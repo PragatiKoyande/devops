@@ -1,331 +1,366 @@
-[root@fcsitgateway SIT-Microservice]# kubectl get pods -n logging -o wide --kubeconfig h06vkssitcbopscls.conf | grep fluent
-fluent-bit-4xz9z        1/1     Running   0          19h   192.168.2.195   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-fluent-bit-fxvvw        1/1     Running   0          19h   192.168.4.227   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-fluent-bit-nnl6z        1/1     Running   0          19h   192.168.1.166   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-[root@fcsitgateway SIT-Microservice]# kubectl logs fluent-bit-4xz9z -n logging --kubeconfig h06vkssitcbopscls.conf
-Fluent Bit v2.2.2
-* Copyright (C) 2015-2024 The Fluent Bit Authors
-* Fluent Bit is a CNCF sub-project under the umbrella of Fluentd
-* https://fluentbit.io
-
-____________________
-< Fluent Bit v2.2.2 >
- -------------------
-          \
-           \
-            \          __---__
-                    _-       /--______
-               __--( /     \ )XXXXXXXXXXX\v.
-             .-XXX(   O   O  )XXXXXXXXXXXXXXX-
-            /XXX(       U     )        XXXXXXX\
-          /XXXXX(              )--_  XXXXXXXXXXX\
-         /XXXXX/ (      O     )   XXXXXX   \XXXXX\
-         XXXXX/   /            XXXXXX   \__ \XXXXX
-         XXXXXX__/          XXXXXX         \__---->
- ---___  XXX__/          XXXXXX      \__         /
-   \-  --__/   ___/\  XXXXXX            /  ___--/=
-    \-\    ___/    XXXXXX              '--- XXXXXX
-       \-\/XXX\ XXXXXX                      /XXXXX
-         \XXXXXXXXX   \                    /XXXXX/
-          \XXXXXX      >                 _/XXXXX/
-            \XXXXX--__/              __-- XXXX/
-             -XXXXXXXX---------------  XXXXXX-
-                \XXXXXXXXXXXXXXXXXXXXXXXXXX/
-                  ""VXXXXXXXXXXXXXXXXXXV""
-
-[2026/02/17 10:03:14] [ info] [fluent bit] version=2.2.2, commit=eeea396e88, pid=1
-[2026/02/17 10:03:14] [ info] [storage] ver=1.5.1, type=memory, sync=normal, checksum=off, max_chunks_up=128
-[2026/02/17 10:03:14] [ info] [cmetrics] version=0.6.6
-[2026/02/17 10:03:14] [ info] [ctraces ] version=0.4.0
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] initializing
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] storage_strategy='memory' (memory only)
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] https=1 host=kubernetes.default.svc port=443
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] local POD info OK
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] testing connectivity with API server...
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] connectivity OK
-[2026/02/17 10:03:14] [ info] [output:loki:loki.0] configured, hostname=loki.logging.svc.cluster.local:3100
-[2026/02/17 10:03:14] [ info] [sp] stream processor started
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917710 watch_fd=1 name=/var/log/containers/antrea-agent-2x8gc_kube-system_antrea-agent-tweaker-fbe5c401488f8907be5a5aac811e2688b0d47682fd1472400feb365d86df022a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917720 watch_fd=2 name=/var/log/containers/antrea-agent-2x8gc_kube-system_antrea-ovs-a3959ad34ab27588e2068f11e0f51264cb2d111816e39be8ac492e540e4660d6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917713 watch_fd=3 name=/var/log/containers/antrea-agent-2x8gc_kube-system_install-cni-de7b4f744aaa04a56357c3972e6517a2049e5c6935f0e30902c87097b0b9d32b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917906 watch_fd=4 name=/var/log/containers/cbs-app-092d299be5dc2a60-driver_cbops_spark-kubernetes-driver-8e63c47962c34c751ae06a886aa633b1ed5133ae8c118adcb5486b98ce7ad1af.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917892 watch_fd=5 name=/var/log/containers/cbs-app-0adc689be5aa0ff0-driver_cbops_spark-kubernetes-driver-8ea4fb7367bbb17d3f8a442752784faa8334feda06773dbf98c089f10b094acf.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917902 watch_fd=6 name=/var/log/containers/cbs-app-0d99699be5cb494d-driver_cbops_spark-kubernetes-driver-b36310bc5efc4ae71f5e59141e2335993ad45956d1fc1aaf403d96004a5f4674.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917944 watch_fd=7 name=/var/log/containers/cbs-app-71e5919bf3cc8c4d-driver_cbops_spark-kubernetes-driver-b2016fd0e30f1198d212a49fa4bed3e7b0f6d7a27a07623c35471a5a68d2981a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917914 watch_fd=8 name=/var/log/containers/cbs-app-cbcb8f9be6396624-driver_cbops_spark-kubernetes-driver-8240a14dc95e347fb79af0e333433399f0e424552301de95cd4cd0832de6d234.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917910 watch_fd=9 name=/var/log/containers/cbs-app-d667d59be60a14cc-driver_cbops_spark-kubernetes-driver-db23a3c9d1f19aef1441da3bfb453a339eab0c3e604630f3174591bf43f53ad1.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917898 watch_fd=10 name=/var/log/containers/cbs-app-f18f949be5a1cf90-driver_cbops_spark-kubernetes-driver-b62d487f6d27afe8717c160ba763a6bc7d30ea2f34aeadc4ed4a18b10e47673b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917894 watch_fd=11 name=/var/log/containers/cbs-app-fe14439be58d00e6-driver_cbops_spark-kubernetes-driver-316c2a53fcb918b148f9437c54de8df193f36b65df4dc8288d1d78339b40a167.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917744 watch_fd=12 name=/var/log/containers/cert-manager-cainjector-69896f7559-2r5rt_cert-manager_cert-manager-cainjector-8e8196ef3517d1d31918146ef3dec6abc19302c9562d8b6348aca25352d48a5b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917863 watch_fd=13 name=/var/log/containers/common-master-deployment-7b7557cf4f-fgqv8_cbops_common-master-container-44309829c8d2b54397993f800e8553938ecaa99703dcf24c0605cd44eead9e51.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917848 watch_fd=14 name=/var/log/containers/common-request-deployment-6b95fbdb56-q8mb9_cbops_common-request-container-a3a8e6f4a44b32e7377f1aff0934d97714bcaf9aeba36746493f56f6477bc1d7.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917858 watch_fd=15 name=/var/log/containers/delete-oracle-connector-cr5jb_cbops_delete-f1a07a2e635e3423fc11a1c93c7bd6cf7790a14c18f2d90939a3159c512b69e6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917872 watch_fd=16 name=/var/log/containers/difference-app-143b609bea47f8fd-driver_cbops_spark-kubernetes-driver-6414f1bb214ba19f7db32f53096fc46c15ad672eece0ac175e154170fffe96cd.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917692 watch_fd=17 name=/var/log/containers/docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w_kube-system_docker-registry-d36fec07401992616ade0aadc87771b946d6848899cfa65d2f9ba7e6e24f04c6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917930 watch_fd=18 name=/var/log/containers/glif-app-7dc20a9be91ad791-driver_cbops_spark-kubernetes-driver-6ad3d74660776aa7d400edc0f0de9148710783557c4edcf4f300e44af09679f0.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917917 watch_fd=19 name=/var/log/containers/glif-app-93442c9be651089d-driver_cbops_spark-kubernetes-driver-2c39f50468a6506563f04c7c037c97e930ef26c4143c11c92e68c3cb2a63eb64.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917925 watch_fd=20 name=/var/log/containers/glif-app-cdb3fd9be65f17e9-driver_cbops_spark-kubernetes-driver-45f094b33a078e18d06c38ed7bcc2e44baf12df91d0c4885e6e007835f876b98.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917923 watch_fd=21 name=/var/log/containers/glif-app-de3d249be913fd4e-driver_cbops_spark-kubernetes-driver-bfac6437229ae08b9757d90215e333168ec6341ddb47610172ca61bdbb50fc3b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917861 watch_fd=22 name=/var/log/containers/kafka-0_cbops_fix-kafka-permissions-f2a504a4266637ed035d674ac6a26b8a0c372ebda82a06957723355b405f704a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917788 watch_fd=23 name=/var/log/containers/kafka-0_cbops_kafka-ddb672d1d73be1fcf2d508827675f49e21b7729471c04688a741a3de5fec8ff5.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917934 watch_fd=24 name=/var/log/containers/kafkahit-lg5vf_cbops_kafkacheck-f24a4ef661d2d14d1d3273d11a4b9b5cd215fea8dc74af9433a8a491783a2cea.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917966 watch_fd=25 name=/var/log/containers/kong-6dd5746646-wttch_kong-system_kong-b8544b6d451defe3a519fc0d1b1cbb39b13196477883459f33ac8a5179f08dde.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917699 watch_fd=26 name=/var/log/containers/kube-proxy-22gdj_kube-system_kube-proxy-ee12cc3298df3db57e40878b45329e90ca75b88f8aa3e7658f82e3697ff189d1.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917939 watch_fd=27 name=/var/log/containers/loki-6f676bfbc7-j7hcl_logging_loki-74f80c497c3515edbbd14249d7c0c72cb79b4e6a12296968cb93964f71f5c02d.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917818 watch_fd=28 name=/var/log/containers/postgres-db-7b865dd6fc-gcnv9_cbops_postgres-db-a0974c0dbcd1ab6cfec3e394399b6f60c6461aa760e66d1f71558ec470ba0d9d.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917832 watch_fd=29 name=/var/log/containers/process-status-deployment-7dddfbcddd-sldjx_cbops_process-status-container-e4a2a3dc0afc34cafdb11f22013c20a715106352ef8fcc8938f6358d4f69658b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917887 watch_fd=30 name=/var/log/containers/redis-deployment-59ddbb9b85-7bzwg_cbops_redis-container-5f63ccfb56efcec0bb52e3f676360b4618158cca74a1f5bf161ed9c16f701fb8.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917871 watch_fd=31 name=/var/log/containers/register-oracle-connector-b2qps_cbops_register-fb93392367e57212d44991000c552e61bafef933ab4f29aa3f5cee4811bcbda6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917933 watch_fd=32 name=/var/log/containers/report-deployment-6846f77ff6-4l7fc_cbops_report-container-33184fdf3432b9a7c5561cbcbfe584570991aab09e7cc68a1addbde751abffa0.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917823 watch_fd=33 name=/var/log/containers/report-deployment-6846f77ff6-4l7fc_cbops_report-container-bee5d314cf518d95b56c404716d8bb08cb492eb6cb98f58e8be4d3994a57a0db.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917851 watch_fd=34 name=/var/log/containers/template-config-deployment-77545dd89d-5khgd_cbops_template-config-container-842eabbe2e905a08de68b19b35a056ae817eceed4a3572a4bc7696814ea2b234.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917733 watch_fd=35 name=/var/log/containers/vsphere-csi-node-6p769_vmware-system-csi_liveness-probe-6749c5f5d3b6ff134581db6b055e320a5e00baecbe9002c2872ba14fa37c3247.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917702 watch_fd=36 name=/var/log/containers/vsphere-csi-node-6p769_vmware-system-csi_node-driver-registrar-c671e7f69f1755b8086816f66c37f6d81e971a4a3f04c82a20c8662d2ab5a9b9.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917819 watch_fd=37 name=/var/log/containers/vsphere-csi-node-6p769_vmware-system-csi_vsphere-csi-node-5d53693280ee6229b9b0ee60abb6ad1b84d86d0bf6b1cab94a703f9a4cedd46a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917716 watch_fd=38 name=/var/log/containers/antrea-agent-2x8gc_kube-system_antrea-agent-87aa634d2ecfe4c302fdf2289d1f2594afe6cf1ce45151147e0ff1e65d0a45d5.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917753 watch_fd=39 name=/var/log/containers/fluent-bit-4xz9z_logging_fluent-bit-d47544ec55a216c529c3b9d317334880a17e11b3e8b5a0d1fd3c1f25d7c86928.log
-[2026/02/17 10:03:34] [error] [output:loki:loki.0] loki.logging.svc.cluster.local:3100, HTTP status=500
-empty ring
-
-[2026/02/17 10:03:34] [ warn] [engine] failed to flush chunk '1-1771322613.385241067.flb', retry in 6 seconds: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:03:34] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917785 watch_fd=40 name=/var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log
-[2026/02/17 10:03:34] [error] [output:loki:loki.0] loki.logging.svc.cluster.local:3100, HTTP status=500
-empty ring
-
-[2026/02/17 10:03:34] [ warn] [engine] failed to flush chunk '1-1771322613.389446620.flb', retry in 7 seconds: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:03:35] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917939 watch_fd=27
-[2026/02/17 10:03:40] [ info] [engine] flush chunk '1-1771322613.385241067.flb' succeeded at retry 1: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:03:41] [ info] [engine] flush chunk '1-1771322613.389446620.flb' succeeded at retry 1: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:46:13] [ info] [input:tail:tail.0] inode=917785 handle rotation(): /var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log => /var/log/pods/logging_loki-6f676bfbc7-986kw_f00468c4-1e95-41a4-986a-b15de0207c95/loki/0.log.20260217-104613
-[2026/02/17 10:46:13] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917785 watch_fd=40
-[2026/02/17 10:46:13] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917785 watch_fd=41 name=/var/log/pods/logging_loki-6f676bfbc7-986kw_f00468c4-1e95-41a4-986a-b15de0207c95/loki/0.log.20260217-104613
-[2026/02/17 10:46:13] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917749 watch_fd=42 name=/var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log
-[2026/02/17 10:46:44] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917785 watch_fd=41
-[2026/02/17 11:11:02] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 11:11:02] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917920 watch_fd=43 name=/var/log/containers/react-app-deployment-65b658dd59-fhjtz_cbops_reactive-container-e1c8080d966b4259636a17a6f3cdb3e35ccf036e2818954e2e1e1d98685ba9a7.log
-[2026/02/17 12:32:04] [ info] [input:tail:tail.0] inode=917749 handle rotation(): /var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log => /var/log/pods/logging_loki-6f676bfbc7-986kw_f00468c4-1e95-41a4-986a-b15de0207c95/loki/0.log.20260217-123204
-[2026/02/17 12:32:04] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917749 watch_fd=42
-[2026/02/17 12:32:04] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917749 watch_fd=44 name=/var/log/pods/logging_loki-6f676bfbc7-986kw_f00468c4-1e95-41a4-986a-b15de0207c95/loki/0.log.20260217-123204
-[2026/02/17 12:32:05] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917785 watch_fd=45 name=/var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log
-[2026/02/17 12:32:44] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917749 watch_fd=44
-[2026/02/17 12:43:19] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 20:53:29] [ info] [input:tail:tail.0] inode=917785 handle rotation(): /var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log => /var/log/pods/logging_loki-6f676bfbc7-986kw_f00468c4-1e95-41a4-986a-b15de0207c95/loki/0.log.20260217-205329
-[2026/02/17 20:53:29] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917785 watch_fd=45
-[2026/02/17 20:53:29] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917785 watch_fd=46 name=/var/log/pods/logging_loki-6f676bfbc7-986kw_f00468c4-1e95-41a4-986a-b15de0207c95/loki/0.log.20260217-205329
-[2026/02/17 20:53:29] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917749 watch_fd=47 name=/var/log/containers/loki-6f676bfbc7-986kw_logging_loki-d57fa8cf736233683da338a39afe3024dbf68b3534b8616b9159564e4c8ddba4.log
-[2026/02/17 20:54:14] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917785 watch_fd=46
-[root@fcsitgateway SIT-Microservice]# kubectl logs fluent-bit-fxvvw -n logging --kubeconfig h06vkssitcbopscls.conf
-Fluent Bit v2.2.2
-* Copyright (C) 2015-2024 The Fluent Bit Authors
-* Fluent Bit is a CNCF sub-project under the umbrella of Fluentd
-* https://fluentbit.io
-
-____________________
-< Fluent Bit v2.2.2 >
- -------------------
-          \
-           \
-            \          __---__
-                    _-       /--______
-               __--( /     \ )XXXXXXXXXXX\v.
-             .-XXX(   O   O  )XXXXXXXXXXXXXXX-
-            /XXX(       U     )        XXXXXXX\
-          /XXXXX(              )--_  XXXXXXXXXXX\
-         /XXXXX/ (      O     )   XXXXXX   \XXXXX\
-         XXXXX/   /            XXXXXX   \__ \XXXXX
-         XXXXXX__/          XXXXXX         \__---->
- ---___  XXX__/          XXXXXX      \__         /
-   \-  --__/   ___/\  XXXXXX            /  ___--/=
-    \-\    ___/    XXXXXX              '--- XXXXXX
-       \-\/XXX\ XXXXXX                      /XXXXX
-         \XXXXXXXXX   \                    /XXXXX/
-          \XXXXXX      >                 _/XXXXX/
-            \XXXXX--__/              __-- XXXX/
-             -XXXXXXXX---------------  XXXXXX-
-                \XXXXXXXXXXXXXXXXXXXXXXXXXX/
-                  ""VXXXXXXXXXXXXXXXXXXV""
-
-[2026/02/17 10:03:14] [ info] [fluent bit] version=2.2.2, commit=eeea396e88, pid=1
-[2026/02/17 10:03:14] [ info] [storage] ver=1.5.1, type=memory, sync=normal, checksum=off, max_chunks_up=128
-[2026/02/17 10:03:14] [ info] [cmetrics] version=0.6.6
-[2026/02/17 10:03:14] [ info] [ctraces ] version=0.4.0
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] initializing
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] storage_strategy='memory' (memory only)
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] https=1 host=kubernetes.default.svc port=443
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] local POD info OK
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] testing connectivity with API server...
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] connectivity OK
-[2026/02/17 10:03:14] [ info] [output:loki:loki.0] configured, hostname=loki.logging.svc.cluster.local:3100
-[2026/02/17 10:03:14] [ info] [sp] stream processor started
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917790 watch_fd=1 name=/var/log/containers/ako-0_avi-system_ako-2c9a98f9113a2dde0b34675b75758c34947edfaa965e4eae03af9c5e452afdf2.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917710 watch_fd=2 name=/var/log/containers/antrea-agent-k7dm2_kube-system_antrea-agent-tweaker-cdf5ddccdfe7c23998c86618d2ee84b5d642ff0014b8911a951b304914069721.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917720 watch_fd=3 name=/var/log/containers/antrea-agent-k7dm2_kube-system_antrea-ovs-a68990dce37a1e64f5654ad8695f8907e3cfdc669f09a66e5073b0e61a390304.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917713 watch_fd=4 name=/var/log/containers/antrea-agent-k7dm2_kube-system_install-cni-65188e139d826426d2659280e5d0d5a5a2d72fe9ab4537fa5b39edbb3e4c5996.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917938 watch_fd=5 name=/var/log/containers/cbs-app-203ff79bf3cf9590-driver_cbops_spark-kubernetes-driver-758c86aa75ea8a230bf841afe4b9e8b7401603fc62d17b65ebf96b17e0fd8d4a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917887 watch_fd=6 name=/var/log/containers/cbs-app-fc0a6b9be5c79988-driver_cbops_spark-kubernetes-driver-2d0d837ea45372a19813a0ec0310687daeba1485acf2c123ad13d67ab3edd49a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917744 watch_fd=7 name=/var/log/containers/cert-manager-74f66c9bf8-84786_cert-manager_cert-manager-controller-42683ced167ba4eb64762b3b3e5868fe623e935b94dc87c63a45792ce5d242a6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917830 watch_fd=8 name=/var/log/containers/dashboard-deployment-5469bc4df5-fnjbk_cbops_dashboard-container-0c46621a74c12ab33b1ae72d3668b9c9e81620cb22333313270d8a6bc099aa43.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917874 watch_fd=9 name=/var/log/containers/delta-table-register-zrkht_cbops_spark-thrift-st-15b8d66fff655815d64c6269a47188d62e8025d809d92c3c7fa5ea37f747e7a5.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917926 watch_fd=10 name=/var/log/containers/difference-app-f9d8ae9bea404bd7-driver_cbops_spark-kubernetes-driver-97c38c2783dc6a6e65792a9f51dff0236b2bf1184d27454239335aede4b669f3.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917692 watch_fd=11 name=/var/log/containers/docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4_kube-system_docker-registry-198e02f49537c480989f0df7179b8194b05f657f888e7988781de51505edc5bc.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917934 watch_fd=12 name=/var/log/containers/glcheck1-vtght_cbops_glcheck1-a153648a94ed54e530923b5fd135f4f3661c29ce3d123e06c48ad6e46efbd77f.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917922 watch_fd=13 name=/var/log/containers/glif-app-1aeb5e9be6438352-driver_cbops_spark-kubernetes-driver-014ab071b8c428057738e5cba7942a8c030d55ffc2fe05eff0f1d31a97e9a5a7.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917918 watch_fd=14 name=/var/log/containers/glif-app-641a569be9bede3e-driver_cbops_spark-kubernetes-driver-bd8a94c818fc249c14e8230759c7b0b063f3eb973ce2a7f2f42c71c325dcc966.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917913 watch_fd=15 name=/var/log/containers/glif-app-6658f39be9634fb3-driver_cbops_spark-kubernetes-driver-d212a925bb562e944e7e515acac88b3dab1382d52424584a0c19063c8ca71992.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917931 watch_fd=16 name=/var/log/containers/glif-app-7222479be64b238b-driver_cbops_spark-kubernetes-driver-d3d5d760cc104de0519d98db554f1a429d9d49008e5d089ef93ba80a503c6f5a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917912 watch_fd=17 name=/var/log/containers/glif-app-8f386c9be6649f83-driver_cbops_spark-kubernetes-driver-2f77fdae4830b9f3430cb4ec4a69f7de930fd72ceccd5ec0f4f0a08431980854.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917944 watch_fd=18 name=/var/log/containers/glif-app-9a90a19bf033b1c2-driver_cbops_spark-kubernetes-driver-61fd7d153a72e9f8bad434ee1043afc64505c3f38afba8f53082858907dedb9b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917905 watch_fd=19 name=/var/log/containers/glif-app-bcf28c9be5ea845e-driver_cbops_spark-kubernetes-driver-02a0cdd98bae58f165eb7ee1adba407b1b1293f87604eac7922c3f976d6c3a91.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917899 watch_fd=20 name=/var/log/containers/glif-app-c950879be659f16d-driver_cbops_spark-kubernetes-driver-7b81fc0b0bd79bfc0f5a770bedff62b7a63c0607793624c6ae78c81dfec282cd.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917973 watch_fd=21 name=/var/log/containers/grafana-864f87c5c4-xkswq_cbops_grafana-2df089120046eb4a87ca88f9312e4654f57dc80e218a5fdf52c89fbda2c76274.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917873 watch_fd=22 name=/var/log/containers/hive-schematool-init-nnd98_cbops_schematool-39f8a160594ecec92f4d0d351540f4c026de271f6627e48d10a66f3ed9f2fd42.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917855 watch_fd=23 name=/var/log/containers/hive-schematool-init-rb6wv_cbops_schematool-51a103591906a56cb9c4b2c1f159b94dccfe1e976bf82ac5beb3c1fffc0e4396.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917859 watch_fd=24 name=/var/log/containers/hive-schematool-init-vs2wb_cbops_schematool-f798e26874bd913faf34b7fe3a31905ba51109cf7c0ff5d5c2f3333fe3cbc739.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917844 watch_fd=25 name=/var/log/containers/hive-schematool-init-wwvmh_cbops_schematool-3231b4ce5287d85af706fe85fa2ff7cadd5eef9598e0f714b0ddff8fd39cf015.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917961 watch_fd=26 name=/var/log/containers/kong-6dd5746646-rfb6v_kong-system_kong-575e482c561d6b9d20a7316c1077a09d61f19e0a12010ddd7873f7e167ca1cc1.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917948 watch_fd=27 name=/var/log/containers/kong-ingress-controller-7659c56b89-j47l5_kong-system_controller-890080f65e8d6c0640fbcbcd44006f7111187a5360be578d36168ffc65a3f63b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917699 watch_fd=28 name=/var/log/containers/kube-proxy-n9gkd_kube-system_kube-proxy-82046c7548f69fd998e8ad4fee7cb15273f47c1ee4bd8056c25f645fd6d17430.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917825 watch_fd=29 name=/var/log/containers/login-deployment-59cb59df5c-mnz77_cbops_login-backend-container-31fd013516f01aa16c13317a1dc8e69a9af418faeeb2913320c8584b5993f6e6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917955 watch_fd=30 name=/var/log/containers/react-app-deployment-686d77cf76-ngp2p_cbops_reactive-container-700f5c164163108cd02cdfa106f6316997cfddf1dab1b00fe54ab8dcebaaecf4.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917840 watch_fd=31 name=/var/log/containers/transactions-deployment-b658c746b-qtv29_cbops_transactions-container-6cb08e5f742dd492caf974ae4f135e5f2df6d20608f0dac0b9f7ffb458b320a6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917894 watch_fd=32 name=/var/log/containers/user-deployment-5675849454-wbrw6_cbops_user-container-1c2703900d0d0707c01679f503be986ddfd0fbdd172d055f40756f2760f524e1.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917732 watch_fd=33 name=/var/log/containers/vsphere-csi-node-jss4t_vmware-system-csi_liveness-probe-b980e05961ce99c24a07794eaaea6fda90e1917931d63b8c911cbbb36b1c6d6b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917702 watch_fd=34 name=/var/log/containers/vsphere-csi-node-jss4t_vmware-system-csi_node-driver-registrar-39854a5689afa750d9108f480e45dd8a2fb093b8c838bcd751ed190c5dc20027.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917729 watch_fd=35 name=/var/log/containers/vsphere-csi-node-jss4t_vmware-system-csi_vsphere-csi-node-ac62c4ea3a42ce8aed2ce5ad15b74fb9dd67fc093303f0a8c9df7a831581ec1f.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917808 watch_fd=36 name=/var/log/containers/ako-0_avi-system_ako-4d4ec8a39ba2edbcfba83077e3560e5e41d4b0759daaf70722d58dbdf35868e4.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917716 watch_fd=37 name=/var/log/containers/antrea-agent-k7dm2_kube-system_antrea-agent-f9c120ccf21ce4af08ee75c5308e1a2d3896d93eb13b3301b97176f3f8f8f047.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917805 watch_fd=38 name=/var/log/containers/connect-c87c7c494-wc2ml_cbops_connect-fe52a22425501d10751317a4559c4c4e022309276dfe8259131ae18fec4e8e0c.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917750 watch_fd=39 name=/var/log/containers/fluent-bit-fxvvw_logging_fluent-bit-7a636e36c235460c5320f7d5b9a8ec30190b7054246ac55a1e72865dae1f9c97.log
-[2026/02/17 10:03:34] [error] [output:loki:loki.0] loki.logging.svc.cluster.local:3100, HTTP status=500
-empty ring
-
-[2026/02/17 10:03:34] [error] [output:loki:loki.0] loki.logging.svc.cluster.local:3100, HTTP status=500
-empty ring
-
-[2026/02/17 10:03:34] [ warn] [engine] failed to flush chunk '1-1771322613.372670605.flb', retry in 6 seconds: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:03:34] [ warn] [engine] failed to flush chunk '1-1771322613.541404798.flb', retry in 7 seconds: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:03:40] [ info] [engine] flush chunk '1-1771322613.372670605.flb' succeeded at retry 1: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:03:41] [ info] [engine] flush chunk '1-1771322613.541404798.flb' succeeded at retry 1: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 10:46:29] [ info] [input:tail:tail.0] inode=917973 handle rotation(): /var/log/containers/grafana-864f87c5c4-xkswq_cbops_grafana-2df089120046eb4a87ca88f9312e4654f57dc80e218a5fdf52c89fbda2c76274.log => /var/log/pods/cbops_grafana-864f87c5c4-xkswq_0173e724-be79-42d6-85f6-1c675a6a264a/grafana/0.log.20260217-104629
-[2026/02/17 10:46:29] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917973 watch_fd=21
-[2026/02/17 10:46:29] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917973 watch_fd=40 name=/var/log/pods/cbops_grafana-864f87c5c4-xkswq_0173e724-be79-42d6-85f6-1c675a6a264a/grafana/0.log.20260217-104629
-[2026/02/17 10:46:30] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917749 watch_fd=41 name=/var/log/containers/grafana-864f87c5c4-xkswq_cbops_grafana-2df089120046eb4a87ca88f9312e4654f57dc80e218a5fdf52c89fbda2c76274.log
-[2026/02/17 10:47:14] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917973 watch_fd=40
-[2026/02/17 11:11:02] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917955 watch_fd=30
-[2026/02/17 11:57:43] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 11:57:43] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 11:57:43] [ warn] [engine] failed to flush chunk '1-1771329453.929241883.flb', retry in 7 seconds: task_id=2, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:50] [ info] [engine] flush chunk '1-1771329453.929241883.flb' succeeded at retry 1: task_id=2, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:51] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917790 watch_fd=1
-[2026/02/17 11:57:52] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917746 watch_fd=42 name=/var/log/containers/ako-0_avi-system_ako-4030adf740111fa99382e4ec3865a9d5d84063d67f330e033566905794db2cd6.log
-[2026/02/17 12:50:45] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917790 watch_fd=43 name=/var/log/containers/report-builder-deployment-6d6c8568b8-tt7g5_cbops_report-builder-container-885bd705edb7d2988aa1afdf0d3d200d169057809820a71ea2c50e6680aff31c.log
-[2026/02/17 12:50:45] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 12:51:32] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917864 watch_fd=44 name=/var/log/containers/report-builder-deployment-6b6f59fb57-ntxtl_cbops_report-builder-container-ee22ec90f79dc49c94e325a86f20f3055c1bf5c8297105311411a1dccebb74d9.log
-[2026/02/17 12:51:33] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917790 watch_fd=43
-[2026/02/17 17:35:37] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917808 watch_fd=36
-[2026/02/17 17:35:38] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917761 watch_fd=45 name=/var/log/containers/ako-0_avi-system_ako-332821c3bd0ee1fec679d6fefa47dd9d91ce4e41a94d61634abac2b29ab07c26.log
-[root@fcsitgateway SIT-Microservice]# kubectl logs fluent-bit-nnl6z -n logging --kubeconfig h06vkssitcbopscls.conf
-Fluent Bit v2.2.2
-* Copyright (C) 2015-2024 The Fluent Bit Authors
-* Fluent Bit is a CNCF sub-project under the umbrella of Fluentd
-* https://fluentbit.io
-
-____________________
-< Fluent Bit v2.2.2 >
- -------------------
-          \
-           \
-            \          __---__
-                    _-       /--______
-               __--( /     \ )XXXXXXXXXXX\v.
-             .-XXX(   O   O  )XXXXXXXXXXXXXXX-
-            /XXX(       U     )        XXXXXXX\
-          /XXXXX(              )--_  XXXXXXXXXXX\
-         /XXXXX/ (      O     )   XXXXXX   \XXXXX\
-         XXXXX/   /            XXXXXX   \__ \XXXXX
-         XXXXXX__/          XXXXXX         \__---->
- ---___  XXX__/          XXXXXX      \__         /
-   \-  --__/   ___/\  XXXXXX            /  ___--/=
-    \-\    ___/    XXXXXX              '--- XXXXXX
-       \-\/XXX\ XXXXXX                      /XXXXX
-         \XXXXXXXXX   \                    /XXXXX/
-          \XXXXXX      >                 _/XXXXX/
-            \XXXXX--__/              __-- XXXX/
-             -XXXXXXXX---------------  XXXXXX-
-                \XXXXXXXXXXXXXXXXXXXXXXXXXX/
-                  ""VXXXXXXXXXXXXXXXXXXV""
-
-[2026/02/17 10:03:14] [ info] [fluent bit] version=2.2.2, commit=eeea396e88, pid=1
-[2026/02/17 10:03:14] [ info] [storage] ver=1.5.1, type=memory, sync=normal, checksum=off, max_chunks_up=128
-[2026/02/17 10:03:14] [ info] [cmetrics] version=0.6.6
-[2026/02/17 10:03:14] [ info] [ctraces ] version=0.4.0
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] initializing
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] storage_strategy='memory' (memory only)
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] https=1 host=kubernetes.default.svc port=443
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] local POD info OK
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] testing connectivity with API server...
-[2026/02/17 10:03:14] [ info] [filter:kubernetes:kubernetes.0] connectivity OK
-[2026/02/17 10:03:14] [ info] [output:loki:loki.0] configured, hostname=loki.logging.svc.cluster.local:3100
-[2026/02/17 10:03:14] [ info] [sp] stream processor started
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917702 watch_fd=1 name=/var/log/containers/antrea-agent-jtf58_kube-system_antrea-agent-tweaker-6b4506ca26fed85c3d56671afac2aec297810a85e870be0520eb32ff9bb1291b.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917720 watch_fd=2 name=/var/log/containers/antrea-agent-jtf58_kube-system_antrea-ovs-4d7cd2c3b34e28f0e09480e823738b991e1f56b7bd7e8323c6569640f3bc9b18.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917713 watch_fd=3 name=/var/log/containers/antrea-agent-jtf58_kube-system_install-cni-7e75b1093ca83b526be479f01da80c92fa96cbfb8f90ea1c34bfb079872d1615.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917744 watch_fd=4 name=/var/log/containers/cert-manager-webhook-6d9c4fd5b8-stbsf_cert-manager_cert-manager-webhook-06d3f4b63dab88bf2d1beee468b8fe1e062590bfe7c37a4202ce3b5a7b5ff4cf.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917692 watch_fd=5 name=/var/log/containers/docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q_kube-system_docker-registry-eede5e11cc6b3ac52c07bc7107cc7db46f7f1660a1fb38f00562f627b49c6978.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917748 watch_fd=6 name=/var/log/containers/fluent-bit-nnl6z_logging_fluent-bit-97bd18985faab2ebe8332229b5719b584a2147bdf17dcade3c243850e039c4a9.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917854 watch_fd=7 name=/var/log/containers/hdfs-st-app-dd3aca9b9c8b874b-driver_cbops_spark-kubernetes-driver-18e4a400233f5c02ad515c03a597ac5a929ac14280a389b4aa2d66875af41446.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917815 watch_fd=8 name=/var/log/containers/hive-schematool-2mqb2_cbops_schematool-2adaae59d778d6c7d8ed448bc979c75508ec7e0a104417c2a2b03de05aaee5e5.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917836 watch_fd=9 name=/var/log/containers/journal-deployment-7fc4c9cf87-d9m7q_cbops_journal-app-container-c9948d74a1fbc2e3144a3bd384e3f296093af581b96d07e0991565daf1edefa1.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917699 watch_fd=10 name=/var/log/containers/kube-proxy-bxpvq_kube-system_kube-proxy-9d2246157e97623991cf0d732bd6dfff96457118e1b5cd2c5e8f6ab603403b90.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917795 watch_fd=11 name=/var/log/containers/notification-deployment-769bcd99cd-p9qmh_cbops_notification-container-7873837351be66bf5f221faa16ba33105259d779f6ffd4a112976be0898f320a.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917842 watch_fd=12 name=/var/log/containers/report-builder-deployment-67df7f7549-tkltx_cbops_template-config-container-85cbfc2eb99494022e8390ecf8f2ae8b5cdcbc6cc79fccd2148a0b3963d977c0.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917884 watch_fd=13 name=/var/log/containers/spark-thrift-7f856c7c74-4f7xj_cbops_spark-thrift-2a4c8632a1305ca8a758bd4665d5531cbe39bca44935b6ea646d630d31bceeea.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917733 watch_fd=14 name=/var/log/containers/vsphere-csi-node-9rhmk_vmware-system-csi_liveness-probe-987337c92de975c68bf0808ce1d44c45200d66fff31f4d1976b45ec6b26f8c58.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917710 watch_fd=15 name=/var/log/containers/vsphere-csi-node-9rhmk_vmware-system-csi_node-driver-registrar-022b9eb7bdea595cf5d393e919478f90671bbaf7df0608b69313231c2b8fa7ef.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917730 watch_fd=16 name=/var/log/containers/vsphere-csi-node-9rhmk_vmware-system-csi_vsphere-csi-node-ddb1bb81f0982fb8a50f8e9807896cb7d1df49a329924f35129b141e4882d2d6.log
-[2026/02/17 10:03:14] [ info] [input:tail:tail.0] inotify_fs_add(): inode=917716 watch_fd=17 name=/var/log/containers/antrea-agent-jtf58_kube-system_antrea-agent-314b72d43b99a70dcdbc78ff3f0de7573e1115e8a61d76a77c8412cd738e394a.log
-[2026/02/17 11:57:36] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 11:57:36] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 11:57:36] [ warn] [engine] failed to flush chunk '1-1771329447.50557947.flb', retry in 8 seconds: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:37] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 11:57:37] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 11:57:37] [ warn] [engine] failed to flush chunk '1-1771329447.872233223.flb', retry in 7 seconds: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:44] [ info] [engine] flush chunk '1-1771329447.50557947.flb' succeeded at retry 1: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:44] [ info] [engine] flush chunk '1-1771329447.872233223.flb' succeeded at retry 1: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:46] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 11:57:46] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 11:57:46] [ warn] [engine] failed to flush chunk '1-1771329456.187417282.flb', retry in 8 seconds: task_id=2, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:47] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 11:57:47] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 11:57:47] [ warn] [engine] failed to flush chunk '1-1771329457.187864775.flb', retry in 6 seconds: task_id=3, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:53] [ info] [engine] flush chunk '1-1771329457.187864775.flb' succeeded at retry 1: task_id=3, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 11:57:54] [ info] [engine] flush chunk '1-1771329456.187417282.flb' succeeded at retry 1: task_id=2, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 12:50:45] [ info] [filter:kubernetes:kubernetes.0]  token updated
-[2026/02/17 12:50:46] [ info] [input:tail:tail.0] inotify_fs_remove(): inode=917842 watch_fd=12
-[2026/02/17 17:35:23] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 17:35:23] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 17:35:23] [ warn] [engine] failed to flush chunk '1-1771349714.50214346.flb', retry in 8 seconds: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:24] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 17:35:24] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 17:35:24] [ warn] [engine] failed to flush chunk '1-1771349715.112684510.flb', retry in 6 seconds: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:30] [ info] [engine] flush chunk '1-1771349715.112684510.flb' succeeded at retry 1: task_id=1, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:31] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 17:35:31] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 17:35:31] [ warn] [engine] failed to flush chunk '1-1771349722.168120779.flb', retry in 10 seconds: task_id=2, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:31] [ info] [engine] flush chunk '1-1771349714.50214346.flb' succeeded at retry 1: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:33] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 17:35:33] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 17:35:33] [ warn] [engine] failed to flush chunk '1-1771349723.187245275.flb', retry in 10 seconds: task_id=3, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:34] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/17 17:35:34] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/17 17:35:34] [ warn] [engine] failed to flush chunk '1-1771349724.187842327.flb', retry in 11 seconds: task_id=4, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:41] [ info] [engine] flush chunk '1-1771349722.168120779.flb' succeeded at retry 1: task_id=2, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:43] [ info] [engine] flush chunk '1-1771349723.187245275.flb' succeeded at retry 1: task_id=3, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/17 17:35:45] [ info] [engine] flush chunk '1-1771349724.187842327.flb' succeeded at retry 1: task_id=4, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/18 03:53:26] [ warn] [net] getaddrinfo(host='loki.logging.svc.cluster.local', err=12): Timeout while contacting DNS servers
-[2026/02/18 03:53:26] [error] [output:loki:loki.0] no upstream connections available
-[2026/02/18 03:53:26] [ warn] [engine] failed to flush chunk '1-1771386796.398901236.flb', retry in 10 seconds: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
-[2026/02/18 03:53:36] [ info] [engine] flush chunk '1-1771386796.398901236.flb' succeeded at retry 1: task_id=0, input=tail.0 > output=loki.0 (out_id=0)
+evel=info ts=2026-02-18T06:02:33.969063914Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:02:33.969067575Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:02:33.969089834Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:02:33.969132206Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:02:33.969138543Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:02:33.96915562Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:02:33.969160557Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:02:40.164036577Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:02:40.164101214Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:03:03.977717434Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=/var/loki/wal/checkpoint.000238.tmp new=/var/loki/wal/checkpoint.000238
+level=info ts=2026-02-18T06:03:03.978055314Z caller=checkpoint.go:569 msg="checkpoint done" time=4m30.003789552s
+level=info ts=2026-02-18T06:03:14.006510115Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:03:15.92208774Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:03:18.708128131Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:03:23.444875818Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:03:33.968965987Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:03:33.968969905Z caller=table_manager.go:228 index-store=boltdb-shipper-2024-01-01 msg="syncing tables"
+level=info ts=2026-02-18T06:03:33.968996149Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:03:33.969001428Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:03:33.969006345Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:03:33.969011503Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:03:33.969014108Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:03:33.96901931Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+ts=2026-02-18T06:03:33.969032422Z caller=spanlogger.go:86 level=info msg="building table cache"
+level=info ts=2026-02-18T06:03:33.969084187Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+ts=2026-02-18T06:03:33.96909362Z caller=spanlogger.go:86 level=info msg="table cache built" duration=53.974µs
+level=info ts=2026-02-18T06:03:33.969116386Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:03:33.9691218Z caller=table.go:334 msg="finished handing over table index_20502"
+ts=2026-02-18T06:03:33.969132696Z caller=spanlogger.go:86 level=info msg="building table names cache"
+level=info ts=2026-02-18T06:03:33.96913909Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:03:33.969142526Z caller=table.go:334 msg="finished handing over table index_20501"
+ts=2026-02-18T06:03:33.969182547Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=45.887µs
+ts=2026-02-18T06:03:33.969192646Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.96922847Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.814µs
+ts=2026-02-18T06:03:33.969241099Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969275965Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.115µs
+ts=2026-02-18T06:03:33.969285134Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969324584Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=36.865µs
+ts=2026-02-18T06:03:33.969337679Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969374894Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=34.722µs
+ts=2026-02-18T06:03:33.96938433Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969420185Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=33.054µs
+ts=2026-02-18T06:03:33.969436147Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969477728Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=39.054µs
+ts=2026-02-18T06:03:33.969489695Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969527484Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=34.796µs
+ts=2026-02-18T06:03:33.969539138Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969584828Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=42.041µs
+ts=2026-02-18T06:03:33.969599815Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969643666Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=40.73µs
+ts=2026-02-18T06:03:33.969657813Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.96969611Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=34.442µs
+ts=2026-02-18T06:03:33.969707246Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969744903Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=34.587µs
+ts=2026-02-18T06:03:33.969760913Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969797302Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=33.837µs
+ts=2026-02-18T06:03:33.969806696Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:33.969848667Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=38.611µs
+ts=2026-02-18T06:03:33.969862261Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:03:33.969876881Z caller=spanlogger.go:86 level=info msg="table cache built" duration=10.792µs
+level=info ts=2026-02-18T06:03:33.96989767Z caller=table_manager.go:271 index-store=boltdb-shipper-2024-01-01 msg="query readiness setup completed" duration=1.875µs distinct_users_len=0 distinct_users=
+level=info ts=2026-02-18T06:03:33.969906737Z caller=table_manager.go:244 index-store=boltdb-shipper-2024-01-01 msg="cleaning tables cache"
+level=info ts=2026-02-18T06:03:33.969912315Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20495"
+level=info ts=2026-02-18T06:03:33.969919144Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20497"
+level=info ts=2026-02-18T06:03:33.969923605Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20498"
+level=info ts=2026-02-18T06:03:33.969927995Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20499"
+level=info ts=2026-02-18T06:03:33.969932386Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20502"
+level=info ts=2026-02-18T06:03:33.969937372Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20501"
+level=info ts=2026-02-18T06:03:33.969942535Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20500"
+level=info ts=2026-02-18T06:03:33.969945781Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20496"
+level=info ts=2026-02-18T06:03:33.96994927Z caller=table_manager.go:247 index-store=boltdb-shipper-2024-01-01 msg="cleaning up expired table index_20494"
+level=info ts=2026-02-18T06:03:33.973739881Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2026-02-18T06:03:33.97386115Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=/var/loki/wal/checkpoint.000239
+level=info ts=2026-02-18T06:03:36.736979988Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:03:36.737033915Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+ts=2026-02-18T06:03:39.113959721Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:03:39.114119656Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=91.994µs
+level=info ts=2026-02-18T06:03:39.114150804Z caller=compactor.go:683 msg="compacting table" table-name=index_20502
+ts=2026-02-18T06:03:39.114252767Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:03:39.114270197Z caller=spanlogger.go:86 level=info msg="table cache built" duration=13.366µs
+level=info ts=2026-02-18T06:03:39.114275158Z caller=table.go:132 table-name=index_20502 msg="listed files" count=1
+level=info ts=2026-02-18T06:03:39.11431209Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20502
+level=info ts=2026-02-18T06:03:39.114320533Z caller=compactor.go:683 msg="compacting table" table-name=index_20501
+ts=2026-02-18T06:03:39.114339686Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:03:39.114357598Z caller=spanlogger.go:86 level=info msg="table cache built" duration=14.783µs
+level=info ts=2026-02-18T06:03:39.114361554Z caller=table.go:132 table-name=index_20501 msg="listed files" count=1
+level=info ts=2026-02-18T06:03:39.114376525Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20501
+level=info ts=2026-02-18T06:04:14.007039564Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:04:15.082069213Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:04:17.914530361Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:04:24.14369883Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:04:33.953103093Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:04:33.953149246Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:04:33.968950212Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:04:33.968980542Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:04:33.968986404Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:04:33.968990997Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:04:33.968998107Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:04:33.969000947Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:04:33.969007717Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:04:33.970037878Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:04:33.970068168Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:04:33.97007341Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:04:33.970090491Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:04:33.970093489Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:05:13.986433672Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:05:15.033977946Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:05:18.305020119Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:05:23.204501932Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:05:32.584126882Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:05:32.584176962Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:05:33.968982679Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:05:33.969014985Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:05:33.969021611Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:05:33.969027391Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:05:33.969032521Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:05:33.969035887Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:05:33.969039193Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:05:33.970114802Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:05:33.970155725Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:05:33.97016015Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:05:33.970178596Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:05:33.970181855Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:06:14.006423582Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:06:15.59922898Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:06:17.644656729Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:06:22.416538881Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:06:32.521812536Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:06:32.521852376Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:06:33.969644154Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:06:33.969661047Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:06:33.969680779Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:06:33.969687136Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:06:33.969691965Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:06:33.969697474Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:06:33.96970038Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:06:33.969703346Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:06:33.96970837Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:06:33.969714579Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:06:33.969732593Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:06:33.969735951Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:07:14.005046537Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:07:15.891726374Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:07:18.633609964Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:07:24.038326794Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:07:33.969989671Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:07:33.970008958Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:07:33.970035305Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:07:33.970040634Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:07:33.970046124Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:07:33.970048183Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:07:33.970054079Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:07:33.970056783Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:07:33.970060219Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:07:33.970063788Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:07:33.970073412Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:07:33.970076963Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:07:37.84219489Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:07:37.842236908Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:07:56.79700393Z caller=flush.go:167 msg="flushing stream" user=fake fp=d94d5e7ea9d986e8 immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"loki\", kubernetes_namespace_name=\"logging\", kubernetes_pod_name=\"loki-6f676bfbc7-986kw\"}"
+level=info ts=2026-02-18T06:08:03.976483177Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=/var/loki/wal/checkpoint.000239.tmp new=/var/loki/wal/checkpoint.000239
+level=info ts=2026-02-18T06:08:03.976801645Z caller=checkpoint.go:569 msg="checkpoint done" time=4m30.002828327s
+level=info ts=2026-02-18T06:08:13.987590346Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:08:15.016834413Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:08:17.038205571Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:08:21.298987561Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:08:26.940580199Z caller=flush.go:167 msg="flushing stream" user=fake fp=0fbd77df24f90b44 immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"connect\", kubernetes_namespace_name=\"cbops\", kubernetes_pod_name=\"connect-c87c7c494-wc2ml\"}"
+level=info ts=2026-02-18T06:08:31.005250341Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:08:31.005299605Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:08:33.968934896Z caller=table_manager.go:228 index-store=boltdb-shipper-2024-01-01 msg="syncing tables"
+ts=2026-02-18T06:08:33.968993687Z caller=spanlogger.go:86 level=info msg="building table names cache"
+level=info ts=2026-02-18T06:08:33.968985199Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:08:33.969012344Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:08:33.969017613Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:08:33.969029994Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:08:33.969035993Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:08:33.969039014Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:08:33.969044588Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+ts=2026-02-18T06:08:33.969100075Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=99.882µs
+ts=2026-02-18T06:08:33.969118455Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969156504Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=35µs
+ts=2026-02-18T06:08:33.969170186Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969205046Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.029µs
+ts=2026-02-18T06:08:33.969214993Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969248617Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.074µs
+ts=2026-02-18T06:08:33.969260215Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.96929417Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.815µs
+ts=2026-02-18T06:08:33.969301492Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969335889Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.223µs
+ts=2026-02-18T06:08:33.969349145Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:08:33.969362263Z caller=spanlogger.go:86 level=info msg="table cache built" duration=10.775µs
+ts=2026-02-18T06:08:33.969381077Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969415467Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.883µs
+ts=2026-02-18T06:08:33.969425226Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969461302Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=33.214µs
+ts=2026-02-18T06:08:33.969473096Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969507025Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.36µs
+ts=2026-02-18T06:08:33.969517424Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969552766Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.985µs
+ts=2026-02-18T06:08:33.969564717Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969598402Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.241µs
+ts=2026-02-18T06:08:33.969606966Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969641933Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.569µs
+ts=2026-02-18T06:08:33.969652162Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.9696857Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.122µs
+ts=2026-02-18T06:08:33.969692911Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:08:33.969727014Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.255µs
+ts=2026-02-18T06:08:33.969739229Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:08:33.969751311Z caller=spanlogger.go:86 level=info msg="table cache built" duration=9.853µs
+level=info ts=2026-02-18T06:08:33.969765176Z caller=table_manager.go:271 index-store=boltdb-shipper-2024-01-01 msg="query readiness setup completed" duration=1.617µs distinct_users_len=0 distinct_users=
+level=info ts=2026-02-18T06:08:33.969850054Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:08:33.969892691Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:08:33.969898527Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:08:33.969916059Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:08:33.969921782Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:08:33.973788418Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2026-02-18T06:08:33.973876568Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=/var/loki/wal/checkpoint.000240
+level=info ts=2026-02-18T06:09:14.006551338Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:09:15.995175049Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:09:19.443967782Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:09:23.792578382Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:09:33.968955787Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:09:33.968992323Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:09:33.968998422Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:09:33.969003655Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:09:33.969009162Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:09:33.9690122Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:09:33.969015779Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:09:33.97016869Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:09:33.970219788Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:09:33.970225411Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:09:33.970243588Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:09:33.970249499Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:09:34.860622775Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:09:34.860673339Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:14.005958027Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:15.206874317Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:17.811850041Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:24.082708752Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:33.05450308Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:33.054544378Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:10:33.968971382Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:10:33.968997876Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:10:33.969005546Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:10:33.96901071Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:10:33.9690162Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:10:33.969019259Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:10:33.969024564Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:10:33.970090182Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:10:33.970123926Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:10:33.970128631Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:10:33.970146252Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:10:33.970152532Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:11:14.006047161Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:11:15.54351141Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:11:18.874397816Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:11:26.796896202Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:11:31.48109047Z caller=roundtrip.go:295 org_id=fake traceID=64735264fecd1098 msg="executing query" type=labels label= length=48h0m0s query=
+ts=2026-02-18T06:11:31.481841095Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=64735264fecd1098 latency=fast query_type=labels length=18h27m55.883s duration=154.394µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=0
+ts=2026-02-18T06:11:31.481953467Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=64735264fecd1098 latency=fast query_type=labels length=23h59m59.999s duration=294.193µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=4
+ts=2026-02-18T06:11:31.482234569Z caller=spanlogger.go:86 user=fake level=info org_id=fake traceID=64735264fecd1098 latency=fast query_type=labels length=5h32m4.116s duration=574.847µs status=200 label= query= splits=0 throughput=0B total_bytes=0B total_entries=4
+level=info ts=2026-02-18T06:11:31.482455216Z caller=metrics.go:207 component=frontend org_id=fake traceID=64735264fecd1098 latency=fast query_type=labels length=48h0m0s duration=1.266878ms status=200 label= query= splits=3 throughput=0B total_bytes=0B total_entries=4
+level=info ts=2026-02-18T06:11:33.968944849Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:11:33.968971322Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:11:33.968976877Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:11:33.968981589Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:11:33.968987452Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:11:33.968990608Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:11:33.968993921Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:11:33.970071528Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:11:33.970109521Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:11:33.970113843Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:11:33.97013284Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:11:33.970138288Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:11:37.651493152Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:11:37.651534284Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:14.009463462Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:15.929362975Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:18.507309371Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:22.575810578Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:32.454001147Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:32.454041872Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:12:33.969625631Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:12:33.969657405Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:12:33.969662765Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:12:33.969668479Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+level=info ts=2026-02-18T06:12:33.969657428Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+level=info ts=2026-02-18T06:12:33.969674294Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:12:33.969685512Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:12:33.969689642Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:12:33.969696899Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:12:33.969702688Z caller=table.go:334 msg="finished handing over table index_20501"
+level=info ts=2026-02-18T06:12:33.969722681Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+level=info ts=2026-02-18T06:12:33.969728008Z caller=table.go:334 msg="finished handing over table index_20502"
+level=info ts=2026-02-18T06:13:03.98510014Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=/var/loki/wal/checkpoint.000240.tmp new=/var/loki/wal/checkpoint.000240
+level=info ts=2026-02-18T06:13:03.985402415Z caller=checkpoint.go:569 msg="checkpoint done" time=4m30.011399566s
+level=info ts=2026-02-18T06:13:14.00600544Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:13:15.051326065Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:13:17.124733358Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:13:23.707926621Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:13:26.306493202Z caller=flush.go:167 msg="flushing stream" user=fake fp=9a130b7866c026de immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"kafka\", kubernetes_namespace_name=\"cbops\", kubernetes_pod_name=\"kafka-0\"}"
+level=info ts=2026-02-18T06:13:33.968925043Z caller=table_manager.go:228 index-store=boltdb-shipper-2024-01-01 msg="syncing tables"
+level=info ts=2026-02-18T06:13:33.968946565Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=info ts=2026-02-18T06:13:33.968966877Z caller=index_set.go:86 msg="uploading table index_20501"
+level=info ts=2026-02-18T06:13:33.968973683Z caller=index_set.go:107 msg="finished uploading table index_20501"
+level=info ts=2026-02-18T06:13:33.968978466Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20501"
+level=info ts=2026-02-18T06:13:33.968984774Z caller=index_set.go:86 msg="uploading table index_20502"
+level=info ts=2026-02-18T06:13:33.968989094Z caller=index_set.go:107 msg="finished uploading table index_20502"
+level=info ts=2026-02-18T06:13:33.968992556Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20502"
+ts=2026-02-18T06:13:33.969002705Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:13:33.969071315Z caller=spanlogger.go:86 level=info msg="table cache built" duration=54.744µs
+level=info ts=2026-02-18T06:13:33.969087811Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
+ts=2026-02-18T06:13:33.969102916Z caller=spanlogger.go:86 level=info msg="building table names cache"
+level=info ts=2026-02-18T06:13:33.969142886Z caller=table.go:318 msg="handing over indexes to shipper index_20501"
+level=info ts=2026-02-18T06:13:33.969148879Z caller=table.go:334 msg="finished handing over table index_20501"
+ts=2026-02-18T06:13:33.969159915Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=52.794µs
+level=info ts=2026-02-18T06:13:33.96916681Z caller=table.go:318 msg="handing over indexes to shipper index_20502"
+ts=2026-02-18T06:13:33.969172461Z caller=spanlogger.go:86 level=info msg="building table names cache"
+level=info ts=2026-02-18T06:13:33.969172565Z caller=table.go:334 msg="finished handing over table index_20502"
+ts=2026-02-18T06:13:33.969208895Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=33.535µs
+ts=2026-02-18T06:13:33.96922649Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969264952Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=35.474µs
+ts=2026-02-18T06:13:33.969275088Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969312577Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=34.767µs
+ts=2026-02-18T06:13:33.969324596Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969359681Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.204µs
+ts=2026-02-18T06:13:33.969368481Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969403877Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.303µs
+ts=2026-02-18T06:13:33.96941487Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969448172Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.031µs
+ts=2026-02-18T06:13:33.969456533Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969490374Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=31.222µs
+ts=2026-02-18T06:13:33.969503267Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969536139Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=30.819µs
+ts=2026-02-18T06:13:33.969544798Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969577882Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=30.734µs
+ts=2026-02-18T06:13:33.969596734Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969633823Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=34.172µs
+ts=2026-02-18T06:13:33.969642718Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969675169Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=30.098µs
+ts=2026-02-18T06:13:33.969687237Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969722976Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.733µs
+ts=2026-02-18T06:13:33.969732547Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:33.969768435Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=32.842µs
+ts=2026-02-18T06:13:33.969785995Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:13:33.969799531Z caller=spanlogger.go:86 level=info msg="table cache built" duration=10.663µs
+level=info ts=2026-02-18T06:13:33.969815231Z caller=table_manager.go:271 index-store=boltdb-shipper-2024-01-01 msg="query readiness setup completed" duration=1.748µs distinct_users_len=0 distinct_users=
+level=info ts=2026-02-18T06:13:33.973727105Z caller=checkpoint.go:611 msg="starting checkpoint"
+level=info ts=2026-02-18T06:13:33.973820141Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=/var/loki/wal/checkpoint.000241
+level=info ts=2026-02-18T06:13:36.42754616Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:13:36.427590642Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+ts=2026-02-18T06:13:39.114076604Z caller=spanlogger.go:86 level=info msg="building table names cache"
+ts=2026-02-18T06:13:39.114237564Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=105.283µs
+level=info ts=2026-02-18T06:13:39.114262731Z caller=compactor.go:683 msg="compacting table" table-name=index_20502
+ts=2026-02-18T06:13:39.11434267Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:13:39.114359765Z caller=spanlogger.go:86 level=info msg="table cache built" duration=13.191µs
+level=info ts=2026-02-18T06:13:39.114365706Z caller=table.go:132 table-name=index_20502 msg="listed files" count=1
+level=info ts=2026-02-18T06:13:39.11440143Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20502
+level=info ts=2026-02-18T06:13:39.114410162Z caller=compactor.go:683 msg="compacting table" table-name=index_20501
+ts=2026-02-18T06:13:39.114429598Z caller=spanlogger.go:86 level=info msg="building table cache"
+ts=2026-02-18T06:13:39.114444309Z caller=spanlogger.go:86 level=info msg="table cache built" duration=11.633µs
+level=info ts=2026-02-18T06:13:39.114447864Z caller=table.go:132 table-name=index_20501 msg="listed files" count=1
+level=info ts=2026-02-18T06:13:39.1144627Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20501
+level=info ts=2026-02-18T06:14:13.986549937Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:14:15.636912Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
+level=info ts=2026-02-18T06:14:18.542896619Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
