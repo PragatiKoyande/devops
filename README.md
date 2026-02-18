@@ -1,6 +1,61 @@
-[root@fcsitgateway SIT-Grafana]# kubectl get daemonset fluent-bit -n logging --kubeconfig h06vkssitcbopscls.conf
-NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-fluent-bit   3         3         3       3            3           <none>          5d23h
-[root@fcsitgateway SIT-Grafana]# kubectl get pod notification-deployment-769bcd99cd-p9qmh -o wide -n cbops --kubeconfig h06vkssitcbopscls.conf
-NAME                                       READY   STATUS    RESTARTS   AGE   IP             NODE                                              NOMINATED NODE   READINESS GATES
-notification-deployment-769bcd99cd-p9qmh   1/1     Running   0          43d   192.168.1.72   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: loki-pv
+spec:
+  capacity:
+    storage: 200Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /mnt/loki-data
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-pvc
+  namespace: logging
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 200Gi
+_---_--------------------
+volumeMounts:
+  - name: storage
+    mountPath: /loki
+--------------------------
+volumes:
+  - name: storage
+    persistentVolumeClaim:
+      claimName: loki-pvc
+--------------------------
+limits_config:
+  retention_period: 720h   # 30 days
+
+compactor:
+  working_directory: /loki/compactor
+  shared_store: filesystem
+  retention_enabled: true
+
+schema_config:
+  configs:
+    - from: 2024-01-01
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/cache
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
