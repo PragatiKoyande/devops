@@ -1,137 +1,70 @@
-[root@fcsitgateway SIT-Microservice]# kubectl get nodes --kubeconfig h06vkssitcbopscls.conf
-NAME                                              STATUS   ROLES           AGE   VERSION
-h06vkssitcbopscls-bmjtp-2r5xw                     Ready    control-plane   77d   v1.32.0+vmware.6-fips
-h06vkssitcbopscls-bmjtp-5q29f                     Ready    control-plane   77d   v1.32.0+vmware.6-fips
-h06vkssitcbopscls-bmjtp-lqpqq                     Ready    control-plane   77d   v1.32.0+vmware.6-fips
-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   Ready    <none>          77d   v1.32.0+vmware.6-fips
-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   Ready    <none>          77d   v1.32.0+vmware.6-fips
-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   Ready    <none>          77d   v1.32.0+vmware.6-fips
-[root@fcsitgateway SIT-Microservice]# kubectl get pods -A -o --kubeconfig h06vkssitcbopscls.conf
-E0218 11:57:14.864888 1308018 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0218 11:57:14.865454 1308018 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0218 11:57:14.867456 1308018 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0218 11:57:14.868007 1308018 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0218 11:57:14.869414 1308018 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
-[root@fcsitgateway SIT-Microservice]# kubectl get pods -A -o wide --kubeconfig h06vkssitcbopscls.conf
-NAMESPACE                      NAME                                                              READY   STATUS      RESTARTS        AGE     IP              NODE                                              NOMINATED NODE   READINESS GATES
-avi-system                     ako-0                                                             1/1     Running     27 (12h ago)    55d     192.168.4.33    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          cbs-app-092d299be5dc2a60-driver                                   0/1     Completed   0               26d     192.168.2.100   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-0adc689be5aa0ff0-driver                                   0/1     Completed   0               26d     192.168.2.92    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-0d99699be5cb494d-driver                                   0/1     Completed   0               26d     192.168.2.97    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-203ff79bf3cf9590-driver                                   0/1     Completed   0               24d     192.168.4.182   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          cbs-app-71e5919bf3cc8c4d-driver                                   0/1     Error       0               24d     192.168.2.155   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-cbcb8f9be6396624-driver                                   0/1     Completed   0               26d     192.168.2.108   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-d667d59be60a14cc-driver                                   0/1     Completed   0               26d     192.168.2.105   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-f18f949be5a1cf90-driver                                   0/1     Error       0               26d     192.168.2.91    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          cbs-app-fc0a6b9be5c79988-driver                                   0/1     Completed   0               26d     192.168.4.113   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          cbs-app-fe14439be58d00e6-driver                                   0/1     Error       0               26d     192.168.2.90    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          common-master-deployment-7b7557cf4f-fgqv8                         1/1     Running     0               42d     192.168.2.75    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          common-request-deployment-6b95fbdb56-q8mb9                        1/1     Running     0               27d     192.168.2.84    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          connect-c87c7c494-wc2ml                                           1/1     Running     0               48d     192.168.4.57    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          dashboard-deployment-5469bc4df5-fnjbk                             1/1     Running     0               55d     192.168.4.28    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          delete-oracle-connector-cr5jb                                     0/1     Completed   0               48d     192.168.2.69    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          delta-table-register-zrkht                                        0/1     Completed   0               39d     192.168.4.91    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          difference-app-143b609bea47f8fd-driver                            0/1     Completed   0               25d     192.168.2.142   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          difference-app-f9d8ae9bea404bd7-driver                            0/1     Error       0               25d     192.168.4.151   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glcheck1-vtght                                                    0/1     Completed   0               24d     192.168.4.175   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-1aeb5e9be6438352-driver                                  0/1     Completed   0               26d     192.168.4.126   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-641a569be9bede3e-driver                                  0/1     Completed   0               25d     192.168.4.148   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-6658f39be9634fb3-driver                                  0/1     Completed   0               26d     192.168.4.145   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-7222479be64b238b-driver                                  0/1     Completed   0               26d     192.168.4.129   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-7dc20a9be91ad791-driver                                  0/1     Completed   0               26d     192.168.2.124   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          glif-app-8f386c9be6649f83-driver                                  0/1     Error       0               26d     192.168.4.138   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-93442c9be651089d-driver                                  0/1     Error       0               26d     192.168.2.111   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          glif-app-9a90a19bf033b1c2-driver                                  0/1     Completed   0               24d     192.168.4.177   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-bcf28c9be5ea845e-driver                                  0/1     Completed   0               26d     192.168.4.120   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-c950879be659f16d-driver                                  0/1     Error       0               26d     192.168.4.133   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          glif-app-cdb3fd9be65f17e9-driver                                  0/1     Error       0               26d     192.168.2.116   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          glif-app-de3d249be913fd4e-driver                                  0/1     Error       0               26d     192.168.2.121   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          grafana-864f87c5c4-xkswq                                          1/1     Running     0               46h     192.168.4.205   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          hdfs-st-app-dd3aca9b9c8b874b-driver                               0/1     Completed   0               40d     192.168.1.82    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-cbops                          hive-schematool-2mqb2                                             0/1     Completed   0               40d     192.168.1.84    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-cbops                          hive-schematool-init-nnd98                                        0/1     Error       0               40d     192.168.4.75    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          hive-schematool-init-rb6wv                                        0/1     Error       0               40d     192.168.4.73    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          hive-schematool-init-vs2wb                                        0/1     Error       0               40d     192.168.4.74    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          hive-schematool-init-wwvmh                                        0/1     Error       0               40d     192.168.4.72    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          journal-deployment-7fc4c9cf87-d9m7q                               1/1     Running     0               55d     192.168.1.21    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-cbops                          kafka-0                                                           1/1     Running     0               25d     192.168.2.150   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          kafkahit-lg5vf                                                    0/1     Completed   0               25d     192.168.2.147   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          login-deployment-59cb59df5c-mnz77                                 1/1     Running     0               42d     192.168.4.63    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          notification-deployment-769bcd99cd-p9qmh                          1/1     Running     0               42d     192.168.1.72    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-cbops                          postgres-db-7b865dd6fc-gcnv9                                      1/1     Running     0               50d     192.168.2.55    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          process-status-deployment-7dddfbcddd-sldjx                        1/1     Running     0               55d     192.168.2.29    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          react-app-deployment-65b658dd59-fhjtz                             1/1     Running     0               19h     192.168.2.197   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          redis-deployment-59ddbb9b85-7bzwg                                 1/1     Running     0               34d     192.168.2.81    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          register-oracle-connector-b2qps                                   0/1     Completed   0               48d     192.168.2.70    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          report-builder-deployment-6b6f59fb57-ntxtl                        1/1     Running     0               17h     192.168.4.229   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          report-deployment-6846f77ff6-4l7fc                                1/1     Running     3 (25d ago)     25d     192.168.2.149   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          spark-thrift-7f856c7c74-4f7xj                                     1/1     Running     0               39d     192.168.1.95    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-cbops                          template-config-deployment-77545dd89d-5khgd                       1/1     Running     0               55d     192.168.2.31    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cbops                          transactions-deployment-b658c746b-qtv29                           1/1     Running     0               55d     192.168.4.31    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cbops                          user-deployment-5675849454-wbrw6                                  1/1     Running     0               34d     192.168.4.98    h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cert-manager                   cert-manager-74f66c9bf8-84786                                     1/1     Running     0               77d     192.168.4.2     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-cert-manager                   cert-manager-cainjector-69896f7559-2r5rt                          1/1     Running     0               77d     192.168.2.2     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-cert-manager                   cert-manager-webhook-6d9c4fd5b8-stbsf                             1/1     Running     0               77d     192.168.1.2     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-kong-system                    kong-6dd5746646-rfb6v                                             1/1     Running     0               4d20h   192.168.4.200   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-kong-system                    kong-6dd5746646-wttch                                             1/1     Running     0               4d20h   192.168.2.170   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-kong-system                    kong-ingress-controller-7659c56b89-j47l5                          1/1     Running     0               4d20h   192.168.4.199   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-kube-system                    antrea-agent-2x8gc                                                2/2     Running     0               77d     10.244.7.83     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-kube-system                    antrea-agent-b4mfs                                                2/2     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    antrea-agent-fszn9                                                2/2     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    antrea-agent-jtf58                                                2/2     Running     0               77d     10.244.7.85     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-kube-system                    antrea-agent-k7dm2                                                2/2     Running     0               77d     10.244.7.84     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-kube-system                    antrea-agent-wmhm8                                                2/2     Running     2 (77d ago)     77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    antrea-controller-6b7485899d-ss6wh                                1/1     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    coredns-57db7b44f5-6mh94                                          1/1     Running     0               77d     192.168.0.9     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    coredns-57db7b44f5-xrnrn                                          1/1     Running     0               77d     192.168.0.2     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    docker-registry-h06vkssitcbopscls-bmjtp-2r5xw                     1/1     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    docker-registry-h06vkssitcbopscls-bmjtp-5q29f                     1/1     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    docker-registry-h06vkssitcbopscls-bmjtp-lqpqq                     1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   1/1     Running     0               77d     10.244.7.84     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-kube-system                    docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   1/1     Running     0               77d     10.244.7.83     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-kube-system                    docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   1/1     Running     0               77d     10.244.7.85     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-kube-system                    etcd-h06vkssitcbopscls-bmjtp-2r5xw                                1/1     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    etcd-h06vkssitcbopscls-bmjtp-5q29f                                1/1     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    etcd-h06vkssitcbopscls-bmjtp-lqpqq                                1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    kube-apiserver-h06vkssitcbopscls-bmjtp-2r5xw                      1/1     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    kube-apiserver-h06vkssitcbopscls-bmjtp-5q29f                      1/1     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    kube-apiserver-h06vkssitcbopscls-bmjtp-lqpqq                      1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    kube-controller-manager-h06vkssitcbopscls-bmjtp-2r5xw             1/1     Running     2 (42d ago)     77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    kube-controller-manager-h06vkssitcbopscls-bmjtp-5q29f             1/1     Running     1 (4d23h ago)   77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    kube-controller-manager-h06vkssitcbopscls-bmjtp-lqpqq             1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    kube-proxy-22gdj                                                  1/1     Running     0               77d     10.244.7.83     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-kube-system                    kube-proxy-bxpvq                                                  1/1     Running     0               77d     10.244.7.85     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-kube-system                    kube-proxy-fstg9                                                  1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    kube-proxy-n9gkd                                                  1/1     Running     0               77d     10.244.7.84     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-kube-system                    kube-proxy-pd926                                                  1/1     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    kube-proxy-wrmnm                                                  1/1     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    kube-scheduler-h06vkssitcbopscls-bmjtp-2r5xw                      1/1     Running     2 (42d ago)     77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    kube-scheduler-h06vkssitcbopscls-bmjtp-5q29f                      1/1     Running     1 (4d23h ago)   77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-kube-system                    kube-scheduler-h06vkssitcbopscls-bmjtp-lqpqq                      1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-kube-system                    metrics-server-8494fddddc-mz86x                                   1/1     Running     0               77d     192.168.0.8     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-kube-system                    snapshot-controller-75bb7555d-fj5db                               1/1     Running     0               77d     192.168.0.5     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-logging                        fluent-bit-4xz9z                                                  1/1     Running     0               20h     192.168.2.195   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-logging                        fluent-bit-fxvvw                                                  1/1     Running     0               20h     192.168.4.227   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-logging                        fluent-bit-nnl6z                                                  1/1     Running     0               20h     192.168.1.166   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-logging                        loki-6f676bfbc7-986kw                                             1/1     Running     0               20h     192.168.2.196   h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-pinniped-concierge             pinniped-concierge-6c86654f64-crkwm                               1/1     Running     0               77d     192.168.0.11    h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-pinniped-concierge             pinniped-concierge-6c86654f64-gcnd8                               1/1     Running     0               77d     192.168.0.10    h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-pinniped-concierge             pinniped-concierge-kube-cert-agent-5b78fbff6c-r5zfc               1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-secretgen-controller           secretgen-controller-66d859945f-fkjsm                             1/1     Running     0               77d     192.168.0.4     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-tkg-system                     kapp-controller-67f4d89bcb-js928                                  2/2     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-vmware-system-antrea           antrea-pre-upgrade-job-4rx49                                      0/1     Completed   0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-vmware-system-auth             guest-cluster-auth-svc-4xx9m                                      1/1     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-vmware-system-auth             guest-cluster-auth-svc-jbtzp                                      1/1     Running     0               77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-vmware-system-auth             guest-cluster-auth-svc-nfkzj                                      1/1     Running     0               77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-vmware-system-cloud-provider   guest-cluster-cloud-provider-5d6ccb578-4ldgh                      1/1     Running     13 (15d ago)    77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-vmware-system-csi              vsphere-csi-controller-7677597f57-jsqbn                           7/7     Running     1 (33d ago)     77d     192.168.0.6     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-vmware-system-csi              vsphere-csi-node-58sg2                                            3/3     Running     2 (77d ago)     77d     10.244.7.87     h06vkssitcbopscls-bmjtp-lqpqq                     <none>           <none>
-vmware-system-csi              vsphere-csi-node-6p769                                            3/3     Running     0               77d     10.244.7.83     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-sb28w   <none>           <none>
-vmware-system-csi              vsphere-csi-node-9rhmk                                            3/3     Running     0               77d     10.244.7.85     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   <none>           <none>
-vmware-system-csi              vsphere-csi-node-hj8mf                                            3/3     Running     0               77d     10.244.7.86     h06vkssitcbopscls-bmjtp-5q29f                     <none>           <none>
-vmware-system-csi              vsphere-csi-node-jss4t                                            3/3     Running     0               77d     10.244.7.84     h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   <none>           <none>
-vmware-system-csi              vsphere-csi-node-xrt7g                                            3/3     Running     2 (77d ago)     77d     10.244.7.82     h06vkssitcbopscls-bmjtp-2r5xw                     <none>           <none>
-[root@fcsitgateway SIT-Microservice]# kubectl get daemonset -n logging --kubeconfig h06vkssitcbopscls.conf
-NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-fluent-bit   3         3         3       3            3           <none>          5d19h
+[root@fcsitgateway SIT-Microservice]# kubectl describe daemonset fluent-bit -n logging --kubeconfig h06vkssitcbopscls.conf
+Name:           fluent-bit
+Selector:       app=fluent-bit
+Node-Selector:  <none>
+Labels:         <none>
+Annotations:    deprecated.daemonset.template.generation: 32
+Desired Number of Nodes Scheduled: 3
+Current Number of Nodes Scheduled: 3
+Number of Nodes Scheduled with Up-to-date Pods: 3
+Number of Nodes Scheduled with Available Pods: 3
+Number of Nodes Misscheduled: 0
+Pods Status:  3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:           app=fluent-bit
+  Annotations:      kubectl.kubernetes.io/restartedAt: 2026-02-17T15:30:46+05:30
+  Service Account:  fluent-bit
+  Containers:
+   fluent-bit:
+    Image:        h06vksharbor.corp.ad.sbi/cbops/fluent-bit-2.2.2
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:
+      /fluent-bit/etc from config (rw)
+      /var/log from varlog (rw)
+  Volumes:
+   varlog:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/log
+    HostPathType:
+   config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      fluent-bit-config
+    Optional:  false
+Events:        <none>
+[root@fcsitgateway SIT-Microservice]# kubectl describe daemonset fluent-bit -n logging --kubeconfig h06vkssitcbopscls.conf
+Name:           fluent-bit
+Selector:       app=fluent-bit
+Node-Selector:  <none>
+Labels:         <none>
+Annotations:    deprecated.daemonset.template.generation: 32
+Desired Number of Nodes Scheduled: 3
+Current Number of Nodes Scheduled: 3
+Number of Nodes Scheduled with Up-to-date Pods: 3
+Number of Nodes Scheduled with Available Pods: 3
+Number of Nodes Misscheduled: 0
+Pods Status:  3 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:           app=fluent-bit
+  Annotations:      kubectl.kubernetes.io/restartedAt: 2026-02-17T15:30:46+05:30
+  Service Account:  fluent-bit
+  Containers:
+   fluent-bit:
+    Image:        h06vksharbor.corp.ad.sbi/cbops/fluent-bit-2.2.2
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:
+      /fluent-bit/etc from config (rw)
+      /var/log from varlog (rw)
+  Volumes:
+   varlog:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/log
+    HostPathType:
+   config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      fluent-bit-config
+    Optional:  false
+Events:        <none>
