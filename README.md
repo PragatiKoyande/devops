@@ -50,4 +50,47 @@ STRICT RULES:
    - exact helm upgrade command
 
 Here is the YAML:
-<PASTE YAML HERE>
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-master-deployment
+  namespace: be-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: common-master-backend
+  template:
+    metadata:
+      labels:
+        app: common-master-backend
+    spec:
+      containers:
+      - name: common-master-container
+        image: h06vksharbor.corp.ad.sbi/cbops/common-master-service:DEV01
+        env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"        
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"       
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce"                   
+        ports:
+        - containerPort: 2000
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-master-service
+  namespace: be-test
+spec:
+  selector:
+    app: common-master-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 2000
+  type: ClusterIP
