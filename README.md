@@ -1,61 +1,53 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: loki-pv
-spec:
-  capacity:
-    storage: 200Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
-  hostPath:
-    path: /mnt/loki-data
+I am providing a Kubernetes YAML file for one microservice.
 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: loki-pvc
-  namespace: logging
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: manual
-  resources:
-    requests:
-      storage: 200Gi
-_---_--------------------
-volumeMounts:
-  - name: storage
-    mountPath: /loki
---------------------------
-volumes:
-  - name: storage
-    persistentVolumeClaim:
-      claimName: loki-pvc
---------------------------
-limits_config:
-  retention_period: 720h   # 30 days
+STRICT RULES:
 
-compactor:
-  working_directory: /loki/compactor
-  shared_store: filesystem
-  retention_enabled: true
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
 
-schema_config:
-  configs:
-    - from: 2024-01-01
-      store: boltdb-shipper
-      object_store: filesystem
-      schema: v11
-      index:
-        prefix: index_
-        period: 24h
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
 
-storage_config:
-  boltdb_shipper:
-    active_index_directory: /loki/index
-    cache_location: /loki/cache
-    shared_store: filesystem
-  filesystem:
-    directory: /loki/chunks
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       networkPolicy.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+4. If YAML contains:
+   - Secrets → map to secret.enabled block
+   - ConfigMaps → map to configMap.enabled block
+   - DB credentials → map to database.enabled block
+   - Enterprise features → preserve them exactly
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+Here is the YAML:
+<PASTE YAML HERE>
