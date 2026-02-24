@@ -1,36 +1,26 @@
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "BACKEND-SERVICES",
+  "uid": "aa93f363-13da-48e4-8ade-a3f2f89468f5",
+  "version": 40,
+  "weekStart": ""
+}{
+  "annotations": {
+    "list": [
       {
-         "datasource":{
-            "type":"loki",
-            "uid":"c4b0305c-d8d5-44c9-98ae-cca6f7b7f6d4"
-         },
-         "description":"Deployment Name = common-request-deployment\nContainer Name = common-request-container",
-         "gridPos":{
-            "h":14,
-            "w":8,
-            "x":16,
-            "y":0
-         },
-         "id":3,
-         "options":{
-            "dedupStrategy":"exact",
-            "enableLogDetails":true,
-            "prettifyLogMessage":false,
-            "showCommonLabels":false,
-            "showLabels":false,
-            "showTime":true,
-            "sortOrder":"Ascending",
-            "wrapLogMessage":true
-         },
-         "targets":[
-            {
-               "datasource":{
-                  "type":"loki",
-                  "uid":"c334504e-7a20-499f-9eab-fe02b6fb7026"
-               },
-               "editorMode":"builder",
-               "expr":"{namespace=\"be-test\", container=\"common-request-container\"} | json | line_format \"{{.level}} {{.log}}\"",
-               "queryType":"range",
-               "refId":"A"
-            }
-         ],
-         "title":"common-request-service",
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  }
+
+  what is the error plese forward me a proper file whithout errors
