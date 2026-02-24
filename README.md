@@ -2139,6 +2139,3 @@
   "version": 40,
   "weekStart": ""
 }
-
-please correct this file I m getting this issue: Import failed
-JSON -> JS Serialization failed: Unexpected non-whitespace character after JSON at position 15247 (line 536 column 2)
