@@ -49,48 +49,51 @@ STRICT RULES:
    - dev override file if needed
    - exact helm upgrade command
 
+10: use name space : cbops-test
+
 Here is the YAML:
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: common-master-deployment
+  name: journal-deployment
   namespace: be-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: common-master-backend
+      app: journal-app
   template:
     metadata:
       labels:
-        app: common-master-backend
+        app: journal-app
     spec:
       containers:
-      - name: common-master-container
-        image: h06vksharbor.corp.ad.sbi/cbops/common-master-service:DEV01
+      - name: journal-app-container
+        image: h06vksharbor.corp.ad.sbi/cbops/journal-service:DEV01
         env:
-          - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"        
-          - name: SPRING_DATA_REDIS_PORT
-            value: "6379"       
-          - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"                   
+        - name: SPRING_DATA_REDIS_HOST
+          value: "redis-service"
+        - name: SPRING_DATA_REDIS_PORT
+          value: "6379"
+        - name: SPRING_DATA_REDIS_CLIENT_TYPE
+          value: "lettuce"
         ports:
-        - containerPort: 2000
+        - containerPort: 9999
         imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: common-master-service
+  name: journal-service
   namespace: be-test
 spec:
   selector:
-    app: common-master-backend
+    app: journal-app
   ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 2000
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 9999
   type: ClusterIP
+
