@@ -148,8 +148,10 @@ SECTION 4 — OUTPUT FORMAT REQUIREMENTS
 5. Keep the output clean, ordered top-to-bottom per the schema in Section 1.
 
 6. Mark any fixes with a comment:  # FIXED: <explanation>
+-----------------------------------------------------------------------------------------------------------
 
-I am pasting my manifest file here:
+I am pasting my manifest file here please convert them into a single values.yaml file compatible with my reusable
+Helm chart
 
 # =====================================================
 # Service Account (Dedicated identity for security)
