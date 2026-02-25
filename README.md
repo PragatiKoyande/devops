@@ -1,19 +1,3 @@
-# ==============================================================
-# MASTER PROMPT — Convert Plain Kubernetes YAML → Helm values.yaml
-# Compatible with: charts/backend-service/
-# Version: 2.0 (enterprise-grade, multi-DB aware)
-# ==============================================================
-# HOW TO USE THIS PROMPT:
-#   1. Copy the entire prompt below
-#   2. Paste the plain Kubernetes YAML manifests at the bottom
-#      where it says [PASTE YOUR PLAIN YAML FILES HERE]
-#   3. Submit to Claude (or any LLM)
-#   4. The output will be a complete, ready-to-use values.yaml
-# ==============================================================
-
-You are a senior Kubernetes and Helm engineer specializing in
-enterprise Spring Boot microservice deployments.
-
 I will give you plain Kubernetes YAML manifests for one backend microservice.
 Convert them into a single values.yaml file compatible with my reusable
 Helm chart at: charts/backend-service/
@@ -165,25 +149,9 @@ SECTION 4 — OUTPUT FORMAT REQUIREMENTS
 
 6. Mark any fixes with a comment:  # FIXED: <explanation>
 
-═══════════════════════════════════════════════════════════════
-SECTION 5 — INPUT
-═══════════════════════════════════════════════════════════════
+I am pasting my manifest file here:
 
-[PASTE YOUR PLAIN YAML FILES HERE]
-
-Provide all relevant Kubernetes manifest files for the service:
-- Deployment
-- Service
-- HPA (if exists)
-- PDB (if exists)
-- ConfigMap (if exists)
-- Secret (if exists)
-- ServiceAccount (if exists)
-- NetworkPolicy (if exists)
-
-  Following are my file details:
-
-  # =====================================================
+# =====================================================
 # Service Account (Dedicated identity for security)
 # =====================================================
 apiVersion: v1
@@ -392,3 +360,5 @@ spec:
       port: 80
       targetPort: 9015
   type: ClusterIP
+
+  
