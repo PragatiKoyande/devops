@@ -1,6 +1,3 @@
-Error: failed to parse environments/dev/journal-service-deployment-dev.yaml: cannot unmarshal yaml document: error converting YAML to JSON: yaml: invalid leading UTF-8 octet
-
-
 # ==============================================================
 # SERVICE:     journal-service
 # ENVIRONMENT: dev
@@ -19,9 +16,9 @@ Error: failed to parse environments/dev/journal-service-deployment-dev.yaml: can
 # VERIFY:      kubectl get all -n cbops-test --kubeconfig hpaa.conf
 # ==============================================================
 #
-# ⚠️  OBSERVATIONS & GAPS FROM SOURCE YAML (read before deploying):
+# WARNING:  OBSERVATIONS & GAPS FROM SOURCE YAML (read before deploying):
 #
-# [GAP 1] — PROBE TYPE MISMATCH
+# [GAP 1] -- PROBE TYPE MISMATCH
 #   Source uses: httpGet /actuator/health on port 9999
 #   Chart uses:  tcpSocket on probes.port (hardcoded in deployment.yaml)
 #   Impact:      Port 9999 connectivity is checked correctly.
@@ -29,7 +26,7 @@ Error: failed to parse environments/dev/journal-service-deployment-dev.yaml: can
 #   Action:      Upgrade chart deployment.yaml to support httpGet probes
 #                if Spring Boot actuator health endpoint check is required.
 #
-# [GAP 2] — securityContext NOT IN CHART SCHEMA — DROPPED
+# [GAP 2] -- securityContext NOT IN CHART SCHEMA -- DROPPED
 #   Pod-level (dropped):
 #     runAsNonRoot: true
 #     runAsUser: 10001
@@ -41,7 +38,7 @@ Error: failed to parse environments/dev/journal-service-deployment-dev.yaml: can
 #   Action:      Add securityContext block to chart deployment.yaml
 #                and values schema. One fix covers all services.
 #
-# [GAP 3] — NETWORK POLICY RULES NOT TEMPLATED
+# [GAP 3] -- NETWORK POLICY RULES NOT TEMPLATED
 #   Source ingress: allow TCP:9999 from namespace cbops-test only
 #   Source egress:  allow all namespaces
 #   Impact:      networkPolicy.enabled: true creates the resource
@@ -50,16 +47,16 @@ Error: failed to parse environments/dev/journal-service-deployment-dev.yaml: can
 #   Action:      Extend templates/networkpolicy.yaml to support
 #                ingress/egress rule injection via values.
 #
-# [GAP 4] — automountServiceAccountToken: false NOT IN SCHEMA
+# [GAP 4] -- automountServiceAccountToken: false NOT IN SCHEMA
 #   Source sets this on ServiceAccount for security hardening.
 #   Chart's serviceaccount.yaml does not template this field.
 #   Impact:      Token is auto-mounted by default (minor security gap).
 #   Action:      Add automountServiceAccountToken: false to
 #                templates/serviceaccount.yaml.
 #
-# NO DATABASE — No DB credentials found in source YAML.
-# NO CONFIGMAP — No ConfigMap found in source YAML.
-# NO SECRET    — No generic Secret found in source YAML.
+# NO DATABASE -- No DB credentials found in source YAML.
+# NO CONFIGMAP -- No ConfigMap found in source YAML.
+# NO SECRET    -- No generic Secret found in source YAML.
 # ==============================================================
 
 
@@ -78,7 +75,7 @@ replicaCount: 1
 
 # ==============================================================
 # === Image ===
-# Private Harbor registry — imagePullSecrets required (see below).
+# Private Harbor registry -- imagePullSecrets required (see below).
 # ==============================================================
 image:
   repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
@@ -106,7 +103,7 @@ imagePullSecrets:
 
 # ==============================================================
 # === Deployment ===
-# revisionHistoryLimit: not in source — chart default (5) applied.
+# revisionHistoryLimit: not in source -- chart default (5) applied.
 # terminationGracePeriodSeconds: 30 matches source exactly.
 # ==============================================================
 deployment:
@@ -118,7 +115,7 @@ deployment:
 # ==============================================================
 # === Container Name ===
 # Explicitly defined in source as "journal-app-container".
-# Preserved exactly — overrides default fallback to deployment.name.
+# Preserved exactly -- overrides default fallback to deployment.name.
 # ==============================================================
 container:
   name: journal-app-container
@@ -133,7 +130,7 @@ serviceAccount:
 
 # ==============================================================
 # === Service ===
-# port 80 → targetPort 9999 — preserved exactly from source.
+# port 80 ? targetPort 9999 -- preserved exactly from source.
 # Other services in cluster call: http://journal-service/...
 # ==============================================================
 service:
@@ -154,11 +151,11 @@ labels:
 
 # ==============================================================
 # === Autoscaling (HPA) ===
-# HPA found in source → autoscaling.enabled: true
-# CPU target: 70% — preserved exactly from source.
-# Memory scaling not in source → null (disabled).
+# HPA found in source ? autoscaling.enabled: true
+# CPU target: 70% -- preserved exactly from source.
+# Memory scaling not in source ? null (disabled).
 #
-# ⚠️  KEY NAME MUST BE: targetCPUUtilizationPercentage (EXACT)
+# WARNING:  KEY NAME MUST BE: targetCPUUtilizationPercentage (EXACT)
 #     Any other key name is silently ignored by the chart template.
 # ==============================================================
 autoscaling:
@@ -172,7 +169,7 @@ autoscaling:
 
 # ==============================================================
 # === Pod Disruption Budget ===
-# PDB found in source → pdb.enabled: true
+# PDB found in source ? pdb.enabled: true
 # Ensures 1 pod stays running during node drains and upgrades.
 # ==============================================================
 pdb:
@@ -183,9 +180,9 @@ pdb:
 
 # ==============================================================
 # === Network Policy ===
-# NetworkPolicy found in source → networkPolicy.enabled: true
+# NetworkPolicy found in source ? networkPolicy.enabled: true
 #
-# ⚠️  See GAP 3 above — ingress/egress rules from source are not
+# WARNING:  See GAP 3 above -- ingress/egress rules from source are not
 #     applied by the current chart template. Extend
 #     templates/networkpolicy.yaml for full zero-trust enforcement.
 # ==============================================================
@@ -196,7 +193,7 @@ networkPolicy:
 
 # ==============================================================
 # === Environment Variables ===
-# Redis connection config — non-sensitive, plain key/value.
+# Redis connection config -- non-sensitive, plain key/value.
 # Injected directly into the container as env vars.
 # ==============================================================
 env:
@@ -238,7 +235,7 @@ secret:
 #     existingSecret: ""
 #     url: jdbc:oracle:thin:@<host>:<port>/<service>
 #     username: <username>
-#     password: <password>   # ⚠️ Move to Vault/ESO before production
+#     password: <password>   # WARNING: Move to Vault/ESO before production
 #     driverClassName: oracle.jdbc.OracleDriver
 #
 # PostgreSQL example:
@@ -247,7 +244,7 @@ secret:
 #     existingSecret: ""
 #     url: jdbc:postgresql://<host>:<port>/<database>
 #     username: <username>
-#     password: <password>   # ⚠️ Move to Vault/ESO before production
+#     password: <password>   # WARNING: Move to Vault/ESO before production
 #     driverClassName: org.postgresql.Driver
 # ==============================================================
 database:
@@ -279,8 +276,7 @@ resources:
 # Spring Boot app listens on port 9999 (server.port=9999).
 # Named port "http" in deployment.yaml maps to this value.
 # Service targetPort "http" resolves to this port.
-# See GAP 1 above — source uses httpGet, chart uses tcpSocket.
+# See GAP 1 above -- source uses httpGet, chart uses tcpSocket.
 # ==============================================================
 probes:
   port: 9999
- 
