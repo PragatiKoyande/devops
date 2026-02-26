@@ -1,461 +1,525 @@
-# ==============================================================
-# MASTER PROMPT - Convert Kubernetes YAML to Helm values.yaml
-# Chart: charts/backend-service/
-# Version: 3.0 - Global Use Edition
-# Compatible with: Claude, ChatGPT, Gemini, any LLM
-# ==============================================================
-#
-# HOW TO USE:
-#   1. Copy this entire prompt (from top to bottom)
-#   2. Replace [PASTE YOUR KUBERNETES YAML HERE] at the bottom
-#      with your actual Kubernetes manifest files
-#   3. Send to any AI assistant
-#
-# ==============================================================
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.544243172Z stdout F   .   ____          _            __ _ _
 
-You are a senior Kubernetes and Helm engineer.
 
-OUTPUT INSTRUCTION (READ THIS FIRST):
-- Output ONLY a single values.yaml file
-- Do NOT write any explanation before or after the file
-- Do NOT wrap output in markdown code fences
-- Do NOT add any keys not listed in the SCHEMA section below
-- Every comment in the output must use plain ASCII only
-  No emoji, no unicode arrows, no special symbols of any kind
-  Use plain text like WARNING: instead of warning emoji
-  Use -- instead of em dash
-  Use -> instead of arrow symbols
 
-I will give you plain Kubernetes YAML manifests for one Spring Boot microservice.
-Convert them into a single values.yaml compatible with charts/backend-service/
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.54427811Z stdout F  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.54427993Z stdout F ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.544281255Z stdout F  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.544282499Z stdout F   '  |____| .__|_| |_|_| |_\__, | / / / /
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.544284595Z stdout F  =========|_|==============|___/=/_/_/_/
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.544286286Z stdout F 
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.585729146Z stdout F  :: Spring Boot ::                (v3.3.0)
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.585748866Z stdout F 
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.704963715Z stdout F 2026-02-26T06:44:52.702Z  INFO 1 --- [ReportService] [           main] c.f.R.ReportServiceApplication           : Starting ReportServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by root in /)
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:52.705908366Z stdout F 2026-02-26T06:44:52.705Z  INFO 1 --- [ReportService] [           main] c.f.R.ReportServiceApplication           : The following 1 profile is active: "dev"
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.475735633Z stdout F 2026-02-26T06:44:53.475Z  INFO 1 --- [ReportService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.477675085Z stdout F 2026-02-26T06:44:53.477Z  INFO 1 --- [ReportService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.603228664Z stdout F 2026-02-26T06:44:53.602Z  INFO 1 --- [ReportService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 119 ms. Found 4 JPA repository interfaces.
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.621941748Z stdout F 2026-02-26T06:44:53.621Z  INFO 1 --- [ReportService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.622965036Z stdout F 2026-02-26T06:44:53.622Z  INFO 1 --- [ReportService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.63394833Z stdout F 2026-02-26T06:44:53.633Z  INFO 1 --- [ReportService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.AppConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.634054418Z stdout F 2026-02-26T06:44:53.633Z  INFO 1 --- [ReportService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.JasperReportTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.635354198Z stdout F 2026-02-26T06:44:53.635Z  INFO 1 --- [ReportService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.635499229Z stdout F 2026-02-26T06:44:53.635Z  INFO 1 --- [ReportService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.ReportTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:53.635544515Z stdout F 2026-02-26T06:44:53.635Z  INFO 1 --- [ReportService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.166786904Z stdout F 2026-02-26T06:44:54.166Z  INFO 1 --- [ReportService] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 9005 (http)
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.176759219Z stdout F 2026-02-26T06:44:54.176Z  INFO 1 --- [ReportService] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.17678462Z stdout F 2026-02-26T06:44:54.176Z  INFO 1 --- [ReportService] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.201880321Z stdout F 2026-02-26T06:44:54.201Z  INFO 1 --- [ReportService] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.20253225Z stdout F 2026-02-26T06:44:54.202Z  INFO 1 --- [ReportService] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1426 ms
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.453875781Z stdout F 2026-02-26T06:44:54.452Z  INFO 1 --- [ReportService] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.496927573Z stdout F 2026-02-26T06:44:54.496Z  INFO 1 --- [ReportService] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.528320432Z stdout F 2026-02-26T06:44:54.527Z  INFO 1 --- [ReportService] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.768920739Z stdout F 2026-02-26T06:44:54.768Z  INFO 1 --- [ReportService] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:54.790818744Z stdout F 2026-02-26T06:44:54.790Z  INFO 1 --- [ReportService] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:55.260531775Z stdout F 2026-02-26T06:44:55.260Z  INFO 1 --- [ReportService] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@11cc9e1e
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:55.261873347Z stdout F 2026-02-26T06:44:55.261Z  INFO 1 --- [ReportService] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:55.382127893Z stdout F 2026-02-26T06:44:55.381Z  WARN 1 --- [ReportService] [           main] org.hibernate.orm.deprecation            : HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-26 12:14:56.190	
+ 2026-02-26T06:44:56.158755783Z stdout F 2026-02-26T06:44:56.158Z  INFO 1 --- [ReportService] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-26 12:14:56.606	
+ 2026-02-26T06:44:56.606439118Z stdout F 2026-02-26T06:44:56.606Z  INFO 1 --- [ReportService] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26 12:14:57.093	
+ 2026-02-26T06:44:57.093352053Z stdout F 2026-02-26T06:44:57.093Z  INFO 1 --- [ReportService] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-26 12:14:57.436	
+ 2026-02-26T06:44:57.436447374Z stdout F 2026-02-26T06:44:57.436Z  INFO 1 --- [ReportService] [           main] c.f.ReportService.config.HadoopConfig    : Initializing HDFS connection to: hdfs://10.177.103.199:8022 as user: root
+2026-02-26 12:14:57.601	
+ 2026-02-26T06:44:57.601266365Z stdout F 2026-02-26T06:44:57.600Z  WARN 1 --- [ReportService] [           main] o.apache.hadoop.util.NativeCodeLoader    : Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2026-02-26 12:14:57.978	
+ 2026-02-26T06:44:57.978152463Z stdout F 2026-02-26T06:44:57.977Z  INFO 1 --- [ReportService] [           main] c.f.R.util.HadoopConnectivityTester      : Attempting to connect to HDFS at: hdfs://10.177.103.199:8022 as user: root
+Fields
 
-===============================================================
-SCHEMA - ONLY THESE KEYS ARE VALID - NO OTHERS ALLOWED
-===============================================================
 
-namespace
-replicaCount
-image.repository
-image.tag
-image.pullPolicy
-imagePullSecrets
-deployment.name
-deployment.revisionHistoryLimit
-deployment.terminationGracePeriodSeconds
-container.name
-serviceAccount.name
-service.name
-service.type
-service.port
-service.targetPort
-labels.app
-autoscaling.enabled
-autoscaling.name
-autoscaling.minReplicas
-autoscaling.maxReplicas
-autoscaling.targetCPUUtilizationPercentage
-autoscaling.targetMemoryUtilizationPercentage
-pdb.enabled
-pdb.name
-pdb.minAvailable
-networkPolicy.enabled
-networkPolicy.name
-env
-configMap.enabled
-configMap.data
-secret.enabled
-secret.data
-database.enabled
-database.existingSecret
-database.url
-database.username
-database.password
-database.driverClassName
-resources.requests.cpu
-resources.requests.memory
-resources.limits.cpu
-resources.limits.memory
-probes.port
 
-FORBIDDEN - NEVER ADD THESE (common LLM mistakes):
-- containerPort (not in schema)
-- strategy (not in schema)
-- probeType (not in schema)
-- securityContext (not in schema)
-- topologySpreadConstraints (not in schema)
-- lifecycle (not in schema)
-- annotations (not in schema)
-- Any key not in the SCHEMA list above
 
-===============================================================
-RULES - NEVER VIOLATE THESE
-===============================================================
+container	
+report-container
 
-RULE 1 - PRESERVE VALUES EXACTLY:
-  Do not change any name, image, tag, port, replica count,
-  resource value, or env var value from the source YAML.
 
-RULE 2 - NAMESPACE IS ALWAYS:
-  namespace: cbops-test
-  Override whatever namespace is in the source.
 
-RULE 3 - ENABLED FLAGS:
-  Source has HPA         -> autoscaling.enabled: true
-  Source has PDB         -> pdb.enabled: true
-  Source has NetworkPolicy -> networkPolicy.enabled: false  (see Rule 11)
-  Source has ConfigMap   -> configMap.enabled: true
-  Source has Secret      -> secret.enabled: true
-  Source has DB creds    -> database.enabled: true
-  Not found              -> set enabled: false (never omit the key)
 
-RULE 4 - HPA CPU KEY IS EXACT:
-  Always use: autoscaling.targetCPUUtilizationPercentage
-  Never use:  cpuUtilization, cpu, targetCPU, or any variant.
-  Wrong key = HPA deploys but CPU autoscaling never triggers.
-  Set to null if memory scaling is not in source.
+job	
+fluentbit
 
-RULE 5 - PRIVATE REGISTRY REQUIRES imagePullSecrets:
-  If image.repository is NOT one of these public registries:
-    docker.io, gcr.io, quay.io, ghcr.io, k8s.gcr.io
-  Then ALWAYS add:
-    imagePullSecrets:
-      - name: harbor-secret
-  And add this comment above it:
-    # Create once: kubectl create secret docker-registry harbor-secret
-    #   --docker-server=<registry> --docker-username=<user>
-    #   --docker-password=<pass> -n cbops-test --kubeconfig hpaa.conf
 
-RULE 6 - OUTPUT FORMAT:
-  Output ONLY the values.yaml file.
-  No explanation. No markdown fences. No preamble.
 
-RULE 7 - ALL ENABLED FLAGS PRESENT:
-  Every enabled flag (autoscaling, pdb, networkPolicy, configMap,
-  secret, database) must appear in the output even if false.
-  Never omit any of them.
 
-RULE 8 - FORBIDDEN KEYS:
-  Never add keys outside the SCHEMA list.
-  If source YAML has extra fields not in SCHEMA, ignore them silently.
+kubernetes_container_hash	
+h06vksharbor.corp.ad.sbi/cbops/report-service@sha256:36424399c415c05a1c2dbb87e021f9d6237ba7ae64789952501af820aa2ca56d
 
-RULE 9 - ASCII ONLY IN ALL COMMENTS:
-  Every comment in the output YAML must be plain ASCII.
-  No emoji (no warning signs, checkmarks, arrows).
-  No unicode dashes (use -- not em dash).
-  No box drawing characters.
-  Reason: unicode in YAML comments causes parse errors in Helm.
-  Wrong: # [warning emoji here] Move to Vault
-  Right: # WARNING: Move to Vault
 
-RULE 10 - SPRING_PROFILES_ACTIVE MUST ALWAYS BE IN env BLOCK:
-  Always add this as the FIRST item in the env list:
-    env:
-      - name: SPRING_PROFILES_ACTIVE
-        value: "dev"
-  Why: Spring Boot only loads application-dev.properties when this
-  profile is active. Without it, all profile-specific config (DB url,
-  Kafka settings, feature flags) is silently ignored and the service
-  fails to start. This applies to ALL services even if the source
-  YAML does not include this env var.
 
-RULE 11 - networkPolicy.enabled IS ALWAYS FALSE:
-  Always set networkPolicy.enabled: false regardless of source.
-  Why: the chart creates a bare NetworkPolicy with no ingress or
-  egress rules. A NetworkPolicy with policyTypes [Ingress, Egress]
-  and no rules = DENY ALL traffic in both directions.
-  DENY ALL egress = pod cannot reach DB, Redis, Kafka = crash.
-  Keep disabled until the chart template is fixed to support rules.
-  Still include the name so it is ready to enable later.
 
-RULE 12 - DATABASE ENABLED vs JAR-BAKED CREDENTIALS:
-  There are two ways DB credentials reach the app. Choose correctly:
+kubernetes_container_image	
+h06vksharbor.corp.ad.sbi/cbops/report-service:DEV11
 
-  OPTION A - Credentials baked into application-dev.properties in JAR:
-    Most common for dev services. The DB url/user/pass are inside
-    the JAR file in application-dev.properties. They load automatically
-    when SPRING_PROFILES_ACTIVE=dev (Rule 10). In this case:
-      database:
-        enabled: false   (no Kubernetes secret needed)
-    The env block SPRING_PROFILES_ACTIVE=dev handles it.
 
-  OPTION B - Credentials NOT in JAR (need Kubernetes secret):
-    Used when credentials are passed via environment variables only,
-    or when you want to override JAR credentials for security.
-    In this case:
-      database:
-        enabled: true
-        url: "jdbc:oracle:thin:@host:port/service"
-        username: "user"
-        password: "pass"  # WARNING: Move to Vault before production
-        driverClassName: "oracle.jdbc.OracleDriver"
-    This creates a Kubernetes Secret that injects:
-      SPRING_DATASOURCE_URL
-      SPRING_DATASOURCE_USERNAME
-      SPRING_DATASOURCE_PASSWORD
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME
 
-  HOW TO DECIDE:
-    If source YAML has SPRING_DATASOURCE_* env vars in the Deployment
-    -> use database.enabled: true (credentials come from outside JAR)
-    If source YAML has NO datasource env vars but has JPA repositories
-    -> use database.enabled: false (credentials are in the JAR)
-    If source YAML has a Secret with DB credentials
-    -> use database.enabled: true and map from the Secret data
 
-===============================================================
-DATABASE REFERENCE
-===============================================================
+kubernetes_container_name	
+report-container
 
-Oracle (service name):
-  url: jdbc:oracle:thin:@<host>:<port>/<service_name>
-  driverClassName: oracle.jdbc.OracleDriver
 
-Oracle (SID):
-  url: jdbc:oracle:thin:@<host>:<port>:<SID>
-  driverClassName: oracle.jdbc.OracleDriver
 
-PostgreSQL:
-  url: jdbc:postgresql://<host>:<port>/<database>
-  driverClassName: org.postgresql.Driver
 
-MySQL 8+:
-  url: jdbc:mysql://<host>:<port>/<database>?useSSL=false
-  driverClassName: com.mysql.cj.jdbc.Driver
+kubernetes_docker_id	
+efa35309fbf432ba6f934ab4a002ea47612ed34af8e37c949996b6813cc8c9be
 
-MySQL 5.x:
-  url: jdbc:mysql://<host>:<port>/<database>
-  driverClassName: com.mysql.jdbc.Driver
 
-MS SQL Server:
-  url: jdbc:sqlserver://<host>:<port>;databaseName=<database>
-  driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
-H2 (dev/test only):
-  url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-  driverClassName: org.h2.Driver
 
-===============================================================
-OUTPUT FORMAT REQUIREMENTS
-===============================================================
+kubernetes_host	
+h06vksuatcbopscls-node-pool-1-xg7gx-rrg8c-bcssn
 
-1. File header block at the top:
-   # SERVICE: <name>
-   # ENVIRONMENT: dev
-   # CHART: charts/backend-service/
-   # DEPLOY: helm upgrade --install <name> charts/backend-service/
-   #           -f <this-file>.yaml -n cbops-test --kubeconfig hpaa.conf
-   # DRY RUN: add --dry-run --debug to the deploy command above
 
-2. Section comment above every major key group:
-   # === Namespace ===
-   # === Image ===
-   # === Deployment ===
-   # === Container Name ===
-   # === Service Account ===
-   # === Service ===
-   # === Labels ===
-   # === Autoscaling (HPA) ===
-   # === Pod Disruption Budget ===
-   # === Network Policy ===
-   # === Environment Variables ===
-   # === ConfigMap ===
-   # === Generic Secret ===
-   # === Database ===
-   # === Resources ===
-   # === Probes Port ===
 
-3. Add a GAPS block at the top (after the header) listing anything
-   from the source YAML that could not be mapped to the schema.
-   Format each gap as:
-   # [GAP N] -- <name> -- <one line description> -- Action: <what to do>
-   Use ASCII only. No emoji. No unicode.
 
-4. Mark any value that was changed from source with:
-   # FIXED: <reason>
+kubernetes_labels_app	
+report-backend
 
-5. Keys must appear in the same top-to-bottom order as the SCHEMA.
 
-===============================================================
-REFERENCE EXAMPLE - SHORT VALID OUTPUT
-===============================================================
 
-# SERVICE: example-service
-# ENVIRONMENT: dev
-# CHART: charts/backend-service/
-# DEPLOY: helm upgrade --install example charts/backend-service/
-#           -f example-service-dev.yaml -n cbops-test --kubeconfig hpaa.conf
-# DRY RUN: add --dry-run --debug to the deploy command above
-#
-# GAPS:
-# [GAP 1] -- securityContext -- pod/container security settings not in schema -- Action: add to chart deployment.yaml template
-# [GAP 2] -- HPA behavior block -- stabilization windows dropped -- Action: extend hpa.yaml template
 
-namespace: cbops-test
-replicaCount: 1
+kubernetes_labels_pod_template_hash	
+67d6d7cc75
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/example-service
-  tag: DEV01
-  pullPolicy: Always
 
-# Create once: kubectl create secret docker-registry harbor-secret
-#   --docker-server=h06vksharbor.corp.ad.sbi --docker-username=USER
-#   --docker-password=PASS -n cbops-test --kubeconfig hpaa.conf
-imagePullSecrets:
-  - name: harbor-secret
 
-deployment:
-  name: example-deployment
-  revisionHistoryLimit: 5
-  terminationGracePeriodSeconds: 30
 
-container:
-  name: example-container
+kubernetes_namespace_name	
+cbops-test
 
-serviceAccount:
-  name: example-sa
 
-service:
-  name: example-service
-  type: ClusterIP
-  port: 80
-  targetPort: 8080
 
-labels:
-  app: example-app
 
-autoscaling:
-  enabled: true
-  name: example-hpa
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: null
+kubernetes_pod_id	
+7039d4bd-d749-4246-8235-2dcb2a231564
 
-pdb:
-  enabled: true
-  name: example-pdb
-  minAvailable: 1
 
-# FIXED: disabled -- bare NetworkPolicy = DENY ALL egress = service crash
-networkPolicy:
-  enabled: false
-  name: example-network-policy
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
-  - name: SPRING_DATA_REDIS_HOST
-    value: "redis-service"
 
-configMap:
-  enabled: false
-  data: {}
+kubernetes_pod_name	
+report-deployment-67d6d7cc75-gr85j
 
-secret:
-  enabled: false
-  data: {}
 
-# Credentials are in application-dev.properties inside JAR.
-# SPRING_PROFILES_ACTIVE=dev above loads them automatically.
-database:
-  enabled: false
-  existingSecret: ""
-  url: ""
-  username: ""
-  password: ""
-  driverClassName: ""
 
-resources:
-  requests:
-    cpu: "200m"
-    memory: "256Mi"
-  limits:
-    cpu: "500m"
-    memory: "512Mi"
 
-probes:
-  port: 8080
+log	
+2026-02-26T06:44:57.978152463Z stdout F 2026-02-26T06:44:57.977Z  INFO 1 --- [ReportService] [           main] c.f.R.util.HadoopConnectivityTester      : Attempting to connect to HDFS at: hdfs://10.177.103.199:8022 as user: root
 
-===============================================================
-INPUT - PASTE YOUR KUBERNETES YAML BELOW THIS LINE
-===============================================================
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: login-deployment
-  namespace: be-test
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: login-backend
-  template:
-    metadata:
-      labels:
-        app: login-backend
-    spec:
-      hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-        - "uatrootdc1.uatad.sbi"
-      volumes:
-      - name: truststore-volume
-        secret:
-          secretName: ldap-truststore-file
-          items:
-            - key: ad-truststore.jks        # Ensure this matches the key you created
-              path: ad-truststore.jks       # Forces the filename inside /etc/fincore/secrets/
-      containers:
-      - name: login-backend-container
-        image: h06vksharbor.corp.ad.sbi/cbops/login-service:DEV09
 
-        volumeMounts:
-        - name: truststore-volume
-          mountPath: "/etc/fincore/secrets"
-          readOnly: true
 
-        env:
-        - name: SPRING_LDAP_URLS
-          value: "ldaps://uatrootdc1.uatad.sbi:3269"        
-        - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"        
-        - name: SPRING_DATA_REDIS_HOST
-          value: "redis-service.be-test.svc.cluster.local"
-        - name: SPRING_DATA_REDIS_PORT
-          value: "6379"
-        - name: SPRING_DATA_REDIS_CLIENT_TYPE
-          value: "lettuce"
-        - name: SPRING_PROFILES_ACTIVE
-          value: "dev"
+namespace	
+cbops-test
 
-        # LDAP TRUSTSTORE CONFIG
-        - name: LDAP_TRUSTSTORE_PATH
-          value: "file:/etc/fincore/secrets/ad-truststore.jks"
 
-        - name: LDAP_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: ldap-creds
-              key: truststore-password
 
-        ports:
-        - containerPort: 8085
-        imagePullPolicy: Always
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: login-service
-  namespace: be-test
-spec:
-  selector:
-    app: login-backend
-  ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 8085
-  type: ClusterIP
+pod	
+report-deployment-67d6d7cc75-gr85j
+2026-02-26 12:14:58.098	
+ 2026-02-26T06:44:58.098412293Z stdout F 2026-02-26T06:44:58.098Z  INFO 1 --- [ReportService] [           main] c.f.R.util.HadoopConnectivityTester      : SUCCESS: Successfully connected to HDFS and accessed the root directory.
+2026-02-26 12:14:58.098	
+ 2026-02-26T06:44:58.098473899Z stdout F 2026-02-26T06:44:58.098Z  INFO 1 --- [ReportService] [           main] c.f.R.util.HadoopConnectivityTester      : HDFS default block size: 134217728
+2026-02-26 12:14:58.132	
+ 2026-02-26T06:44:58.132104319Z stdout F 2026-02-26T06:44:58.131Z  WARN 1 --- [ReportService] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-26 12:14:58.152	
+ 2026-02-26T06:44:58.151930443Z stdout F 2026-02-26T06:44:58.151Z  WARN 1 --- [ReportService] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+2026-02-26 12:14:58.152	
+ 2026-02-26T06:44:58.151966553Z stdout F 
+2026-02-26 12:14:58.152	
+ 2026-02-26T06:44:58.151971399Z stdout F Using generated security password: 9123d753-c9a4-46bb-af0c-d5c2d8e7a347
+2026-02-26 12:14:58.152	
+ 2026-02-26T06:44:58.151973454Z stdout F 
+2026-02-26 12:14:58.152	
+ 2026-02-26T06:44:58.151976278Z stdout F This generated password is for development use only. Your security configuration must be updated before running your application in production.
+2026-02-26 12:14:58.152	
+ 2026-02-26T06:44:58.151978182Z stdout F 
+2026-02-26 12:14:58.165	
+ 2026-02-26T06:44:58.165645262Z stdout F 2026-02-26T06:44:58.165Z  INFO 1 --- [ReportService] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-02-26 12:14:58.371	
+ 2026-02-26T06:44:58.37183795Z stdout F 2026-02-26T06:44:58.371Z  INFO 1 --- [ReportService] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@492a54b4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4a5f435b, org.springframework.security.web.context.SecurityContextHolderFilter@1390db9e, org.springframework.security.web.header.HeaderWriterFilter@3094b465, org.springframework.web.filter.CorsFilter@6b021959, org.springframework.security.web.authentication.logout.LogoutFilter@637edfe0, com.fincore.commonutilities.security.ContextRbacFilter@175957f9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@61ab2bcc, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7be7236d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@ccd3e52, org.springframework.security.web.session.SessionManagementFilter@15f12e7b, org.springframework.security.web.access.ExceptionTranslationFilter@5a30ab46, org.springframework.security.web.access.intercept.AuthorizationFilter@18b378a2]
+2026-02-26 12:14:58.760	
+ 2026-02-26T06:44:58.760893207Z stdout F 2026-02-26T06:44:58.760Z  INFO 1 --- [ReportService] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 9005 (http) with context path '/'
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805543263Z stdout F 2026-02-26T06:44:58.805Z  INFO 1 --- [ReportService] [           main] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805582919Z stdout F 	allow.auto.create.topics = true
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805585465Z stdout F 	auto.commit.interval.ms = 5000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805587332Z stdout F 	auto.include.jmx.reporter = true
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805588968Z stdout F 	auto.offset.reset = latest
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805590622Z stdout F 	bootstrap.servers = [kafka.cbops-test.svc.cluster.local:9092]
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805592291Z stdout F 	check.crcs = true
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805593731Z stdout F 	client.dns.lookup = use_all_dns_ips
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805595068Z stdout F 	client.id = consumer-spring-pipeline-group-1
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805596533Z stdout F 	client.rack = 
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805597945Z stdout F 	connections.max.idle.ms = 540000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.80559923Z stdout F 	default.api.timeout.ms = 60000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805600646Z stdout F 	enable.auto.commit = false
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805602528Z stdout F 	enable.metrics.push = true
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805603862Z stdout F 	exclude.internal.topics = true
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805605361Z stdout F 	fetch.max.bytes = 52428800
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805606623Z stdout F 	fetch.max.wait.ms = 500
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.8056081Z stdout F 	fetch.min.bytes = 1
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805609416Z stdout F 	group.id = spring-pipeline-group
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805610776Z stdout F 	group.instance.id = null
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805612145Z stdout F 	group.protocol = classic
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805613598Z stdout F 	group.remote.assignor = null
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805614929Z stdout F 	heartbeat.interval.ms = 3000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805616162Z stdout F 	interceptor.classes = []
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805617531Z stdout F 	internal.leave.group.on.close = true
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805618948Z stdout F 	internal.throw.on.fetch.stable.offset.unsupported = false
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805620296Z stdout F 	isolation.level = read_uncommitted
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805622143Z stdout F 	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805623691Z stdout F 	max.partition.fetch.bytes = 1048576
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805625173Z stdout F 	max.poll.interval.ms = 300000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805626438Z stdout F 	max.poll.records = 500
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805627671Z stdout F 	metadata.max.age.ms = 300000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805628958Z stdout F 	metric.reporters = []
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805630334Z stdout F 	metrics.num.samples = 2
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805631592Z stdout F 	metrics.recording.level = INFO
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805632869Z stdout F 	metrics.sample.window.ms = 30000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805634779Z stdout F 	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805636443Z stdout F 	receive.buffer.bytes = 65536
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805637877Z stdout F 	reconnect.backoff.max.ms = 1000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805639391Z stdout F 	reconnect.backoff.ms = 50
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805641008Z stdout F 	request.timeout.ms = 30000
+2026-02-26 12:14:58.805	
+ 2026-02-26T06:44:58.805642497Z stdout F 	retry.backoff.max.ms = 1000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805643872Z stdout F 	retry.backoff.ms = 100
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805645243Z stdout F 	sasl.client.callback.handler.class = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805646514Z stdout F 	sasl.jaas.config = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.80564779Z stdout F 	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805649125Z stdout F 	sasl.kerberos.min.time.before.relogin = 60000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805650444Z stdout F 	sasl.kerberos.service.name = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805651734Z stdout F 	sasl.kerberos.ticket.renew.jitter = 0.05
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805653053Z stdout F 	sasl.kerberos.ticket.renew.window.factor = 0.8
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805654339Z stdout F 	sasl.login.callback.handler.class = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805655585Z stdout F 	sasl.login.class = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805656854Z stdout F 	sasl.login.connect.timeout.ms = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.8056581Z stdout F 	sasl.login.read.timeout.ms = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805659375Z stdout F 	sasl.login.refresh.buffer.seconds = 300
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805662692Z stdout F 	sasl.login.refresh.min.period.seconds = 60
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.80566396Z stdout F 	sasl.login.refresh.window.factor = 0.8
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805665267Z stdout F 	sasl.login.refresh.window.jitter = 0.05
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805666517Z stdout F 	sasl.login.retry.backoff.max.ms = 10000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805667745Z stdout F 	sasl.login.retry.backoff.ms = 100
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805670164Z stdout F 	sasl.mechanism = GSSAPI
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805671583Z stdout F 	sasl.oauthbearer.clock.skew.seconds = 30
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805672864Z stdout F 	sasl.oauthbearer.expected.audience = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805674121Z stdout F 	sasl.oauthbearer.expected.issuer = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805675382Z stdout F 	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805676704Z stdout F 	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805677983Z stdout F 	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805679266Z stdout F 	sasl.oauthbearer.jwks.endpoint.url = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805680826Z stdout F 	sasl.oauthbearer.scope.claim.name = scope
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805682093Z stdout F 	sasl.oauthbearer.sub.claim.name = sub
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805683363Z stdout F 	sasl.oauthbearer.token.endpoint.url = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805684792Z stdout F 	security.protocol = PLAINTEXT
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805686219Z stdout F 	security.providers = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805687611Z stdout F 	send.buffer.bytes = 131072
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805688903Z stdout F 	session.timeout.ms = 45000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805690311Z stdout F 	socket.connection.setup.timeout.max.ms = 30000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805691573Z stdout F 	socket.connection.setup.timeout.ms = 10000
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805692878Z stdout F 	ssl.cipher.suites = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.80569414Z stdout F 	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805695412Z stdout F 	ssl.endpoint.identification.algorithm = https
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805696694Z stdout F 	ssl.engine.factory.class = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805698244Z stdout F 	ssl.key.password = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805699505Z stdout F 	ssl.keymanager.algorithm = SunX509
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.80570079Z stdout F 	ssl.keystore.certificate.chain = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805702089Z stdout F 	ssl.keystore.key = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805703482Z stdout F 	ssl.keystore.location = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.80570476Z stdout F 	ssl.keystore.password = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805706117Z stdout F 	ssl.keystore.type = JKS
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805707478Z stdout F 	ssl.protocol = TLSv1.3
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805708854Z stdout F 	ssl.provider = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805710153Z stdout F 	ssl.secure.random.implementation = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805711476Z stdout F 	ssl.trustmanager.algorithm = PKIX
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805712756Z stdout F 	ssl.truststore.certificates = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805714036Z stdout F 	ssl.truststore.location = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805715289Z stdout F 	ssl.truststore.password = null
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805716649Z stdout F 	ssl.truststore.type = JKS
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805718002Z stdout F 	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+2026-02-26 12:14:58.806	
+ 2026-02-26T06:44:58.805719376Z stdout F 
+2026-02-26 12:14:58.858	
+ 2026-02-26T06:44:58.858386624Z stdout F 2026-02-26T06:44:58.858Z  INFO 1 --- [ReportService] [           main] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
+2026-02-26 12:14:58.872	
+ 2026-02-26T06:44:58.872381142Z stdout F 2026-02-26T06:44:58.872Z  WARN 1 --- [ReportService] [           main] org.apache.kafka.clients.ClientUtils     : Couldn't resolve server kafka.cbops-test.svc.cluster.local:9092 from bootstrap.servers as DNS resolution failed for kafka.cbops-test.svc.cluster.local
+2026-02-26 12:14:58.873	
+ 2026-02-26T06:44:58.87355058Z stdout F 2026-02-26T06:44:58.873Z  INFO 1 --- [ReportService] [           main] o.apache.kafka.common.metrics.Metrics    : Metrics scheduler closed
+2026-02-26 12:14:58.873	
+ 2026-02-26T06:44:58.873572752Z stdout F 2026-02-26T06:44:58.873Z  INFO 1 --- [ReportService] [           main] o.apache.kafka.common.metrics.Metrics    : Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-02-26 12:14:58.873	
+ 2026-02-26T06:44:58.873711698Z stdout F 2026-02-26T06:44:58.873Z  INFO 1 --- [ReportService] [           main] o.apache.kafka.common.metrics.Metrics    : Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-02-26 12:14:58.873	
+ 2026-02-26T06:44:58.873729912Z stdout F 2026-02-26T06:44:58.873Z  INFO 1 --- [ReportService] [           main] o.apache.kafka.common.metrics.Metrics    : Metrics reporters closed
+2026-02-26 12:14:58.876	
+ 2026-02-26T06:44:58.87596499Z stdout F 2026-02-26T06:44:58.875Z  INFO 1 --- [ReportService] [           main] o.a.kafka.common.utils.AppInfoParser     : App info kafka.consumer for consumer-spring-pipeline-group-1 unregistered
+2026-02-26 12:14:58.885	
+ 2026-02-26T06:44:58.88583975Z stdout F 2026-02-26T06:44:58.885Z  WARN 1 --- [ReportService] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'org.springframework.kafka.config.internalKafkaListenerEndpointRegistry'
+2026-02-26 12:14:58.915	
+ 2026-02-26T06:44:58.91520192Z stdout F 2026-02-26T06:44:58.914Z  INFO 1 --- [ReportService] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-26 12:14:58.917	
+ 2026-02-26T06:44:58.917196927Z stdout F 2026-02-26T06:44:58.916Z  INFO 1 --- [ReportService] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-26 12:14:58.959	
+ 2026-02-26T06:44:58.959545969Z stdout F 2026-02-26T06:44:58.959Z  INFO 1 --- [ReportService] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-26 12:14:58.970	
+ 2026-02-26T06:44:58.96995394Z stdout F 2026-02-26T06:44:58.969Z  INFO 1 --- [ReportService] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+2026-02-26 12:14:58.970	
+ 2026-02-26T06:44:58.969987275Z stdout F 
+2026-02-26 12:14:58.970	
+ 2026-02-26T06:44:58.969990656Z stdout F Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985274596Z stdout F 2026-02-26T06:44:58.982Z ERROR 1 --- [ReportService] [           main] o.s.boot.SpringApplication               : Application run failed
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985300625Z stdout F 
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985303718Z stdout F org.springframework.context.ApplicationContextException: Failed to start bean 'org.springframework.kafka.config.internalKafkaListenerEndpointRegistry'
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985305295Z stdout F 	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:291) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985306959Z stdout F 	at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:471) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985309072Z stdout F 	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[na:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985310465Z stdout F 	at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:260) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985311839Z stdout F 	at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:205) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985313266Z stdout F 	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:981) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985314535Z stdout F 	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.98531668Z stdout F 	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.3.0.jar!/:3.3.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985318421Z stdout F 	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.3.0.jar!/:3.3.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985327979Z stdout F 	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.3.0.jar!/:3.3.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985329854Z stdout F 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335) ~[spring-boot-3.3.0.jar!/:3.3.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985331184Z stdout F 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-3.3.0.jar!/:3.3.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985332486Z stdout F 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352) ~[spring-boot-3.3.0.jar!/:3.3.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985334179Z stdout F 	at com.fincore.ReportService.ReportServiceApplication.main(ReportServiceApplication.java:10) ~[!/:0.0.1-SNAPSHOT]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985335569Z stdout F 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985336906Z stdout F 	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985338233Z stdout F 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91) ~[app.jar:0.0.1-SNAPSHOT]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.98533965Z stdout F 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53) ~[app.jar:0.0.1-SNAPSHOT]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985341145Z stdout F 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58) ~[app.jar:0.0.1-SNAPSHOT]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985343061Z stdout F Caused by: org.apache.kafka.common.KafkaException: Failed to construct kafka consumer
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985344664Z stdout F 	at org.apache.kafka.clients.consumer.internals.LegacyKafkaConsumer.<init>(LegacyKafkaConsumer.java:264) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985346287Z stdout F 	at org.apache.kafka.clients.consumer.internals.ConsumerDelegateCreator.create(ConsumerDelegateCreator.java:65) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985347715Z stdout F 	at org.apache.kafka.clients.consumer.KafkaConsumer.<init>(KafkaConsumer.java:600) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.98534909Z stdout F 	at org.apache.kafka.clients.consumer.KafkaConsumer.<init>(KafkaConsumer.java:595) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985351102Z stdout F 	at org.springframework.kafka.core.DefaultKafkaConsumerFactory$ExtendedKafkaConsumer.<init>(DefaultKafkaConsumerFactory.java:505) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985352879Z stdout F 	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createRawConsumer(DefaultKafkaConsumerFactory.java:484) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985354454Z stdout F 	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createKafkaConsumer(DefaultKafkaConsumerFactory.java:461) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985355767Z stdout F 	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createConsumerWithAdjustedProperties(DefaultKafkaConsumerFactory.java:438) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.9853574Z stdout F 	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createKafkaConsumer(DefaultKafkaConsumerFactory.java:405) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985365116Z stdout F 	at org.springframework.kafka.core.DefaultKafkaConsumerFactory.createConsumer(DefaultKafkaConsumerFactory.java:366) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985366838Z stdout F 	at org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer.<init>(KafkaMessageListenerContainer.java:866) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985368432Z stdout F 	at org.springframework.kafka.listener.KafkaMessageListenerContainer.doStart(KafkaMessageListenerContainer.java:379) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985370213Z stdout F 	at org.springframework.kafka.listener.AbstractMessageListenerContainer.start(AbstractMessageListenerContainer.java:512) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985373725Z stdout F 	at org.springframework.kafka.listener.ConcurrentMessageListenerContainer.doStart(ConcurrentMessageListenerContainer.java:255) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985375171Z stdout F 	at org.springframework.kafka.listener.AbstractMessageListenerContainer.start(AbstractMessageListenerContainer.java:512) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.98537645Z stdout F 	at org.springframework.kafka.config.KafkaListenerEndpointRegistry.startIfNecessary(KafkaListenerEndpointRegistry.java:436) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985377943Z stdout F 	at org.springframework.kafka.config.KafkaListenerEndpointRegistry.start(KafkaListenerEndpointRegistry.java:382) ~[spring-kafka-3.2.0.jar!/:3.2.0]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985379367Z stdout F 	at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:288) ~[spring-context-6.1.8.jar!/:6.1.8]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985381261Z stdout F 	... 18 common frames omitted
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985382774Z stdout F Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985384099Z stdout F 	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:103) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985385655Z stdout F 	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:62) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985387137Z stdout F 	at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:58) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985388411Z stdout F 	at org.apache.kafka.clients.consumer.internals.LegacyKafkaConsumer.<init>(LegacyKafkaConsumer.java:183) ~[kafka-clients-3.7.0.jar!/:na]
+2026-02-26 12:14:58.985	
+ 2026-02-26T06:44:58.985389906Z stdout F 	... 35 common frames omitted
+
+
+
+
+
+
+ what is the issue?
