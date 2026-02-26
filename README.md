@@ -381,4 +381,81 @@ probes:
 INPUT - PASTE YOUR KUBERNETES YAML BELOW THIS LINE
 ===============================================================
 
-[PASTE YOUR KUBERNETES YAML HERE]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-deployment
+  namespace: be-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: login-backend
+  template:
+    metadata:
+      labels:
+        app: login-backend
+    spec:
+      hostAliases:
+      - ip: "10.189.42.83"
+        hostnames:
+        - "uatrootdc1.uatad.sbi"
+      volumes:
+      - name: truststore-volume
+        secret:
+          secretName: ldap-truststore-file
+          items:
+            - key: ad-truststore.jks        # Ensure this matches the key you created
+              path: ad-truststore.jks       # Forces the filename inside /etc/fincore/secrets/
+      containers:
+      - name: login-backend-container
+        image: h06vksharbor.corp.ad.sbi/cbops/login-service:DEV09
+
+        volumeMounts:
+        - name: truststore-volume
+          mountPath: "/etc/fincore/secrets"
+          readOnly: true
+
+        env:
+        - name: SPRING_LDAP_URLS
+          value: "ldaps://uatrootdc1.uatad.sbi:3269"        
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"        
+        - name: SPRING_DATA_REDIS_HOST
+          value: "redis-service.be-test.svc.cluster.local"
+        - name: SPRING_DATA_REDIS_PORT
+          value: "6379"
+        - name: SPRING_DATA_REDIS_CLIENT_TYPE
+          value: "lettuce"
+        - name: SPRING_PROFILES_ACTIVE
+          value: "dev"
+
+        # LDAP TRUSTSTORE CONFIG
+        - name: LDAP_TRUSTSTORE_PATH
+          value: "file:/etc/fincore/secrets/ad-truststore.jks"
+
+        - name: LDAP_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ldap-creds
+              key: truststore-password
+
+        ports:
+        - containerPort: 8085
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-service
+  namespace: be-test
+spec:
+  selector:
+    app: login-backend
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8085
+  type: ClusterIP
