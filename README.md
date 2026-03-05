@@ -1,6 +1,5 @@
-this is my yaml file:
 # --------------------------------------------
-# Service Account (security baseline)
+# Service Account
 # --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
@@ -20,11 +19,8 @@ metadata:
 
 spec:
   replicas: 2
-
-  # Keep previous ReplicaSets for rollback
   revisionHistoryLimit: 5
 
-  # Zero-downtime rolling updates
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -41,23 +37,21 @@ spec:
         app: process-status-backend
 
     spec:
-      # Dedicated service account for RBAC/security
       serviceAccountName: process-status-sa
-
-      # Graceful shutdown duration
       terminationGracePeriodSeconds: 30
-
-      # Disable automatic service env vars
       enableServiceLinks: false
 
-      # Pod-level security hardening
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 2000
 
-      # Spread pods across nodes (HA readiness)
+      # ✅ Writable volume for logs
+      volumes:
+        - name: logs-volume
+          emptyDir: {}
+
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -67,72 +61,71 @@ spec:
               app: process-status-backend
 
       containers:
-      - name: process-status-container
-        image: h06vksharbor.corp.ad.sbi/cbops/process-status-service:SV04
-        imagePullPolicy: Always
+        - name: process-status-container
+          image: h06vksharbor.corp.ad.sbi/cbops/process-status-service:SV04
+          imagePullPolicy: Always
 
-        env:
-          - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"
-          - name: SPRING_DATA_REDIS_PORT
-            value: "6379"
-          - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"
+          env:
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis-service"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_CLIENT_TYPE
+              value: "lettuce"
 
-        ports:
-        - containerPort: 3000
+          ports:
+            - containerPort: 3000
 
-        # Resource management (required for stable clusters + HPA)
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+          # ✅ Mount writable logs directory
+          volumeMounts:
+            - name: logs-volume
+              mountPath: /logs
 
-        # Startup probe prevents restart loops during boot
-        startupProbe:
-          tcpSocket:
-            port: 3000
-          failureThreshold: 30
-          periodSeconds: 10
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
-        # Liveness probe for self-healing
-        livenessProbe:
-          tcpSocket:
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
 
-        # Readiness probe controls traffic routing
-        readinessProbe:
-          tcpSocket:
-            port: 3000
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
 
-        # Graceful shutdown hook
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
 
-        # Container-level security hardening
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
 
 ---
 # --------------------------------------------
-# Service (internal cluster communication)
+# Service
 # --------------------------------------------
 apiVersion: v1
 kind: Service
@@ -154,7 +147,7 @@ spec:
 
 ---
 # --------------------------------------------
-# Horizontal Pod Autoscaler (CPU-based scaling)
+# Horizontal Pod Autoscaler
 # --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -171,7 +164,6 @@ spec:
   minReplicas: 1
   maxReplicas: 5
 
-  # Stabilization avoids scale flapping
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
@@ -189,7 +181,6 @@ spec:
 ---
 # --------------------------------------------
 # Pod Disruption Budget
-# Ensures availability during maintenance
 # --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -202,5 +193,3 @@ spec:
   selector:
     matchLabels:
       app: process-status-backend
-
----
