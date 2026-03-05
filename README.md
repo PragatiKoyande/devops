@@ -1,11 +1,95 @@
+I am providing a Kubernetes YAML file.
+
+IMPORTANT RULES — FOLLOW STRICTLY:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT change image, ports, env, replicas
+   - Do NOT rename resources
+   - Do NOT alter existing logic
+
+2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+
+3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
+   Add things like:
+   - resources requests & limits
+   - liveness/readiness/startup probes (safe defaults)
+   - rolling update strategy
+   - security context
+   - service account
+   - HPA (CPU based)
+   - PodDisruptionBudget
+   - lifecycle preStop hook
+   - topology spread constraints
+   - network policy
+   - graceful shutdown settings
+   - any other MUST-HAVE enterprise features
+
+4. Do NOT add Prometheus annotations or monitoring-related configs.
+
+5. Keep YAML structure clean and production-ready.
+
+6. Do not ask for permission before adding missing enterprise features — just add them.
+
+7. After YAML, explain briefly what new things were added and why.
+8. add also comments in yaml file for better understanding 
+Here is the YAML:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: process-status-deployment
+  namespace: be-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: process-status-backend
+  template:
+    metadata:
+      labels:
+        app: process-status-backend
+    spec:
+      containers:
+      - name: process-status-container
+        image: h06vksharbor.corp.ad.sbi/cbops/process-status-service:SV04
+        env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"        
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"       
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce"                           
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: process-status-service
+  namespace: be-test
+spec:
+  selector:
+    app: process-status-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+
+
+I want in this fashion:
+
 # --------------------------------------------
-# Service Account (security best practice)
+# Service Account (security baseline)
 # --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: notification-sa
-  namespace: be-test
+  name: report-sa
+  namespace: cbops-test
 
 ---
 # --------------------------------------------
@@ -14,16 +98,16 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-deployment
-  namespace: be-test
+  name: report-deployment
+  namespace: cbops-test
 
 spec:
   replicas: 1
 
-  # Keeps previous ReplicaSets for rollback
+  # Keep previous ReplicaSets for rollback
   revisionHistoryLimit: 5
 
-  # Zero-downtime rolling update strategy
+  # Zero-downtime rolling updates
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -32,166 +116,147 @@ spec:
 
   selector:
     matchLabels:
-      app: notification-backend
+      app: report-backend
 
   template:
     metadata:
       labels:
-        app: notification-backend
+        app: report-backend
 
     spec:
-      # Use dedicated service account
-      serviceAccountName: notification-sa
+      # Dedicated service account for RBAC/security
+      serviceAccountName: report-sa
 
-      # Allows graceful shutdown before SIGKILL
+      # Graceful shutdown duration
       terminationGracePeriodSeconds: 30
 
-      # Prevent automatic service env injection
+      # Disable automatic service env vars
       enableServiceLinks: false
 
-      # Pod-level security context
+      # Pod-level security hardening
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 2000
 
-      # Distribute pods across nodes (HA readiness)
+      # Spread pods across nodes (HA readiness)
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: notification-backend
+              app: report-backend
 
       containers:
-      - name: notification-container
-        image: h06vksharbor.corp.ad.sbi/cbops/notification-service:TEST-1
+      - name: report-container
+        image: h06vksharbor.corp.ad.sbi/cbops/report-service:DEV11
         imagePullPolicy: Always
 
         env:
-          - name: SPRING_DATASOURCE_URL
-            value: "jdbc:postgresql://postgres-db:5432/notification_db"
-          - name: SPRING_DATASOURCE_USERNAME
-            value: "notification_user"
-          - name: SPRING_DATASOURCE_PASSWORD
-            value: "notification_password"
-          - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
-            value: "kafka.cbops.svc.cluster.local:9092"
-          - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
-            value: "kafka.cbops.svc.cluster.local:9092"
-          - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-            value: "notification-service-group"
-          - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-            value: "earliest"
           - name: SPRING_DATA_REDIS_HOST
             value: "redis-service"
           - name: SPRING_DATA_REDIS_PORT
             value: "6379"
           - name: SPRING_DATA_REDIS_CLIENT_TYPE
             value: "lettuce"
+          - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
+            value: "kafka.cbops-test.svc.cluster.local:9092"
+          - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
+            value: "kafka.cbops-test.svc.cluster.local:9092"
 
-        ports:
-          - containerPort: 9010
-
-        # Resource management (required for stable clusters + HPA)
+        # Existing resources kept exactly as provided
         resources:
           requests:
-            cpu: "200m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
             memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "8Gi"
+            cpu: "4"
 
-        # Startup probe prevents restart loops for slow-starting apps
+        ports:
+        - containerPort: 9005
+
+        # Startup probe prevents restart loops during boot
         startupProbe:
           tcpSocket:
-            port: 9010
+            port: 9005
           failureThreshold: 30
           periodSeconds: 10
 
-        # Checks if container is alive (auto-restart if failed)
+        # Liveness probe for self-healing
         livenessProbe:
           tcpSocket:
-            port: 9010
+            port: 9005
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 3
           failureThreshold: 3
 
-        # Controls when traffic is allowed to this pod
+        # Readiness probe controls traffic routing
         readinessProbe:
           tcpSocket:
-            port: 9010
+            port: 9005
           initialDelaySeconds: 15
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
 
-        # Graceful shutdown before pod termination
+        # Graceful shutdown hook
         lifecycle:
           preStop:
             exec:
               command: ["/bin/sh", "-c", "sleep 10"]
 
-        # Container-level security hardening
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
-
 ---
 # --------------------------------------------
-# Service (internal cluster access)
+# Service (internal cluster communication)
 # --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: notification-service
-  namespace: be-test
+  name: report-service
+  namespace: cbops-test
 
 spec:
   selector:
-    app: notification-backend
+    app: report-backend
 
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 9010
+      targetPort: 9005
 
   type: ClusterIP
 
 ---
 # --------------------------------------------
-# Horizontal Pod Autoscaler (auto scaling)
+# Horizontal Pod Autoscaler (CPU-based scaling)
 # --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: notification-hpa
-  namespace: be-test
+  name: report-hpa
+  namespace: cbops-test
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: notification-deployment
+    name: report-deployment
 
   minReplicas: 1
   maxReplicas: 5
 
-  # Prevent aggressive scaling (stability)
+  # Stabilization avoids scale flapping
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300
 
-  # Scale based on CPU usage
   metrics:
     - type: Resource
       resource:
@@ -203,43 +268,43 @@ spec:
 ---
 # --------------------------------------------
 # Pod Disruption Budget
-# Prevents downtime during node maintenance
+# Ensures availability during maintenance
 # --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: notification-pdb
-  namespace: be-test
+  name: report-pdb
+  namespace: cbops-test
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: notification-backend
+      app: report-backend
 
 ---
 # --------------------------------------------
-# Network Policy (baseline network security)
+# Network Policy (baseline security)
 # --------------------------------------------
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: notification-network-policy
-  namespace: be-test
+  name: report-network-policy
+  namespace: cbops-test
 
 spec:
   podSelector:
     matchLabels:
-      app: notification-backend
+      app: report-backend
 
   policyTypes:
     - Ingress
     - Egress
 
-  # Allow inbound traffic (can be restricted later)
+  # Allow inbound traffic (can tighten later)
   ingress:
     - {}
 
-  # Allow outbound traffic (Postgres / Kafka / Redis access)
+  # Allow outbound traffic (Kafka/Redis access)
   egress:
     - {}
