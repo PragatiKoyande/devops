@@ -1,285 +1,226 @@
-[2026-03-05 08:26:30,474] INFO [ExpirationReaper-1-AlterAcls]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,475] INFO [KafkaApi-1] Shutdown complete. (kafka.server.KafkaApis)
-[2026-03-05 08:26:30,475] INFO [KafkaApi-1] Shutdown complete. (kafka.server.KafkaApis)
-[2026-03-05 08:26:30,477] INFO [TransactionCoordinator id=1] Shutting down. (kafka.coordinator.transaction.TransactionCoordinator)
-[2026-03-05 08:26:30,477] INFO [TransactionCoordinator id=1] Shutting down. (kafka.coordinator.transaction.TransactionCoordinator)
-[2026-03-05 08:26:30,478] INFO [Transaction State Manager 1]: Shutdown complete (kafka.coordinator.transaction.TransactionStateManager)
-[2026-03-05 08:26:30,478] INFO [Transaction State Manager 1]: Shutdown complete (kafka.coordinator.transaction.TransactionStateManager)
-[2026-03-05 08:26:30,478] INFO [TxnMarkerSenderThread-1]: Shutting down (kafka.coordinator.transaction.TransactionMarkerChannelManager)
-[2026-03-05 08:26:30,478] INFO [TxnMarkerSenderThread-1]: Shutting down (kafka.coordinator.transaction.TransactionMarkerChannelManager)
-[2026-03-05 08:26:30,478] INFO [TxnMarkerSenderThread-1]: Stopped (kafka.coordinator.transaction.TransactionMarkerChannelManager)
-[2026-03-05 08:26:30,478] INFO [TxnMarkerSenderThread-1]: Shutdown completed (kafka.coordinator.transaction.TransactionMarkerChannelManager)
-[2026-03-05 08:26:30,478] INFO [TxnMarkerSenderThread-1]: Stopped (kafka.coordinator.transaction.TransactionMarkerChannelManager)
-[2026-03-05 08:26:30,478] INFO [TxnMarkerSenderThread-1]: Shutdown completed (kafka.coordinator.transaction.TransactionMarkerChannelManager)
-[2026-03-05 08:26:30,480] INFO [TransactionCoordinator id=1] Shutdown complete. (kafka.coordinator.transaction.TransactionCoordinator)
-[2026-03-05 08:26:30,480] INFO [TransactionCoordinator id=1] Shutdown complete. (kafka.coordinator.transaction.TransactionCoordinator)
-[2026-03-05 08:26:30,480] INFO [GroupCoordinator id=1] Shutting down. (org.apache.kafka.coordinator.group.GroupCoordinatorService)
-[2026-03-05 08:26:30,481] INFO [GroupCoordinator id=1] Closing coordinator runtime. (org.apache.kafka.coordinator.common.runtime.CoordinatorRuntime)
-[2026-03-05 08:26:30,481] INFO [group-coordinator-reaper]: Shutting down (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,481] INFO [group-coordinator-reaper]: Shutdown completed (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,481] INFO [group-coordinator-reaper]: Stopped (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,481] INFO [GroupCoordinator id=1] Shutting down event processor. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-0]: Shutting down. Draining the remaining events. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-0]: Shutdown completed (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-3]: Shutting down. Draining the remaining events. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-2]: Shutting down. Draining the remaining events. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-3]: Shutdown completed (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-1]: Shutting down. Draining the remaining events. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-1]: Shutdown completed (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [group-coordinator-event-processor-2]: Shutdown completed (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,482] INFO [GroupCoordinator id=1] Event processor closed. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor)
-[2026-03-05 08:26:30,484] INFO [GroupCoordinator id=1] Coordinator runtime closed. (org.apache.kafka.coordinator.common.runtime.CoordinatorRuntime)
-[2026-03-05 08:26:30,484] INFO [GroupCoordinator id=1] Shutdown complete. (org.apache.kafka.coordinator.group.GroupCoordinatorService)
-[2026-03-05 08:26:30,484] INFO [ShareCoordinator id=1] Shutting down. (org.apache.kafka.coordinator.share.ShareCoordinatorService)
-[2026-03-05 08:26:30,484] INFO [ShareCoordinator id=1] Closing coordinator runtime. (org.apache.kafka.coordinator.common.runtime.CoordinatorRuntime)
-[2026-03-05 08:26:30,485] INFO [share-coordinator-reaper]: Shutting down (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,485] INFO [share-coordinator-reaper]: Shutdown completed (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,485] INFO [share-coordinator-reaper]: Stopped (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,485] INFO [ShareCoordinator id=1] Shutting down event processor. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor)
-[2026-03-05 08:26:30,485] INFO [share-coordinator-event-processor-0]: Shutting down. Draining the remaining events. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,485] INFO [share-coordinator-event-processor-0]: Shutdown completed (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor$EventProcessorThread)
-[2026-03-05 08:26:30,485] INFO [ShareCoordinator id=1] Event processor closed. (org.apache.kafka.coordinator.common.runtime.MultiThreadedEventProcessor)
-[2026-03-05 08:26:30,485] INFO [ShareCoordinator id=1] Coordinator runtime closed. (org.apache.kafka.coordinator.common.runtime.CoordinatorRuntime)
-[2026-03-05 08:26:30,486] INFO [ShareCoordinator id=1] Shutdown complete. (org.apache.kafka.coordinator.share.ShareCoordinatorService)
-[2026-03-05 08:26:30,486] INFO [AssignmentsManager id=1]KafkaEventQueue#close: shutting down event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,486] INFO [AssignmentsManager id=1] shutting down. (org.apache.kafka.server.AssignmentsManager)
-[2026-03-05 08:26:30,487] INFO [broker-1-to-controller-directory-assignments-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,487] INFO [broker-1-to-controller-directory-assignments-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,487] INFO [broker-1-to-controller-directory-assignments-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,487] INFO [broker-1-to-controller-directory-assignments-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,487] INFO [broker-1-to-controller-directory-assignments-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,487] INFO [broker-1-to-controller-directory-assignments-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,487] INFO Node to controller channel manager for directory-assignments shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,487] INFO Node to controller channel manager for directory-assignments shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,487] INFO [AssignmentsManager id=1]closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,488] INFO [ReplicaManager broker=1] Shutting down (kafka.server.ReplicaManager)
-[2026-03-05 08:26:30,488] INFO [ReplicaManager broker=1] Shutting down (kafka.server.ReplicaManager)
-[2026-03-05 08:26:30,488] INFO [LogDirFailureHandler]: Shutting down (kafka.server.ReplicaManager$LogDirFailureHandler)
-[2026-03-05 08:26:30,488] INFO [LogDirFailureHandler]: Shutting down (kafka.server.ReplicaManager$LogDirFailureHandler)
-[2026-03-05 08:26:30,488] INFO [LogDirFailureHandler]: Shutdown completed (kafka.server.ReplicaManager$LogDirFailureHandler)
-[2026-03-05 08:26:30,488] INFO [LogDirFailureHandler]: Shutdown completed (kafka.server.ReplicaManager$LogDirFailureHandler)
-[2026-03-05 08:26:30,488] INFO [LogDirFailureHandler]: Stopped (kafka.server.ReplicaManager$LogDirFailureHandler)
-[2026-03-05 08:26:30,488] INFO [LogDirFailureHandler]: Stopped (kafka.server.ReplicaManager$LogDirFailureHandler)
-[2026-03-05 08:26:30,489] INFO [ReplicaFetcherManager on broker 1] shutting down (kafka.server.ReplicaFetcherManager)
-[2026-03-05 08:26:30,489] INFO [ReplicaFetcherManager on broker 1] shutting down (kafka.server.ReplicaFetcherManager)
-[2026-03-05 08:26:30,489] INFO [ReplicaFetcherManager on broker 1] shutdown completed (kafka.server.ReplicaFetcherManager)
-[2026-03-05 08:26:30,489] INFO [ReplicaFetcherManager on broker 1] shutdown completed (kafka.server.ReplicaFetcherManager)
-[2026-03-05 08:26:30,490] INFO [ReplicaAlterLogDirsManager on broker 1] shutting down (kafka.server.ReplicaAlterLogDirsManager)
-[2026-03-05 08:26:30,490] INFO [ReplicaAlterLogDirsManager on broker 1] shutting down (kafka.server.ReplicaAlterLogDirsManager)
-[2026-03-05 08:26:30,490] INFO [ReplicaAlterLogDirsManager on broker 1] shutdown completed (kafka.server.ReplicaAlterLogDirsManager)
-[2026-03-05 08:26:30,490] INFO [ReplicaAlterLogDirsManager on broker 1] shutdown completed (kafka.server.ReplicaAlterLogDirsManager)
-[2026-03-05 08:26:30,490] INFO [ExpirationReaper-1-Fetch]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,490] INFO [ExpirationReaper-1-Fetch]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,490] INFO [ExpirationReaper-1-Fetch]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,490] INFO [ExpirationReaper-1-RemoteFetch]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,490] INFO [ExpirationReaper-1-RemoteFetch]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,490] INFO [ExpirationReaper-1-RemoteFetch]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,491] INFO [ExpirationReaper-1-RemoteListOffsets]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,491] INFO [ExpirationReaper-1-RemoteListOffsets]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,491] INFO [ExpirationReaper-1-RemoteListOffsets]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,491] INFO [ExpirationReaper-1-Produce]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,491] INFO [ExpirationReaper-1-Produce]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,491] INFO [ExpirationReaper-1-Produce]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,492] INFO [ExpirationReaper-1-DeleteRecords]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,492] INFO [ExpirationReaper-1-DeleteRecords]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,492] INFO [ExpirationReaper-1-DeleteRecords]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,492] INFO [ExpirationReaper-1-ShareFetch]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,493] INFO [ExpirationReaper-1-ShareFetch]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,493] INFO [ExpirationReaper-1-ShareFetch]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,493] INFO [AddPartitionsToTxnSenderThread-1]: Shutting down (org.apache.kafka.server.transaction.AddPartitionsToTxnManager)
-[2026-03-05 08:26:30,493] INFO [AddPartitionsToTxnSenderThread-1]: Shutdown completed (org.apache.kafka.server.transaction.AddPartitionsToTxnManager)
-[2026-03-05 08:26:30,493] INFO [AddPartitionsToTxnSenderThread-1]: Stopped (org.apache.kafka.server.transaction.AddPartitionsToTxnManager)
-[2026-03-05 08:26:30,494] INFO [ReplicaManager broker=1] Shut down completely (kafka.server.ReplicaManager)
-[2026-03-05 08:26:30,494] INFO [ReplicaManager broker=1] Shut down completely (kafka.server.ReplicaManager)
-[2026-03-05 08:26:30,494] INFO [broker-1-to-controller-alter-partition-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,494] INFO [broker-1-to-controller-alter-partition-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,494] INFO [broker-1-to-controller-alter-partition-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,494] INFO [broker-1-to-controller-alter-partition-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,494] INFO [broker-1-to-controller-alter-partition-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,494] INFO [broker-1-to-controller-alter-partition-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,494] INFO Node to controller channel manager for alter-partition shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,494] INFO Node to controller channel manager for alter-partition shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,495] INFO [broker-1-to-controller-forwarding-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,495] INFO [broker-1-to-controller-forwarding-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,495] INFO [broker-1-to-controller-forwarding-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,495] INFO [broker-1-to-controller-forwarding-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,495] INFO [broker-1-to-controller-forwarding-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,495] INFO [broker-1-to-controller-forwarding-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,495] INFO Node to controller channel manager for forwarding shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,495] INFO Node to controller channel manager for forwarding shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,496] INFO Shutting down. (kafka.log.LogManager)
-[2026-03-05 08:26:30,496] INFO Shutting down. (kafka.log.LogManager)
-[2026-03-05 08:26:30,496] INFO Shutting down the log cleaner. (org.apache.kafka.storage.internals.log.LogCleaner)
-[2026-03-05 08:26:30,497] INFO [kafka-log-cleaner-thread-0]: Shutting down (org.apache.kafka.storage.internals.log.LogCleaner$CleanerThread)
-[2026-03-05 08:26:30,497] INFO [kafka-log-cleaner-thread-0]: Shutdown completed (org.apache.kafka.storage.internals.log.LogCleaner$CleanerThread)
-[2026-03-05 08:26:30,497] INFO [kafka-log-cleaner-thread-0]: Stopped (org.apache.kafka.storage.internals.log.LogCleaner$CleanerThread)
-[2026-03-05 08:26:30,510] INFO Shutdown complete. (kafka.log.LogManager)
-[2026-03-05 08:26:30,510] INFO Shutdown complete. (kafka.log.LogManager)
-[2026-03-05 08:26:30,510] INFO [broker-1-ThrottledChannelReaper-Fetch]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,510] INFO [broker-1-ThrottledChannelReaper-Fetch]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Fetch]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Fetch]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Fetch]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Fetch]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Produce]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Produce]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Produce]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Produce]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Produce]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Produce]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Request]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Request]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Request]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Request]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-ControllerMutation]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Request]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-ControllerMutation]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-Request]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-ControllerMutation]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-ControllerMutation]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-ControllerMutation]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,511] INFO [broker-1-ThrottledChannelReaper-ControllerMutation]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,512] INFO [SocketServer listenerType=BROKER, nodeId=1] Shutting down socket server (kafka.network.SocketServer)
-[2026-03-05 08:26:30,512] INFO [SocketServer listenerType=BROKER, nodeId=1] Shutting down socket server (kafka.network.SocketServer)
-[2026-03-05 08:26:30,519] INFO [SocketServer listenerType=BROKER, nodeId=1] Shutdown completed (kafka.network.SocketServer)
-[2026-03-05 08:26:30,519] INFO [SocketServer listenerType=BROKER, nodeId=1] Shutdown completed (kafka.network.SocketServer)
-[2026-03-05 08:26:30,520] INFO Broker and topic stats closed (org.apache.kafka.storage.log.metrics.BrokerTopicStats)
-[2026-03-05 08:26:30,520] INFO [share-group-lock-timeout-reaper]: Shutting down (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,521] INFO [share-group-lock-timeout-reaper]: Shutdown completed (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,521] INFO [share-group-lock-timeout-reaper]: Stopped (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,521] INFO [PersisterStateManager]: Shutting down (org.apache.kafka.server.share.persister.PersisterStateManager$SendThread)
-[2026-03-05 08:26:30,521] INFO [PersisterStateManager]: Shutdown completed (org.apache.kafka.server.share.persister.PersisterStateManager$SendThread)
-[2026-03-05 08:26:30,521] INFO [PersisterStateManager]: Stopped (org.apache.kafka.server.share.persister.PersisterStateManager$SendThread)
-[2026-03-05 08:26:30,522] INFO [persister-state-manager-reaper]: Shutting down (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,522] INFO [persister-state-manager-reaper]: Shutdown completed (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,522] INFO [persister-state-manager-reaper]: Stopped (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,522] INFO [BrokerLifecycleManager id=1] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,522] INFO [client-metrics-reaper]: Shutting down (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,522] INFO [client-metrics-reaper]: Shutdown completed (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,522] INFO [client-metrics-reaper]: Stopped (org.apache.kafka.server.util.timer.SystemTimerReaper$Reaper)
-[2026-03-05 08:26:30,523] INFO [BrokerServer id=1] shut down completed (kafka.server.BrokerServer)
-[2026-03-05 08:26:30,523] INFO [BrokerServer id=1] shut down completed (kafka.server.BrokerServer)
-[2026-03-05 08:26:30,523] INFO [BrokerServer id=1] Transition from SHUTTING_DOWN to SHUTDOWN (kafka.server.BrokerServer)
-[2026-03-05 08:26:30,523] INFO [BrokerServer id=1] Transition from SHUTTING_DOWN to SHUTDOWN (kafka.server.BrokerServer)
-[2026-03-05 08:26:30,523] ERROR Exiting Kafka due to fatal exception during startup. (kafka.Kafka$)
-java.lang.RuntimeException: Received a fatal error while waiting for the controller to acknowledge that we are caught up
-        at org.apache.kafka.server.util.FutureUtils.waitWithLogging(FutureUtils.java:72) ~[kafka-server-common-8.1.1-ccs.jar:?]
-        at kafka.server.BrokerServer.startup(BrokerServer.scala:551) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.server.KafkaRaftServer.$anonfun$startup$2(KafkaRaftServer.scala:95) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.server.KafkaRaftServer.$anonfun$startup$2$adapted(KafkaRaftServer.scala:95) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at scala.Option.foreach(Option.scala:437) ~[scala-library-2.13.16.jar:?]
-        at kafka.server.KafkaRaftServer.startup(KafkaRaftServer.scala:95) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.Kafka$.main(Kafka.scala:97) [kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.Kafka.main(Kafka.scala) [kafka_2.13-8.1.1-ccs.jar:?]
-Caused by: java.util.concurrent.CancellationException
-        at java.base/java.util.concurrent.CompletableFuture.cancel(Unknown Source) ~[?:?]
-        at kafka.server.BrokerLifecycleManager$ShutdownEvent.run(BrokerLifecycleManager.scala:614) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at org.apache.kafka.queue.KafkaEventQueue$EventHandler.run(KafkaEventQueue.java:192) ~[kafka-server-common-8.1.1-ccs.jar:?]
-        at java.base/java.lang.Thread.run(Unknown Source) ~[?:?]
-[2026-03-05 08:26:30,523] ERROR Exiting Kafka due to fatal exception during startup. (kafka.Kafka$)
-java.lang.RuntimeException: Received a fatal error while waiting for the controller to acknowledge that we are caught up
-        at org.apache.kafka.server.util.FutureUtils.waitWithLogging(FutureUtils.java:72) ~[kafka-server-common-8.1.1-ccs.jar:?]
-        at kafka.server.BrokerServer.startup(BrokerServer.scala:551) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.server.KafkaRaftServer.$anonfun$startup$2(KafkaRaftServer.scala:95) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.server.KafkaRaftServer.$anonfun$startup$2$adapted(KafkaRaftServer.scala:95) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at scala.Option.foreach(Option.scala:437) ~[scala-library-2.13.16.jar:?]
-        at kafka.server.KafkaRaftServer.startup(KafkaRaftServer.scala:95) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.Kafka$.main(Kafka.scala:97) [kafka_2.13-8.1.1-ccs.jar:?]
-        at kafka.Kafka.main(Kafka.scala) [kafka_2.13-8.1.1-ccs.jar:?]
-Caused by: java.util.concurrent.CancellationException
-        at java.base/java.util.concurrent.CompletableFuture.cancel(Unknown Source) ~[?:?]
-        at kafka.server.BrokerLifecycleManager$ShutdownEvent.run(BrokerLifecycleManager.scala:614) ~[kafka_2.13-8.1.1-ccs.jar:?]
-        at org.apache.kafka.queue.KafkaEventQueue$EventHandler.run(KafkaEventQueue.java:192) ~[kafka-server-common-8.1.1-ccs.jar:?]
-        at java.base/java.lang.Thread.run(Unknown Source) ~[?:?]
-[2026-03-05 08:26:30,524] INFO [ControllerServer id=1] shutting down (kafka.server.ControllerServer)
-[2026-03-05 08:26:30,524] INFO [ControllerServer id=1] shutting down (kafka.server.ControllerServer)
-[2026-03-05 08:26:30,525] INFO [raft-expiration-reaper]: Shutting down (org.apache.kafka.raft.TimingWheelExpirationService$ExpiredOperationReaper)
-[2026-03-05 08:26:30,662] INFO [raft-expiration-reaper]: Shutdown completed (org.apache.kafka.raft.TimingWheelExpirationService$ExpiredOperationReaper)
-[2026-03-05 08:26:30,662] INFO [raft-expiration-reaper]: Stopped (org.apache.kafka.raft.TimingWheelExpirationService$ExpiredOperationReaper)
-[2026-03-05 08:26:30,663] INFO [kafka-1-raft-io-thread]: Shutting down (org.apache.kafka.raft.KafkaRaftClientDriver)
-[2026-03-05 08:26:30,663] INFO [RaftManager id=1] Beginning graceful shutdown (org.apache.kafka.raft.KafkaRaftClient)
-[2026-03-05 08:26:30,663] INFO [RaftManager id=1] Graceful shutdown completed (org.apache.kafka.raft.KafkaRaftClient)
-[2026-03-05 08:26:30,664] INFO [RaftManager id=1] Completed graceful shutdown of RaftClient (org.apache.kafka.raft.KafkaRaftClientDriver)
-[2026-03-05 08:26:30,664] INFO [kafka-1-raft-io-thread]: Stopped (org.apache.kafka.raft.KafkaRaftClientDriver)
-[2026-03-05 08:26:30,664] INFO [kafka-1-raft-io-thread]: Shutdown completed (org.apache.kafka.raft.KafkaRaftClientDriver)
-[2026-03-05 08:26:30,664] INFO [kafka-1-raft-outbound-request-thread]: Shutting down (org.apache.kafka.raft.KafkaNetworkChannel$SendThread)
-[2026-03-05 08:26:30,665] INFO [kafka-1-raft-outbound-request-thread]: Shutdown completed (org.apache.kafka.raft.KafkaNetworkChannel$SendThread)
-[2026-03-05 08:26:30,665] INFO [kafka-1-raft-outbound-request-thread]: Stopped (org.apache.kafka.raft.KafkaNetworkChannel$SendThread)
-[2026-03-05 08:26:30,666] INFO [ProducerStateManager partition=__cluster_metadata-0] Wrote producer snapshot at offset 733 with 0 producer ids in 1 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
-[2026-03-05 08:26:30,668] INFO [ControllerRegistrationManager id=1 incarnation=szxfVfSNR-2Tt8rUI8hg8A] beginShutdown: shutting down event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,669] INFO [ControllerRegistrationManager id=1 incarnation=szxfVfSNR-2Tt8rUI8hg8A] shutting down. (kafka.server.ControllerRegistrationManager)
-[2026-03-05 08:26:30,669] INFO [ControllerRegistrationManager id=1 incarnation=szxfVfSNR-2Tt8rUI8hg8A] shutting down. (kafka.server.ControllerRegistrationManager)
-[2026-03-05 08:26:30,669] INFO [controller-1-to-controller-registration-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,669] INFO [controller-1-to-controller-registration-channel-manager]: Shutting down (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,669] INFO [controller-1-to-controller-registration-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,669] INFO [controller-1-to-controller-registration-channel-manager]: Stopped (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,669] INFO [controller-1-to-controller-registration-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,669] INFO [controller-1-to-controller-registration-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,669] INFO Node to controller channel manager for registration shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,669] INFO Node to controller channel manager for registration shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,670] INFO [ControllerRegistrationManager id=1 incarnation=szxfVfSNR-2Tt8rUI8hg8A] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,670] INFO [controller-1-to-controller-registration-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,670] INFO [controller-1-to-controller-registration-channel-manager]: Shutdown completed (kafka.server.NodeToControllerRequestThread)
-[2026-03-05 08:26:30,670] WARN [NodeToControllerChannelManager id=1 name=registration] Attempting to close NetworkClient that has already been closed. (org.apache.kafka.clients.NetworkClient)
-[2026-03-05 08:26:30,670] INFO Node to controller channel manager for registration shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,670] INFO Node to controller channel manager for registration shutdown (kafka.server.NodeToControllerChannelManagerImpl)
-[2026-03-05 08:26:30,670] INFO [ControllerRegistrationManager id=1 incarnation=szxfVfSNR-2Tt8rUI8hg8A] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,671] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Stopping socket server request processors (kafka.network.SocketServer)
-[2026-03-05 08:26:30,671] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Stopping socket server request processors (kafka.network.SocketServer)
-[2026-03-05 08:26:30,674] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Stopped socket server request processors (kafka.network.SocketServer)
-[2026-03-05 08:26:30,674] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Stopped socket server request processors (kafka.network.SocketServer)
-[2026-03-05 08:26:30,674] INFO [QuorumController id=1] QuorumController#beginShutdown: shutting down event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,674] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Shutting down socket server (kafka.network.SocketServer)
-[2026-03-05 08:26:30,674] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Shutting down socket server (kafka.network.SocketServer)
-[2026-03-05 08:26:30,675] INFO [QuorumController id=1] writeNoOpRecord: event unable to start processing because of RejectedExecutionException (treated as TimeoutException). Exception message: The event queue is shutting down (org.apache.kafka.controller.QuorumController)
-[2026-03-05 08:26:30,675] INFO [QuorumController id=1] maybeFenceStaleBroker: event unable to start processing because of RejectedExecutionException (treated as TimeoutException). Exception message: The event queue is shutting down (org.apache.kafka.controller.QuorumController)
-[2026-03-05 08:26:30,675] INFO [QuorumController id=1] generatePeriodicPerformanceMessage: event unable to start processing because of RejectedExecutionException (treated as TimeoutException). Exception message: The event queue is shutting down (org.apache.kafka.controller.QuorumController)
-[2026-03-05 08:26:30,675] INFO [QuorumController id=1] electPreferred: event unable to start processing because of RejectedExecutionException (treated as TimeoutException). Exception message: The event queue is shutting down (org.apache.kafka.controller.QuorumController)
-[2026-03-05 08:26:30,675] INFO [QuorumController id=1] electUnclean: event unable to start processing because of RejectedExecutionException (treated as TimeoutException). Exception message: The event queue is shutting down (org.apache.kafka.controller.QuorumController)
-[2026-03-05 08:26:30,675] INFO [QuorumController id=1] expireDelegationTokens: event unable to start processing because of RejectedExecutionException (treated as TimeoutException). Exception message: The event queue is shutting down (org.apache.kafka.controller.QuorumController)
-[2026-03-05 08:26:30,678] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Shutdown completed (kafka.network.SocketServer)
-[2026-03-05 08:26:30,678] INFO [SocketServer listenerType=CONTROLLER, nodeId=1] Shutdown completed (kafka.network.SocketServer)
-[2026-03-05 08:26:30,679] INFO [data-plane Kafka Request Handler on Controller 1] shutting down (kafka.server.KafkaRequestHandlerPool)
-[2026-03-05 08:26:30,679] INFO [data-plane Kafka Request Handler on Controller 1] shutting down (kafka.server.KafkaRequestHandlerPool)
-[2026-03-05 08:26:30,680] INFO [data-plane Kafka Request Handler on Controller 1] shut down completely (kafka.server.KafkaRequestHandlerPool)
-[2026-03-05 08:26:30,680] INFO [data-plane Kafka Request Handler on Controller 1] shut down completely (kafka.server.KafkaRequestHandlerPool)
-[2026-03-05 08:26:30,680] INFO [ExpirationReaper-1-AlterAcls]: Shutting down (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,681] INFO [ExpirationReaper-1-AlterAcls]: Stopped (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,681] INFO [ExpirationReaper-1-AlterAcls]: Shutdown completed (org.apache.kafka.server.purgatory.DelayedOperationPurgatory$ExpiredOperationReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Fetch]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Fetch]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Fetch]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Fetch]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Fetch]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Fetch]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Produce]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Produce]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Produce]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Produce]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Produce]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Produce]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Request]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,682] INFO [controller-1-ThrottledChannelReaper-Request]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-Request]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-Request]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-Request]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-Request]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-ControllerMutation]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-ControllerMutation]: Shutting down (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-ControllerMutation]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-ControllerMutation]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-ControllerMutation]: Stopped (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,683] INFO [controller-1-ThrottledChannelReaper-ControllerMutation]: Shutdown completed (kafka.server.ClientQuotaManager$ThrottledChannelReaper)
-[2026-03-05 08:26:30,684] INFO [QuorumController id=1] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,685] INFO [SharedServer id=1] Stopping SharedServer (kafka.server.SharedServer)
-[2026-03-05 08:26:30,685] INFO [SharedServer id=1] Stopping SharedServer (kafka.server.SharedServer)
-[2026-03-05 08:26:30,686] INFO [MetadataLoader id=1] beginShutdown: shutting down event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,686] INFO [SnapshotGenerator id=1] close: shutting down event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,686] INFO [SnapshotGenerator id=1] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,686] INFO [MetadataLoader id=1] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,687] INFO [SnapshotGenerator id=1] closed event queue. (org.apache.kafka.queue.KafkaEventQueue)
-[2026-03-05 08:26:30,688] INFO Metrics scheduler closed (org.apache.kafka.common.metrics.Metrics)
-[2026-03-05 08:26:30,688] INFO Closing reporter org.apache.kafka.common.metrics.JmxReporter (org.apache.kafka.common.metrics.Metrics)
-[2026-03-05 08:26:30,688] INFO Metrics reporters closed (org.apache.kafka.common.metrics.Metrics)
-[2026-03-05 08:26:30,688] INFO App info kafka.server for 1 unregistered (org.apache.kafka.common.utils.AppInfoParser)
-[2026-03-05 08:26:30,689] INFO App info kafka.server for 1 unregistered (org.apache.kafka.common.utils.AppInfoParser)
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: common-master-sa
+  namespace: backend
+ 
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-master-deployment
+  namespace: backend
+ 
+spec:
+  replicas: 2
+ 
+  # Keeps previous ReplicaSets for rollback
+  revisionHistoryLimit: 5
+ 
+  # Zero-downtime rolling update strategy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+ 
+  selector:
+    matchLabels:
+      app: common-master-backend
+ 
+  template:
+    metadata:
+      labels:
+        app: common-master-backend
+ 
+      # Prometheus auto-scrape annotations (future monitoring readiness)
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2000"
+ 
+    spec:
+      # Use dedicated service account
+      serviceAccountName: common-master-sa
+ 
+      # Allows graceful shutdown before SIGKILL
+      terminationGracePeriodSeconds: 30
+ 
+      # Prevent automatic service env injection (cleaner env)
+      enableServiceLinks: false
+ 
+ 
+      # Distribute pods across nodes (HA readiness)
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: common-master-backend
+ 
+      containers:
+      - name: common-master-container
+        image: h06vksharbor.corp.ad.sbi/cbops/common-master-service:CBOPS-04
+        imagePullPolicy: Always
+ 
+        env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce"
+          - name: SPRING_PROFILES_ACTIVE  
+            value: "dev"           
+        ports:
+        - containerPort: 2000
+ 
+        # Resource management (required for stable clusters + HPA)
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+ 
+        # Startup probe prevents restart loops for slow-starting apps
+        startupProbe:
+          tcpSocket:
+            port: 2000
+          failureThreshold: 30
+          periodSeconds: 10
+ 
+        # Checks if container is alive (auto-restart if failed)
+        livenessProbe:
+          tcpSocket:
+            port: 2000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+ 
+        # Controls when traffic is allowed to this pod
+        readinessProbe:
+          tcpSocket:
+            port: 2000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+ 
+        # Graceful shutdown before pod termination
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+ 
+---
+# --------------------------------------------
+# Service (internal cluster access)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-master-service
+  namespace: backend
+ 
+spec:
+  selector:
+    app: common-master-backend
+ 
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 2000
+ 
+  type: ClusterIP
+ 
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (auto scaling)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: common-master-hpa
+  namespace: backend
+ 
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: common-master-deployment
+ 
+  minReplicas: 1
+  maxReplicas: 5
+ 
+  # Prevent aggressive scaling (stability)
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+ 
+  # Scale based on CPU usage
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+ 
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# Prevents downtime during node maintenance
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: common-master-pdb
+  namespace: backend
+ 
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: common-master-backend
+ 
+---
+# --------------------------------------------
+# Network Policy (baseline network security)
+# --------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: common-master-network-policy
+  namespace: backend
+ 
+spec:
+  podSelector:
+    matchLabels:
+      app: common-master-backend
+ 
+  policyTypes:
+    - Ingress
+    - Egress
+ 
+  # Allow inbound traffic (can be restricted later)
+  ingress:
+    - {}
+ 
+  # Allow outbound traffic (can be restricted later)
+  egress:
+    - {}
+    
+    
+This configuration willl run how many pods? I want count of 2 pods to be running
