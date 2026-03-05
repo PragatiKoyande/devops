@@ -1,115 +1,228 @@
-I am providing a Kubernetes YAML file.
+Please make it in this fashion
 
-IMPORTANT RULES — FOLLOW STRICTLY:
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: report-sa
+  namespace: cbops-test
 
-1. DO NOT change any existing values.
-   - Do NOT modify names
-   - Do NOT change image, ports, env, replicas
-   - Do NOT rename resources
-   - Do NOT alter existing logic
-
-2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
-
-3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
-   Add things like:
-   - resources requests & limits
-   - liveness/readiness/startup probes (safe defaults)
-   - rolling update strategy
-   - security context
-   - service account
-   - HPA (CPU based)
-   - PodDisruptionBudget
-   - lifecycle preStop hook
-   - topology spread constraints
-   - network policy
-   - graceful shutdown settings
-   - any other MUST-HAVE enterprise features
-
-4. Do NOT add Prometheus annotations or monitoring-related configs.
-
-5. Keep YAML structure clean and production-ready.
-
-6. Do not ask for permission before adding missing enterprise features — just add them.
-
-7. After YAML, explain briefly what new things were added and why.
-8. add also comments in yaml file for better understanding 
-Here is the YAML:
-
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: login-deployment
-  namespace: be-test
+  name: report-deployment
+  namespace: cbops-test
+
 spec:
   replicas: 1
+
+  # Keep previous ReplicaSets for rollback
+  revisionHistoryLimit: 5
+
+  # Zero-downtime rolling updates
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
   selector:
     matchLabels:
-      app: login-backend
+      app: report-backend
+
   template:
     metadata:
       labels:
-        app: login-backend
+        app: report-backend
+
     spec:
-      hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-        - "uatrootdc1.uatad.sbi"
-      volumes:
-      - name: truststore-volume
-        secret:
-          secretName: ldap-truststore-file
-          items:
-            - key: ad-truststore.jks        # Ensure this matches the key you created
-              path: ad-truststore.jks       # Forces the filename inside /etc/fincore/secrets/
+      # Dedicated service account for RBAC/security
+      serviceAccountName: report-sa
+
+      # Graceful shutdown duration
+      terminationGracePeriodSeconds: 30
+
+      # Disable automatic service env vars
+      enableServiceLinks: false
+
+      # Pod-level security hardening
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      # Spread pods across nodes (HA readiness)
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: report-backend
+
       containers:
-      - name: login-backend-container
-        image: h06vksharbor.corp.ad.sbi/cbops/login-service:DEV09
-
-        volumeMounts:
-        - name: truststore-volume
-          mountPath: "/etc/fincore/secrets"
-          readOnly: true
-
-        env:
-        - name: SPRING_LDAP_URLS
-          value: "ldaps://uatrootdc1.uatad.sbi:3269"        
-        - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"        
-        - name: SPRING_DATA_REDIS_HOST
-          value: "redis-service.be-test.svc.cluster.local"
-        - name: SPRING_DATA_REDIS_PORT
-          value: "6379"
-        - name: SPRING_DATA_REDIS_CLIENT_TYPE
-          value: "lettuce"
-        - name: SPRING_PROFILES_ACTIVE
-          value: "dev"
-
-        # LDAP TRUSTSTORE CONFIG
-        - name: LDAP_TRUSTSTORE_PATH
-          value: "file:/etc/fincore/secrets/ad-truststore.jks"
-
-        - name: LDAP_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: ldap-creds
-              key: truststore-password
-
-        ports:
-        - containerPort: 8085
+      - name: report-container
+        image: h06vksharbor.corp.ad.sbi/cbops/report-service:DEV11
         imagePullPolicy: Always
 
+        env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce"
+          - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
+            value: "kafka.cbops-test.svc.cluster.local:9092"
+          - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
+            value: "kafka.cbops-test.svc.cluster.local:9092"
+
+        # Existing resources kept exactly as provided
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "8Gi"
+            cpu: "4"
+
+        ports:
+        - containerPort: 9005
+
+        # Startup probe prevents restart loops during boot
+        startupProbe:
+          tcpSocket:
+            port: 9005
+          failureThreshold: 30
+          periodSeconds: 10
+
+        # Liveness probe for self-healing
+        livenessProbe:
+          tcpSocket:
+            port: 9005
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Readiness probe controls traffic routing
+        readinessProbe:
+          tcpSocket:
+            port: 9005
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Graceful shutdown hook
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+
 ---
+# --------------------------------------------
+# Service (internal cluster communication)
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: login-service
-  namespace: be-test
+  name: report-service
+  namespace: cbops-test
+
 spec:
   selector:
-    app: login-backend
+    app: report-backend
+
   ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 8085
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9005
+
   type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based scaling)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: report-hpa
+  namespace: cbops-test
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: report-deployment
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  # Stabilization avoids scale flapping
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# Ensures availability during maintenance
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: report-pdb
+  namespace: cbops-test
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: report-backend
+
+---
+# --------------------------------------------
+# Network Policy (baseline security)
+# --------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: report-network-policy
+  namespace: cbops-test
+
+spec:
+  podSelector:
+    matchLabels:
+      app: report-backend
+
+  policyTypes:
+    - Ingress
+    - Egress
+
+  # Allow inbound traffic (can tighten later)
+  ingress:
+    - {}
+
+  # Allow outbound traffic (Kafka/Redis access)
+  egress:
+    - {}
