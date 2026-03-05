@@ -1,226 +1,33 @@
-# --------------------------------------------
-# Service Account (security best practice)
-# --------------------------------------------
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: common-master-sa
-  namespace: backend
- 
----
-# --------------------------------------------
-# Deployment
-# --------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: common-master-deployment
-  namespace: backend
- 
-spec:
-  replicas: 2
- 
-  # Keeps previous ReplicaSets for rollback
-  revisionHistoryLimit: 5
- 
-  # Zero-downtime rolling update strategy
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
- 
-  selector:
-    matchLabels:
-      app: common-master-backend
- 
-  template:
-    metadata:
-      labels:
-        app: common-master-backend
- 
-      # Prometheus auto-scrape annotations (future monitoring readiness)
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "2000"
- 
-    spec:
-      # Use dedicated service account
-      serviceAccountName: common-master-sa
- 
-      # Allows graceful shutdown before SIGKILL
-      terminationGracePeriodSeconds: 30
- 
-      # Prevent automatic service env injection (cleaner env)
-      enableServiceLinks: false
- 
- 
-      # Distribute pods across nodes (HA readiness)
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: common-master-backend
- 
-      containers:
-      - name: common-master-container
-        image: h06vksharbor.corp.ad.sbi/cbops/common-master-service:CBOPS-04
-        imagePullPolicy: Always
- 
-        env:
-          - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"
-          - name: SPRING_DATA_REDIS_PORT
-            value: "6379"
-          - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"
-          - name: SPRING_PROFILES_ACTIVE  
-            value: "dev"           
-        ports:
-        - containerPort: 2000
- 
-        # Resource management (required for stable clusters + HPA)
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
- 
-        # Startup probe prevents restart loops for slow-starting apps
-        startupProbe:
-          tcpSocket:
-            port: 2000
-          failureThreshold: 30
-          periodSeconds: 10
- 
-        # Checks if container is alive (auto-restart if failed)
-        livenessProbe:
-          tcpSocket:
-            port: 2000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
- 
-        # Controls when traffic is allowed to this pod
-        readinessProbe:
-          tcpSocket:
-            port: 2000
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
- 
-        # Graceful shutdown before pod termination
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
- 
----
-# --------------------------------------------
-# Service (internal cluster access)
-# --------------------------------------------
-apiVersion: v1
-kind: Service
-metadata:
-  name: common-master-service
-  namespace: backend
- 
-spec:
-  selector:
-    app: common-master-backend
- 
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 2000
- 
-  type: ClusterIP
- 
----
-# --------------------------------------------
-# Horizontal Pod Autoscaler (auto scaling)
-# --------------------------------------------
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: common-master-hpa
-  namespace: backend
- 
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: common-master-deployment
- 
-  minReplicas: 1
-  maxReplicas: 5
- 
-  # Prevent aggressive scaling (stability)
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
- 
-  # Scale based on CPU usage
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
- 
----
-# --------------------------------------------
-# Pod Disruption Budget
-# Prevents downtime during node maintenance
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: common-master-pdb
-  namespace: backend
- 
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: common-master-backend
- 
----
-# --------------------------------------------
-# Network Policy (baseline network security)
-# --------------------------------------------
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: common-master-network-policy
-  namespace: backend
- 
-spec:
-  podSelector:
-    matchLabels:
-      app: common-master-backend
- 
-  policyTypes:
-    - Ingress
-    - Egress
- 
-  # Allow inbound traffic (can be restricted later)
-  ingress:
-    - {}
- 
-  # Allow outbound traffic (can be restricted later)
-  egress:
-    - {}
-    
-    
-This configuration willl run how many pods? I want count of 2 pods to be running
+D:\Pragati\PROD-Deployment-Test>kubectl logs common-request-deployment-78679cbdb-4c8dq -n backend --kubeconfig h06vksuatcbopscls.conf
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2026-03-05T08:55:17.810Z  INFO 1 --- [CommonRequestService] [           main] c.t.f.C.CommonRequestServiceApplication  : Starting CommonRequestServiceApplication v0.0.1 using Java 22.0.2 with PID 1 (/app.jar started by ? in /)
+2026-03-05T08:55:17.813Z  INFO 1 --- [CommonRequestService] [           main] c.t.f.C.CommonRequestServiceApplication  : The following 1 profile is active: "dev"
+2026-03-05T08:55:23.395Z  INFO 1 --- [CommonRequestService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-05T08:55:23.397Z  INFO 1 --- [CommonRequestService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-05T08:55:24.112Z  INFO 1 --- [CommonRequestService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 701 ms. Found 15 JPA repository interfaces.
+2026-03-05T08:55:24.208Z  INFO 1 --- [CommonRequestService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-05T08:55:24.209Z  INFO 1 --- [CommonRequestService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-05T08:55:24.303Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.BranchMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.303Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.CalenderConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.303Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.CGLMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.304Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.CircleMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.304Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.CommonRequestRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.304Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.CurrencyMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.304Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.CurrencyRateChangeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.306Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.306Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.PermissionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.306Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.ReportTemplateFilterRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.306Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.ReportTemplateRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.307Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.ReportTemplateVariantParamDefRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.307Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.ReportTemplateVariantRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.307Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.SegmentCodeMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.307Z  INFO 1 --- [CommonRequestService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonRequestService.repository.StateMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-05T08:55:24.307Z  INFO 1 --- [CommonRequestService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
