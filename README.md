@@ -69,9 +69,9 @@ spec:
 
         env:
 
-        # Disable broken logback configuration
+        # FIXED JAVA OPTIONS
         - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.preferIPv4Stack=true -Dlogging.config=NONE"
+          value: "-Djava.net.preferIPv4Stack=true"
 
         # Kafka
         - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
