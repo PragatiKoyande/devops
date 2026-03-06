@@ -1,335 +1,407 @@
----
-# =========================================================
-# KAFKA HEADLESS SERVICE (REQUIRED FOR KRaft)
-# =========================================================
+D:\Pragati\PROD-Deployment-Test>kubectl logs notification-deployment-6c4c5fb4b8-ddg2j -n backend --kubeconfig h06vksuatcbopscls.conf
+Logging system failed to initialize using configuration from 'null'
+java.lang.IllegalStateException: Logback configuration error detected:
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - Failed to create parent directories for [/logs/application-json.log]
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - openFile(logs/application-json.log,true) call failed. java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.reportConfigurationErrorsIfNecessary(LogbackLoggingSystem.java:282)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:260)
+        at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithConventions(AbstractLoggingSystem.java:81)
+        at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:61)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:193)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+        at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+        at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+        at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+        at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+        at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:370)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.fincore.NotificationService.NotificationServiceApplication.main(NotificationServiceApplication.java:18)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+        Suppressed: java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+                at java.base/java.io.FileOutputStream.open0(Native Method)
+                at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+                at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+                at ch.qos.logback.core.recovery.ResilientFileOutputStream.<init>(ResilientFileOutputStream.java:26)
+                at ch.qos.logback.core.FileAppender.openFile(FileAppender.java:206)
+                at ch.qos.logback.core.FileAppender.start(FileAppender.java:126)
+                at ch.qos.logback.core.rolling.RollingFileAppender.start(RollingFileAppender.java:103)
+                at ch.qos.logback.core.model.processor.AppenderModelHandler.postHandle(AppenderModelHandler.java:84)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:257)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.traversalLoop(DefaultProcessor.java:90)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.process(DefaultProcessor.java:106)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.processModel(GenericXMLConfigurator.java:216)
+                at org.springframework.boot.logging.logback.SpringBootJoranConfigurator.processModel(SpringBootJoranConfigurator.java:132)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:178)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:123)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:66)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.configureByResourceUrl(LogbackLoggingSystem.java:292)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.lambda$loadConfiguration$1(LogbackLoggingSystem.java:254)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.withLoggingSuppressed(LogbackLoggingSystem.java:472)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:248)
+                ... 28 more
+2026-03-06 10:06:42.778 ERROR [main] o.s.b.SpringApplication: Application run failed
+java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected:
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - Failed to create parent directories for [/logs/application-json.log]
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - openFile(logs/application-json.log,true) call failed. java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:347)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+        at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+        at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+        at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+        at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+        at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:370)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.fincore.NotificationService.NotificationServiceApplication.main(NotificationServiceApplication.java:18)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+Caused by: java.lang.IllegalStateException: Logback configuration error detected:
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - Failed to create parent directories for [/logs/application-json.log]
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - openFile(logs/application-json.log,true) call failed. java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.reportConfigurationErrorsIfNecessary(LogbackLoggingSystem.java:282)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:260)
+        at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithConventions(AbstractLoggingSystem.java:81)
+        at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:61)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:193)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
+        ... 24 common frames omitted
+        Suppressed: java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+                at java.base/java.io.FileOutputStream.open0(Native Method)
+                at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+                at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+                at ch.qos.logback.core.recovery.ResilientFileOutputStream.<init>(ResilientFileOutputStream.java:26)
+                at ch.qos.logback.core.FileAppender.openFile(FileAppender.java:206)
+                at ch.qos.logback.core.FileAppender.start(FileAppender.java:126)
+                at ch.qos.logback.core.rolling.RollingFileAppender.start(RollingFileAppender.java:103)
+                at ch.qos.logback.core.model.processor.AppenderModelHandler.postHandle(AppenderModelHandler.java:84)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:257)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.traversalLoop(DefaultProcessor.java:90)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.process(DefaultProcessor.java:106)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.processModel(GenericXMLConfigurator.java:216)
+                at org.springframework.boot.logging.logback.SpringBootJoranConfigurator.processModel(SpringBootJoranConfigurator.java:132)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:178)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:123)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:66)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.configureByResourceUrl(LogbackLoggingSystem.java:292)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.lambda$loadConfiguration$1(LogbackLoggingSystem.java:254)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.withLoggingSuppressed(LogbackLoggingSystem.java:472)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:248)
+                ... 28 common frames omitted
+Exception in thread "main" java.lang.reflect.InvocationTargetException
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+Caused by: java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected:
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - Failed to create parent directories for [/logs/application-json.log]
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - openFile(logs/application-json.log,true) call failed. java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:347)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+        at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+        at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+        at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+        at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+        at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:370)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.fincore.NotificationService.NotificationServiceApplication.main(NotificationServiceApplication.java:18)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        ... 4 more
+Caused by: java.lang.IllegalStateException: Logback configuration error detected:
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - Failed to create parent directories for [/logs/application-json.log]
+ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - openFile(logs/application-json.log,true) call failed. java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.reportConfigurationErrorsIfNecessary(LogbackLoggingSystem.java:282)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:260)
+        at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithConventions(AbstractLoggingSystem.java:81)
+        at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:61)
+        at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:193)
+        at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
+        ... 24 more
+        Suppressed: java.io.FileNotFoundException: logs/application-json.log (No such file or directory)
+                at java.base/java.io.FileOutputStream.open0(Native Method)
+                at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+                at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+                at ch.qos.logback.core.recovery.ResilientFileOutputStream.<init>(ResilientFileOutputStream.java:26)
+                at ch.qos.logback.core.FileAppender.openFile(FileAppender.java:206)
+                at ch.qos.logback.core.FileAppender.start(FileAppender.java:126)
+                at ch.qos.logback.core.rolling.RollingFileAppender.start(RollingFileAppender.java:103)
+                at ch.qos.logback.core.model.processor.AppenderModelHandler.postHandle(AppenderModelHandler.java:84)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:257)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.traversalLoop(DefaultProcessor.java:90)
+                at ch.qos.logback.core.model.processor.DefaultProcessor.process(DefaultProcessor.java:106)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.processModel(GenericXMLConfigurator.java:216)
+                at org.springframework.boot.logging.logback.SpringBootJoranConfigurator.processModel(SpringBootJoranConfigurator.java:132)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:178)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:123)
+                at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:66)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.configureByResourceUrl(LogbackLoggingSystem.java:292)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.lambda$loadConfiguration$1(LogbackLoggingSystem.java:254)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.withLoggingSuppressed(LogbackLoggingSystem.java:472)
+                at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:248)
+                ... 28 more
+
+                Getting this issue and below is my manifest file:
+
+                # --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
 apiVersion: v1
-kind: Service
+kind: ServiceAccount
 metadata:
-  name: kafka
+  name: notification-sa
   namespace: backend
-  labels:
-    app: kafka
-spec:
-  clusterIP: None
-  selector:
-    app: kafka
-  ports:
-    - name: broker
-      port: 9092
-    - name: controller
-      port: 9093
 
 ---
-# =========================================================
-# KAFKA STATEFULSET (Confluent cp-kafka, KRaft mode)
-# =========================================================
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: kafka
-  namespace: backend
-spec:
-  serviceName: kafka
-  replicas: 1
-  selector:
-    matchLabels:
-      app: kafka
-  template:
-    metadata:
-      labels:
-        app: kafka
-    spec:
-      securityContext:
-        fsGroup: 1000
-      containers:
-        - name: kafka
-          image: h06vksharbor.corp.ad.sbi/cbops/cp-kafka:v1
-          ports:
-            - name: broker
-              containerPort: 9092
-            - name: controller
-              containerPort: 9093
-
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "2Gi"
-            limits:
-              cpu: "2"
-              memory: "4Gi"
-
-          env:
-            - name: CLUSTER_ID
-              value: "jgQjUybBSACbAFjwpKFQiA"
-
-            - name: KAFKA_NODE_ID
-              value: "1"
-
-            - name: KAFKA_PROCESS_ROLES
-              value: "broker,controller"
-
-            - name: KAFKA_CONTROLLER_LISTENER_NAMES
-              value: "CONTROLLER"
-
-            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
-              value: "1@kafka-0.kafka.cbops.svc.cluster.local:9093"
-
-            - name: KAFKA_LISTENERS
-              value: "INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
-
-            - name: KAFKA_ADVERTISED_LISTENERS
-              value: "INTERNAL://kafka-0.kafka.cbops.svc.cluster.local:9092"
-
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
-
-            - name: KAFKA_INTER_BROKER_LISTENER_NAME
-              value: "INTERNAL"
-
-            - name: KAFKA_LOG_DIRS
-              value: "/var/lib/kafka/data/kafka"
-
-            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
-              value: "1"
-
-            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
-              value: "1"
-
-            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
-              value: "1"
-
-          volumeMounts:
-            - name: kafka-data
-              mountPath: /var/lib/kafka/data
-
-  volumeClaimTemplates:
-    - metadata:
-        name: kafka-data
-      spec:
-        storageClassName: h06-vks-sp-6
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 5Gi
-            -----------------------------------------------------------
-            apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: connect
+  name: notification-deployment
   namespace: backend
+
 spec:
-  replicas: 1
+  replicas: 2
+
+  # Keeps previous ReplicaSets for rollback
+  revisionHistoryLimit: 5
+
+  # Zero-downtime rolling update strategy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
   selector:
     matchLabels:
-      app: connect
+      app: notification-backend
+
   template:
     metadata:
       labels:
-        app: connect
+        app: notification-backend
+
     spec:
+      # Use dedicated service account
+      serviceAccountName: notification-sa
+
+      # Allows graceful shutdown before SIGKILL
+      terminationGracePeriodSeconds: 30
+
+      # Prevent automatic service env injection
+      enableServiceLinks: false
+
+      # Pod-level security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      # Distribute pods across nodes (HA readiness)
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: notification-backend
+
       containers:
-        - name: connect
-          image: h06vksharbor.corp.ad.sbi/cbops/kafka-connect:x1
-          ports:
-            - containerPort: 8083
-              name: rest
+      - name: notification-container
+        image: h06vksharbor.corp.ad.sbi/cbops/notification-service:TEST-1
+        imagePullPolicy: Always
 
-          env:
-            # ========= REQUIRED =========
-            - name: CONNECT_BOOTSTRAP_SERVERS
-              value: "kafka.be-test.svc.cluster.local:9092"
+        env:
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:postgresql://postgres-db:5432/notification_db"
+          - name: SPRING_DATASOURCE_USERNAME
+            value: "notification_user"
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: "notification_password"
+          - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
+            value: "kafka.backend.svc.cluster.local:9092"
+          - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
+            value: "kafka.backend.svc.cluster.local:9092"
+          - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+            value: "notification-service-group"
+          - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+            value: "earliest"
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce"
 
-            - name: CONNECT_GROUP_ID
-              value: "connect-cluster"
+        ports:
+          - containerPort: 9010
 
-            - name: CONNECT_CONFIG_STORAGE_TOPIC
-              value: "_connect-configs"
+        # Resource management (required for stable clusters + HPA)
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
 
-            - name: CONNECT_OFFSET_STORAGE_TOPIC
-              value: "_connect-offsets"
+        # Startup probe prevents restart loops for slow-starting apps
+        startupProbe:
+          tcpSocket:
+            port: 9010
+          failureThreshold: 30
+          periodSeconds: 10
 
-            - name: CONNECT_STATUS_STORAGE_TOPIC
-              value: "_connect-status"
+        # Checks if container is alive (auto-restart if failed)
+        livenessProbe:
+          tcpSocket:
+            port: 9010
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
-              value: "1"
+        # Controls when traffic is allowed to this pod
+        readinessProbe:
+          tcpSocket:
+            port: 9010
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
-              value: "1"
+        # Graceful shutdown before pod termination
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
 
-            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
-              value: "1"
-
-            # ========= CONVERTERS =========
-            - name: CONNECT_KEY_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_VALUE_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_INTERNAL_KEY_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_INTERNAL_VALUE_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
-              value: "true"
-
-            - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
-              value: "true"
-
-            - name: CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE
-              value: "false"
-
-            - name: CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE
-              value: "false"
-
-            # ========= REST =========
-            - name: CONNECT_REST_PORT
-              value: "8083"
-
-            - name: CONNECT_REST_ADVERTISED_HOST_NAME
-              value: "connect.be-test.svc.cluster.local"
-
-            - name: CONNECT_REST_ADVERTISED_PORT
-              value: "8083"
-
-            # ========= PLUGINS =========
-            - name: CONNECT_PLUGIN_PATH
-              value: "/usr/share/java,/usr/share/java/debezium-connector-oracle"
-
-            # ========= LOGGING =========
-            - name: CONNECT_LOG4J_ROOT_LOGLEVEL
-              value: "INFO"
-
-          readinessProbe:
-            httpGet:
-              path: /connectors
-              port: 8083
-            initialDelaySeconds: 20
-            periodSeconds: 10
+        # Container-level security hardening
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
 
 ---
+# --------------------------------------------
+# Service (internal cluster access)
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: connect
+  name: notification-service
   namespace: backend
+
 spec:
   selector:
-    app: connect
+    app: notification-backend
+
   ports:
-    - name: rest
-      port: 8083
-      targetPort: 8083
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9010
+
   type: ClusterIP
--------------------------------------------------------------------------------------------
-apiVersion: v1
-data:
-  oracle-connector.json: |
-    {
-      "name": "fincore-connector-final",
-      "config": {
-        "connector.class": "io.debezium.connector.oracle.OracleConnector",
-        "tasks.max": "1",
 
-        "database.hostname": "10.177.103.192",
-        "database.port": "1523",
-        "database.user": "c##debezium",
-        "database.password": "Debe#123",
-        "database.dbname": "fincorepdb1",
-        "database.pdb.name": "fincorepdb1",
-        "database.sid": "fincorepdb1",
-        "database.servername": "fincorepdb1",
-
-        "topic.prefix": "fincore",
-        "table.include.list": "fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS",
-
-        "decimal.handling.mode": "string",
-        "database.connection.adapter": "logminer",
-
-        "database.history": "io.debezium.relational.history.KafkaDatabaseHistory",
-
-        "database.history.kafka.bootstrap.servers": "kafka.cbops.svc.cluster.local:9092",
-        "schema.history.internal.kafka.bootstrap.servers": "kafka.cbops.svc.cluster.local:9092",
-        "schema.history.internal.kafka.topic": "schema-changes.oracle",
-
-        "log.mining.strategy": "online_catalog",
-        "log.mining.continuous.mine": "true",
-        "log.mining.batch.size.default": "50000",
-        "log.mining.batch.size.max": "100000",
-        "log.mining.sleep.time.default": "50",
-        "log.mining.sleep.time.max": "2000",
-
-        "heartbeat.interval.ms": "2000",
-        "heartbeat.topics.prefix": "heartbeat",
-
-        "openlineage.integration.enabled": "true"
-      }
-    }
-kind: ConfigMap
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (auto scaling)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"oracle-connector.json":"{\n  \"name\": \"fincore-connector-final\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.oracle.OracleConnector\",\n    \"tasks.max\": \"1\",\n\n    \"database.hostname\": \"10.177.103.192\",\n    \"database.port\": \"1523\",\n    \"database.user\": \"c##debezium\",\n    \"database.password\": \"Debe#123\",\n    \"database.dbname\": \"fincorepdb1\",\n    \"database.pdb.name\": \"fincorepdb1\",\n    \"database.sid\": \"fincorepdb1\",\n    \"database.servername\": \"fincorepdb1\",\n\n    \"topic.prefix\": \"fincore\",\n    \"table.include.list\": \"fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS\",\n\n    \"decimal.handling.mode\": \"string\",\n    \"database.connection.adapter\": \"logminer\",\n\n    \"database.history\": \"io.debezium.relational.history.KafkaDatabaseHistory\",\n\n    \"database.history.kafka.bootstrap.servers\": \"kafka.cbops.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.bootstrap.servers\": \"kafka.cbops.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.topic\": \"schema-changes.oracle\",\n\n    \"log.mining.strategy\": \"online_catalog\",\n    \"log.mining.continuous.mine\": \"true\",\n    \"log.mining.batch.size.default\": \"50000\",\n    \"log.mining.batch.size.max\": \"100000\",\n    \"log.mining.sleep.time.default\": \"50\",\n    \"log.mining.sleep.time.max\": \"2000\",\n\n    \"heartbeat.interval.ms\": \"2000\",\n    \"heartbeat.topics.prefix\": \"heartbeat\",\n\n    \"openlineage.integration.enabled\": \"true\"\n  }\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"oracle-connector-config","namespace":"cbops"}}
-  creationTimestamp: "2025-12-10T10:16:10Z"
-  name: oracle-connector-config
+  name: notification-hpa
   namespace: backend
-  resourceVersion: "46613478"
-  uid: d4abbc42-98d9-4883-bd30-4553baa9bb87
- ---------------------------------------------------------------------------
- apiVersion: batch/v1
-kind: Job
-metadata:
-  name: register-oracle-connector
-  namespace: backend
+
 spec:
-  backoffLimit: 3
-  template:
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: register
-          image: h06vksharbor.corp.ad.sbi/cbops/curlimages/curl:v1
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              echo "Waiting for Kafka Connect..."
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: notification-deployment
 
-              # Wait until Connect REST is up
-              until curl -sf http://connect.be-test.svc.cluster.local:8083/connectors ; do
-                echo "Connect not ready yet..."
-                sleep 5
-              done
+  minReplicas: 1
+  maxReplicas: 5
 
-              echo "Sleeping 30s for worker + plugins to fully init..."
-              sleep 30
+  # Prevent aggressive scaling (stability)
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-              echo "Posting connector config from /config/oracle-connector.json ..."
-              HTTP_CODE=$(curl -s -o /tmp/out.txt -w "%{http_code}" \
-                -X POST \
-                -H "Content-Type: application/json" \
-                --data "@/config/oracle-connector.json" \
-                http://connect.be-test.svc.cluster.local:8083/connectors)
+  # Scale based on CPU usage
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-              echo "HTTP_CODE=$HTTP_CODE"
-              echo "Response body:"
-              cat /tmp/out.txt || true
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# Prevents downtime during node maintenance
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: notification-pdb
+  namespace: backend
 
-              # 201 = created, 200 = ok, 409 = already exists
-              if [ "$HTTP_CODE" != "201" ] && [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "409" ]; then
-                echo "Registration failed (HTTP $HTTP_CODE)"
-                exit 1
-              fi
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: notification-backend
 
-              echo "Connector registration succeeded (or already existed)."
-          volumeMounts:
-            - name: connector-config
-              mountPath: /config
-
-      volumes:
-        - name: connector-config
-          configMap:
-            name: oracle-connector-config
+---
