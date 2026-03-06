@@ -54,7 +54,6 @@ spec:
           matchLabels:
             app: user-backend
 
-      # CREATE LOG DIRECTORY
       volumes:
       - name: logs-volume
         emptyDir: {}
@@ -64,12 +63,13 @@ spec:
         image: h06vksharbor.corp.ad.sbi/cbops/user-service:TEST-1
         imagePullPolicy: Always
 
-        # MOUNT /logs
         volumeMounts:
         - name: logs-volume
           mountPath: /logs
 
         env:
+
+        # Kafka
         - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
           value: "kafka-0.kafka.backend.svc.cluster.local:9092"
 
@@ -79,6 +79,7 @@ spec:
         - name: SPRING_KAFKA_CONSUMER_GROUP_ID
           value: "rbac-cache-group"
 
+        # Redis
         - name: SPRING_DATA_REDIS_HOST
           value: "redis-service"
 
@@ -87,6 +88,14 @@ spec:
 
         - name: SPRING_DATA_REDIS_CLIENT_TYPE
           value: "lettuce"
+
+        # Logging path (important)
+        - name: LOGGING_FILE_PATH
+          value: "/logs"
+
+        # JVM stability settings
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Djava.net.preferIPv4Stack=true -Dlogging.file.path=/logs"
 
         ports:
         - containerPort: 8087
