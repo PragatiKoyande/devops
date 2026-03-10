@@ -1,87 +1,3 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: user-deployment
-  namespace: uat-cbops1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: user-backend
-  template:
-    metadata:
-      labels:
-        app: user-backend
-    spec:
-      hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-        - "uatrootdc1.uatad.sbi" 
-      volumes:
-      - name: truststore-volume
-        secret:
-          secretName: ldap-truststore-file
-          items:
-            - key: ad-truststore.jks        # Ensure this matches the key you created
-              path: ad-truststore.jks       # Forces the filename inside /etc/fincore/secrets/        
-      containers:
-      - name: user-container
-        image: h06vksharbor.corp.ad.sbi/cbops/user-service:UAT08
-        volumeMounts:
-        - name: truststore-volume
-          mountPath: "/etc/fincore/secrets"
-          readOnly: true        
-        env:
-            # ========= REQUIRED =========
-            - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
-              value: "kafka-0.kafka.uat-cbops1.svc.cluster.local:9092"
-            - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
-              value: "kafka-0.kafka.uat-cbops1.svc.cluster.local:9092"
-            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-              value: "rbac-cache-group" 
-            - name: SPRING_LDAP_URLS
-              value: "ldaps://uatrootdc1.uatad.sbi:3269"        
-            - name: JAVA_TOOL_OPTIONS
-              value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
-            - name: LDAP_TRUSTSTORE_PATH
-              value: "file:/etc/fincore/secrets/ad-truststore.jks"
-            - name: SPRING_LDAP_USERNAME
-              value: "fincorecbops@UATAD.SBI"
-            - name: SPRING_LDAP_PASSWORD
-              value: "F1C0re#15"  
-            - name: LDAP_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                 name: ldap-creds
-                 key: truststore-password              
-        envFrom:
-            - configMapRef:
-                name: uat-common-app-config
-            - secretRef:
-                name: uat-common-app-secret              
-        ports:
-        - containerPort: 8087
-        imagePullPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: user-service
-  namespace: uat-cbops1
-spec:
-  selector:
-    app: user-backend
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 8087
-  type: ClusterIP
-
-
-
-I want to add secretName: ldap-truststore-file configuration related all things in my another yaml file which is below mentioned:
-
 # --------------------------------------------
 # Service Account
 # --------------------------------------------
@@ -154,6 +70,11 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
+      hostAliases:
+      - ip: "10.189.42.83"
+        hostnames:
+        - "uatrootdc1.uatad.sbi"
+
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: kubernetes.io/hostname
@@ -170,6 +91,14 @@ spec:
         configMap:
           name: user-logback-config
 
+      # LDAP Truststore Secret Volume
+      - name: truststore-volume
+        secret:
+          secretName: ldap-truststore-file
+          items:
+            - key: ad-truststore.jks
+              path: ad-truststore.jks
+
       containers:
       - name: user-container
         image: h06vksharbor.corp.ad.sbi/cbops/user-service:TEST-1
@@ -182,11 +111,15 @@ spec:
         - name: logback-config
           mountPath: /config
 
+        - name: truststore-volume
+          mountPath: /etc/fincore/secrets
+          readOnly: true
+
         env:
 
-        # Override logging configuration
+        # Logging
         - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.preferIPv4Stack=true -Dlogging.config=/config/logback.xml"
+          value: "-Djava.net.preferIPv4Stack=true -Dlogging.config=/config/logback.xml -Djavax.net.debug=ssl:handshake"
 
         # Kafka
         - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
@@ -207,6 +140,25 @@ spec:
 
         - name: SPRING_DATA_REDIS_CLIENT_TYPE
           value: "lettuce"
+
+        # LDAP
+        - name: SPRING_LDAP_URLS
+          value: "ldaps://uatrootdc1.uatad.sbi:3269"
+
+        - name: LDAP_TRUSTSTORE_PATH
+          value: "file:/etc/fincore/secrets/ad-truststore.jks"
+
+        - name: SPRING_LDAP_USERNAME
+          value: "fincorecbops@UATAD.SBI"
+
+        - name: SPRING_LDAP_PASSWORD
+          value: "F1C0re#15"
+
+        - name: LDAP_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ldap-creds
+              key: truststore-password
 
         ports:
         - containerPort: 8087
@@ -317,5 +269,3 @@ spec:
   selector:
     matchLabels:
       app: user-backend
-
-      Can you add the details and share again the entire file
