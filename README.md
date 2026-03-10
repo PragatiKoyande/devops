@@ -1,271 +1,379 @@
-# --------------------------------------------
-# Service Account
-# --------------------------------------------
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: user-sa
-  namespace: backend
+I am providing a Kubernetes YAML file.
 
+IMPORTANT RULES — FOLLOW STRICTLY:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT change image, ports, env, replicas
+   - Do NOT rename resources
+   - Do NOT alter existing logic
+
+2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+
+3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
+   Add things like:
+   - resources requests & limits
+   - liveness/readiness/startup probes (safe defaults)
+   - rolling update strategy
+   - security context
+   - service account
+   - HPA (CPU based)
+   - PodDisruptionBudget
+   - lifecycle preStop hook
+   - topology spread constraints
+   - network policy
+   - graceful shutdown settings
+   - any other MUST-HAVE enterprise features
+
+4. Do NOT add Prometheus annotations or monitoring-related configs.
+
+5. Keep YAML structure clean and production-ready.
+
+6. Do not ask for permission before adding missing enterprise features — just add them.
+
+7. After YAML, explain briefly what new things were added and why.
+8. add also comments in yaml file for better understanding 
+Here is the YAML:
+
+1) apache-kafka.yaml
 ---
-# --------------------------------------------
-# Logback Override ConfigMap
-# --------------------------------------------
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: user-logback-config
-  namespace: backend
-data:
-  logback.xml: |
-    <configuration>
-        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger - %msg%n</pattern>
-            </encoder>
-        </appender>
-
-        <root level="INFO">
-            <appender-ref ref="STDOUT"/>
-        </root>
-    </configuration>
-
----
-# --------------------------------------------
-# Deployment
-# --------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: user-deployment
-  namespace: backend
-
-spec:
-  replicas: 2
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-  selector:
-    matchLabels:
-      app: user-backend
-
-  template:
-    metadata:
-      labels:
-        app: user-backend
-
-    spec:
-      serviceAccountName: user-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
-
-      hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-        - "uatrootdc1.uatad.sbi"
-
-      topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: ScheduleAnyway
-        labelSelector:
-          matchLabels:
-            app: user-backend
-
-      volumes:
-      - name: logs-volume
-        emptyDir: {}
-
-      - name: logback-config
-        configMap:
-          name: user-logback-config
-
-      # LDAP Truststore Secret Volume
-      - name: truststore-volume
-        secret:
-          secretName: ldap-truststore-file
-          items:
-            - key: ad-truststore.jks
-              path: ad-truststore.jks
-
-      containers:
-      - name: user-container
-        image: h06vksharbor.corp.ad.sbi/cbops/user-service:TEST-1
-        imagePullPolicy: Always
-
-        volumeMounts:
-        - name: logs-volume
-          mountPath: /logs
-
-        - name: logback-config
-          mountPath: /config
-
-        - name: truststore-volume
-          mountPath: /etc/fincore/secrets
-          readOnly: true
-
-        env:
-
-        # Logging
-        - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.preferIPv4Stack=true -Dlogging.config=/config/logback.xml -Djavax.net.debug=ssl:handshake"
-
-        # Kafka
-        - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
-          value: "kafka-0.kafka.backend.svc.cluster.local:9092"
-
-        - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
-          value: "kafka-0.kafka.backend.svc.cluster.local:9092"
-
-        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-          value: "rbac-cache-group"
-
-        # Redis
-        - name: SPRING_DATA_REDIS_HOST
-          value: "redis-service"
-
-        - name: SPRING_DATA_REDIS_PORT
-          value: "6379"
-
-        - name: SPRING_DATA_REDIS_CLIENT_TYPE
-          value: "lettuce"
-
-        # LDAP
-        - name: SPRING_LDAP_URLS
-          value: "ldaps://uatrootdc1.uatad.sbi:3269"
-
-        - name: LDAP_TRUSTSTORE_PATH
-          value: "file:/etc/fincore/secrets/ad-truststore.jks"
-
-        - name: SPRING_LDAP_USERNAME
-          value: "fincorecbops@UATAD.SBI"
-
-        - name: SPRING_LDAP_PASSWORD
-          value: "F1C0re#15"
-
-        - name: LDAP_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: ldap-creds
-              key: truststore-password
-
-        ports:
-        - containerPort: 8087
-
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-
-        startupProbe:
-          tcpSocket:
-            port: 8087
-          failureThreshold: 30
-          periodSeconds: 10
-
-        livenessProbe:
-          tcpSocket:
-            port: 8087
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
-
-        readinessProbe:
-          tcpSocket:
-            port: 8087
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
-
----
-# --------------------------------------------
-# Service
-# --------------------------------------------
+# =========================================================
+# KAFKA HEADLESS SERVICE (REQUIRED FOR KRaft)
+# =========================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-service
+  name: kafka
   namespace: backend
-
+  labels:
+    app: kafka
 spec:
+  clusterIP: None
   selector:
-    app: user-backend
-
+    app: kafka
   ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 8087
-
-  type: ClusterIP
+    - name: broker
+      port: 9092
+    - name: controller
+      port: 9093
 
 ---
-# --------------------------------------------
-# Horizontal Pod Autoscaler
-# --------------------------------------------
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+# =========================================================
+# KAFKA STATEFULSET (Confluent cp-kafka, KRaft mode)
+# =========================================================
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: user-hpa
+  name: kafka
   namespace: backend
-
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: user-deployment
-
-  minReplicas: 1
-  maxReplicas: 5
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-
----
-# --------------------------------------------
-# Pod Disruption Budget
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: user-pdb
-  namespace: backend
-
-spec:
-  minAvailable: 1
-
+  serviceName: kafka
+  replicas: 1
   selector:
     matchLabels:
-      app: user-backend
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: kafka
+          image: h06vksharbor.corp.ad.sbi/cbops/cp-kafka:v1
+          ports:
+            - name: broker
+              containerPort: 9092
+            - name: controller
+              containerPort: 9093
+
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+
+          env:
+            - name: CLUSTER_ID
+              value: "jgQjUybBSACbAFjwpKFQiA"
+
+            - name: KAFKA_NODE_ID
+              value: "1"
+
+            - name: KAFKA_PROCESS_ROLES
+              value: "broker,controller"
+
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "1@kafka-0.kafka.backend.svc.cluster.local:9093"
+
+            - name: KAFKA_LISTENERS
+              value: "INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "INTERNAL://kafka-0.kafka.backend.svc.cluster.local:9092"
+
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "INTERNAL"
+
+            - name: KAFKA_LOG_DIRS
+              value: "/var/lib/kafka/data/kafka"
+
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
+
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data
+      spec:
+        storageClassName: h06-vks-sp-6
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+
+            2) kafka-connect.yaml
+
+            apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connect
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: connect
+  template:
+    metadata:
+      labels:
+        app: connect
+    spec:
+      containers:
+        - name: connect
+          image: h06vksharbor.corp.ad.sbi/cbops/kafka-connect:x1
+          ports:
+            - containerPort: 8083
+              name: rest
+
+          env:
+            # ========= REQUIRED =========
+            - name: CONNECT_BOOTSTRAP_SERVERS
+              value: "kafka.backend.svc.cluster.local:9092"
+
+            - name: CONNECT_GROUP_ID
+              value: "connect-cluster"
+
+            - name: CONNECT_CONFIG_STORAGE_TOPIC
+              value: "_connect-configs"
+
+            - name: CONNECT_OFFSET_STORAGE_TOPIC
+              value: "_connect-offsets"
+
+            - name: CONNECT_STATUS_STORAGE_TOPIC
+              value: "_connect-status"
+
+            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+              value: "1"
+
+            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+              value: "1"
+
+            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+              value: "1"
+
+            # ========= CONVERTERS =========
+            - name: CONNECT_KEY_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_VALUE_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_INTERNAL_KEY_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
+              value: "true"
+
+            - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+              value: "true"
+
+            - name: CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+
+            # ========= REST =========
+            - name: CONNECT_REST_PORT
+              value: "8083"
+
+            - name: CONNECT_REST_ADVERTISED_HOST_NAME
+              value: "connect.backend.svc.cluster.local"
+
+            - name: CONNECT_REST_ADVERTISED_PORT
+              value: "8083"
+
+            # ========= PLUGINS =========
+            - name: CONNECT_PLUGIN_PATH
+              value: "/usr/share/java,/usr/share/java/debezium-connector-oracle"
+
+            # ========= LOGGING =========
+            - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+              value: "INFO"
+
+          readinessProbe:
+            httpGet:
+              path: /connectors
+              port: 8083
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: connect
+  namespace: backend
+spec:
+  selector:
+    app: connect
+  ports:
+    - name: rest
+      port: 8083
+      targetPort: 8083
+  type: ClusterIP
+
+3) oracle-configmap.yaml
+
+apiVersion: v1
+data:
+  oracle-connector.json: |
+    {
+      "name": "fincore-connector-final",
+      "config": {
+        "connector.class": "io.debezium.connector.oracle.OracleConnector",
+        "tasks.max": "1",
+
+        "database.hostname": "10.177.103.192",
+        "database.port": "1523",
+        "database.user": "c##debezium",
+        "database.password": "Debe#123",
+        "database.dbname": "fincorepdb1",
+        "database.pdb.name": "fincorepdb1",
+        "database.sid": "fincorepdb1",
+        "database.servername": "fincorepdb1",
+
+        "topic.prefix": "fincore",
+        "table.include.list": "fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS",
+
+        "decimal.handling.mode": "string",
+        "database.connection.adapter": "logminer",
+
+        "database.history": "io.debezium.relational.history.KafkaDatabaseHistory",
+
+        "database.history.kafka.bootstrap.servers": "kafka.backend.svc.cluster.local:9092",
+        "schema.history.internal.kafka.bootstrap.servers": "kafka.backend.svc.cluster.local:9092",
+        "schema.history.internal.kafka.topic": "schema-changes.oracle",
+
+        "log.mining.strategy": "online_catalog",
+        "log.mining.continuous.mine": "true",
+        "log.mining.batch.size.default": "50000",
+        "log.mining.batch.size.max": "100000",
+        "log.mining.sleep.time.default": "50",
+        "log.mining.sleep.time.max": "2000",
+
+        "heartbeat.interval.ms": "2000",
+        "heartbeat.topics.prefix": "heartbeat",
+
+        "openlineage.integration.enabled": "true"
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"oracle-connector.json":"{\n  \"name\": \"fincore-connector-final\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.oracle.OracleConnector\",\n    \"tasks.max\": \"1\",\n\n    \"database.hostname\": \"10.177.103.192\",\n    \"database.port\": \"1523\",\n    \"database.user\": \"c##debezium\",\n    \"database.password\": \"Debe#123\",\n    \"database.dbname\": \"fincorepdb1\",\n    \"database.pdb.name\": \"fincorepdb1\",\n    \"database.sid\": \"fincorepdb1\",\n    \"database.servername\": \"fincorepdb1\",\n\n    \"topic.prefix\": \"fincore\",\n    \"table.include.list\": \"fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS\",\n\n    \"decimal.handling.mode\": \"string\",\n    \"database.connection.adapter\": \"logminer\",\n\n    \"database.history\": \"io.debezium.relational.history.KafkaDatabaseHistory\",\n\n    \"database.history.kafka.bootstrap.servers\": \"kafka.backend.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.bootstrap.servers\": \"kafka.backend.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.topic\": \"schema-changes.oracle\",\n\n    \"log.mining.strategy\": \"online_catalog\",\n    \"log.mining.continuous.mine\": \"true\",\n    \"log.mining.batch.size.default\": \"50000\",\n    \"log.mining.batch.size.max\": \"100000\",\n    \"log.mining.sleep.time.default\": \"50\",\n    \"log.mining.sleep.time.max\": \"2000\",\n\n    \"heartbeat.interval.ms\": \"2000\",\n    \"heartbeat.topics.prefix\": \"heartbeat\",\n\n    \"openlineage.integration.enabled\": \"true\"\n  }\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"oracle-connector-config","namespace":"backend"}}
+  creationTimestamp: "2025-12-10T10:16:10Z"
+  name: oracle-connector-config
+  namespace: backend
+  resourceVersion: "46613478"
+  uid: d4abbc42-98d9-4883-bd30-4553baa9bb87
+ 
+4) register-oracle-connector.yaml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: register-oracle-connector
+  namespace: backend
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: register
+          image: h06vksharbor.corp.ad.sbi/cbops/curlimages/curl:v1
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Waiting for Kafka Connect..."
+
+              # Wait until Connect REST is up
+              until curl -sf http://connect.backend.svc.cluster.local:8083/connectors ; do
+                echo "Connect not ready yet..."
+                sleep 5
+              done
+
+              echo "Sleeping 30s for worker + plugins to fully init..."
+              sleep 30
+
+              echo "Posting connector config from /config/oracle-connector.json ..."
+              HTTP_CODE=$(curl -s -o /tmp/out.txt -w "%{http_code}" \
+                -X POST \
+                -H "Content-Type: application/json" \
+                --data "@/config/oracle-connector.json" \
+                http://connect.backend.svc.cluster.local:8083/connectors)
+
+              echo "HTTP_CODE=$HTTP_CODE"
+              echo "Response body:"
+              cat /tmp/out.txt || true
+
+              # 201 = created, 200 = ok, 409 = already exists
+              if [ "$HTTP_CODE" != "201" ] && [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "409" ]; then
+                echo "Registration failed (HTTP $HTTP_CODE)"
+                exit 1
+              fi
+
+              echo "Connector registration succeeded (or already existed)."
+          volumeMounts:
+            - name: connector-config
+              mountPath: /config
+
+      volumes:
+        - name: connector-config
+          configMap:
+            name: oracle-connector-config
