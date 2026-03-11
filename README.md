@@ -1,379 +1,1348 @@
-I am providing a Kubernetes YAML file.
+[root@fcuatgateway UAT-Grafana]# kubectl get pods -n logging --kubeconfig h06vksuat1cbopscls.conf
+NAME                    READY   STATUS             RESTARTS         AGE
+fluent-bit-5m9sb        1/1     Running            0                11d
+fluent-bit-6qqkd        1/1     Running            0                11d
+fluent-bit-f5f2r        1/1     Running            0                11d
+loki-58595d499c-hj7t2   0/1     CrashLoopBackOff   127 (4m1s ago)   11d
+[root@fcuatgateway UAT-Grafana]# kubectl logs loki-58595d499c-hj7t2 -n logging --kubeconfig h06vksuat1cbopscls.conf
+unexpected fault address 0x7fa249a00008
+fatal error: fault
+[signal SIGBUS: bus error code=0x2 addr=0x7fa249a00008 pc=0x1d56bd5]
 
-IMPORTANT RULES — FOLLOW STRICTLY:
+goroutine 1 [running]:
+runtime.throw({0x278254b?, 0xc000db26e0?})
+        /usr/local/go/src/runtime/panic.go:1077 +0x5c fp=0xc000db2620 sp=0xc000db25f0 pc=0x43b43c
+runtime.sigpanic()
+        /usr/local/go/src/runtime/signal_unix.go:858 +0x116 fp=0xc000db2680 sp=0xc000db2620 pc=0x452316
+go.etcd.io/bbolt.(*elemRef).isLeaf(...)
+        /src/loki/vendor/go.etcd.io/bbolt/cursor.go:387
+go.etcd.io/bbolt.(*Cursor).first(0xc000db2790)
+        /src/loki/vendor/go.etcd.io/bbolt/cursor.go:170 +0x55 fp=0xc000db26e0 sp=0xc000db2680 pc=0x1d56bd5
+go.etcd.io/bbolt.(*Cursor).First(0xc000db2790)
+        /src/loki/vendor/go.etcd.io/bbolt/cursor.go:36 +0x112 fp=0xc000db2760 sp=0xc000db26e0 pc=0x1d56492
+go.etcd.io/bbolt.(*Bucket).ForEach(0x1?, 0xc000db27e0)
+        /src/loki/vendor/go.etcd.io/bbolt/bucket.go:389 +0x54 fp=0xc000db27c0 sp=0xc000db2760 pc=0x1d540d4
+go.etcd.io/bbolt.(*Tx).ForEach(...)
+        /src/loki/vendor/go.etcd.io/bbolt/tx.go:128
+github.com/grafana/loki/pkg/storage/stores/shipper/index.loadBoltDBsFromDir.func1(0xc000db2830?)
+        /src/loki/pkg/storage/stores/shipper/index/table.go:382 +0x66 fp=0xc000db2808 sp=0xc000db27c0 pc=0x1e728e6
+go.etcd.io/bbolt.(*DB).View(0xc000adbc40?, 0xc000db2988)
+        /src/loki/vendor/go.etcd.io/bbolt/db.go:772 +0x72 fp=0xc000db2870 sp=0xc000db2808 pc=0x1d5a2f2
+github.com/grafana/loki/pkg/storage/stores/shipper/index.loadBoltDBsFromDir({0xc0009159e0, 0x2b}, 0xc000c882d0)
+        /src/loki/pkg/storage/stores/shipper/index/table.go:381 +0x63b fp=0xc000db29f8 sp=0xc000db2870 pc=0x1e7243b
+github.com/grafana/loki/pkg/storage/stores/shipper/index.LoadTable({0xc0009159e0, 0x2b}, {0xc000915980, 0x29}, {0x7fa249ea8f80, 0xc0005d9b00}, 0x0?, 0x0?)
+        /src/loki/pkg/storage/stores/shipper/index/table.go:75 +0x45 fp=0xc000db2a50 sp=0xc000db29f8 pc=0x1e6ebe5
+github.com/grafana/loki/pkg/storage/stores/shipper/index.(*TableManager).loadTables(0xc0001518c0)
+        /src/loki/pkg/storage/stores/shipper/index/table_manager.go:241 +0x9f4 fp=0xc000db2c88 sp=0xc000db2a50 pc=0x1e748f4
+github.com/grafana/loki/pkg/storage/stores/shipper/index.NewTableManager({{0xc000915980, 0x29}, {0xc000ccf7c0, 0x1f}, 0x1176592e000, 0x0}, {0x7fa249ea8f80, 0xc0005d9b00}, {0x4d0b, 0x18daea1d7f, ...}, ...)
+        /src/loki/pkg/storage/stores/shipper/index/table_manager.go:70 +0x2a5 fp=0xc000db2dd8 sp=0xc000db2c88 pc=0x1e72ce5
+github.com/grafana/loki/pkg/storage/stores/shipper.(*indexClient).init(0xc0005d98c0, {0x2eb3f50, 0xc000993460}, {0x7fa249ea8e30, 0xc000122b10}, 0x0?, {0x0?, 0x0?, 0xc0009bde60?}, {0x2e9f3c0, ...})
+        /src/loki/pkg/storage/stores/shipper/shipper_index_client.go:102 +0x34f fp=0xc000db3268 sp=0xc000db2dd8 pc=0x1e758cf
+github.com/grafana/loki/pkg/storage/stores/shipper.NewShipper({{{0xc000ccf7c0, 0x1f}, {0x0, 0x0}, {0x2787e4e, 0x6}, {0xc000ccf7e0, 0x1e}, 0x4e94914f0000, 0x45d964b800, ...}, ...}, ...)
+        /src/loki/pkg/storage/stores/shipper/shipper_index_client.go:71 +0x1d3 fp=0xc000db3580 sp=0xc000db3268 pc=0x1e75333
+github.com/grafana/loki/pkg/storage.NewIndexClient({{0x18cc251f400}, {0xc000939dc0, 0xe}, {0xc000939de0, 0xa}, {0xc000939df8, 0x3}, {{0xc000939e10, 0x6}, 0x4e94914f0000, ...}, ...}, ...)
+        /src/loki/pkg/storage/factory.go:420 +0x1173 fp=0xc000db4908 sp=0xc000db3580 pc=0x1ebe7b3
+github.com/grafana/loki/pkg/storage.(*store).storeForPeriod(0xc0005bd500, {{0x18cc251f400}, {0xc000939dc0, 0xe}, {0xc000939de0, 0xa}, {0xc000939df8, 0x3}, {{0xc000939e10, 0x6}, ...}, ...}, ...)
+        /src/loki/pkg/storage/store.go:293 +0x1109 fp=0xc000db7cf8 sp=0xc000db4908 pc=0x1ec6b09
+github.com/grafana/loki/pkg/storage.(*store).init(0xc0005bd500)
+        /src/loki/pkg/storage/store.go:177 +0x397 fp=0xc000db7f40 sp=0xc000db7cf8 pc=0x1ec52b7
+github.com/grafana/loki/pkg/storage.NewStore({{{0x0, 0x0}, {0x0, 0x0}, {0x0, 0x0}, {0x0, 0x0}}, {{{0x0}, 0x4000000000000000, ...}, ...}, ...}, ...)
+        /src/loki/pkg/storage/store.go:155 +0xbd3 fp=0xc000db85a8 sp=0xc000db7f40 pc=0x1ec4dd3
+github.com/grafana/loki/pkg/loki.(*Loki).initStore(0xc000b8f000)
+        /src/loki/pkg/loki/modules.go:689 +0x5c5 fp=0xc000dbae00 sp=0xc000db85a8 pc=0x209d085
+github.com/grafana/loki/pkg/loki.(*Loki).initStore-fm()
+        <autogenerated>:1 +0x25 fp=0xc000dbae18 sp=0xc000dbae00 pc=0x20ab8a5
+github.com/grafana/dskit/modules.(*Manager).initModule(0xc000a843f0, {0x277f9d3, 0x3}, 0xc000762950?, 0x1?)
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:136 +0x1f7 fp=0xc000dbaf20 sp=0xc000dbae18 pc=0x1db2917
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices(0x1?, {0xc000762de0, 0x1, 0xc000dbb080?})
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108 +0xd8 fp=0xc000dbb040 sp=0xc000dbaf20 pc=0x1db26b8
+github.com/grafana/loki/pkg/loki.(*Loki).Run(0xc000b8f000, {0xc000981200?})
+        /src/loki/pkg/loki/loki.go:461 +0x4a fp=0xc000dbb1c8 sp=0xc000dbb040 pc=0x208be2a
+main.main()
+        /src/loki/cmd/loki/main.go:110 +0xe45 fp=0xc000dbff40 sp=0xc000dbb1c8 pc=0x20ad185
+runtime.main()
+        /usr/local/go/src/runtime/proc.go:267 +0x2bb fp=0xc000dbffe0 sp=0xc000dbff40 pc=0x43de1b
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000dbffe8 sp=0xc000dbffe0 pc=0x471621
 
-1. DO NOT change any existing values.
-   - Do NOT modify names
-   - Do NOT change image, ports, env, replicas
-   - Do NOT rename resources
-   - Do NOT alter existing logic
+goroutine 2 [force gc (idle)]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008efa8 sp=0xc00008ef88 pc=0x43e28e
+runtime.goparkunlock(...)
+        /usr/local/go/src/runtime/proc.go:404
+runtime.forcegchelper()
+        /usr/local/go/src/runtime/proc.go:322 +0xb3 fp=0xc00008efe0 sp=0xc00008efa8 pc=0x43e0f3
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008efe8 sp=0xc00008efe0 pc=0x471621
+created by runtime.init.6 in goroutine 1
+        /usr/local/go/src/runtime/proc.go:310 +0x1a
 
-2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+goroutine 3 [GC sweep wait]:
+runtime.gopark(0x1?, 0x0?, 0x0?, 0x0?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008f778 sp=0xc00008f758 pc=0x43e28e
+runtime.goparkunlock(...)
+        /usr/local/go/src/runtime/proc.go:404
+runtime.bgsweep(0x0?)
+        /usr/local/go/src/runtime/mgcsweep.go:321 +0xdf fp=0xc00008f7c8 sp=0xc00008f778 pc=0x42831f
+runtime.gcenable.func1()
+        /usr/local/go/src/runtime/mgc.go:200 +0x25 fp=0xc00008f7e0 sp=0xc00008f7c8 pc=0x41d445
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008f7e8 sp=0xc00008f7e0 pc=0x471621
+created by runtime.gcenable in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:200 +0x66
 
-3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
-   Add things like:
-   - resources requests & limits
-   - liveness/readiness/startup probes (safe defaults)
-   - rolling update strategy
-   - security context
-   - service account
-   - HPA (CPU based)
-   - PodDisruptionBudget
-   - lifecycle preStop hook
-   - topology spread constraints
-   - network policy
-   - graceful shutdown settings
-   - any other MUST-HAVE enterprise features
+goroutine 4 [GC scavenge wait]:
+runtime.gopark(0xc0000ae000?, 0x2e75f28?, 0x0?, 0x0?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008ff70 sp=0xc00008ff50 pc=0x43e28e
+runtime.goparkunlock(...)
+        /usr/local/go/src/runtime/proc.go:404
+runtime.(*scavengerState).park(0x4398fa0)
+        /usr/local/go/src/runtime/mgcscavenge.go:425 +0x49 fp=0xc00008ffa0 sp=0xc00008ff70 pc=0x425b49
+runtime.bgscavenge(0x0?)
+        /usr/local/go/src/runtime/mgcscavenge.go:658 +0x59 fp=0xc00008ffc8 sp=0xc00008ffa0 pc=0x4260f9
+runtime.gcenable.func2()
+        /usr/local/go/src/runtime/mgc.go:201 +0x25 fp=0xc00008ffe0 sp=0xc00008ffc8 pc=0x41d3e5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008ffe8 sp=0xc00008ffe0 pc=0x471621
+created by runtime.gcenable in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:201 +0xa5
 
-4. Do NOT add Prometheus annotations or monitoring-related configs.
+goroutine 5 [finalizer wait]:
+runtime.gopark(0x400000?, 0x10008e670?, 0x0?, 0x0?, 0x43cce20?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008e628 sp=0xc00008e608 pc=0x43e28e
+runtime.runfinq()
+        /usr/local/go/src/runtime/mfinal.go:193 +0x107 fp=0xc00008e7e0 sp=0xc00008e628 pc=0x41c4c7
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008e7e8 sp=0xc00008e7e0 pc=0x471621
+created by runtime.createfing in goroutine 1
+        /usr/local/go/src/runtime/mfinal.go:163 +0x3d
 
-5. Keep YAML structure clean and production-ready.
+goroutine 17 [select]:
+runtime.gopark(0xc00008a748?, 0x2?, 0x0?, 0x0?, 0xc00008a714?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008a5b0 sp=0xc00008a590 pc=0x43e28e
+runtime.selectgo(0xc00008a748, 0xc00008a710, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc00008a6d0 sp=0xc00008a5b0 pc=0x44e745
+github.com/baidubce/bce-sdk-go/util/log.NewLogger.func1()
+        /src/loki/vendor/github.com/baidubce/bce-sdk-go/util/log/logger.go:375 +0xa8 fp=0xc00008a7e0 sp=0xc00008a6d0 pc=0x191ba88
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008a7e8 sp=0xc00008a7e0 pc=0x471621
+created by github.com/baidubce/bce-sdk-go/util/log.NewLogger in goroutine 1
+        /src/loki/vendor/github.com/baidubce/bce-sdk-go/util/log/logger.go:368 +0x125
 
-6. Do not ask for permission before adding missing enterprise features — just add them.
+goroutine 18 [GC worker (idle)]:
+runtime.gopark(0x0?, 0x0?, 0x0?, 0x0?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008af50 sp=0xc00008af30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00008afe0 sp=0xc00008af50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008afe8 sp=0xc00008afe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
 
-7. After YAML, explain briefly what new things were added and why.
-8. add also comments in yaml file for better understanding 
-Here is the YAML:
+goroutine 33 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81c1de0?, 0x3?, 0x6f?, 0xb2?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00049a750 sp=0xc00049a730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00049a7e0 sp=0xc00049a750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00049a7e8 sp=0xc00049a7e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
 
-1) apache-kafka.yaml
----
-# =========================================================
-# KAFKA HEADLESS SERVICE (REQUIRED FOR KRaft)
-# =========================================================
+goroutine 6 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81bb1c6?, 0x3?, 0x63?, 0x9?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000090750 sp=0xc000090730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc0000907e0 sp=0xc000090750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0000907e8 sp=0xc0000907e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 34 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81cc137?, 0x1?, 0x3c?, 0x14?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00049af50 sp=0xc00049af30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00049afe0 sp=0xc00049af50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00049afe8 sp=0xc00049afe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 19 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81bb4a1?, 0x3?, 0xc9?, 0x73?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008b750 sp=0xc00008b730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00008b7e0 sp=0xc00008b750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008b7e8 sp=0xc00008b7e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 7 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81bc778?, 0x3?, 0x55?, 0x4?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000090f50 sp=0xc000090f30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc000090fe0 sp=0xc000090f50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000090fe8 sp=0xc000090fe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 35 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81bb3fe?, 0x3?, 0x91?, 0x6?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00049b750 sp=0xc00049b730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00049b7e0 sp=0xc00049b750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00049b7e8 sp=0xc00049b7e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 8 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81d1600?, 0x3?, 0xe8?, 0x4f?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000091750 sp=0xc000091730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc0000917e0 sp=0xc000091750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0000917e8 sp=0xc0000917e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 20 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81cc098?, 0x1?, 0x39?, 0xde?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008bf50 sp=0xc00008bf30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00008bfe0 sp=0xc00008bf50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008bfe8 sp=0xc00008bfe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 9 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81ce7a7?, 0x3?, 0x69?, 0x9?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000091f50 sp=0xc000091f30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc000091fe0 sp=0xc000091f50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000091fe8 sp=0xc000091fe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 21 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81bc7cb?, 0x3?, 0xae?, 0x25?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008c750 sp=0xc00008c730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00008c7e0 sp=0xc00008c750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008c7e8 sp=0xc00008c7e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 10 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81cbd47?, 0x3?, 0x2f?, 0x45?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000496750 sp=0xc000496730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc0004967e0 sp=0xc000496750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0004967e8 sp=0xc0004967e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 22 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81cbe5a?, 0x3?, 0xc8?, 0x28?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008cf50 sp=0xc00008cf30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00008cfe0 sp=0xc00008cf50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008cfe8 sp=0xc00008cfe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 36 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81cf99a?, 0x1?, 0x76?, 0x8e?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00049bf50 sp=0xc00049bf30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00049bfe0 sp=0xc00049bf50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00049bfe8 sp=0xc00049bfe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 11 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81bb2fd?, 0x3?, 0xa5?, 0x0?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000496f50 sp=0xc000496f30 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc000496fe0 sp=0xc000496f50 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000496fe8 sp=0xc000496fe0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 37 [GC worker (idle)]:
+runtime.gopark(0x1c29d7c81cba1a?, 0x3?, 0x52?, 0xee?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00049c750 sp=0xc00049c730 pc=0x43e28e
+runtime.gcBgMarkWorker()
+        /usr/local/go/src/runtime/mgc.go:1293 +0xe5 fp=0xc00049c7e0 sp=0xc00049c750 pc=0x41efc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00049c7e8 sp=0xc00049c7e0 pc=0x471621
+created by runtime.gcBgMarkStartWorkers in goroutine 1
+        /usr/local/go/src/runtime/mgc.go:1217 +0x1c
+
+goroutine 12 [select]:
+runtime.gopark(0xc000498f88?, 0x3?, 0xb8?, 0xf8?, 0xc000498f72?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000498e18 sp=0xc000498df8 pc=0x43e28e
+runtime.selectgo(0xc000498f88, 0xc000498f6c, 0xc0001a3180?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000498f38 sp=0xc000498e18 pc=0x44e745
+go.opencensus.io/stats/view.(*worker).start(0xc0001a3180)
+        /src/loki/vendor/go.opencensus.io/stats/view/worker.go:292 +0x9f fp=0xc000498fc8 sp=0xc000498f38 pc=0x19d107f
+go.opencensus.io/stats/view.init.0.func1()
+        /src/loki/vendor/go.opencensus.io/stats/view/worker.go:34 +0x25 fp=0xc000498fe0 sp=0xc000498fc8 pc=0x19d03a5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000498fe8 sp=0xc000498fe0 pc=0x471621
+created by go.opencensus.io/stats/view.init.0 in goroutine 1
+        /src/loki/vendor/go.opencensus.io/stats/view/worker.go:34 +0x8d
+
+goroutine 153 [chan receive]:
+runtime.gopark(0x45b1be?, 0xc00006e000?, 0x58?, 0x20?, 0x1c29d7ce0a482e?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000966ed8 sp=0xc000966eb8 pc=0x43e28e
+runtime.chanrecv(0xc00070c0c0, 0xc000966fb0, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000966f50 sp=0xc000966ed8 pc=0x4099ad
+runtime.chanrecv2(0x5f5e100?, 0x8529de?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000966f78 sp=0xc000966f50 pc=0x4095d2
+github.com/grafana/loki/pkg/util/log.newPrometheusLogger.WithFlushPeriod.func2.1()
+        /src/loki/vendor/github.com/grafana/dskit/log/buffered.go:76 +0x97 fp=0xc000966fe0 sp=0xc000966f78 pc=0xc05937
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000966fe8 sp=0xc000966fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/util/log.newPrometheusLogger.WithFlushPeriod.func2 in goroutine 1
+        /src/loki/vendor/github.com/grafana/dskit/log/buffered.go:72 +0x65
+
+goroutine 174 [select]:
+runtime.gopark(0xc000962f58?, 0x2?, 0x0?, 0x60?, 0xc000962f4c?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000962df8 sp=0xc000962dd8 pc=0x43e28e
+runtime.selectgo(0xc000962f58, 0xc000962f48, 0xc000962f40?, 0x0, 0xc0001522d8?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000962f18 sp=0xc000962df8 pc=0x44e745
+github.com/uber/jaeger-client-go.(*RemotelyControlledSampler).pollControllerWithTicker(0xc000f884e0, 0xc0001522d0)
+        /src/loki/vendor/github.com/uber/jaeger-client-go/sampler_remote.go:153 +0x85 fp=0xc000962f88 sp=0xc000962f18 pc=0x899aa5
+github.com/uber/jaeger-client-go.(*RemotelyControlledSampler).pollController(0xc000f884e0)
+        /src/loki/vendor/github.com/uber/jaeger-client-go/sampler_remote.go:148 +0x5e fp=0xc000962fc8 sp=0xc000962f88 pc=0x89997e
+github.com/uber/jaeger-client-go.NewRemotelyControlledSampler.func1()
+        /src/loki/vendor/github.com/uber/jaeger-client-go/sampler_remote.go:87 +0x25 fp=0xc000962fe0 sp=0xc000962fc8 pc=0x8990a5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000962fe8 sp=0xc000962fe0 pc=0x471621
+created by github.com/uber/jaeger-client-go.NewRemotelyControlledSampler in goroutine 1
+        /src/loki/vendor/github.com/uber/jaeger-client-go/sampler_remote.go:87 +0x16a
+
+goroutine 154 [select]:
+runtime.gopark(0xc000963f88?, 0x2?, 0xf8?, 0x4a?, 0xc000963f6c?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000963e10 sp=0xc000963df0 pc=0x43e28e
+runtime.selectgo(0xc000963f88, 0xc000963f68, 0x0?, 0x0, 0xc0009c6fa8?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000963f30 sp=0xc000963e10 pc=0x44e745
+github.com/uber/jaeger-client-go/utils.(*reconnectingUDPConn).reconnectLoop(0xc00093a700, 0xc0000b0960?)
+        /src/loki/vendor/github.com/uber/jaeger-client-go/utils/reconnecting_udp_conn.go:70 +0xaa fp=0xc000963fc0 sp=0xc000963f30 pc=0x886a0a
+github.com/uber/jaeger-client-go/utils.newReconnectingUDPConn.func1()
+        /src/loki/vendor/github.com/uber/jaeger-client-go/utils/reconnecting_udp_conn.go:60 +0x25 fp=0xc000963fe0 sp=0xc000963fc0 pc=0x886925
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000963fe8 sp=0xc000963fe0 pc=0x471621
+created by github.com/uber/jaeger-client-go/utils.newReconnectingUDPConn in goroutine 1
+        /src/loki/vendor/github.com/uber/jaeger-client-go/utils/reconnecting_udp_conn.go:60 +0x1e7
+
+goroutine 155 [select]:
+runtime.gopark(0xc000497f78?, 0x2?, 0xc5?, 0x3?, 0xc000497f14?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc0006eeda0 sp=0xc0006eed80 pc=0x43e28e
+runtime.selectgo(0xc0006eef78, 0xc000497f10, 0x409000?, 0x0, 0x4?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc0006eeec0 sp=0xc0006eeda0 pc=0x44e745
+github.com/uber/jaeger-client-go.(*remoteReporter).processQueue(0xc000b3a480)
+        /src/loki/vendor/github.com/uber/jaeger-client-go/reporter.go:296 +0xd1 fp=0xc0006eefc8 sp=0xc0006eeec0 pc=0x8966d1
+github.com/uber/jaeger-client-go.NewRemoteReporter.func1()
+        /src/loki/vendor/github.com/uber/jaeger-client-go/reporter.go:237 +0x25 fp=0xc0006eefe0 sp=0xc0006eefc8 pc=0x8963a5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0006eefe8 sp=0xc0006eefe0 pc=0x471621
+created by github.com/uber/jaeger-client-go.NewRemoteReporter in goroutine 1
+        /src/loki/vendor/github.com/uber/jaeger-client-go/reporter.go:237 +0x24c
+
+goroutine 178 [select]:
+runtime.gopark(0xc000967f80?, 0x2?, 0x3?, 0x0?, 0xc000967f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000967dd0 sp=0xc000967db0 pc=0x43e28e
+runtime.selectgo(0xc000967f80, 0xc000967f40, 0x0?, 0x0, 0xc0002fe0b8?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000967ef0 sp=0xc000967dd0 pc=0x44e745
+google.golang.org/grpc/internal/grpcsync.(*CallbackSerializer).run(0xc000910b60, {0x2eaaa38, 0xc000adcc80})
+        /src/loki/vendor/google.golang.org/grpc/internal/grpcsync/callback_serializer.go:83 +0x112 fp=0xc000967fb8 sp=0xc000967ef0 pc=0x91d912
+google.golang.org/grpc/internal/grpcsync.NewCallbackSerializer.func1()
+        /src/loki/vendor/google.golang.org/grpc/internal/grpcsync/callback_serializer.go:55 +0x28 fp=0xc000967fe0 sp=0xc000967fb8 pc=0x91d648
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000967fe8 sp=0xc000967fe0 pc=0x471621
+created by google.golang.org/grpc/internal/grpcsync.NewCallbackSerializer in goroutine 1
+        /src/loki/vendor/google.golang.org/grpc/internal/grpcsync/callback_serializer.go:55 +0x129
+
+goroutine 179 [select]:
+runtime.gopark(0xc000c83f80?, 0x2?, 0x3?, 0x0?, 0xc000c83f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000c83dd0 sp=0xc000c83db0 pc=0x43e28e
+runtime.selectgo(0xc000c83f80, 0xc000c83f40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000c83ef0 sp=0xc000c83dd0 pc=0x44e745
+google.golang.org/grpc/internal/grpcsync.(*CallbackSerializer).run(0xc000910bc0, {0x2eaaa38, 0xc000adccd0})
+        /src/loki/vendor/google.golang.org/grpc/internal/grpcsync/callback_serializer.go:83 +0x112 fp=0xc000c83fb8 sp=0xc000c83ef0 pc=0x91d912
+google.golang.org/grpc/internal/grpcsync.NewCallbackSerializer.func1()
+        /src/loki/vendor/google.golang.org/grpc/internal/grpcsync/callback_serializer.go:55 +0x28 fp=0xc000c83fe0 sp=0xc000c83fb8 pc=0x91d648
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000c83fe8 sp=0xc000c83fe0 pc=0x471621
+created by google.golang.org/grpc/internal/grpcsync.NewCallbackSerializer in goroutine 1
+        /src/loki/vendor/google.golang.org/grpc/internal/grpcsync/callback_serializer.go:55 +0x129
+
+goroutine 180 [select]:
+runtime.gopark(0xc000ea1f38?, 0x3?, 0xe0?, 0xc4?, 0xc000ea1ef2?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000ea1d40 sp=0xc000ea1d20 pc=0x43e28e
+runtime.selectgo(0xc000ea1f38, 0xc000ea1eec, 0x2e8c2a0?, 0x0, 0x1?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000ea1e60 sp=0xc000ea1d40 pc=0x44e745
+google.golang.org/grpc.(*addrConn).resetTransport(0xc000527600)
+        /src/loki/vendor/google.golang.org/grpc/clientconn.go:1352 +0x3a9 fp=0xc000ea1f78 sp=0xc000ea1e60 pc=0x9dc569
+google.golang.org/grpc.(*addrConn).connect(0xc000527600)
+        /src/loki/vendor/google.golang.org/grpc/clientconn.go:978 +0x99 fp=0xc000ea1fc8 sp=0xc000ea1f78 pc=0x9da619
+google.golang.org/grpc.(*acBalancerWrapper).Connect.func1()
+        /src/loki/vendor/google.golang.org/grpc/balancer_conn_wrappers.go:398 +0x25 fp=0xc000ea1fe0 sp=0xc000ea1fc8 pc=0x9d4b85
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000ea1fe8 sp=0xc000ea1fe0 pc=0x471621
+created by google.golang.org/grpc.(*acBalancerWrapper).Connect in goroutine 178
+        /src/loki/vendor/google.golang.org/grpc/balancer_conn_wrappers.go:398 +0x56
+
+goroutine 182 [select]:
+runtime.gopark(0xc000968f70?, 0x2?, 0xc5?, 0x3?, 0xc000968f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000968dd8 sp=0xc000968db8 pc=0x43e28e
+runtime.selectgo(0xc000968f70, 0xc000968f40, 0x0?, 0x0, 0x1?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000968ef8 sp=0xc000968dd8 pc=0x44e745
+github.com/grafana/loki/pkg/storage/stores/indexshipper/compactor/generationnumber.(*GenNumberLoader).loop(0xc0009815c0)
+        /src/loki/pkg/storage/stores/indexshipper/compactor/generationnumber/gennumber_loader.go:53 +0xc5 fp=0xc000968fc8 sp=0xc000968ef8 pc=0x2071ea5
+github.com/grafana/loki/pkg/storage/stores/indexshipper/compactor/generationnumber.NewGenNumberLoader.func1()
+        /src/loki/pkg/storage/stores/indexshipper/compactor/generationnumber/gennumber_loader.go:44 +0x25 fp=0xc000968fe0 sp=0xc000968fc8 pc=0x2071da5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000968fe8 sp=0xc000968fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/stores/indexshipper/compactor/generationnumber.NewGenNumberLoader in goroutine 1
+        /src/loki/pkg/storage/stores/indexshipper/compactor/generationnumber/gennumber_loader.go:44 +0x119
+
+goroutine 201 [select]:
+runtime.gopark(0xc000969f90?, 0x2?, 0x40?, 0x9e?, 0xc000969f74?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000969e18 sp=0xc000969df8 pc=0x43e28e
+runtime.selectgo(0xc000969f90, 0xc000969f70, 0xc000969f90?, 0x0, 0x40948b?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000969f38 sp=0xc000969e18 pc=0x44e745
+github.com/grafana/dskit/kv/consul.(*mockKV).loop(0xc000152af0)
+        /src/loki/vendor/github.com/grafana/dskit/kv/consul/mock.go:87 +0xa6 fp=0xc000969fc8 sp=0xc000969f38 pc=0xcadd46
+github.com/grafana/dskit/kv/consul.NewInMemoryClientWithConfig.func2()
+        /src/loki/vendor/github.com/grafana/dskit/kv/consul/mock.go:58 +0x25 fp=0xc000969fe0 sp=0xc000969fc8 pc=0xcadbc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000969fe8 sp=0xc000969fe0 pc=0x471621
+created by github.com/grafana/dskit/kv/consul.NewInMemoryClientWithConfig in goroutine 1
+        /src/loki/vendor/github.com/grafana/dskit/kv/consul/mock.go:58 +0x205
+
+goroutine 218 [chan receive]:
+runtime.gopark(0xc00092af38?, 0x3?, 0xd8?, 0xf3?, 0x0?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00092af00 sp=0xc00092aee0 pc=0x43e28e
+runtime.chanrecv(0xc00089d4a0, 0xc00092afc8, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc00092af78 sp=0xc00092af00 pc=0x4099ad
+runtime.chanrecv2(0x44533c?, 0xc00092afd0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc00092afa0 sp=0xc00092af78 pc=0x4095d2
+github.com/grafana/dskit/services.(*BasicService).AddListener.func1()
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:344 +0x65 fp=0xc00092afe0 sp=0xc00092afa0 pc=0xb09325
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00092afe8 sp=0xc00092afe0 pc=0x471621
+created by github.com/grafana/dskit/services.(*BasicService).AddListener in goroutine 1
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:343 +0x1b9
+
+goroutine 219 [chan receive]:
+runtime.gopark(0xc0005f90e0?, 0x3?, 0x48?, 0xbf?, 0x3?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00092bf00 sp=0xc00092bee0 pc=0x43e28e
+runtime.chanrecv(0xc00089d500, 0xc00092bfc8, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc00092bf78 sp=0xc00092bf00 pc=0x4099ad
+runtime.chanrecv2(0x44533c?, 0xc00092bfd0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc00092bfa0 sp=0xc00092bf78 pc=0x4095d2
+github.com/grafana/dskit/services.(*BasicService).AddListener.func1()
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:344 +0x65 fp=0xc00092bfe0 sp=0xc00092bfa0 pc=0xb09325
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00092bfe8 sp=0xc00092bfe0 pc=0x471621
+created by github.com/grafana/dskit/services.(*BasicService).AddListener in goroutine 1
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:343 +0x1b9
+
+goroutine 220 [chan receive]:
+runtime.gopark(0x0?, 0xc0002ff258?, 0xb8?, 0xf2?, 0x408e40?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc0006e8f00 sp=0xc0006e8ee0 pc=0x43e28e
+runtime.chanrecv(0xc00089d560, 0xc0006e8fc8, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc0006e8f78 sp=0xc0006e8f00 pc=0x4099ad
+runtime.chanrecv2(0x44533c?, 0xc0006e8fd0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc0006e8fa0 sp=0xc0006e8f78 pc=0x4095d2
+github.com/grafana/dskit/services.(*Manager).AddListener.func1()
+        /src/loki/vendor/github.com/grafana/dskit/services/manager.go:244 +0x65 fp=0xc0006e8fe0 sp=0xc0006e8fa0 pc=0xb0b1e5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0006e8fe8 sp=0xc0006e8fe0 pc=0x471621
+created by github.com/grafana/dskit/services.(*Manager).AddListener in goroutine 1
+        /src/loki/vendor/github.com/grafana/dskit/services/manager.go:243 +0x1c6
+
+goroutine 244 [select]:
+runtime.gopark(0xc0006e9ed8?, 0x2?, 0xc5?, 0x3?, 0xc0006e9e9c?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc0006e9d40 sp=0xc0006e9d20 pc=0x43e28e
+runtime.selectgo(0xc0006e9ed8, 0xc0006e9e98, 0xc0006e9eb8?, 0x0, 0xc0002ffda0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc0006e9e60 sp=0xc0006e9d40 pc=0x44e745
+github.com/grafana/dskit/ring/client.NewPool.NewTimerService.func1({0x2eaaa38, 0xc000aea910})
+        /src/loki/vendor/github.com/grafana/dskit/services/services.go:31 +0xe6 fp=0xc0006e9f10 sp=0xc0006e9e60 pc=0x16bf106
+github.com/grafana/dskit/services.(*BasicService).main(0xc0007d8be0)
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:190 +0x1b4 fp=0xc0006e9fc8 sp=0xc0006e9f10 pc=0xb08194
+github.com/grafana/dskit/services.(*BasicService).StartAsync.func1.2()
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:119 +0x25 fp=0xc0006e9fe0 sp=0xc0006e9fc8 pc=0xb07de5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0006e9fe8 sp=0xc0006e9fe0 pc=0x471621
+created by github.com/grafana/dskit/services.(*BasicService).StartAsync.func1 in goroutine 1
+        /src/loki/vendor/github.com/grafana/dskit/services/basic_service.go:119 +0x105
+
+goroutine 253 [select]:
+runtime.gopark(0xc000927f80?, 0x2?, 0xc5?, 0x3?, 0xc000927f64?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000927e00 sp=0xc000927de0 pc=0x43e28e
+runtime.selectgo(0xc000927f80, 0xc000927f60, 0xc000927f58?, 0x0, 0xc000b42540?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000927f20 sp=0xc000927e00 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/cache.(*FifoCache).runPruneJob(0xc000aac750, 0x0?, 0xc000b42540?)
+        /src/loki/pkg/storage/chunk/cache/fifo_cache.go:225 +0xcd fp=0xc000927fb8 sp=0xc000927f20 pc=0x13979ad
+github.com/grafana/loki/pkg/storage/chunk/cache.NewFifoCache.func1()
+        /src/loki/pkg/storage/chunk/cache/fifo_cache.go:214 +0x28 fp=0xc000927fe0 sp=0xc000927fb8 pc=0x13978a8
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000927fe8 sp=0xc000927fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/cache.NewFifoCache in goroutine 1
+        /src/loki/pkg/storage/chunk/cache/fifo_cache.go:214 +0x1185
+
+goroutine 266 [chan receive]:
+runtime.gopark(0xc000926d50?, 0x41051d?, 0x0?, 0xa0?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000926ce8 sp=0xc000926cc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000926f18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000926d60 sp=0xc000926ce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x27c363a?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000926d88 sp=0xc000926d60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000926fc8 sp=0xc000926d88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000926fe0 sp=0xc000926fc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000926fe8 sp=0xc000926fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 267 [chan receive]:
+runtime.gopark(0xc000928d50?, 0x4103c5?, 0x70?, 0xe0?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000928ce8 sp=0xc000928cc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000928f18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000928d60 sp=0xc000928ce8 pc=0x4099ad
+runtime.chanrecv2(0xc0008f3a00?, 0x4?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000928d88 sp=0xc000928d60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000928fc8 sp=0xc000928d88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000928fe0 sp=0xc000928fc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000928fe8 sp=0xc000928fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 268 [chan receive]:
+runtime.gopark(0xc000499d50?, 0x41051d?, 0x0?, 0xe0?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000499ce8 sp=0xc000499cc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000499f18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000499d60 sp=0xc000499ce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x27c363a?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000499d88 sp=0xc000499d60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000499fc8 sp=0xc000499d88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000499fe0 sp=0xc000499fc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000499fe8 sp=0xc000499fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 269 [chan receive]:
+runtime.gopark(0xc0006ebd50?, 0x4103c5?, 0xc0?, 0xa8?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc0006ebce8 sp=0xc0006ebcc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc0006ebf18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc0006ebd60 sp=0xc0006ebce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x27c363a?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc0006ebd88 sp=0xc0006ebd60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc0006ebfc8 sp=0xc0006ebd88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc0006ebfe0 sp=0xc0006ebfc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0006ebfe8 sp=0xc0006ebfe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 270 [chan receive]:
+runtime.gopark(0xc000c18d50?, 0x41051d?, 0xe0?, 0x40?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000c18ce8 sp=0xc000c18cc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000c18f18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000c18d60 sp=0xc000c18ce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000c18d88 sp=0xc000c18d60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000c18fc8 sp=0xc000c18d88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000c18fe0 sp=0xc000c18fc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000c18fe8 sp=0xc000c18fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 271 [chan receive]:
+runtime.gopark(0xc00049dd50?, 0x41051d?, 0xa0?, 0x22?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000f74ce8 sp=0xc000f74cc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000f74f18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000f74d60 sp=0xc000f74ce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000f74d88 sp=0xc000f74d60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000f74fc8 sp=0xc000f74d88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000f74fe0 sp=0xc000f74fc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000f74fe8 sp=0xc000f74fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 272 [chan receive]:
+runtime.gopark(0xc00008d550?, 0x4103c5?, 0xe0?, 0xa7?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008d4e8 sp=0xc00008d4c8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc00008d718, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc00008d560 sp=0xc00008d4e8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc00008d588 sp=0xc00008d560 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc00008d7c8 sp=0xc00008d588 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc00008d7e0 sp=0xc00008d7c8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008d7e8 sp=0xc00008d7e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 273 [chan receive]:
+runtime.gopark(0xc00008dd50?, 0x41051d?, 0x0?, 0x40?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc00008dce8 sp=0xc00008dcc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc00008df18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc00008dd60 sp=0xc00008dce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc00008dd88 sp=0xc00008dd60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc00008dfc8 sp=0xc00008dd88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc00008dfe0 sp=0xc00008dfc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc00008dfe8 sp=0xc00008dfe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 274 [chan receive]:
+runtime.gopark(0xc000b4cd50?, 0x4103c5?, 0x30?, 0xa9?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4cce8 sp=0xc000b4ccc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000b4cf18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000b4cd60 sp=0xc000b4cce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000b4cd88 sp=0xc000b4cd60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000b4cfc8 sp=0xc000b4cd88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000b4cfe0 sp=0xc000b4cfc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4cfe8 sp=0xc000b4cfe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 275 [chan receive]:
+runtime.gopark(0xc0000c4238?, 0x41051d?, 0x70?, 0xe0?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000daace8 sp=0xc000daacc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000daaf18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000daad60 sp=0xc000daace8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000daad88 sp=0xc000daad60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000daafc8 sp=0xc000daad88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000daafe0 sp=0xc000daafc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000daafe8 sp=0xc000daafe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 276 [chan receive]:
+runtime.gopark(0xc000b4dd50?, 0x4103c5?, 0xe0?, 0xa0?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4dce8 sp=0xc000b4dcc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000b4df18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000b4dd60 sp=0xc000b4dce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000b4dd88 sp=0xc000b4dd60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000b4dfc8 sp=0xc000b4dd88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000b4dfe0 sp=0xc000b4dfc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4dfe8 sp=0xc000b4dfe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 277 [chan receive]:
+runtime.gopark(0xc000f70d50?, 0x41051d?, 0xc0?, 0xe1?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000f70ce8 sp=0xc000f70cc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000f70f18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000f70d60 sp=0xc000f70ce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000f70d88 sp=0xc000f70d60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000f70fc8 sp=0xc000f70d88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000f70fe0 sp=0xc000f70fc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000f70fe8 sp=0xc000f70fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 278 [chan receive]:
+runtime.gopark(0xc0006efd50?, 0x41051d?, 0x70?, 0xa0?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc0006efce8 sp=0xc0006efcc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc0006eff18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc0006efd60 sp=0xc0006efce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc0006efd88 sp=0xc0006efd60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc0006effc8 sp=0xc0006efd88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc0006effe0 sp=0xc0006effc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0006effe8 sp=0xc0006effe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 279 [chan receive]:
+runtime.gopark(0xc000b4f550?, 0x4103c5?, 0x70?, 0x40?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4f4e8 sp=0xc000b4f4c8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000b4f718, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000b4f560 sp=0xc000b4f4e8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000b4f588 sp=0xc000b4f560 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000b4f7c8 sp=0xc000b4f588 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000b4f7e0 sp=0xc000b4f7c8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4f7e8 sp=0xc000b4f7e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 280 [chan receive]:
+runtime.gopark(0xc000b4fd50?, 0x4103c5?, 0x50?, 0x41?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4fce8 sp=0xc000b4fcc8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000b4ff18, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000b4fd60 sp=0xc000b4fce8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000b4fd88 sp=0xc000b4fd60 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc000b4ffc8 sp=0xc000b4fd88 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc000b4ffe0 sp=0xc000b4ffc8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4ffe8 sp=0xc000b4ffe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 281 [chan receive]:
+runtime.gopark(0xc0000c4238?, 0x41051d?, 0xe0?, 0x80?, 0x70?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc0004974e8 sp=0xc0004974c8 pc=0x43e28e
+runtime.chanrecv(0xc0000c41e0, 0xc000497718, 0x1)
+        /usr/local/go/src/runtime/chan.go:583 +0x3cd fp=0xc000497560 sp=0xc0004974e8 pc=0x4099ad
+runtime.chanrecv2(0x0?, 0x0?)
+        /usr/local/go/src/runtime/chan.go:447 +0x12 fp=0xc000497588 sp=0xc000497560 pc=0x4095d2
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).worker(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:158 +0x1e7 fp=0xc0004977c8 sp=0xc000497588 pc=0x14585a7
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func1()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x25 fp=0xc0004977e0 sp=0xc0004977c8 pc=0x1458045
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc0004977e8 sp=0xc0004977e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:107 +0x237
+
+goroutine 282 [select]:
+runtime.gopark(0xc000b48f78?, 0x2?, 0x0?, 0x0?, 0xc000b48f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b48dd0 sp=0xc000b48db0 pc=0x43e28e
+runtime.selectgo(0xc000b48f78, 0xc000b48f40, 0xb9298255b6?, 0x0, 0x18?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b48ef0 sp=0xc000b48dd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b48fc8 sp=0xc000b48ef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b48fe0 sp=0xc000b48fc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b48fe8 sp=0xc000b48fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 283 [select]:
+runtime.gopark(0xc000b49778?, 0x2?, 0x0?, 0x0?, 0xc000b49744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b495d0 sp=0xc000b495b0 pc=0x43e28e
+runtime.selectgo(0xc000b49778, 0xc000b49740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b496f0 sp=0xc000b495d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b497c8 sp=0xc000b496f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b497e0 sp=0xc000b497c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b497e8 sp=0xc000b497e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 284 [select]:
+runtime.gopark(0xc000b49f78?, 0x2?, 0x0?, 0x0?, 0xc000b49f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b49dd0 sp=0xc000b49db0 pc=0x43e28e
+runtime.selectgo(0xc000b49f78, 0xc000b49f40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b49ef0 sp=0xc000b49dd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b49fc8 sp=0xc000b49ef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b49fe0 sp=0xc000b49fc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b49fe8 sp=0xc000b49fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 285 [select]:
+runtime.gopark(0xc000b4a778?, 0x2?, 0x0?, 0x0?, 0xc000b4a744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4a5d0 sp=0xc000b4a5b0 pc=0x43e28e
+runtime.selectgo(0xc000b4a778, 0xc000b4a740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b4a6f0 sp=0xc000b4a5d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b4a7c8 sp=0xc000b4a6f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b4a7e0 sp=0xc000b4a7c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4a7e8 sp=0xc000b4a7e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 286 [select]:
+runtime.gopark(0xc000b4af78?, 0x2?, 0x0?, 0x0?, 0xc000b4af44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4add0 sp=0xc000b4adb0 pc=0x43e28e
+runtime.selectgo(0xc000b4af78, 0xc000b4af40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b4aef0 sp=0xc000b4add0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b4afc8 sp=0xc000b4aef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b4afe0 sp=0xc000b4afc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4afe8 sp=0xc000b4afe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 287 [select]:
+runtime.gopark(0xc000b4b778?, 0x2?, 0x0?, 0x0?, 0xc000b4b744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4b5d0 sp=0xc000b4b5b0 pc=0x43e28e
+runtime.selectgo(0xc000b4b778, 0xc000b4b740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b4b6f0 sp=0xc000b4b5d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b4b7c8 sp=0xc000b4b6f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b4b7e0 sp=0xc000b4b7c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4b7e8 sp=0xc000b4b7e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 288 [select]:
+runtime.gopark(0xc000b4bf78?, 0x2?, 0x0?, 0x0?, 0xc000b4bf44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4bdd0 sp=0xc000b4bdb0 pc=0x43e28e
+runtime.selectgo(0xc000b4bf78, 0xc000b4bf40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b4bef0 sp=0xc000b4bdd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b4bfc8 sp=0xc000b4bef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b4bfe0 sp=0xc000b4bfc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4bfe8 sp=0xc000b4bfe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 289 [select]:
+runtime.gopark(0xc000b4c778?, 0x2?, 0x0?, 0x0?, 0xc000b4c744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b4c5d0 sp=0xc000b4c5b0 pc=0x43e28e
+runtime.selectgo(0xc000b4c778, 0xc000b4c740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b4c6f0 sp=0xc000b4c5d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b4c7c8 sp=0xc000b4c6f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b4c7e0 sp=0xc000b4c7c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b4c7e8 sp=0xc000b4c7e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 290 [select]:
+runtime.gopark(0xc000b74f78?, 0x2?, 0x75?, 0x73?, 0xc000b74f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b74dd0 sp=0xc000b74db0 pc=0x43e28e
+runtime.selectgo(0xc000b74f78, 0xc000b74f40, 0x1200118656d616e?, 0x0, 0x1d12656d614e6369?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b74ef0 sp=0xc000b74dd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b74fc8 sp=0xc000b74ef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b74fe0 sp=0xc000b74fc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b74fe8 sp=0xc000b74fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 291 [select]:
+runtime.gopark(0xc000b75778?, 0x2?, 0x9?, 0xea?, 0xc000b75744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b755d0 sp=0xc000b755b0 pc=0x43e28e
+runtime.selectgo(0xc000b75778, 0xc000b75740, 0x677261740c0a2212?, 0x0, 0xc52092803200618?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b756f0 sp=0xc000b755d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b757c8 sp=0xc000b756f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b757e0 sp=0xc000b757c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b757e8 sp=0xc000b757e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 292 [select]:
+runtime.gopark(0xc000b75f78?, 0x2?, 0x0?, 0x0?, 0xc000b75f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b75dd0 sp=0xc000b75db0 pc=0x43e28e
+runtime.selectgo(0xc000b75f78, 0xc000b75f40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b75ef0 sp=0xc000b75dd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b75fc8 sp=0xc000b75ef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b75fe0 sp=0xc000b75fc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b75fe8 sp=0xc000b75fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 293 [select]:
+runtime.gopark(0xc000b76778?, 0x2?, 0x0?, 0x0?, 0xc000b76744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b765d0 sp=0xc000b765b0 pc=0x43e28e
+runtime.selectgo(0xc000b76778, 0xc000b76740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b766f0 sp=0xc000b765d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b767c8 sp=0xc000b766f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b767e0 sp=0xc000b767c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b767e8 sp=0xc000b767e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 294 [select]:
+runtime.gopark(0xc000b76f78?, 0x2?, 0x0?, 0x0?, 0xc000b76f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b76dd0 sp=0xc000b76db0 pc=0x43e28e
+runtime.selectgo(0xc000b76f78, 0xc000b76f40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b76ef0 sp=0xc000b76dd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b76fc8 sp=0xc000b76ef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b76fe0 sp=0xc000b76fc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b76fe8 sp=0xc000b76fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 295 [select]:
+runtime.gopark(0xc000b77778?, 0x2?, 0x0?, 0x0?, 0xc000b77744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b775d0 sp=0xc000b775b0 pc=0x43e28e
+runtime.selectgo(0xc000b77778, 0xc000b77740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b776f0 sp=0xc000b775d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b777c8 sp=0xc000b776f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b777e0 sp=0xc000b777c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b777e8 sp=0xc000b777e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 296 [select]:
+runtime.gopark(0xc000b77f78?, 0x2?, 0x0?, 0x0?, 0xc000b77f44?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b77dd0 sp=0xc000b77db0 pc=0x43e28e
+runtime.selectgo(0xc000b77f78, 0xc000b77f40, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b77ef0 sp=0xc000b77dd0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b77fc8 sp=0xc000b77ef0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b77fe0 sp=0xc000b77fc8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b77fe8 sp=0xc000b77fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 297 [select]:
+runtime.gopark(0xc000b48778?, 0x2?, 0x0?, 0x0?, 0xc000b48744?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000b485d0 sp=0xc000b485b0 pc=0x43e28e
+runtime.selectgo(0xc000b48778, 0xc000b48740, 0x0?, 0x0, 0x0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000b486f0 sp=0xc000b485d0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/chunk/fetcher.(*Fetcher).asyncWriteBackCacheQueueProcessLoop(0xc0005f2a50)
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:132 +0x99 fp=0xc000b487c8 sp=0xc000b486f0 pc=0x1458119
+github.com/grafana/loki/pkg/storage/chunk/fetcher.New.func2()
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x25 fp=0xc000b487e0 sp=0xc000b487c8 pc=0x1457fe5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000b487e8 sp=0xc000b487e0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/chunk/fetcher.New in goroutine 1
+        /src/loki/pkg/storage/chunk/fetcher/fetcher.go:114 +0x2d6
+
+goroutine 303 [select]:
+runtime.gopark(0xc000929f88?, 0x2?, 0xc5?, 0x3?, 0xc000929f4c?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000929df0 sp=0xc000929dd0 pc=0x43e28e
+runtime.selectgo(0xc000929f88, 0xc000929f48, 0x43ca500?, 0x0, 0xc000929f58?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000929f10 sp=0xc000929df0 pc=0x44e745
+github.com/grafana/loki/pkg/storage/stores/indexshipper/uploads.(*tableManager).loop(0xc000af2f80)
+        /src/loki/pkg/storage/stores/indexshipper/uploads/table_manager.go:67 +0x155 fp=0xc000929fc8 sp=0xc000929f10 pc=0x1e6a2d5
+github.com/grafana/loki/pkg/storage/stores/indexshipper/uploads.NewTableManager.func1()
+        /src/loki/pkg/storage/stores/indexshipper/uploads/table_manager.go:53 +0x25 fp=0xc000929fe0 sp=0xc000929fc8 pc=0x1e6a145
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000929fe8 sp=0xc000929fe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/stores/indexshipper/uploads.NewTableManager in goroutine 1
+        /src/loki/pkg/storage/stores/indexshipper/uploads/table_manager.go:53 +0x2b9
+
+goroutine 313 [select]:
+runtime.gopark(0xc000c1cf70?, 0x3?, 0xc5?, 0x3?, 0xc000c1ceca?)
+        /usr/local/go/src/runtime/proc.go:398 +0xce fp=0xc000c1cd40 sp=0xc000c1cd20 pc=0x43e28e
+runtime.selectgo(0xc000c1cf70, 0xc000c1cec4, 0xc000c1ceb8?, 0x0, 0xc000c1cea0?, 0x1)
+        /usr/local/go/src/runtime/select.go:327 +0x725 fp=0xc000c1ce60 sp=0xc000c1cd40 pc=0x44e745
+github.com/grafana/loki/pkg/storage/stores/indexshipper/downloads.(*tableManager).loop(0xc000aacc30)
+        /src/loki/pkg/storage/stores/indexshipper/downloads/table_manager.go:129 +0x1dd fp=0xc000c1cfc8 sp=0xc000c1ce60 pc=0x1e55edd
+github.com/grafana/loki/pkg/storage/stores/indexshipper/downloads.NewTableManager.func1()
+        /src/loki/pkg/storage/stores/indexshipper/downloads/table_manager.go:114 +0x25 fp=0xc000c1cfe0 sp=0xc000c1cfc8 pc=0x1e55cc5
+runtime.goexit()
+        /usr/local/go/src/runtime/asm_amd64.s:1650 +0x1 fp=0xc000c1cfe8 sp=0xc000c1cfe0 pc=0x471621
+created by github.com/grafana/loki/pkg/storage/stores/indexshipper/downloads.NewTableManager in goroutine 1
+        /src/loki/pkg/storage/stores/indexshipper/downloads/table_manager.go:114 +0x326
+
+
+loki-deployment.yaml
+# ================================
+# Persistent Volume Claim
+# ================================
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: kafka
-  namespace: backend
-  labels:
-    app: kafka
+  name: loki-pvc
+  namespace: logging
 spec:
-  clusterIP: None
-  selector:
-    app: kafka
-  ports:
-    - name: broker
-      port: 9092
-    - name: controller
-      port: 9093
-
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: h06-vks-sp-5
+  resources:
+    requests:
+      storage: 5Gi
 ---
-# =========================================================
-# KAFKA STATEFULSET (Confluent cp-kafka, KRaft mode)
-# =========================================================
-apiVersion: apps/v1
-kind: StatefulSet
+# ================================
+# Service Account
+# ================================
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: kafka
-  namespace: backend
+  name: loki-sa
+  namespace: logging
+automountServiceAccountToken: false
+---
+# ================================
+# Pod Disruption Budget
+# ================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: loki-pdb
+  namespace: logging
 spec:
-  serviceName: kafka
-  replicas: 1
+  minAvailable: 1
   selector:
     matchLabels:
-      app: kafka
+      app: loki
+---
+# ================================
+# Deployment
+# ================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: logging
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: loki
+
   template:
     metadata:
       labels:
-        app: kafka
+        app: loki
     spec:
+
+      serviceAccountName: loki-sa
+      terminationGracePeriodSeconds: 60
+
+      # âœ… FIX ADDED: Required for PVC write permission
       securityContext:
-        fsGroup: 1000
+        fsGroup: 10001
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: loki
+
       containers:
-        - name: kafka
-          image: h06vksharbor.corp.ad.sbi/cbops/cp-kafka:v1
+        - name: loki
+          image: h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4
+          args:
+            - -config.file=/etc/loki/loki.yaml
+
           ports:
-            - name: broker
-              containerPort: 9092
-            - name: controller
-              containerPort: 9093
+            - containerPort: 3100
 
           resources:
             requests:
-              cpu: "500m"
-              memory: "2Gi"
+              cpu: "250m"
+              memory: "512Mi"
             limits:
-              cpu: "2"
-              memory: "4Gi"
-
-          env:
-            - name: CLUSTER_ID
-              value: "jgQjUybBSACbAFjwpKFQiA"
-
-            - name: KAFKA_NODE_ID
-              value: "1"
-
-            - name: KAFKA_PROCESS_ROLES
-              value: "broker,controller"
-
-            - name: KAFKA_CONTROLLER_LISTENER_NAMES
-              value: "CONTROLLER"
-
-            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
-              value: "1@kafka-0.kafka.backend.svc.cluster.local:9093"
-
-            - name: KAFKA_LISTENERS
-              value: "INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
-
-            - name: KAFKA_ADVERTISED_LISTENERS
-              value: "INTERNAL://kafka-0.kafka.backend.svc.cluster.local:9092"
-
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
-
-            - name: KAFKA_INTER_BROKER_LISTENER_NAME
-              value: "INTERNAL"
-
-            - name: KAFKA_LOG_DIRS
-              value: "/var/lib/kafka/data/kafka"
-
-            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
-              value: "1"
-
-            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
-              value: "1"
-
-            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
-              value: "1"
-
-          volumeMounts:
-            - name: kafka-data
-              mountPath: /var/lib/kafka/data
-
-  volumeClaimTemplates:
-    - metadata:
-        name: kafka-data
-      spec:
-        storageClassName: h06-vks-sp-6
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 5Gi
-
-            2) kafka-connect.yaml
-
-            apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: connect
-  namespace: backend
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: connect
-  template:
-    metadata:
-      labels:
-        app: connect
-    spec:
-      containers:
-        - name: connect
-          image: h06vksharbor.corp.ad.sbi/cbops/kafka-connect:x1
-          ports:
-            - containerPort: 8083
-              name: rest
-
-          env:
-            # ========= REQUIRED =========
-            - name: CONNECT_BOOTSTRAP_SERVERS
-              value: "kafka.backend.svc.cluster.local:9092"
-
-            - name: CONNECT_GROUP_ID
-              value: "connect-cluster"
-
-            - name: CONNECT_CONFIG_STORAGE_TOPIC
-              value: "_connect-configs"
-
-            - name: CONNECT_OFFSET_STORAGE_TOPIC
-              value: "_connect-offsets"
-
-            - name: CONNECT_STATUS_STORAGE_TOPIC
-              value: "_connect-status"
-
-            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
-              value: "1"
-
-            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
-              value: "1"
-
-            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
-              value: "1"
-
-            # ========= CONVERTERS =========
-            - name: CONNECT_KEY_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_VALUE_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_INTERNAL_KEY_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_INTERNAL_VALUE_CONVERTER
-              value: "org.apache.kafka.connect.json.JsonConverter"
-
-            - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
-              value: "true"
-
-            - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
-              value: "true"
-
-            - name: CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE
-              value: "false"
-
-            - name: CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE
-              value: "false"
-
-            # ========= REST =========
-            - name: CONNECT_REST_PORT
-              value: "8083"
-
-            - name: CONNECT_REST_ADVERTISED_HOST_NAME
-              value: "connect.backend.svc.cluster.local"
-
-            - name: CONNECT_REST_ADVERTISED_PORT
-              value: "8083"
-
-            # ========= PLUGINS =========
-            - name: CONNECT_PLUGIN_PATH
-              value: "/usr/share/java,/usr/share/java/debezium-connector-oracle"
-
-            # ========= LOGGING =========
-            - name: CONNECT_LOG4J_ROOT_LOGLEVEL
-              value: "INFO"
+              cpu: "1"
+              memory: "1Gi"
 
           readinessProbe:
             httpGet:
-              path: /connectors
-              port: 8083
-            initialDelaySeconds: 20
+              path: /ready
+              port: 3100
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 5
+
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 3100
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 5
+
+          startupProbe:
+            httpGet:
+              path: /ready
+              port: 3100
+            failureThreshold: 30
             periodSeconds: 10
 
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 20"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+          volumeMounts:
+            - name: config
+              mountPath: /etc/loki
+              readOnly: true
+            - name: storage
+              mountPath: /var/loki
+
+      volumes:
+        - name: config
+          configMap:
+            name: loki-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: loki-pvc
 ---
+# ================================
+# Service
+# ================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: connect
-  namespace: backend
+  name: loki
+  namespace: logging
 spec:
-  selector:
-    app: connect
-  ports:
-    - name: rest
-      port: 8083
-      targetPort: 8083
   type: ClusterIP
+  selector:
+    app: loki
+  ports:
+    - port: 3100
+      targetPort: 3100
+      protocol: TCP
+---
+# ================================
+# Network Policy
+# ================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: loki-network-policy
+  namespace: logging
+spec:
+  podSelector:
+    matchLabels:
+      app: loki
 
-3) oracle-configmap.yaml
+  policyTypes:
+    - Ingress
+    - Egress
 
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 3100
+
+  egress:
+    - to:
+        - namespaceSelector: {}
+
+
+        loki-config-prod.yaml
+
+        # ============================================
+# ConfigMap for Loki (Enterprise Hardened)
+# Aligned with secure deployment configuration
+# ============================================
 apiVersion: v1
-data:
-  oracle-connector.json: |
-    {
-      "name": "fincore-connector-final",
-      "config": {
-        "connector.class": "io.debezium.connector.oracle.OracleConnector",
-        "tasks.max": "1",
-
-        "database.hostname": "10.177.103.192",
-        "database.port": "1523",
-        "database.user": "c##debezium",
-        "database.password": "Debe#123",
-        "database.dbname": "fincorepdb1",
-        "database.pdb.name": "fincorepdb1",
-        "database.sid": "fincorepdb1",
-        "database.servername": "fincorepdb1",
-
-        "topic.prefix": "fincore",
-        "table.include.list": "fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS",
-
-        "decimal.handling.mode": "string",
-        "database.connection.adapter": "logminer",
-
-        "database.history": "io.debezium.relational.history.KafkaDatabaseHistory",
-
-        "database.history.kafka.bootstrap.servers": "kafka.backend.svc.cluster.local:9092",
-        "schema.history.internal.kafka.bootstrap.servers": "kafka.backend.svc.cluster.local:9092",
-        "schema.history.internal.kafka.topic": "schema-changes.oracle",
-
-        "log.mining.strategy": "online_catalog",
-        "log.mining.continuous.mine": "true",
-        "log.mining.batch.size.default": "50000",
-        "log.mining.batch.size.max": "100000",
-        "log.mining.sleep.time.default": "50",
-        "log.mining.sleep.time.max": "2000",
-
-        "heartbeat.interval.ms": "2000",
-        "heartbeat.topics.prefix": "heartbeat",
-
-        "openlineage.integration.enabled": "true"
-      }
-    }
 kind: ConfigMap
 metadata:
+  name: loki-config
+  namespace: logging
+
+  # Protect ConfigMap from accidental deletion
   annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"oracle-connector.json":"{\n  \"name\": \"fincore-connector-final\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.oracle.OracleConnector\",\n    \"tasks.max\": \"1\",\n\n    \"database.hostname\": \"10.177.103.192\",\n    \"database.port\": \"1523\",\n    \"database.user\": \"c##debezium\",\n    \"database.password\": \"Debe#123\",\n    \"database.dbname\": \"fincorepdb1\",\n    \"database.pdb.name\": \"fincorepdb1\",\n    \"database.sid\": \"fincorepdb1\",\n    \"database.servername\": \"fincorepdb1\",\n\n    \"topic.prefix\": \"fincore\",\n    \"table.include.list\": \"fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS\",\n\n    \"decimal.handling.mode\": \"string\",\n    \"database.connection.adapter\": \"logminer\",\n\n    \"database.history\": \"io.debezium.relational.history.KafkaDatabaseHistory\",\n\n    \"database.history.kafka.bootstrap.servers\": \"kafka.backend.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.bootstrap.servers\": \"kafka.backend.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.topic\": \"schema-changes.oracle\",\n\n    \"log.mining.strategy\": \"online_catalog\",\n    \"log.mining.continuous.mine\": \"true\",\n    \"log.mining.batch.size.default\": \"50000\",\n    \"log.mining.batch.size.max\": \"100000\",\n    \"log.mining.sleep.time.default\": \"50\",\n    \"log.mining.sleep.time.max\": \"2000\",\n\n    \"heartbeat.interval.ms\": \"2000\",\n    \"heartbeat.topics.prefix\": \"heartbeat\",\n\n    \"openlineage.integration.enabled\": \"true\"\n  }\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"oracle-connector-config","namespace":"backend"}}
-  creationTimestamp: "2025-12-10T10:16:10Z"
-  name: oracle-connector-config
-  namespace: backend
-  resourceVersion: "46613478"
-  uid: d4abbc42-98d9-4883-bd30-4553baa9bb87
- 
-4) register-oracle-connector.yaml
+    description: "Loki main configuration - production aligned"
+    config.kubernetes.io/local-config: "true"
 
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: register-oracle-connector
-  namespace: backend
-spec:
-  backoffLimit: 3
-  template:
-    spec:
-      restartPolicy: OnFailure
-      containers:
-        - name: register
-          image: h06vksharbor.corp.ad.sbi/cbops/curlimages/curl:v1
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              echo "Waiting for Kafka Connect..."
+  labels:
+    app: loki
+    component: logging
+    managed-by: kubernetes
 
-              # Wait until Connect REST is up
-              until curl -sf http://connect.backend.svc.cluster.local:8083/connectors ; do
-                echo "Connect not ready yet..."
-                sleep 5
-              done
+immutable: true   # Prevent accidental runtime modification (enterprise safety)
 
-              echo "Sleeping 30s for worker + plugins to fully init..."
-              sleep 30
+data:
+  loki.yaml: |
+    # ============================================
+    # Authentication
+    # (unchanged as per requirement)
+    # ============================================
+    auth_enabled: false
 
-              echo "Posting connector config from /config/oracle-connector.json ..."
-              HTTP_CODE=$(curl -s -o /tmp/out.txt -w "%{http_code}" \
-                -X POST \
-                -H "Content-Type: application/json" \
-                --data "@/config/oracle-connector.json" \
-                http://connect.backend.svc.cluster.local:8083/connectors)
+    # ============================================
+    # Server Configuration
+    # ============================================
+    server:
+      http_listen_port: 3100
 
-              echo "HTTP_CODE=$HTTP_CODE"
-              echo "Response body:"
-              cat /tmp/out.txt || true
+      # Graceful shutdown support (aligned with 60s terminationGracePeriod)
+      graceful_shutdown_timeout: 60s
 
-              # 201 = created, 200 = ok, 409 = already exists
-              if [ "$HTTP_CODE" != "201" ] && [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "409" ]; then
-                echo "Registration failed (HTTP $HTTP_CODE)"
-                exit 1
-              fi
+      # Prevent slow client abuse
+      http_server_read_timeout: 30s
+      http_server_write_timeout: 30s
+      http_server_idle_timeout: 120s
 
-              echo "Connector registration succeeded (or already existed)."
-          volumeMounts:
-            - name: connector-config
-              mountPath: /config
+    # ============================================
+    # Common Configuration
+    # ============================================
+    common:
+      instance_addr: 127.0.0.1
+      path_prefix: /var/loki
 
-      volumes:
-        - name: connector-config
-          configMap:
-            name: oracle-connector-config
+      storage:
+        filesystem:
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
+
+      replication_factor: 1   # Unchanged (single replica deployment)
+
+      ring:
+        kvstore:
+          store: inmemory     # Unchanged as required
+
+    # ============================================
+    # Schema Configuration
+    # ============================================
+    schema_config:
+      configs:
+        - from: 2024-01-01
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
+
+    # ============================================
+    # Limits Configuration
+    # ============================================
+    limits_config:
+      retention_period: 168h   # 7 days (unchanged)
+
+      # Enterprise safety controls (added)
+      ingestion_rate_mb: 8
+      ingestion_burst_size_mb: 16
+      max_streams_per_user: 10000
+      max_global_streams_per_user: 0
+
+    # ============================================
+    # Chunk Store Configuration
+    # ============================================
+    chunk_store_config:
+      max_look_back_period: 168h
+
+    # ============================================
+    # Compactor Configuration
+    # Required for boltdb-shipper in production
+    # ============================================
+    compactor:
+      working_directory: /var/loki/boltdb-shipper-compactor
+      shared_store: filesystem
+      retention_enabled: true
+
+    # ============================================
+    # Table Manager (Retention Enforcement)
+    # ============================================
+    table_manager:
+      retention_deletes_enabled: true
+      retention_period: 168h
+
+    # ============================================
+    # Ingester Configuration
+    # Prevent data loss on restart
+    # ============================================
+    ingester:
+      chunk_idle_period: 5m
+      chunk_retain_period: 30s
+      wal:
+        enabled: true
+        dir: /var/loki/wal
+
+    # ============================================
+    # Query Range Optimization
+    # Protect from heavy queries
+    # ============================================
+    query_range:
+      align_queries_with_step: true
+      max_retries: 5
+
+    # ============================================
+    # Frontend (Stability tuning)
+    # ============================================
+    frontend:
+      log_queries_longer_than: 5s
+
+
+      this failing and below is my manisfest file 
