@@ -1,8 +1,3 @@
-[root@fcsitgateway SIT-Grafana]# kubectl apply -f loki-config-prod.yaml -n logging --kubeconfig h06vkssitcbopscls.conf
-error: error parsing loki-config-prod.yaml: error converting YAML to JSON: yaml: line 37: found a tab character where an indentation space is expected
-
-this is my file:
-
 # ============================================
 # ConfigMap for Loki
 # Non-Production Environment
@@ -39,7 +34,7 @@ data:
     # ============================================
     server:
       http_listen_port: 3100
-	  
+
       # Graceful shutdown support (aligned with 60s terminationGracePeriod)
       graceful_shutdown_timeout: 60s
 
@@ -78,69 +73,3 @@ data:
           index:
             prefix: index_
             period: 24h
-
-    # ============================================
-    # Limits Configuration
-    # ============================================
-    limits_config:
-      retention_period: 168h   # 7 days
-	  
-	  # Enterprise safety controls (added)
-      ingestion_rate_mb: 8
-      ingestion_burst_size_mb: 16
-      max_streams_per_user: 10000
-      max_global_streams_per_user: 0
-
-
-    # ============================================
-    # Chunk Store Configuration
-    # ============================================
-    chunk_store_config:
-      max_look_back_period: 168h
-	  
-	  
-	# ============================================
-    # Compactor Configuration
-    # Required for boltdb-shipper in production
-    # ============================================
-    compactor:
-      working_directory: /var/loki/boltdb-shipper-compactor
-      shared_store: filesystem
-      retention_enabled: true
-
-    # ============================================
-    # Table Manager (Retention Enforcement)
-    # ============================================
-    table_manager:
-      retention_deletes_enabled: true
-      retention_period: 168h
-
-    # ============================================
-    # Ingester Configuration
-    # Prevent data loss on restart
-    # ============================================
-    ingester:
-      chunk_idle_period: 5m
-      chunk_retain_period: 30s
-      wal:
-        enabled: true
-        dir: /var/loki/wal
-
-    # ============================================
-    # Query Range Optimization
-    # Protect from heavy queries
-    # ============================================
-    query_range:
-      align_queries_with_step: true
-      max_retries: 5
-
-    # ============================================
-    # Frontend (Stability tuning)
-    # ============================================
-    frontend:
-      log_queries_longer_than: 5s
-
-
-
-
-      please correct it and send me back
