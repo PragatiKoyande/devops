@@ -1,155 +1,146 @@
+[root@fcsitgateway SIT-Grafana]# kubectl apply -f loki-config-prod.yaml -n logging --kubeconfig h06vkssitcbopscls.conf
+error: error parsing loki-config-prod.yaml: error converting YAML to JSON: yaml: line 37: found a tab character where an indentation space is expected
+
+this is my file:
+
+# ============================================
+# ConfigMap for Loki
+# Non-Production Environment
+# Aligned with enterprise deployment format
+# ============================================
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: ConfigMap
 metadata:
-  name: grafana-pvc
-  namespace: cbops
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: h06-vks-sp-6
-  resources:
-    requests:
-      storage: 5Gi
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: grafana-pdb
-  namespace: cbops
-spec:
-  minAvailable: 0
-  selector:
-    matchLabels:
-      app: grafana
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: grafana
-  namespace: cbops
-spec:
-  replicas: 1
-  revisionHistoryLimit: 10
+  name: loki-config
+  namespace: logging
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  # Protect ConfigMap metadata and describe purpose
+  annotations:
+    description: "Loki main configuration - non-production environment"
+    config.kubernetes.io/local-config: "true"
 
-  selector:
-    matchLabels:
-      app: grafana
+  labels:
+    app: loki
+    component: logging
+    managed-by: kubernetes
 
-  template:
-    metadata:
-      labels:
-        app: grafana
+# Prevent accidental runtime edits
+immutable: true
 
-    spec:
-      terminationGracePeriodSeconds: 20
+data:
+  loki.yaml: |
+    # ============================================
+    # Authentication
+    # ============================================
+    auth_enabled: false
 
-      securityContext:
-        fsGroup: 472
+    # ============================================
+    # Server Configuration
+    # ============================================
+    server:
+      http_listen_port: 3100
+	  
+      # Graceful shutdown support (aligned with 60s terminationGracePeriod)
+      graceful_shutdown_timeout: 60s
 
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                        - grafana
-                topologyKey: kubernetes.io/hostname
+      # Prevent slow client abuse
+      http_server_read_timeout: 30s
+      http_server_write_timeout: 30s
+      http_server_idle_timeout: 120s
 
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: grafana
+    # ============================================
+    # Common Configuration
+    # ============================================
+    common:
+      instance_addr: 127.0.0.1
+      path_prefix: /var/loki
 
-      containers:
-        - name: grafana
-          image: h06vksharbor.corp.ad.sbi/cbops/grafana/grafana:10.2.3
+      storage:
+        filesystem:
+          chunks_directory: /var/loki/chunks
+          rules_directory: /var/loki/rules
 
-          ports:
-            - containerPort: 3000
+      replication_factor: 1  # Unchanged (single replica deployment)
 
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "512Mi"
-            limits:
-              cpu: "1"
-              memory: "1Gi"
+      ring:
+        kvstore:
+          store: inmemory    # Unchanged as required
 
-          livenessProbe:
-            httpGet:
-              path: /grafana/api/health
-              port: 3000
-            initialDelaySeconds: 20
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 5
+    # ============================================
+    # Schema Configuration
+    # ============================================
+    schema_config:
+      configs:
+        - from: 2024-01-01
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v11
+          index:
+            prefix: index_
+            period: 24h
 
-          readinessProbe:
-            httpGet:
-              path: /grafana/api/health
-              port: 3000
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+    # ============================================
+    # Limits Configuration
+    # ============================================
+    limits_config:
+      retention_period: 168h   # 7 days
+	  
+	  # Enterprise safety controls (added)
+      ingestion_rate_mb: 8
+      ingestion_burst_size_mb: 16
+      max_streams_per_user: 10000
+      max_global_streams_per_user: 0
 
-          env:
-            - name: GF_SECURITY_ADMIN_USER
-              value: admin
-            - name: GF_SECURITY_ADMIN_PASSWORD
-              value: admin123
 
-            - name: GF_SERVER_DOMAIN
-              value: fincorest.sbi
-            - name: GF_SERVER_HTTP_ADDR
-              value: "0.0.0.0"
-            - name: GF_SERVER_ROOT_URL
-              value: "https://fincorest.sbi/grafana/"
-            - name: GF_SERVER_SERVE_FROM_SUB_PATH
-              value: "true"
+    # ============================================
+    # Chunk Store Configuration
+    # ============================================
+    chunk_store_config:
+      max_look_back_period: 168h
+	  
+	  
+	# ============================================
+    # Compactor Configuration
+    # Required for boltdb-shipper in production
+    # ============================================
+    compactor:
+      working_directory: /var/loki/boltdb-shipper-compactor
+      shared_store: filesystem
+      retention_enabled: true
 
-            - name: GF_SECURITY_CONTENT_SECURITY_POLICY
-              value: "false"
+    # ============================================
+    # Table Manager (Retention Enforcement)
+    # ============================================
+    table_manager:
+      retention_deletes_enabled: true
+      retention_period: 168h
 
-            - name: GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES
-              value: "false"
+    # ============================================
+    # Ingester Configuration
+    # Prevent data loss on restart
+    # ============================================
+    ingester:
+      chunk_idle_period: 5m
+      chunk_retain_period: 30s
+      wal:
+        enabled: true
+        dir: /var/loki/wal
 
-            - name: GF_ANALYTICS_REPORTING_ENABLED
-              value: "false"
+    # ============================================
+    # Query Range Optimization
+    # Protect from heavy queries
+    # ============================================
+    query_range:
+      align_queries_with_step: true
+      max_retries: 5
 
-          volumeMounts:
-            - name: grafana-storage
-              mountPath: /var/lib/grafana
+    # ============================================
+    # Frontend (Stability tuning)
+    # ============================================
+    frontend:
+      log_queries_longer_than: 5s
 
-      volumes:
-        - name: grafana-storage
-          persistentVolumeClaim:
-            claimName: grafana-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: grafana
-  namespace: cbops
-spec:
-  type: ClusterIP
-  sessionAffinity: None
-  selector:
-    app: grafana
-  ports:
-    - name: http
-      port: 3000
-      targetPort: 3000
+
+
+
+      please correct it and send me back
