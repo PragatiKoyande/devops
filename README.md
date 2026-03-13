@@ -1,140 +1,44 @@
-# ============================================
-# ConfigMap for Loki (Enterprise Hardened)
-# Aligned with secure deployment configuration
-# ============================================
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: loki-config
-  namespace: logging
-
-  # Protect ConfigMap from accidental deletion
-  annotations:
-    description: "Loki main configuration - production aligned"
-    config.kubernetes.io/local-config: "true"
-
-  labels:
-    app: loki
-    component: logging
-    managed-by: kubernetes
-
-immutable: true   # Prevent accidental runtime modification (enterprise safety)
-
-data:
-  loki.yaml: |
-    # ============================================
-    # Authentication
-    # ============================================
-    auth_enabled: false
-
-    # ============================================
-    # Server Configuration
-    # ============================================
-    server:
-      http_listen_port: 3100
-
-      # Graceful shutdown support (aligned with 60s terminationGracePeriod)
-      graceful_shutdown_timeout: 60s
-
-      # Prevent slow client abuse
-      http_server_read_timeout: 30s
-      http_server_write_timeout: 30s
-      http_server_idle_timeout: 120s
-
-    # ============================================
-    # Common Configuration
-    # ============================================
-    common:
-      instance_addr: 127.0.0.1
-      path_prefix: /var/loki
-
-      storage:
-        filesystem:
-          chunks_directory: /var/loki/chunks
-          rules_directory: /var/loki/rules
-
-      replication_factor: 1
-
-      ring:
-        kvstore:
-          store: inmemory
-
-    # ============================================
-    # STORAGE CONFIGURATION (REQUIRED FOR BOLTDB SHIPPER)
-    # ============================================
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/index_cache
-        shared_store: filesystem
-
-      filesystem:
-        directory: /var/loki/chunks
-
-    # ============================================
-    # Schema Configuration
-    # ============================================
-    schema_config:
-      configs:
-        - from: 2024-01-01
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: index_
-            period: 24h
-
-    # ============================================
-    # Limits Configuration
-    # ============================================
-    limits_config:
-      retention_period: 168h
-
-      ingestion_rate_mb: 8
-      ingestion_burst_size_mb: 16
-      max_streams_per_user: 10000
-      max_global_streams_per_user: 0
-
-    # ============================================
-    # Chunk Store Configuration
-    # ============================================
-    chunk_store_config:
-      max_look_back_period: 168h
-
-    # ============================================
-    # Compactor Configuration
-    # ============================================
-    compactor:
-      working_directory: /var/loki/boltdb-shipper-compactor
-      shared_store: filesystem
-      retention_enabled: true
-
-    # ============================================
-    # Table Manager
-    # ============================================
-    table_manager:
-      retention_deletes_enabled: true
-      retention_period: 168h
-
-    # ============================================
-    # Ingester Configuration
-    # ============================================
-    ingester:
-      chunk_idle_period: 5m
-      chunk_retain_period: 30s
-      wal:
-        enabled: true
-        dir: /var/loki/wal
-
-    # ============================================
-    # Query Range Optimization
-    # ============================================
-    query_range:
-      align_queries_with_step: true
-      max_retries: 5
-
-    # ============================================
-    # Frontend
-    # ============================================
-    frontend:
-      log_queries_longer_than: 5s
+D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl logs loki-58595d499c-d888v -n logging --kubeconfig h06vksuatcbopscls.conf
+mkdir /var/loki/index_cache: no space left on device
+error creating index client
+github.com/grafana/loki/pkg/storage.(*store).storeForPeriod
+        /src/loki/pkg/storage/store.go:295
+github.com/grafana/loki/pkg/storage.(*store).init
+        /src/loki/pkg/storage/store.go:177
+github.com/grafana/loki/pkg/storage.NewStore
+        /src/loki/pkg/storage/store.go:155
+github.com/grafana/loki/pkg/loki.(*Loki).initStore
+        /src/loki/pkg/loki/modules.go:689
+github.com/grafana/dskit/modules.(*Manager).initModule
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:136
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+github.com/grafana/loki/pkg/loki.(*Loki).Run
+        /src/loki/pkg/loki/loki.go:461
+main.main
+        /src/loki/cmd/loki/main.go:110
+runtime.main
+        /usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1650
+error initialising module: store
+github.com/grafana/dskit/modules.(*Manager).initModule
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+github.com/grafana/loki/pkg/loki.(*Loki).Run
+        /src/loki/pkg/loki/loki.go:461
+main.main
+        /src/loki/cmd/loki/main.go:110
+runtime.main
+        /usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1650
+level=warn ts=2026-03-13T06:18:52.197458836Z caller=store.go:56 msg="running with DEPRECATED flag -store.max-look-back-period, use -querier.max-query-lookback instead."
+level=warn ts=2026-03-13T06:18:52.197533281Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-03-13T06:18:52.199014307Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-03-13T06:18:52.200125937Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=warn ts=2026-03-13T06:18:52.202792987Z caller=cache.go:127 msg="fifocache config is deprecated. use embedded-cache instead"
+level=warn ts=2026-03-13T06:18:52.202825974Z caller=experimental.go:20 msg="experimental feature in use" feature="In-memory (FIFO) cache - chunksembedded-cache"
+level=info ts=2026-03-13T06:18:52.203252022Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
+level=error ts=2026-03-13T06:18:52.203251909Z caller=log.go:230 msg="error running loki" err="mkdir /var/loki/index_cache: no space left on device\nerror creating index client\ngithub.com/grafana/loki/pkg/storage.(*store).storeForPeriod\n\t/src/loki/pkg/storage/store.go:295\ngithub.com/grafana/loki/pkg/storage.(*store).init\n\t/src/loki/pkg/storage/store.go:177\ngithub.com/grafana/loki/pkg/storage.NewStore\n\t/src/loki/pkg/storage/store.go:155\ngithub.com/grafana/loki/pkg/loki.(*Loki).initStore\n\t/src/loki/pkg/loki/modules.go:689\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:136\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650\nerror initialising module: store\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
