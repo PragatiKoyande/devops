@@ -24,7 +24,6 @@ data:
   loki.yaml: |
     # ============================================
     # Authentication
-    # (unchanged as per requirement)
     # ============================================
     auth_enabled: false
 
@@ -54,11 +53,23 @@ data:
           chunks_directory: /var/loki/chunks
           rules_directory: /var/loki/rules
 
-      replication_factor: 1   # Unchanged (single replica deployment)
+      replication_factor: 1
 
       ring:
         kvstore:
-          store: inmemory     # Unchanged as required
+          store: inmemory
+
+    # ============================================
+    # STORAGE CONFIGURATION (REQUIRED FOR BOLTDB SHIPPER)
+    # ============================================
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/index_cache
+        shared_store: filesystem
+
+      filesystem:
+        directory: /var/loki/chunks
 
     # ============================================
     # Schema Configuration
@@ -77,9 +88,8 @@ data:
     # Limits Configuration
     # ============================================
     limits_config:
-      retention_period: 168h   # 7 days (unchanged)
+      retention_period: 168h
 
-      # Enterprise safety controls (added)
       ingestion_rate_mb: 8
       ingestion_burst_size_mb: 16
       max_streams_per_user: 10000
@@ -93,7 +103,6 @@ data:
 
     # ============================================
     # Compactor Configuration
-    # Required for boltdb-shipper in production
     # ============================================
     compactor:
       working_directory: /var/loki/boltdb-shipper-compactor
@@ -101,7 +110,7 @@ data:
       retention_enabled: true
 
     # ============================================
-    # Table Manager (Retention Enforcement)
+    # Table Manager
     # ============================================
     table_manager:
       retention_deletes_enabled: true
@@ -109,7 +118,6 @@ data:
 
     # ============================================
     # Ingester Configuration
-    # Prevent data loss on restart
     # ============================================
     ingester:
       chunk_idle_period: 5m
@@ -120,19 +128,13 @@ data:
 
     # ============================================
     # Query Range Optimization
-    # Protect from heavy queries
     # ============================================
     query_range:
       align_queries_with_step: true
       max_retries: 5
 
     # ============================================
-    # Frontend (Stability tuning)
+    # Frontend
     # ============================================
     frontend:
       log_queries_longer_than: 5s
-
-
-
-
-      this is my config file can you please add those configuration and send me complete file
