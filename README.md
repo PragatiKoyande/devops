@@ -14,6 +14,11 @@ SIT Environment:
 PROD Environment:
 <PASTE_PROD_GRAFANA_LINK_HERE>
 
-Kindly start using Grafana to verify logs whenever required. If you face any issues accessing the dashboards, please let me know.
+You can log in using the following common credentials:
+
+Username: <USERNAME>
+Password: <PASSWORD>
+
+Kindly use these credentials to access Grafana and verify application logs as needed. If you face any issues accessing the dashboards, please let me know.
 
 Thanks.
