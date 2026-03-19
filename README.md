@@ -184,9 +184,9 @@ ERROR in ch.qos.logback.core.rolling.RollingFileAppender[JSON_FILE] - openFile(l
                 ... 28 more
 
 
-                this si the issue i m facing for another service and below is my manifest file please only alter the required chnage sto resolve the issue and dont do anything else:
-
-                # --------------------------------------------
+                this si the issue i m facing for another service and below is my manifest file please only alter the required chnage sto resolve the issue and dont do anything else and also send th entire file back 
+                
+# --------------------------------------------
 # Service Account (security best practice)
 # --------------------------------------------
 apiVersion: v1
