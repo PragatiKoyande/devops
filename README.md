@@ -1,183 +1,137 @@
+2026-03-19 07:16:35.510 INFO  [main] o.s.b.StartupInfoLogger: Starting CommonMasterServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by root in /)
+2026-03-19 07:16:35.516 INFO  [main] o.s.b.SpringApplication: The following 1 profile is active: "dev"
+2026-03-19 07:16:39.110 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-19 07:16:39.112 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-19 07:16:39.708 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 591 ms. Found 15 JPA repository interfaces.
+2026-03-19 07:16:39.721 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-19 07:16:39.806 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-19 07:16:39.817 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.AnnouncementsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.818 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.BalanceRecordRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.818 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.BranchMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.818 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.BranchMasterWithStateCircleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.819 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.CalenderConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.819 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.CGLMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.819 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.CGLMasterWithSegmentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.819 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.CircleMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.819 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.CurrencyMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.820 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.CurrencyRateChangeRepo; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.820 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.FileTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.821 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.NotificationOutboxRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.821 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.SegmentCodeMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.821 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.StateMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.821 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.tcs.fincore.CommonMasterService.repository.ZoneMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-19 07:16:39.821 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-03-19 07:16:43.224 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 2000 (http)
+2026-03-19 07:16:43.308 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-2000"]
+2026-03-19 07:16:43.309 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+2026-03-19 07:16:43.309 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-19 07:16:43.424 INFO  [main] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2026-03-19 07:16:43.424 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 7802 ms
+2026-03-19 07:16:45.629 INFO  [main] o.s.b.w.s.RegistrationBean: Filter mdcFilterRegistration was not registered (disabled)
+2026-03-19 07:16:45.706 INFO  [main] o.s.b.w.s.RegistrationBean: Filter rbacFilterRegistration was not registered (disabled)
+2026-03-19 07:16:46.624 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+2026-03-19 07:17:18.050 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-19 07:17:18.217 INFO  [main] o.h.Version: HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-03-19 07:17:18.317 INFO  [main] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
+2026-03-19 07:17:19.121 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-19 07:17:19.215 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+2026-03-19 07:17:50.218 WARN  [main] o.h.e.j.e.i.JdbcEnvironmentInitiator: HHH000342: Could not obtain connection to query metadata
+java.lang.NullPointerException: Cannot invoke "org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(java.sql.SQLException, String)" because the return value of "org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.sqlExceptionHelper()" is null
+        at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:116)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:290)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:123)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:77)
+        at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215)
+        at org.hibernate.boot.model.relational.Database.<init>(Database.java:45)
+        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:221)
+        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:189)
+        at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:171)
+        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1431)
+        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1502)
+        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.tcs.fincore.CommonMasterService.CommonMasterServiceApplication.main(CommonMasterServiceApplication.java:9)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+2026-03-19 07:17:50.220 ERROR [main] o.s.o.j.AbstractEntityManagerFactoryBean: Failed to initialize JPA EntityManagerFactory: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
+2026-03-19 07:17:50.221 WARN  [main] o.s.c.s.AbstractApplicationContext: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
+2026-03-19 07:17:50.230 INFO  [main] o.a.j.l.DirectJDKLog: Stopping service [Tomcat]
+2026-03-19 07:17:50.308 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLogger:
 
-level=info ts=2026-03-19T06:37:11.395651383Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
-level=info ts=2026-03-19T06:37:11.39568658Z caller=index_set.go:86 msg="uploading table index_20528"
-level=info ts=2026-03-19T06:37:11.39569221Z caller=index_set.go:107 msg="finished uploading table index_20528"
-level=info ts=2026-03-19T06:37:11.395696862Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20528"
-level=info ts=2026-03-19T06:37:11.39570246Z caller=index_set.go:86 msg="uploading table index_20529"
-level=info ts=2026-03-19T06:37:11.3957053Z caller=index_set.go:107 msg="finished uploading table index_20529"
-level=info ts=2026-03-19T06:37:11.395708801Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20529"
-level=info ts=2026-03-19T06:37:11.395712577Z caller=index_set.go:86 msg="uploading table index_20530"
-level=info ts=2026-03-19T06:37:11.395715165Z caller=index_set.go:107 msg="finished uploading table index_20530"
-level=info ts=2026-03-19T06:37:11.395718279Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20530"
-level=info ts=2026-03-19T06:37:11.395722372Z caller=index_set.go:86 msg="uploading table index_20531"
-level=info ts=2026-03-19T06:37:11.39572629Z caller=index_set.go:107 msg="finished uploading table index_20531"
-level=info ts=2026-03-19T06:37:11.395729347Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20531"
-level=info ts=2026-03-19T06:37:11.395742346Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
-level=info ts=2026-03-19T06:37:11.395777058Z caller=table.go:318 msg="handing over indexes to shipper index_20528"
-level=info ts=2026-03-19T06:37:11.395782132Z caller=table.go:334 msg="finished handing over table index_20528"
-level=info ts=2026-03-19T06:37:11.395801293Z caller=table.go:318 msg="handing over indexes to shipper index_20529"
-level=info ts=2026-03-19T06:37:11.395804454Z caller=table.go:334 msg="finished handing over table index_20529"
-level=info ts=2026-03-19T06:37:11.395817798Z caller=table.go:318 msg="handing over indexes to shipper index_20530"
-level=info ts=2026-03-19T06:37:11.395821308Z caller=table.go:334 msg="finished handing over table index_20530"
-level=info ts=2026-03-19T06:37:11.395833931Z caller=table.go:318 msg="handing over indexes to shipper index_20531"
-level=info ts=2026-03-19T06:37:11.395839272Z caller=table.go:334 msg="finished handing over table index_20531"
-level=info ts=2026-03-19T06:37:16.349175412Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:37:16.349218334Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:37:16.60287077Z caller=marker.go:202 msg="no marks file found"
-level=info ts=2026-03-19T06:37:17.92881925Z caller=checkpoint.go:498 msg="atomic checkpoint finished" old=/var/loki/wal/checkpoint.000970.tmp new=/var/loki/wal/checkpoint.000970
-level=info ts=2026-03-19T06:37:17.938963514Z caller=checkpoint.go:569 msg="checkpoint done" time=4m6.536790851s
-level=info ts=2026-03-19T06:37:46.242091829Z caller=flush.go:167 msg="flushing stream" user=fake fp=ab64fb26b98579a6 immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"redis\", kubernetes_namespace_name=\"uat-cbops1\", kubernetes_pod_name=\"airflow-redis-0\"}"
-level=info ts=2026-03-19T06:37:51.432916931Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:37:53.078433751Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:37:56.853427211Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:38:01.033261663Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:38:11.3959197Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
-level=info ts=2026-03-19T06:38:11.395942501Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
-level=info ts=2026-03-19T06:38:11.39596897Z caller=index_set.go:86 msg="uploading table index_20528"
-level=info ts=2026-03-19T06:38:11.395974139Z caller=index_set.go:107 msg="finished uploading table index_20528"
-level=info ts=2026-03-19T06:38:11.395964842Z caller=table_manager.go:228 index-store=boltdb-shipper-2024-01-01 msg="syncing tables"
-level=info ts=2026-03-19T06:38:11.395980692Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20528"
-level=info ts=2026-03-19T06:38:11.395983607Z caller=table.go:318 msg="handing over indexes to shipper index_20528"
-level=info ts=2026-03-19T06:38:11.395988695Z caller=index_set.go:86 msg="uploading table index_20529"
-level=info ts=2026-03-19T06:38:11.395989314Z caller=table.go:334 msg="finished handing over table index_20528"
-level=info ts=2026-03-19T06:38:11.395992003Z caller=index_set.go:107 msg="finished uploading table index_20529"
-level=info ts=2026-03-19T06:38:11.395996181Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20529"
-level=info ts=2026-03-19T06:38:11.395999739Z caller=index_set.go:86 msg="uploading table index_20530"
-level=info ts=2026-03-19T06:38:11.396002159Z caller=index_set.go:107 msg="finished uploading table index_20530"
-level=info ts=2026-03-19T06:38:11.396005105Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20530"
-level=info ts=2026-03-19T06:38:11.396008773Z caller=index_set.go:86 msg="uploading table index_20531"
-level=info ts=2026-03-19T06:38:11.396008442Z caller=table.go:318 msg="handing over indexes to shipper index_20529"
-level=info ts=2026-03-19T06:38:11.396012222Z caller=index_set.go:107 msg="finished uploading table index_20531"
-level=info ts=2026-03-19T06:38:11.396015608Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20531"
-level=info ts=2026-03-19T06:38:11.396016717Z caller=table.go:334 msg="finished handing over table index_20529"
-ts=2026-03-19T06:38:11.396019627Z caller=spanlogger.go:86 level=info msg="building table cache"
-level=info ts=2026-03-19T06:38:11.396030356Z caller=table.go:318 msg="handing over indexes to shipper index_20530"
-level=info ts=2026-03-19T06:38:11.396033448Z caller=table.go:334 msg="finished handing over table index_20530"
-level=info ts=2026-03-19T06:38:11.396047418Z caller=table.go:318 msg="handing over indexes to shipper index_20531"
-level=info ts=2026-03-19T06:38:11.396053432Z caller=table.go:334 msg="finished handing over table index_20531"
-ts=2026-03-19T06:38:11.39607706Z caller=spanlogger.go:86 level=info msg="table cache built" duration=50.73µs
-level=info ts=2026-03-19T06:38:11.396106564Z caller=table_manager.go:271 index-store=boltdb-shipper-2024-01-01 msg="query readiness setup completed" duration=1.429µs distinct_users_len=0 distinct_users=
-level=info ts=2026-03-19T06:38:11.40195569Z caller=checkpoint.go:611 msg="starting checkpoint"
-level=info ts=2026-03-19T06:38:11.402039524Z caller=checkpoint.go:336 msg="attempting checkpoint for" dir=/var/loki/wal/checkpoint.000971
-level=info ts=2026-03-19T06:38:12.313650692Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:38:12.313693518Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:38:16.120386953Z caller=flush.go:167 msg="flushing stream" user=fake fp=b84bf34e40e6d2d2 immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"fluent-bit\", kubernetes_namespace_name=\"tanzu-system-logging\", kubernetes_pod_name=\"fluent-bit-nw5sp\"}"
-level=info ts=2026-03-19T06:38:16.603427878Z caller=compactor.go:517 msg="applying retention with compaction"
-level=info ts=2026-03-19T06:38:16.603474225Z caller=expiration.go:78 msg="overall smallest retention period 1773297496.603, default smallest retention period 1773297496.603"
-ts=2026-03-19T06:38:16.603515341Z caller=spanlogger.go:86 level=info msg="building table names cache"
-level=info ts=2026-03-19T06:38:16.603528446Z caller=marker.go:202 msg="no marks file found"
-ts=2026-03-19T06:38:16.603672243Z caller=spanlogger.go:86 level=info msg="table names cache built" duration=150.1µs
-level=info ts=2026-03-19T06:38:16.603692963Z caller=compactor.go:683 msg="compacting table" table-name=index_20531
-ts=2026-03-19T06:38:16.603767206Z caller=spanlogger.go:86 level=info msg="building table cache"
-ts=2026-03-19T06:38:16.603786395Z caller=spanlogger.go:86 level=info msg="table cache built" duration=15.613µs
-level=info ts=2026-03-19T06:38:16.603791422Z caller=table.go:132 table-name=index_20531 msg="listed files" count=2
-level=info ts=2026-03-19T06:38:16.603809929Z caller=table_compactor.go:325 table-name=index_20531 msg="using compactor-1773901096.gz as seed file"
-level=info ts=2026-03-19T06:38:16.606108896Z caller=util.go:94 table-name=index_20531 file-name=compactor-1773901096.gz size="278 kB" msg="downloaded file" total_time=2.290973ms
-level=info ts=2026-03-19T06:38:16.606370155Z caller=util.go:94 table-name=index_20531 file-name=loki-58595d499c-rdfmh-1773641891395426348-1773900900.gz size="66 kB" msg="downloaded file" total_time=164.678µs
-level=info ts=2026-03-19T06:38:16.623993795Z caller=index_set.go:269 table-name=index_20531 msg="removing source db files from storage" count=2
-level=info ts=2026-03-19T06:38:16.624092947Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20531
-level=info ts=2026-03-19T06:38:16.62410646Z caller=compactor.go:683 msg="compacting table" table-name=index_20530
-ts=2026-03-19T06:38:16.62414382Z caller=spanlogger.go:86 level=info msg="building table cache"
-ts=2026-03-19T06:38:16.624166983Z caller=spanlogger.go:86 level=info msg="table cache built" duration=17.428µs
-level=info ts=2026-03-19T06:38:16.624172708Z caller=table.go:132 table-name=index_20530 msg="listed files" count=1
-level=info ts=2026-03-19T06:38:16.624191404Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20530
-level=info ts=2026-03-19T06:38:16.624199469Z caller=compactor.go:683 msg="compacting table" table-name=index_20529
-ts=2026-03-19T06:38:16.624221987Z caller=spanlogger.go:86 level=info msg="building table cache"
-ts=2026-03-19T06:38:16.624240868Z caller=spanlogger.go:86 level=info msg="table cache built" duration=15.835µs
-level=info ts=2026-03-19T06:38:16.624244332Z caller=table.go:132 table-name=index_20529 msg="listed files" count=1
-level=info ts=2026-03-19T06:38:16.624257699Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20529
-level=info ts=2026-03-19T06:38:16.624263993Z caller=compactor.go:683 msg="compacting table" table-name=index_20528
-ts=2026-03-19T06:38:16.624280726Z caller=spanlogger.go:86 level=info msg="building table cache"
-ts=2026-03-19T06:38:16.624302401Z caller=spanlogger.go:86 level=info msg="table cache built" duration=18.04µs
-level=info ts=2026-03-19T06:38:16.62430896Z caller=table.go:132 table-name=index_20528 msg="listed files" count=1
-level=info ts=2026-03-19T06:38:16.624327904Z caller=compactor.go:688 msg="finished compacting table" table-name=index_20528
-level=info ts=2026-03-19T06:38:46.166388698Z caller=flush.go:167 msg="flushing stream" user=fake fp=8b70fd6fdef885de immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"antrea-agent\", kubernetes_namespace_name=\"kube-system\", kubernetes_pod_name=\"antrea-agent-7hx9p\"}"
-level=info ts=2026-03-19T06:38:51.43214811Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:38:53.042120781Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:38:55.98949895Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:39:00.056518199Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:39:11.395738345Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
-level=info ts=2026-03-19T06:39:11.395753215Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
-level=info ts=2026-03-19T06:39:11.395780385Z caller=index_set.go:86 msg="uploading table index_20528"
-level=info ts=2026-03-19T06:39:11.39578649Z caller=index_set.go:107 msg="finished uploading table index_20528"
-level=info ts=2026-03-19T06:39:11.395794125Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20528"
-level=info ts=2026-03-19T06:39:11.395800079Z caller=index_set.go:86 msg="uploading table index_20529"
-level=info ts=2026-03-19T06:39:11.395801357Z caller=table.go:318 msg="handing over indexes to shipper index_20528"
-level=info ts=2026-03-19T06:39:11.395803009Z caller=index_set.go:107 msg="finished uploading table index_20529"
-level=info ts=2026-03-19T06:39:11.395806838Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20529"
-level=info ts=2026-03-19T06:39:11.395806661Z caller=table.go:334 msg="finished handing over table index_20528"
-level=info ts=2026-03-19T06:39:11.395810729Z caller=index_set.go:86 msg="uploading table index_20530"
-level=info ts=2026-03-19T06:39:11.395813599Z caller=index_set.go:107 msg="finished uploading table index_20530"
-level=info ts=2026-03-19T06:39:11.395816639Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20530"
-level=info ts=2026-03-19T06:39:11.395820255Z caller=index_set.go:86 msg="uploading table index_20531"
-level=info ts=2026-03-19T06:39:11.395823601Z caller=index_set.go:107 msg="finished uploading table index_20531"
-level=info ts=2026-03-19T06:39:11.395826242Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20531"
-level=info ts=2026-03-19T06:39:11.395827478Z caller=table.go:318 msg="handing over indexes to shipper index_20529"
-level=info ts=2026-03-19T06:39:11.395831142Z caller=table.go:334 msg="finished handing over table index_20529"
-level=info ts=2026-03-19T06:39:11.3958472Z caller=table.go:318 msg="handing over indexes to shipper index_20530"
-level=info ts=2026-03-19T06:39:11.395850418Z caller=table.go:334 msg="finished handing over table index_20530"
-level=info ts=2026-03-19T06:39:11.395865549Z caller=table.go:318 msg="handing over indexes to shipper index_20531"
-level=info ts=2026-03-19T06:39:11.395871061Z caller=table.go:334 msg="finished handing over table index_20531"
-level=info ts=2026-03-19T06:39:14.089533363Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:39:14.089566146Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:39:16.602986904Z caller=marker.go:202 msg="no marks file found"
-level=info ts=2026-03-19T06:39:51.431565435Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:39:52.574078679Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:39:56.005545206Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:40:01.641622302Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:40:11.395365921Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
-level=info ts=2026-03-19T06:40:11.395397022Z caller=index_set.go:86 msg="uploading table index_20529"
-level=info ts=2026-03-19T06:40:11.395404574Z caller=index_set.go:107 msg="finished uploading table index_20529"
-level=info ts=2026-03-19T06:40:11.395409266Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20529"
-level=info ts=2026-03-19T06:40:11.395414272Z caller=index_set.go:86 msg="uploading table index_20530"
-level=info ts=2026-03-19T06:40:11.395417392Z caller=index_set.go:107 msg="finished uploading table index_20530"
-level=info ts=2026-03-19T06:40:11.395420705Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20530"
-level=info ts=2026-03-19T06:40:11.395425098Z caller=index_set.go:86 msg="uploading table index_20531"
-level=info ts=2026-03-19T06:40:11.395430474Z caller=index_set.go:107 msg="finished uploading table index_20531"
-level=info ts=2026-03-19T06:40:11.39543355Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20531"
-level=info ts=2026-03-19T06:40:11.395437321Z caller=index_set.go:86 msg="uploading table index_20528"
-level=info ts=2026-03-19T06:40:11.395439973Z caller=index_set.go:107 msg="finished uploading table index_20528"
-level=info ts=2026-03-19T06:40:11.395444899Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20528"
-level=info ts=2026-03-19T06:40:11.396421699Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
-level=info ts=2026-03-19T06:40:11.396463714Z caller=table.go:318 msg="handing over indexes to shipper index_20530"
-level=info ts=2026-03-19T06:40:11.39646847Z caller=table.go:334 msg="finished handing over table index_20530"
-level=info ts=2026-03-19T06:40:11.396489798Z caller=table.go:318 msg="handing over indexes to shipper index_20531"
-level=info ts=2026-03-19T06:40:11.396494967Z caller=table.go:334 msg="finished handing over table index_20531"
-level=info ts=2026-03-19T06:40:11.396518387Z caller=table.go:318 msg="handing over indexes to shipper index_20528"
-level=info ts=2026-03-19T06:40:11.396521535Z caller=table.go:334 msg="finished handing over table index_20528"
-level=info ts=2026-03-19T06:40:11.396535764Z caller=table.go:318 msg="handing over indexes to shipper index_20529"
-level=info ts=2026-03-19T06:40:11.396540043Z caller=table.go:334 msg="finished handing over table index_20529"
-level=info ts=2026-03-19T06:40:13.140367378Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:40:13.14041706Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:40:16.603429992Z caller=marker.go:202 msg="no marks file found"
-level=info ts=2026-03-19T06:40:46.355012404Z caller=flush.go:167 msg="flushing stream" user=fake fp=9afafef45548f35f immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"process-status-container\", kubernetes_namespace_name=\"uat-cbops1\", kubernetes_pod_name=\"process-status-deployment-5d96dcd7c9-px2x8\"}"
-level=info ts=2026-03-19T06:40:51.432207317Z caller=reporter.go:305 msg="failed to send usage report" retries=0 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:40:53.286774242Z caller=reporter.go:305 msg="failed to send usage report" retries=1 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:40:55.483356547Z caller=reporter.go:305 msg="failed to send usage report" retries=2 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:41:03.42186984Z caller=reporter.go:305 msg="failed to send usage report" retries=3 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:41:11.39581693Z caller=table_manager.go:136 index-store=boltdb-shipper-2024-01-01 msg="uploading tables"
-level=info ts=2026-03-19T06:41:11.395856962Z caller=index_set.go:86 msg="uploading table index_20528"
-level=info ts=2026-03-19T06:41:11.395862423Z caller=index_set.go:107 msg="finished uploading table index_20528"
-level=info ts=2026-03-19T06:41:11.395867056Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20528"
-level=info ts=2026-03-19T06:41:11.395872585Z caller=index_set.go:86 msg="uploading table index_20529"
-level=info ts=2026-03-19T06:41:11.395875351Z caller=index_set.go:107 msg="finished uploading table index_20529"
-level=info ts=2026-03-19T06:41:11.395878691Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20529"
-level=info ts=2026-03-19T06:41:11.395882518Z caller=index_set.go:86 msg="uploading table index_20530"
-level=info ts=2026-03-19T06:41:11.395885031Z caller=index_set.go:107 msg="finished uploading table index_20530"
-level=info ts=2026-03-19T06:41:11.39588815Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20530"
-level=info ts=2026-03-19T06:41:11.395892163Z caller=index_set.go:86 msg="uploading table index_20531"
-level=info ts=2026-03-19T06:41:11.3958965Z caller=index_set.go:107 msg="finished uploading table index_20531"
-level=info ts=2026-03-19T06:41:11.395900461Z caller=index_set.go:185 msg="cleaning up unwanted indexes from table index_20531"
-level=info ts=2026-03-19T06:41:11.395883452Z caller=table_manager.go:171 index-store=boltdb-shipper-2024-01-01 msg="handing over indexes to shipper"
-level=info ts=2026-03-19T06:41:11.395943324Z caller=table.go:318 msg="handing over indexes to shipper index_20528"
-level=info ts=2026-03-19T06:41:11.395948797Z caller=table.go:334 msg="finished handing over table index_20528"
-level=info ts=2026-03-19T06:41:11.395977015Z caller=table.go:318 msg="handing over indexes to shipper index_20529"
-level=info ts=2026-03-19T06:41:11.395980504Z caller=table.go:334 msg="finished handing over table index_20529"
-level=info ts=2026-03-19T06:41:11.395993592Z caller=table.go:318 msg="handing over indexes to shipper index_20530"
-level=info ts=2026-03-19T06:41:11.395996473Z caller=table.go:334 msg="finished handing over table index_20530"
-level=info ts=2026-03-19T06:41:11.396007817Z caller=table.go:318 msg="handing over indexes to shipper index_20531"
-level=info ts=2026-03-19T06:41:11.396013321Z caller=table.go:334 msg="finished handing over table index_20531"
-level=info ts=2026-03-19T06:41:15.854248429Z caller=reporter.go:305 msg="failed to send usage report" retries=4 err="Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:41:15.854289717Z caller=reporter.go:281 msg="failed to report usage" err="5 errors: Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host; Post \"https://stats.grafana.org/loki-usage-report\": dial tcp: lookup stats.grafana.org on 10.96.0.10:53: no such host"
-level=info ts=2026-03-19T06:41:16.366802425Z caller=flush.go:167 msg="flushing stream" user=fake fp=b84bf34e40e6d2d2 immediate=false num_chunks=1 labels="{job=\"fluentbit\", kubernetes_container_name=\"fluent-bit\", kubernetes_namespace_name=\"tanzu-system-logging\", kubernetes_pod_name=\"fluent-bit-nw5sp\"}"
-level=info ts=2026-03-19T06:41:16.603480008Z caller=marker.go:202 msg="no marks file found"
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-19 07:17:50.318 ERROR [main] o.s.b.SpringApplication: Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.tcs.fincore.CommonMasterService.CommonMasterServiceApplication.main(CommonMasterServiceApplication.java:9)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:276)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215)
+        at org.hibernate.boot.model.relational.Database.<init>(Database.java:45)
+        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:221)
+        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:189)
+        at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:171)
+        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1431)
+        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1502)
+        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
+        ... 20 common frames omitted
+Caused by: org.hibernate.HibernateException: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
+        at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:191)
+        at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:87)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentWithDefaults(JdbcEnvironmentInitiator.java:152)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:362)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:123)
+        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:77)
+        at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)
+        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+        ... 35 common frames omitted
