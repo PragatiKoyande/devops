@@ -20,10 +20,8 @@ metadata:
 spec:
   replicas: 2
  
-  # Keeps previous ReplicaSets for rollback
   revisionHistoryLimit: 5
  
-  # Zero-downtime rolling update strategy
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -39,23 +37,15 @@ spec:
       labels:
         app: common-master-backend
  
-      # Prometheus auto-scrape annotations (future monitoring readiness)
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "2000"
  
     spec:
-      # Use dedicated service account
       serviceAccountName: common-master-sa
- 
-      # Allows graceful shutdown before SIGKILL
       terminationGracePeriodSeconds: 30
- 
-      # Prevent automatic service env injection (cleaner env)
       enableServiceLinks: false
  
- 
-      # Distribute pods across nodes (HA readiness)
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -70,6 +60,7 @@ spec:
         imagePullPolicy: Always
  
         env:
+          # ✅ EXISTING
           - name: SPRING_DATA_REDIS_HOST
             value: "redis-service"
           - name: SPRING_DATA_REDIS_PORT
@@ -77,11 +68,23 @@ spec:
           - name: SPRING_DATA_REDIS_CLIENT_TYPE
             value: "lettuce"
           - name: SPRING_PROFILES_ACTIVE  
-            value: "dev"           
+            value: "dev"
+
+          # ✅ ADDED (FIX FOR DB ISSUE)
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:oracle:thin:@//<DB_HOST>:<PORT>/<SERVICE_NAME>"
+          - name: SPRING_DATASOURCE_USERNAME
+            value: "<DB_USERNAME>"
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: "<DB_PASSWORD>"
+          - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+            value: "oracle.jdbc.OracleDriver"
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+            value: "org.hibernate.dialect.OracleDialect"
+ 
         ports:
         - containerPort: 2000
  
-        # Resource management (required for stable clusters + HPA)
         resources:
           requests:
             cpu: "200m"
@@ -90,14 +93,12 @@ spec:
             cpu: "500m"
             memory: "512Mi"
  
-        # Startup probe prevents restart loops for slow-starting apps
         startupProbe:
           tcpSocket:
             port: 2000
           failureThreshold: 30
           periodSeconds: 10
  
-        # Checks if container is alive (auto-restart if failed)
         livenessProbe:
           tcpSocket:
             port: 2000
@@ -106,7 +107,6 @@ spec:
           timeoutSeconds: 3
           failureThreshold: 3
  
-        # Controls when traffic is allowed to this pod
         readinessProbe:
           tcpSocket:
             port: 2000
@@ -115,7 +115,6 @@ spec:
           timeoutSeconds: 3
           failureThreshold: 3
  
-        # Graceful shutdown before pod termination
         lifecycle:
           preStop:
             exec:
@@ -162,14 +161,12 @@ spec:
   minReplicas: 1
   maxReplicas: 5
  
-  # Prevent aggressive scaling (stability)
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300
  
-  # Scale based on CPU usage
   metrics:
     - type: Resource
       resource:
@@ -181,7 +178,6 @@ spec:
 ---
 # --------------------------------------------
 # Pod Disruption Budget
-# Prevents downtime during node maintenance
 # --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -194,12 +190,3 @@ spec:
   selector:
     matchLabels:
       app: common-master-backend
- 
----
-
-    
-    
-
-
-
-This is my manisfest file: kindly do changes and revert me the file dont alter any other thing just the changes required to resolve this iissue
