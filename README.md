@@ -59,7 +59,6 @@ spec:
       - name: report-builder-container
         image: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service:PR01
         imagePullPolicy: Always
-
         env:
           - name: SPRING_DATA_REDIS_HOST
             value: "redis-service"
@@ -73,8 +72,6 @@ spec:
             value: "root"
           - name: GLIF_REPORTS_BASE_PATH
             value: "/reports"
-
-          # ✅ FIX: Ensure Spring writes logs to mounted directory
           - name: LOGGING_FILE_PATH
             value: "/logs"
 
@@ -123,7 +120,6 @@ spec:
       volumes:
         - name: logs-volume
           emptyDir: {}
-
 ---
 # --------------------------------------------
 # Service (internal communication)
@@ -145,7 +141,6 @@ spec:
       targetPort: 8091
 
   type: ClusterIP
-
 ---
 # --------------------------------------------
 # Horizontal Pod Autoscaler (CPU-based)
@@ -194,3 +189,17 @@ spec:
   selector:
     matchLabels:
       app: report-builder-app
+
+
+
+      This is my manifest file for one of the service:
+
+      after applying manifest this is happening:
+
+journal-deployment-654c8877b4-8rvxf           1/1     Running            4 (2m14s ago)     9m4s
+journal-deployment-654c8877b4-9bxhd           0/1     CrashLoopBackOff   4 (64s ago)       9m49s
+journal-deployment-654c8877b4-nn69b           0/1     CrashLoopBackOff   4 (78s ago)       10m
+journal-deployment-654c8877b4-nwrfm           0/1     CrashLoopBackOff   4 (52s ago)       9m49s
+journal-deployment-654c8877b4-wz77t           1/1     Running            5 (90s ago)       10m
+
+after few mins all are gaing running and sometimes it is failing i think so we need to chnage and sync our probes configuration can you please alter those only in my manifest and send me back the entire manisfest file
