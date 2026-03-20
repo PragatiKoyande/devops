@@ -1,4 +1,67 @@
-hostAliases:
+# =====================================================
+# Service Account
+# =====================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: login-sa
+  namespace: backend
+automountServiceAccountToken: false
+
+---
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: login-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: login-backend
+
+---
+# =====================================================
+# Deployment
+# =====================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-deployment
+  namespace: backend
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: login-backend
+
+  template:
+    metadata:
+      labels:
+        app: login-backend
+
+    spec:
+      serviceAccountName: login-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+
+      hostAliases:
       - ip: "10.176.53.145"
         hostnames:
         - "corpdcmdgbl01.corp.ad.sbi"
@@ -23,3 +86,168 @@ hostAliases:
       - ip: "10.189.37.138"
         hostnames:
         - "corpdcmdrbl04.corp.ad.sbi"
+
+      # =================================================
+      # Volumes
+      # =================================================
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
+
+        - name: logs-volume
+          emptyDir: {}
+
+      containers:
+        - name: login-backend-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/login-service:PR01
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8085
+
+          # =================================================
+          # Volume Mounts
+          # =================================================
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: "/etc/fincore/secrets"
+              readOnly: true
+
+            - name: logs-volume
+              mountPath: /logs
+
+          # =================================================
+          # Environment Variables
+          # =================================================
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:oracle:thin:@10.190.224.79:1523/fincorepdb1"
+
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "fincore"
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "Password#1234"
+
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: "oracle.jdbc.OracleDriver"
+
+            - name: SPRING_LDAP_URLS
+              value: "ldaps://uatrootdc1.uatad.sbi:3269"
+
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
+
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis-service.backend.svc.cluster.local"
+
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+
+            - name: SPRING_DATA_REDIS_CLIENT_TYPE
+              value: "lettuce"
+
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+
+            - name: LDAP_TRUSTSTORE_PATH
+              value: "file:/etc/fincore/secrets/ad-truststore.jks"
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
+
+          # =================================================
+          # Resources
+          # =================================================
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          # =================================================
+          # Probes
+          # =================================================
+          readinessProbe:
+            tcpSocket:
+              port: 8085
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 5
+
+          livenessProbe:
+            tcpSocket:
+              port: 8085
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 5
+
+          startupProbe:
+            tcpSocket:
+              port: 8085
+            failureThreshold: 30
+            periodSeconds: 10
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+
+---
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: login-hpa
+  namespace: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: login-deployment
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# =====================================================
+# Service
+# =====================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-service
+  namespace: backend
+spec:
+  selector:
+    app: login-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8085
+  type: ClusterIP
