@@ -1,253 +1,46 @@
-# =====================================================
-# Service Account
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: login-sa
-  namespace: backend
-automountServiceAccountToken: false
+[root@fcprodkubjump Microservices]# k logs process-status-deployment-97dd447f-j6fhs -n backend
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
 
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: login-pdb
-  namespace: backend
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: login-backend
+ :: Spring Boot ::                (v3.3.0)
 
----
-# =====================================================
-# Deployment
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: login-deployment
-  namespace: backend
-spec:
-  replicas: 2
-  revisionHistoryLimit: 5
+2026-03-20 09:22:54.512 INFO  [main] o.s.b.StartupInfoLogger: Starting ProcessStatusApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)
+2026-03-20 09:22:54.517 INFO  [main] o.s.b.SpringApplication: The following 1 profile is active: "dev"
+2026-03-20 09:22:58.425 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-20 09:22:58.429 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-20 09:22:59.008 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 574 ms. Found 11 JPA repository interfaces.
+2026-03-20 09:22:59.019 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-20 09:22:59.020 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-20 09:22:59.107 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.ControlFileMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.108 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.FileSummaryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.108 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.FileTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.108 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.FincoreDagRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.108 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.FincoreDateRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.108 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.FincoreProcessRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.109 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.FincoreProcessStageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.109 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.ProcessRunRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.109 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.ProcessRunStageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.109 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.ProcessStagesRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.109 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.process_status_service.repository.ProcessStatusRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 09:22:59.109 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 83 ms. Found 0 Redis repository interfaces.
+2026-03-20 09:23:02.710 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 3000 (http)
+2026-03-20 09:23:02.720 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-3000"]
+2026-03-20 09:23:02.721 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+2026-03-20 09:23:02.721 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-20 09:23:02.920 INFO  [main] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2026-03-20 09:23:02.920 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 8211 ms
+2026-03-20 09:23:05.333 INFO  [main] o.s.b.w.s.RegistrationBean: Filter mdcFilterRegistration was not registered (disabled)
+2026-03-20 09:23:05.333 INFO  [main] o.s.b.w.s.RegistrationBean: Filter rbacFilterRegistration was not registered (disabled)
+2026-03-20 09:23:06.414 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+2026-03-20 09:23:37.838 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-20 09:23:38.014 INFO  [main] o.h.Version: HHH000412: Hibernate ORM core version 6.5.2.Final
+2026-03-20 09:23:38.113 INFO  [main] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
+2026-03-20 09:23:39.012 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-20 09:23:39.032 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
 
-  selector:
-    matchLabels:
-      app: login-backend
-
-  template:
-    metadata:
-      labels:
-        app: login-backend
-
-    spec:
-      serviceAccountName: login-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
-
-      hostAliases:
-      - ip: "10.176.53.145"
-        hostnames:
-        - "corpdcmdgbl01.corp.ad.sbi"
-      - ip: "10.176.54.30"
-        hostnames:
-        - "corpdcmdgbl02.corp.ad.sbi"
-      - ip: "10.176.54.31"
-        hostnames:
-        - "corpdcmdgbl03.corp.ad.sbi"
-      - ip: "10.176.54.32"
-        hostnames:
-        - "corpdcmdgbl04.corp.ad.sbi"
-      - ip: "10.189.37.135"
-        hostnames:
-        - "corpdcmdrbl01.corp.ad.sbi"
-      - ip: "10.189.37.136"
-        hostnames:
-        - "corpdcmdrbl02.corp.ad.sbi"
-      - ip: "10.189.37.137"
-        hostnames:
-        - "corpdcmdrbl03.corp.ad.sbi"
-      - ip: "10.189.37.138"
-        hostnames:
-        - "corpdcmdrbl04.corp.ad.sbi"
-
-      # =================================================
-      # Volumes
-      # =================================================
-      volumes:
-        - name: truststore-volume
-          secret:
-            secretName: ldap-truststore-file
-            items:
-              - key: ad-truststore.jks
-                path: ad-truststore.jks
-
-        - name: logs-volume
-          emptyDir: {}
-
-      containers:
-        - name: login-backend-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/login-service:PR01
-          imagePullPolicy: Always
-
-          ports:
-            - containerPort: 8085
-
-          # =================================================
-          # Volume Mounts
-          # =================================================
-          volumeMounts:
-            - name: truststore-volume
-              mountPath: "/etc/fincore/secrets"
-              readOnly: true
-
-            - name: logs-volume
-              mountPath: /logs
-
-          # =================================================
-          # Environment Variables
-          # =================================================
-          env:
-            - name: SPRING_DATASOURCE_URL
-              value: "jdbc:oracle:thin:@10.190.224.79:1523/fincorepdb1"
-
-            - name: SPRING_DATASOURCE_USERNAME
-              value: "fincore"
-
-            - name: SPRING_DATASOURCE_PASSWORD
-              value: "Password#1234"
-
-            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-              value: "oracle.jdbc.OracleDriver"
-
-            - name: SPRING_LDAP_URLS
-              value: "ldaps://uatrootdc1.uatad.sbi:3269"
-
-            - name: JAVA_TOOL_OPTIONS
-              value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
-
-            - name: SPRING_DATA_REDIS_HOST
-              value: "redis-service.backend.svc.cluster.local"
-
-            - name: SPRING_DATA_REDIS_PORT
-              value: "6379"
-
-            - name: SPRING_DATA_REDIS_CLIENT_TYPE
-              value: "lettuce"
-
-            - name: SPRING_PROFILES_ACTIVE
-              value: "dev"
-
-            - name: LDAP_TRUSTSTORE_PATH
-              value: "file:/etc/fincore/secrets/ad-truststore.jks"
-
-            - name: LDAP_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ldap-creds
-                  key: truststore-password
-
-          # =================================================
-          # Resources
-          # =================================================
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-
-          # =================================================
-          # Probes
-          # =================================================
-          readinessProbe:
-            tcpSocket:
-              port: 8085
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            failureThreshold: 5
-
-          livenessProbe:
-            tcpSocket:
-              port: 8085
-            initialDelaySeconds: 30
-            periodSeconds: 20
-            failureThreshold: 5
-
-          startupProbe:
-            tcpSocket:
-              port: 8085
-            failureThreshold: 30
-            periodSeconds: 10
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: login-hpa
-  namespace: backend
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: login-deployment
-  minReplicas: 1
-  maxReplicas: 3
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: login-service
-  namespace: backend
-spec:
-  selector:
-    app: login-backend
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 8085
-  type: ClusterIP
+gettinng this issue 
