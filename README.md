@@ -1,168 +1,33 @@
-# ============================================
-# Service Account
-# ============================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: journal-sa
-  namespace: backend
+ :: Spring Boot ::                (v3.3.0)
 
----
-# ============================================
-# Deployment
-# ============================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: journal-deployment
-  namespace: backend
-spec:
-  replicas: 2
+2026-03-20 08:20:21.082 INFO  [main] o.s.b.StartupInfoLogger: Starting JournalServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)
+2026-03-20 08:20:21.093 INFO  [main] o.s.b.SpringApplication: The following 1 profile is active: "dev"
+2026-03-20 08:20:25.489 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-20 08:20:25.490 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-20 08:20:25.985 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 489 ms. Found 11 JPA repository interfaces.
+2026-03-20 08:20:28.203 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-20 08:20:28.280 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-20 08:20:28.301 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.BranchMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.301 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.CglMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.302 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.CurrencyMasterRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.302 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.FincoreDateRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.302 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.GlBalanceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.303 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.GlTransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.303 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.JournalLogRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.303 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.JournalRequestRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.303 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.MasterJournalRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.304 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.305 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.JournalService.Repository.PermissionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-20 08:20:28.305 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-03-20 08:20:33.790 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 9999 (http)
+2026-03-20 08:20:33.800 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-9999"]
+2026-03-20 08:20:33.802 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+2026-03-20 08:20:33.802 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-20 08:20:34.178 INFO  [main] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
+2026-03-20 08:20:34.180 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 12887 ms
+2026-03-20 08:20:37.883 INFO  [main] o.s.b.w.s.RegistrationBean: Filter mdcFilterRegistration was not registered (disabled)
+2026-03-20 08:20:37.884 INFO  [main] o.s.b.w.s.RegistrationBean: Filter rbacFilterRegistration was not registered (disabled)
+2026-03-20 08:20:39.086 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: oracle]
+2026-03-20 08:20:39.291 INFO  [main] o.h.Version: HHH000412: Hibernate ORM core version 6.5.2.Final
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-  selector:
-    matchLabels:
-      app: journal-app
-
-  template:
-    metadata:
-      labels:
-        app: journal-app
-
-    spec:
-      serviceAccountName: journal-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
-
-      volumes:
-        - name: logs-volume
-          emptyDir: {}
-        - name: tmp-volume
-          emptyDir: {}
-
-      containers:
-        - name: journal-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/journal-service:PR01
-          imagePullPolicy: Always
-
-          ports:
-            - containerPort: 9999
-
-          volumeMounts:
-            - name: logs-volume
-              mountPath: /logs
-            - name: tmp-volume
-              mountPath: /tmp
-
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-
-          # ✅ STARTUP PROBE (added)
-          startupProbe:
-            tcpSocket:
-              port: 9999
-            failureThreshold: 60
-            periodSeconds: 10
-
-          # ✅ LIVENESS PROBE (added)
-          livenessProbe:
-            tcpSocket:
-              port: 9999
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          # ✅ READINESS PROBE (added)
-          readinessProbe:
-            tcpSocket:
-              port: 9999
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-
----
-# ============================================
-# Service
-# ============================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: journal-service
-  namespace: backend
-spec:
-  selector:
-    app: journal-app
-  ports:
-    - name: http
-      port: 80
-      targetPort: 9999
-  type: ClusterIP
-
----
-# ============================================
-# Horizontal Pod Autoscaler
-# ============================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: journal-hpa
-  namespace: backend
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: journal-deployment
-  minReplicas: 1
-  maxReplicas: 5
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
----
-# ============================================
-# Pod Disruption Budget
-# ============================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: journal-pdb
-  namespace: backend
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: journal-app
+getting these logs are they ok?
