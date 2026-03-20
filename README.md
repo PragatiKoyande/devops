@@ -91,23 +91,20 @@ spec:
             cpu: "500m"
             memory: "512Mi"
 
-        # ✅ FIXED: More tolerant startup probe
         startupProbe:
           tcpSocket:
             port: 8091
-          failureThreshold: 60     # was 30 → doubled
+          failureThreshold: 60     # was 30 - doubled
           periodSeconds: 10        # total startup time = 10 min
 
-        # ✅ FIXED: Liveness waits until app is stable
         livenessProbe:
           tcpSocket:
             port: 8091
-          initialDelaySeconds: 90   # was 30 → increased
+          initialDelaySeconds: 90   # was 30 - increased
           periodSeconds: 15
           timeoutSeconds: 5
           failureThreshold: 5
 
-        # ✅ FIXED: Readiness more forgiving
         readinessProbe:
           tcpSocket:
             port: 8091
@@ -195,3 +192,154 @@ spec:
   selector:
     matchLabels:
       app: report-builder-app
+
+
+
+
+      like these probes configuration can ou ad for another file which is journal deploymnet:
+
+      # ============================================
+# Service Account
+# ============================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: journal-sa
+  namespace: backend
+
+---
+# ============================================
+# Deployment
+# ============================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: journal-deployment
+  namespace: backend
+spec:
+  replicas: 2
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: journal-app
+
+  template:
+    metadata:
+      labels:
+        app: journal-app
+
+    spec:
+      serviceAccountName: journal-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      volumes:
+        - name: logs-volume
+          emptyDir: {}
+        - name: tmp-volume
+          emptyDir: {}
+
+      containers:
+        - name: journal-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/journal-service:PR01
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 9999
+
+          volumeMounts:
+            - name: logs-volume
+              mountPath: /logs
+            - name: tmp-volume
+              mountPath: /tmp
+
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+---
+# ============================================
+# Service
+# ============================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: journal-service
+  namespace: backend
+spec:
+  selector:
+    app: journal-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 9999
+  type: ClusterIP
+
+---
+# ============================================
+# Horizontal Pod Autoscaler
+# ============================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: journal-hpa
+  namespace: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: journal-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# ============================================
+# Pod Disruption Budget
+# ============================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: journal-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: journal-app
+
+      and send me the entire manifest back please only modify the probes configuration and not others.
