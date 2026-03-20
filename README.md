@@ -59,6 +59,7 @@ spec:
       - name: report-builder-container
         image: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service:PR01
         imagePullPolicy: Always
+
         env:
           - name: SPRING_DATA_REDIS_HOST
             value: "redis-service"
@@ -90,27 +91,30 @@ spec:
             cpu: "500m"
             memory: "512Mi"
 
+        # ✅ FIXED: More tolerant startup probe
         startupProbe:
           tcpSocket:
             port: 8091
-          failureThreshold: 30
-          periodSeconds: 10
+          failureThreshold: 60     # was 30 → doubled
+          periodSeconds: 10        # total startup time = 10 min
 
+        # ✅ FIXED: Liveness waits until app is stable
         livenessProbe:
           tcpSocket:
             port: 8091
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          initialDelaySeconds: 90   # was 30 → increased
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
 
+        # ✅ FIXED: Readiness more forgiving
         readinessProbe:
           tcpSocket:
             port: 8091
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          initialDelaySeconds: 30   # was 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
 
         lifecycle:
           preStop:
@@ -120,6 +124,7 @@ spec:
       volumes:
         - name: logs-volume
           emptyDir: {}
+
 ---
 # --------------------------------------------
 # Service (internal communication)
@@ -141,6 +146,7 @@ spec:
       targetPort: 8091
 
   type: ClusterIP
+
 ---
 # --------------------------------------------
 # Horizontal Pod Autoscaler (CPU-based)
@@ -189,17 +195,3 @@ spec:
   selector:
     matchLabels:
       app: report-builder-app
-
-
-
-      This is my manifest file for one of the service:
-
-      after applying manifest this is happening:
-
-journal-deployment-654c8877b4-8rvxf           1/1     Running            4 (2m14s ago)     9m4s
-journal-deployment-654c8877b4-9bxhd           0/1     CrashLoopBackOff   4 (64s ago)       9m49s
-journal-deployment-654c8877b4-nn69b           0/1     CrashLoopBackOff   4 (78s ago)       10m
-journal-deployment-654c8877b4-nwrfm           0/1     CrashLoopBackOff   4 (52s ago)       9m49s
-journal-deployment-654c8877b4-wz77t           1/1     Running            5 (90s ago)       10m
-
-after few mins all are gaing running and sometimes it is failing i think so we need to chnage and sync our probes configuration can you please alter those only in my manifest and send me back the entire manisfest file
