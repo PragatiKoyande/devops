@@ -47,7 +47,6 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
-      # ✅ ADDED: initContainer to create /logs directory
       initContainers:
         - name: init-logs
           image: busybox
@@ -65,7 +64,7 @@ spec:
               app: report-builder-app
 
       containers:
-      - name: template-config-container
+      - name: report-builder-container
         image: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service:PR01
         imagePullPolicy: Always
 
@@ -86,7 +85,6 @@ spec:
         ports:
         - containerPort: 8091
 
-        # ✅ ADDED: mount logs directory
         volumeMounts:
           - name: logs-volume
             mountPath: /logs
@@ -125,8 +123,6 @@ spec:
           preStop:
             exec:
               command: ["/bin/sh", "-c", "sleep 10"]
-
-      # ✅ ADDED: volume definition
       volumes:
         - name: logs-volume
           emptyDir: {}
@@ -201,3 +197,10 @@ spec:
   selector:
     matchLabels:
       app: report-builder-app
+
+
+      I dont want to keep the init containers configurations in my manifest file and send me back the file as is only remove those onfigurations and keep everything else thev as I m facing issue 
+
+      [root@fcprodkubjump Microservices]# k logs report-builder-deployment-67fdcd8bcd-ld46q -n backend
+Defaulted container "report-builder-container" out of: report-builder-container, init-logs (init)
+Error from server (BadRequest): container "report-builder-container" in pod "report-builder-deployment-67fdcd8bcd-ld46q" is waiting to start: PodInitializing
