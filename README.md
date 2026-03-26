@@ -1,197 +1,76 @@
-[root@fcprodkubjump Microservices]# k logs report-deployment-6999864f57-7fvkq -n backend
-Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: report-redis-config
+  namespace: backend
 
-2026-03-26 08:44:25.628 INFO  [background-preinit] o.h.v.i.u.Version: HV000001: Hibernate Validator 8.0.1.Final
-{"@timestamp":"2026-03-26T14:14:25.628239378+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.validator.internal.util.Version","message":"HV000001: Hibernate Validator 8.0.1.Final","stack_trace":""}
- :: Spring Boot ::                (v3.3.0)
-
-2026-03-26 08:44:25.713 INFO  [main] o.s.b.StartupInfoLogger: Starting ReportServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)
-{"@timestamp":"2026-03-26T14:14:25.713184278+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.R.ReportServiceApplication","message":"Starting ReportServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)","stack_trace":""}
-2026-03-26 08:44:25.714 INFO  [main] o.s.b.SpringApplication: The following 1 profile is active: "dev"
-{"@timestamp":"2026-03-26T14:14:25.714243571+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.R.ReportServiceApplication","message":"The following 1 profile is active: \"dev\"","stack_trace":""}
-2026-03-26 08:44:26.590 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
-{"@timestamp":"2026-03-26T14:14:26.590490744+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
-2026-03-26 08:44:26.592 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-{"@timestamp":"2026-03-26T14:14:26.592816843+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","stack_trace":""}
-2026-03-26 08:44:26.697 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 99 ms. Found 5 JPA repository interfaces.
-{"@timestamp":"2026-03-26T14:14:26.697259898+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 99 ms. Found 5 JPA repository interfaces.","stack_trace":""}
-2026-03-26 08:44:26.709 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
-{"@timestamp":"2026-03-26T14:14:26.709859014+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
-2026-03-26 08:44:26.711 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-{"@timestamp":"2026-03-26T14:14:26.711008373+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data Redis repositories in DEFAULT mode.","stack_trace":""}
-2026-03-26 08:44:26.721 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.AppConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-03-26T14:14:26.721405385+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.AppConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-03-26 08:44:26.721 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.DifferenceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-03-26T14:14:26.721750104+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.DifferenceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-03-26 08:44:26.721 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.JasperReportTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-03-26T14:14:26.721954161+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.JasperReportTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-03-26 08:44:26.723 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-03-26T14:14:26.723031772+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-03-26 08:44:26.723 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.ReportTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-03-26T14:14:26.723285264+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.ReportService.repository.ReportTypeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-03-26 08:44:26.723 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
-{"@timestamp":"2026-03-26T14:14:26.723439105+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.","stack_trace":""}
-2026-03-26 08:44:27.420 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 9005 (http)
-{"@timestamp":"2026-03-26T14:14:27.420436717+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 9005 (http)","stack_trace":""}
-2026-03-26 08:44:27.427 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-9005"]
-{"@timestamp":"2026-03-26T14:14:27.427229066+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-9005\"]","stack_trace":""}
-2026-03-26 08:44:27.428 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
-{"@timestamp":"2026-03-26T14:14:27.428639929+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.catalina.core.StandardService","message":"Starting service [Tomcat]","stack_trace":""}
-2026-03-26 08:44:27.428 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.24]
-{"@timestamp":"2026-03-26T14:14:27.428869184+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.24]","stack_trace":""}
-2026-03-26 08:44:27.451 INFO  [main] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
-{"@timestamp":"2026-03-26T14:14:27.451941576+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.a.c.c.C.[Tomcat].[localhost].[/]","message":"Initializing Spring embedded WebApplicationContext","stack_trace":""}
-2026-03-26 08:44:27.452 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 1654 ms
-{"@timestamp":"2026-03-26T14:14:27.452706777+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.s.c.ServletWebServerApplicationContext","message":"Root WebApplicationContext: initialization completed in 1654 ms","stack_trace":""}
-Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
-2026-03-26 08:44:27.899 INFO  [main] o.s.b.w.s.RegistrationBean: Filter mdcFilterRegistration was not registered (disabled)
-{"@timestamp":"2026-03-26T14:14:27.899965348+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.boot.web.servlet.RegistrationBean","message":"Filter mdcFilterRegistration was not registered (disabled)","stack_trace":""}
-2026-03-26 08:44:27.900 INFO  [main] o.s.b.w.s.RegistrationBean: Filter rbacFilterRegistration was not registered (disabled)
-{"@timestamp":"2026-03-26T14:14:27.900275374+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.boot.web.servlet.RegistrationBean","message":"Filter rbacFilterRegistration was not registered (disabled)","stack_trace":""}
-2026-03-26 08:44:28.102 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
-{"@timestamp":"2026-03-26T14:14:28.102038897+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: default]","stack_trace":""}
-2026-03-26 08:44:28.141 INFO  [main] o.h.Version: HHH000412: Hibernate ORM core version 6.5.2.Final
-{"@timestamp":"2026-03-26T14:14:28.141046664+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.5.2.Final","stack_trace":""}
-2026-03-26 08:44:28.162 INFO  [main] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
-{"@timestamp":"2026-03-26T14:14:28.162857739+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.c.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled","stack_trace":""}
-2026-03-26 08:44:28.351 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
-{"@timestamp":"2026-03-26T14:14:28.351916418+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.p.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","stack_trace":""}
-2026-03-26 08:44:28.370 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
-{"@timestamp":"2026-03-26T14:14:28.370552255+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Starting...","stack_trace":""}
-2026-03-26 08:44:28.778 INFO  [main] c.z.h.p.HikariPool: HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@253379ec
-{"@timestamp":"2026-03-26T14:14:28.778055534+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@253379ec","stack_trace":""}
-2026-03-26 08:44:28.779 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Start completed.
-{"@timestamp":"2026-03-26T14:14:28.779332434+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Start completed.","stack_trace":""}
-2026-03-26 08:44:28.877 WARN  [main] o.h.e.j.d.i.DialectFactoryImpl: HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-{"@timestamp":"2026-03-26T14:14:28.877033626+05:30","level":"WARN","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.hibernate.orm.deprecation","message":"HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)","stack_trace":""}
-2026-03-26 08:44:29.562 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-{"@timestamp":"2026-03-26T14:14:29.562880943+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.e.t.j.p.i.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","stack_trace":""}
-2026-03-26 08:44:29.902 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Initialized JPA EntityManagerFactory for persistence unit 'default'
-{"@timestamp":"2026-03-26T14:14:29.9023406+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.LocalContainerEntityManagerFactoryBean","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","stack_trace":""}
-2026-03-26 08:44:30.116 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactory: Hibernate is in classpath; If applicable, HQL parser will be used.
-{"@timestamp":"2026-03-26T14:14:30.116868076+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.j.r.query.QueryEnhancerFactory","message":"Hibernate is in classpath; If applicable, HQL parser will be used.","stack_trace":""}
-2026-03-26 08:44:30.684 INFO  [main] c.f.R.c.HadoopConfig: Initializing HDFS connection to: hdfs://fincore as user: root
-{"@timestamp":"2026-03-26T14:14:30.684121108+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.ReportService.config.HadoopConfig","message":"Initializing HDFS connection to: hdfs://fincore as user: root","stack_trace":""}
-2026-03-26 08:44:30.818 WARN  [main] o.a.h.u.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-{"@timestamp":"2026-03-26T14:14:30.818252128+05:30","level":"WARN","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.hadoop.util.NativeCodeLoader","message":"Unable to load native-hadoop library for your platform... using builtin-java classes where applicable","stack_trace":""}
-2026-03-26 08:44:35.914 WARN  [main] o.a.h.f.FileSystem: Failed to initialize filesystem hdfs://fincore: java.lang.IllegalArgumentException: java.net.UnknownHostException: fincore
-{"@timestamp":"2026-03-26T14:14:35.914499001+05:30","level":"WARN","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.hadoop.fs.FileSystem","message":"Failed to initialize filesystem hdfs://fincore: java.lang.IllegalArgumentException: java.net.UnknownHostException: fincore","stack_trace":""}
-2026-03-26 08:44:35.916 WARN  [main] o.s.c.s.AbstractApplicationContext: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/controller/ReportController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 6: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore
-{"@timestamp":"2026-03-26T14:14:35.916838851+05:30","level":"WARN","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext","message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/controller/ReportController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 6: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore","stack_trace":""}
-2026-03-26 08:44:35.917 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Closing JPA EntityManagerFactory for persistence unit 'default'
-{"@timestamp":"2026-03-26T14:14:35.917267616+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'","stack_trace":""}
-2026-03-26 08:44:35.918 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown initiated...
-{"@timestamp":"2026-03-26T14:14:35.918247069+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated...","stack_trace":""}
-2026-03-26 08:44:36.095 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown completed.
-{"@timestamp":"2026-03-26T14:14:36.095044651+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed.","stack_trace":""}
-2026-03-26 08:44:36.104 INFO  [main] o.a.j.l.DirectJDKLog: Stopping service [Tomcat]
-{"@timestamp":"2026-03-26T14:14:36.104230482+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.catalina.core.StandardService","message":"Stopping service [Tomcat]","stack_trace":""}
-2026-03-26 08:44:36.115 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLogger:
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-{"@timestamp":"2026-03-26T14:14:36.115822912+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
-2026-03-26 08:44:36.126 ERROR [main] o.s.b.SpringApplication: Application run failed
-org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/controller/ReportController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 6: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-        at com.fincore.ReportService.ReportServiceApplication.main(ReportServiceApplication.java:10)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 6: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 24 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore
-        at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
-        at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1337)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1167)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 38 common frames omitted
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore
-        at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)
-        at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)
-        ... 52 common frames omitted
-Caused by: java.lang.IllegalArgumentException: java.net.UnknownHostException: fincore
-        at org.apache.hadoop.security.SecurityUtil.buildTokenService(SecurityUtil.java:475)
-        at org.apache.hadoop.hdfs.NameNodeProxiesClient.createProxyWithClientProtocol(NameNodeProxiesClient.java:134)
-        at org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:374)
-        at org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:308)
-        at org.apache.hadoop.hdfs.DistributedFileSystem.initDFSClient(DistributedFileSystem.java:204)
-        at org.apache.hadoop.hdfs.DistributedFileSystem.initialize(DistributedFileSystem.java:189)
-        at org.apache.hadoop.fs.FileSystem.createFileSystem(FileSystem.java:3611)
-        at org.apache.hadoop.fs.FileSystem.access$300(FileSystem.java:174)
-        at org.apache.hadoop.fs.FileSystem$Cache.getInternal(FileSystem.java:3712)
-        at org.apache.hadoop.fs.FileSystem$Cache.get(FileSystem.java:3663)
-        at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:557)
-        at org.apache.hadoop.fs.FileSystem$1.run(FileSystem.java:278)
-        at org.apache.hadoop.fs.FileSystem$1.run(FileSystem.java:275)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:714)
-        at java.base/javax.security.auth.Subject.doAs(Subject.java:525)
-        at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1899)
-        at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:275)
-        at com.fincore.ReportService.config.HadoopConfig.fileSystem(HadoopConfig.java:133)
-        at com.fincore.ReportService.config.HadoopConfig$$SpringCGLIB$$0.CGLIB$fileSystem$0(<generated>)
-        at com.fincore.ReportService.config.HadoopConfig$$SpringCGLIB$$FastClass$$1.invoke(<generated>)
-        at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258)
-        at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:339)
-        at com.fincore.ReportService.config.HadoopConfig$$SpringCGLIB$$0.fileSystem(<generated>)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
-        ... 53 common frames omitted
-Caused by: java.net.UnknownHostException: fincore
-        ... 79 common frames omitted
-{"@timestamp":"2026-03-26T14:14:36.126495109+05:30","level":"ERROR","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/controller/ReportController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 6: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 6: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'fileSystem' defined in class path resource [com/fincore/ReportService/config/HadoopConfig.class]: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1337)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1167)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.hadoop.fs.FileSystem]: Factory method 'fileSystem' threw exception with message: java.net.UnknownHostException: fincore\n\tat org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1337)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1167)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\nCaused by: java.lang.IllegalArgumentException: java.net.UnknownHostException: fincore\n\tat org.apache.hadoop.security.SecurityUtil.buildTokenService(SecurityUtil.java:475)\n\tat org.apache.hadoop.hdfs.NameNodeProxiesClient.createProxyWithClientProtocol(NameNodeProxiesClient.java:134)\n\tat org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:374)\n\tat org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:308)\n\tat org.apache.hadoop.hdfs.DistributedFileSystem.initDFSClient(DistributedFileSystem.java:204)\n\tat org.apache.hadoop.hdfs.DistributedFileSystem.initialize(DistributedFileSystem.java:189)\n\tat org.apache.hadoop.fs.FileSystem.createFileSystem(FileSystem.java:3611)\n\tat org.apache.hadoop.fs.FileSystem.access$300(FileSystem.java:174)\n\tat org.apache.hadoop.fs.FileSystem$Cache.getInternal(FileSystem.java:3712)\n\tat org.apache.hadoop.fs.FileSystem$Cache.get(FileSystem.java:3663)\nCaused by: java.net.UnknownHostException: fincore\n\tat org.apache.hadoop.security.SecurityUtil.buildTokenService(SecurityUtil.java:475)\n\tat org.apache.hadoop.hdfs.NameNodeProxiesClient.createProxyWithClientProtocol(NameNodeProxiesClient.java:134)\n\tat org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:374)\n\tat org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:308)\n\tat org.apache.hadoop.hdfs.DistributedFileSystem.initDFSClient(DistributedFileSystem.java:204)\n\tat org.apache.hadoop.hdfs.DistributedFileSystem.initialize(DistributedFileSystem.java:189)\n\tat org.apache.hadoop.fs.FileSystem.createFileSystem(FileSystem.java:3611)\n\tat org.apache.hadoop.fs.FileSystem.access$300(FileSystem.java:174)\n\tat org.apache.hadoop.fs.FileSystem$Cache.getInternal(FileSystem.java:3712)\n\tat org.apache.hadoop.fs.FileSystem$Cache.get(FileSystem.java:3663)\n"}
+data:
+  SPRING_DATA_REDIS_HOST: "redis-service"
+  SPRING_DATA_REDIS_PORT: "6379"
+  SPRING_DATA_REDIS_CLIENT_TYPE: "lettuce"
 
 
-what could be this issue??
+
+kafka
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: report-kafka-config
+  namespace: backend
+
+data:
+  SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: "kafka.backend.svc.cluster.local:9092"
+  SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: "kafka.backend.svc.cluster.local:9092"
+
+
+spring
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: report-spring-config
+  namespace: backend
+
+data:
+  SPRING_DATASOURCE_URL: "jdbc:oracle:thin:@10.190.224.79:1523/fincorepdb1"
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "oracle.jdbc.OracleDriver"
+
+
+Hadoop
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: report-hadoop-config
+  namespace: backend
+
+data:
+  HADOOP_FS_HA_NN1: "hdfs://10.177.224.102:8022"
+  HADOOP_FS_HA_NN2: "hdfs://10.177.224.103:8022"
+  HADOOP_FS_HA_NN3: "hdfs://10.177.224.104:8022"
+  HADOOP_FS_HA_NN4: "hdfs://10.177.224.105:8022"
+  HADOOP_FS_HA_NN5: "hdfs://10.177.224.106:8022"
+
+  HADOOP_FS_USER: "root"
+  HADOOP_FS_URI: "hdfs://fincore"
+  GLIF_REPORTS_BASE_PATH: "/reports"
+
+
+secrets
+
+echo -n "fincore" | base64
+echo -n "Password#1234" | base64
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: report-secret
+  namespace: backend
+
+type: Opaque
+
+data:
+  SPRING_DATASOURCE_USERNAME: ZmluY29yZQ==
+  SPRING_DATASOURCE_PASSWORD: UGFzc3dvcmQjMTIzNA==
