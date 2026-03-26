@@ -19,7 +19,6 @@ metadata:
 
 spec:
   replicas: 1
-
   revisionHistoryLimit: 5
 
   strategy:
@@ -49,21 +48,21 @@ spec:
         fsGroup: 2000
 
       hostAliases:
-      - ip: "10.177.224.102"
-        hostnames:
-        - "fincore"
-      - ip: "10.177.224.103"
-        hostnames:
-        - "fincore"
-      - ip: "10.177.224.104"
-        hostnames:
-        - "fincore"
-      - ip: "10.177.224.105"
-        hostnames:
-        - "fincore"
-      - ip: "10.177.224.106"
-        hostnames:
-        - "fincore"
+        - ip: "10.177.224.102"
+          hostnames:
+            - "fincore"
+        - ip: "10.177.224.103"
+          hostnames:
+            - "fincore"
+        - ip: "10.177.224.104"
+          hostnames:
+            - "fincore"
+        - ip: "10.177.224.105"
+          hostnames:
+            - "fincore"
+        - ip: "10.177.224.106"
+          hostnames:
+            - "fincore"
 
       topologySpreadConstraints:
         - maxSkew: 1
@@ -74,59 +73,60 @@ spec:
               app: report-backend
 
       containers:
-      - name: report-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-01
-        imagePullPolicy: Always
+        - name: report-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-01
+          imagePullPolicy: Always
 
-        envFrom:
-          - configMapRef:
-              name: redis-config
-          - configMapRef:
-              name:kafka-config
-          - configMapRef:
-              name: oracle-config
-          - secretRef:
-              name: oracle-secret
-                - configMapRef:
-          name: hadoop-config
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: hadoop-config
 
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-          limits:
-            memory: "8Gi"
-            cpu: "4"
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
 
-        ports:
-        - containerPort: 9005
+          ports:
+            - containerPort: 9005
 
-        startupProbe:
-          tcpSocket:
-            port: 9005
-          failureThreshold: 60
-          periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 9005
+            failureThreshold: 60
+            periodSeconds: 10
 
-        livenessProbe:
-          tcpSocket:
-            port: 9005
-          initialDelaySeconds: 90
-          periodSeconds: 15
-          timeoutSeconds: 5
-          failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: 9005
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        readinessProbe:
-          tcpSocket:
-            port: 9005
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 9005
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
 ---
 # --------------------------------------------
 # Service
@@ -197,6 +197,3 @@ spec:
   selector:
     matchLabels:
       app: report-backend
-
-
-      Please fix the indentation problem from this file and send me back the entire correct file
