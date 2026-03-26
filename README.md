@@ -1,8 +1,14 @@
-The request is invalid: patch: Invalid value: "map[metadata:map[annotations:map[kubectl.kubernetes.io/last-applied-configuration:{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"name\":\"common-request-deployment\",\"namespace\":\"backend\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"common-request-backend\"}},\"strategy\":{\"rollingUpdate\":{\"maxSurge\":1,\"maxUnavailable\":0},\"type\":\"RollingUpdate\"},\"template\":{\"metadata\":{\"labels\":{\"app\":\"common-request-backend\"}},\"spec\":{\"containers\":[{\"envFrom\":[{\"configMapRef\":null,\"name\":\"redis-config\"},{\"configMapRef\":null,\"name\":\"kafka-config\"},{\"configMapRef\":null,\"name\":\"spring-datasource-config\"},{\"name\":\"spring-datasource-secret\",\"secretRef\":null}],\"image\":\"a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01\",\"imagePullPolicy\":\"Always\",\"lifecycle\":{\"preStop\":{\"exec\":{\"command\":[\"/bin/sh\",\"-c\",\"sleep 10\"]}}},\"livenessProbe\":{\"failureThreshold\":5,\"initialDelaySeconds\":90,\"periodSeconds\":15,\"tcpSocket\":{\"port\":9000},\"timeoutSeconds\":5},\"name\":\"common-request-container\",\"ports\":[{\"containerPort\":9000}],\"readinessProbe\":{\"failureThreshold\":5,\"initialDelaySeconds\":30,\"periodSeconds\":10,\"tcpSocket\":{\"port\":9000},\"timeoutSeconds\":5},\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false},\"startupProbe\":{\"failureThreshold\":60,\"periodSeconds\":10,\"tcpSocket\":{\"port\":9000}}}],\"securityContext\":{\"fsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"common-request-sa\",\"terminationGracePeriodSeconds\":30,\"topologySpreadConstraints\":[{\"labelSelector\":{\"matchLabels\":{\"app\":\"common-request-backend\"}},\"maxSkew\":1,\"topologyKey\":\"kubernetes.io/hostname\",\"whenUnsatisfiable\":\"ScheduleAnyway\"}]}}}}\n]] spec:map[template:map[spec:map[]]]]": strict decoding error: unknown field "spec.template.spec.containers[0].envFrom[0].name", unknown field "spec.template.spec.containers[0].envFrom[1].name", unknown field "spec.template.spec.containers[0].envFrom[2].name", unknown field "spec.template.spec.containers[0].envFrom[3].name"
+[root@fcprodkubjump Microservices]# vim prod-common-request-deployment.yaml
+[root@fcprodkubjump Microservices]# kubectl apply -f prod-common-request-deployment.yaml -n backend
+serviceaccount/common-request-sa unchanged
+poddisruptionbudget.policy/common-request-pdb configured
+horizontalpodautoscaler.autoscaling/common-request-hpa unchanged
+service/common-request-service unchanged
+The request is invalid: patch: Invalid value: "map[metadata:map[annotations:map[kubectl.kubernetes.io/last-applied-configuration:{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"name\":\"common-request-deployment\",\"namespace\":\"backend\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"common-request-backend\"}},\"strategy\":{\"rollingUpdate\":{\"maxSurge\":1,\"maxUnavailable\":0},\"type\":\"RollingUpdate\"},\"template\":{\"metadata\":{\"labels\":{\"app\":\"common-request-backend\"}},\"spec\":{\"containers\":[{\"envFrom\":[{\"configMapRef\":null,\"name\":\"redis-config\"},{\"configMapRef\":null,\"name\":\"kafka-config\"},{\"configMapRef\":null,\"name\":\"spring-datasource-config\"},{\"name\":\"spring-datasource-secret\",\"secretRef\":null}],\"image\":\"a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01\",\"imagePullPolicy\":\"Always\",\"lifecycle\":{\"preStop\":{\"exec\":{\"command\":[\"/bin/sh\",\"-c\",\"sleep 10\"]}}},\"livenessProbe\":{\"failureThreshold\":5,\"initialDelaySeconds\":90,\"periodSeconds\":15,\"tcpSocket\":{\"port\":9000},\"timeoutSeconds\":5},\"name\":\"common-request-container\",\"ports\":[{\"containerPort\":9000}],\"readinessProbe\":{\"failureThreshold\":5,\"initialDelaySeconds\":30,\"periodSeconds\":10,\"tcpSocket\":{\"port\":9000},\"timeoutSeconds\":5},\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false},\"startupProbe\":{\"failureThreshold\":60,\"periodSeconds\":10,\"tcpSocket\":{\"port\":9000}}}],\"securityContext\":{\"fsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"common-request-sa\",\"terminationGracePeriodSeconds\":30,\"topologySpreadConstraints\":[{\"labelSelector\":{\"matchLabels\":{\"app\":\"common-request-backend\"}},\"maxSkew\":1,\"topologyKey\":\"kubernetes.io/hostname\",\"whenUnsatisfiable\":\"ScheduleAnyway\"}]}}}}\n]] spec:map[template:map[spec:map[]]]]": strict decoding error: unknown field "spec.template.spec.containers[0].envFr
 
-getting this issue :
 
-below is my mnaifest file:
+
+getting this issue and below is my manifest file
 
 # =====================================================
 # Service Account (Dedicated Identity for Pod Security)
@@ -77,14 +83,14 @@ spec:
         imagePullPolicy: Always
 
         envFrom:
-          - configMapRef:
-            name: redis-config
-          - configMapRef:
-            name: kafka-config
-          - configMapRef:
-            name: spring-datasource-config
-          - secretRef:
-            name: spring-datasource-secret
+         - configMapRef:
+           name: redis-config
+         - configMapRef:
+           name: kafka-config
+         - configMapRef:
+           name: spring-datasource-config
+         - secretRef:
+           name: spring-datasource-secret
 
         ports:
         - containerPort: 9000
@@ -174,4 +180,4 @@ spec:
 
 
 
-  please correct me
+  please do the correction of this issue and send me back the entire mnifest file
