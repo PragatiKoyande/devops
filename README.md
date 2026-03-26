@@ -48,33 +48,32 @@ spec:
         fsGroup: 2000
 
       hostAliases:
-      - ip: "10.176.53.145"
-        hostnames:
-        - "corp.ad.sbi"
-        - "corpdcmdgbl01.corp.ad.sbi"
-      - ip: "10.176.54.30"
-        hostnames:
-        - "corpdcmdgbl02.corp.ad.sbi"
-      - ip: "10.176.54.31"
-        hostnames:
-        - "corpdcmdgbl03.corp.ad.sbi"
-      - ip: "10.176.54.32"
-        hostnames:
-        - "corpdcmdgbl04.corp.ad.sbi"
-      - ip: "10.189.37.135"
-        hostnames:
-        - "corpdcmdrbl01.corp.ad.sbi"
-      - ip: "10.189.37.136"
-        hostnames:
-        - "corpdcmdrbl02.corp.ad.sbi"
-      - ip: "10.189.37.137"
-        hostnames:
-        - "corpdcmdrbl03.corp.ad.sbi"
-      - ip: "10.189.37.138"
-        hostnames:
-        - "corpdcmdrbl04.corp.ad.sbi"
+        - ip: "10.176.53.145"
+          hostnames:
+            - "corp.ad.sbi"
+            - "corpdcmdgbl01.corp.ad.sbi"
+        - ip: "10.176.54.30"
+          hostnames:
+            - "corpdcmdgbl02.corp.ad.sbi"
+        - ip: "10.176.54.31"
+          hostnames:
+            - "corpdcmdgbl03.corp.ad.sbi"
+        - ip: "10.176.54.32"
+          hostnames:
+            - "corpdcmdgbl04.corp.ad.sbi"
+        - ip: "10.189.37.135"
+          hostnames:
+            - "corpdcmdrbl01.corp.ad.sbi"
+        - ip: "10.189.37.136"
+          hostnames:
+            - "corpdcmdrbl02.corp.ad.sbi"
+        - ip: "10.189.37.137"
+          hostnames:
+            - "corpdcmdrbl03.corp.ad.sbi"
+        - ip: "10.189.37.138"
+          hostnames:
+            - "corpdcmdrbl04.corp.ad.sbi"
 
-      # LDAP Truststore Secret Volume
       volumes:
         - name: truststore-volume
           secret:
@@ -84,74 +83,74 @@ spec:
                 path: ad-truststore.jks
 
       containers:
-      - name: user-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/user-service:PR-01
-        imagePullPolicy: Always
+        - name: user-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/user-service:PR-01
+          imagePullPolicy: Always
 
-        volumeMounts:
-        - name: truststore-volume
-          mountPath: /etc/fincore/secrets
-          readOnly: true
-          
-        envFrom: 
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
+
+          envFrom:
             - configMapRef:
                 name: oracle-config
             - secretRef:
                 name: oracle-secret
             - configMapRef:
-                name: kafka-config 
+                name: kafka-config
             - configMapRef:
-                name: redis-config 
+                name: redis-config
             - configMapRef:
                 name: ldap-config
             - secretRef:
-                name: ldap-secret                
+                name: ldap-secret
 
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod"        
-        - name: JAVA_TOOL_OPTIONS
-          value: "-Djava.net.preferIPv4Stack=true"         
-        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-          value: "rbac-cache-group"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
 
-        ports:
-        - containerPort: 8087
+          ports:
+            - containerPort: 8087
 
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
-        startupProbe:
-          tcpSocket:
-            port: 8087
-          failureThreshold: 60
-          periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 8087
+            failureThreshold: 60
+            periodSeconds: 10
 
-        livenessProbe:
-          tcpSocket:
-            port: 8087
-          initialDelaySeconds: 90
-          periodSeconds: 15
-          timeoutSeconds: 5
-          failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        readinessProbe:
-          tcpSocket:
-            port: 8087
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
 # --------------------------------------------
@@ -168,10 +167,10 @@ spec:
     app: user-backend
 
   ports:
-  - name: http
-    protocol: TCP
-    port: 80
-    targetPort: 8087
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8087
 
   type: ClusterIP
 
@@ -201,12 +200,12 @@ spec:
       stabilizationWindowSeconds: 300
 
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
 ---
 # --------------------------------------------
@@ -220,11 +219,6 @@ metadata:
 
 spec:
   minAvailable: 1
-
   selector:
     matchLabels:
       app: user-backend
-
-
-
-      Please fix this file if there are any indentation issue and send me vack the correct file with proper indenatation
