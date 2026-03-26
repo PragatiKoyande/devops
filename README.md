@@ -66,64 +66,64 @@ spec:
         fsGroup: 10001
 
       containers:
-      - name: common-request-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01
-        imagePullPolicy: Always
+        - name: common-request-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01
+          imagePullPolicy: Always
 
-        envFrom:
-         - configMapRef:
-           name: redis-config
-         - configMapRef:
-           name: kafka-config
-         - configMapRef:
-           name: spring-datasource-config
-         - secretRef:
-           name: spring-datasource-secret
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: spring-datasource-config
+            - secretRef:
+                name: spring-datasource-secret
 
-        ports:
-        - containerPort: 9000
+          ports:
+            - containerPort: 9000
 
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
-        startupProbe:
-          tcpSocket:
-            port: 9000
-          failureThreshold: 60     # was 30 - doubled
-          periodSeconds: 10        # total startup time = 10 min
+          startupProbe:
+            tcpSocket:
+              port: 9000
+            failureThreshold: 60
+            periodSeconds: 10
 
-        livenessProbe:
-          tcpSocket:
-            port: 9000
-          initialDelaySeconds: 90   # was 30 - increased
-          periodSeconds: 15
-          timeoutSeconds: 5
-          failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        readinessProbe:
-          tcpSocket:
-            port: 9000
-          initialDelaySeconds: 30   # was 15
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-              - ALL
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
 ---
 # =====================================================
 # Horizontal Pod Autoscaler
