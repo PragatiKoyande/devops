@@ -42,10 +42,10 @@ spec:
       enableServiceLinks: false
 
       volumes:
-      - name: tmp-dir
-        emptyDir:
-          medium: Memory
-          sizeLimit: 64Mi
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
 
       securityContext:
         runAsNonRoot: true
@@ -67,8 +67,8 @@ spec:
           imagePullPolicy: Always
 
           volumeMounts:
-          - name: tmp-dir
-            mountPath: /tmp
+            - name: tmp-dir
+              mountPath: /tmp
 
           envFrom:
             - configMapRef:
@@ -79,7 +79,7 @@ spec:
                 name: oracle-secret
             - configMapRef:
                 name: kafka-config
-                
+
           ports:
             - containerPort: 3000
 
@@ -195,7 +195,3 @@ spec:
   selector:
     matchLabels:
       app: process-status-backend
-
-
-
-      please solve the issue for indentation and send me back correct entire file
