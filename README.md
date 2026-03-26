@@ -44,10 +44,10 @@ spec:
       terminationGracePeriodSeconds: 30
 
       volumes:
-      - name: tmp-dir
-        emptyDir:
-          medium: Memory
-          sizeLimit: 64Mi
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
 
       securityContext:
         runAsNonRoot: true
@@ -56,68 +56,69 @@ spec:
         fsGroup: 2000
 
       containers:
-      - name: notification-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/notification-service:PR-01
-        imagePullPolicy: Always
+        - name: notification-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/notification-service:PR-01
+          imagePullPolicy: Always
 
-        volumeMounts:
-        - name: tmp-dir
-          mountPath: /tmp
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
 
-        ports:
-        - containerPort: 9010
+          ports:
+            - containerPort: 9010
 
-        envFrom:
-          - configMapRef:
-              name: postgres-config
-          - secretRef:
-              name: postgres-secret
-          - configMapRef:
-              name: redis-config
-          - configMapRef:
-              name: kafka-config
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+            - secretRef:
+                name: postgres-secret
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
 
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
-        startupProbe:
-          tcpSocket:
-            port: 9010
-          failureThreshold: 60
-          periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 9010
+            failureThreshold: 60
+            periodSeconds: 10
 
-        livenessProbe:
-          tcpSocket:
-            port: 9010
-          initialDelaySeconds: 90
-          periodSeconds: 15
-          timeoutSeconds: 5
-          timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 9010
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        readinessProbe:
-          tcpSocket:
-            port: 9010
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 9010
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh","-c","sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
 ---
 # ------------------------------------------------
 # Service
@@ -130,14 +131,13 @@ metadata:
 
 spec:
   type: ClusterIP
-
   selector:
     app: notification-backend
 
   ports:
-  - port: 80
-    targetPort: 9010
-    protocol: TCP
+    - port: 80
+      targetPort: 9010
+      protocol: TCP
 
 ---
 # ------------------------------------------------
@@ -159,12 +159,12 @@ spec:
   maxReplicas: 5
 
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
 ---
 # ------------------------------------------------
@@ -178,10 +178,6 @@ metadata:
 
 spec:
   minAvailable: 1
-
   selector:
     matchLabels:
       app: notification-backend
-
-
-      Please fix the indentatio issue in this manifest file and send me back the entire file
