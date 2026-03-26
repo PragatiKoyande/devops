@@ -1,37 +1,26 @@
-# =====================================================
-# Service Account (Dedicated Identity for Pod Security)
-# =====================================================
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: common-request-sa
+  name: common-master-sa
   namespace: backend
-automountServiceAccountToken: false
+
 ---
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: common-request-pdb
-  namespace: backend
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: common-request-backend
----
-# =====================================================
-# Deployment (Enterprise Hardened)
-# =====================================================
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: common-request-deployment
+  name: common-master-deployment
   namespace: backend
+
 spec:
   replicas: 1
+
+  revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
@@ -41,16 +30,21 @@ spec:
 
   selector:
     matchLabels:
-      app: common-request-backend
+      app: common-master-backend
 
   template:
     metadata:
       labels:
-        app: common-request-backend
-    spec:
+        app: common-master-backend
 
-      serviceAccountName: common-request-sa
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2000"
+
+    spec:
+      serviceAccountName: common-master-sa
       terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
       topologySpreadConstraints:
         - maxSkew: 1
@@ -58,88 +52,106 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: common-request-backend
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
+              app: common-master-backend
 
       containers:
-        - name: common-request-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01
-          imagePullPolicy: Always
+      - name: common-master-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service:PR-01
+        imagePullPolicy: Always
 
-          envFrom:
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: kafka-config
-            - configMapRef:
-                name: spring-datasource-config
-            - secretRef:
-                name: spring-datasource-secret
+        envFrom:
+         - configMapRef:
+           name: redis-config
+         - configMapRef:
+           name: spring-datasource-config
+         - secretRef:
+           name: spring-datasource-secret
 
-          ports:
-            - containerPort: 9000
+        ports:
+        - containerPort: 2000
 
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 
-          startupProbe:
-            tcpSocket:
-              port: 9000
-            failureThreshold: 60
-            periodSeconds: 10
+        startupProbe:
+          tcpSocket:
+            port: 2000
+          failureThreshold: 60
+          periodSeconds: 10
 
-          livenessProbe:
-            tcpSocket:
-              port: 9000
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+        livenessProbe:
+          tcpSocket:
+            port: 2000
+          initialDelaySeconds: 90
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
 
-          readinessProbe:
-            tcpSocket:
-              port: 9000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: 2000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
 
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
 
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
 ---
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
+# --------------------------------------------
+# Service (internal cluster access)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-master-service
+  namespace: backend
+
+spec:
+  selector:
+    app: common-master-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 2000
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (auto scaling)
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: common-request-hpa
+  name: common-master-hpa
   namespace: backend
+
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: common-request-deployment
+    name: common-master-deployment
+
   minReplicas: 1
-  maxReplicas: 3
+  maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
   metrics:
     - type: Resource
       resource:
@@ -147,21 +159,23 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
+
 ---
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 metadata:
-  name: common-request-service
+  name: common-master-pdb
   namespace: backend
+
 spec:
+  minAvailable: 1
   selector:
-    app: common-request-backend
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 9000
-  type: ClusterIP
+    matchLabels:
+      app: common-master-backend
+
+
+
+      i this file also please fix indenation issue and send me back
