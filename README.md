@@ -76,11 +76,10 @@ spec:
                 name: redis-config
             - configMapRef:
                 name: kafka-config
-			
-		  env:
-		    - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-              value: "notification-service-group"
 
+          env:
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "notification-service-group"
             - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
               value: "earliest"
 
@@ -188,6 +187,3 @@ spec:
   selector:
     matchLabels:
       app: notification-backend
-
-
-      Please fix any indentation issue if present and send me back entire correct file
