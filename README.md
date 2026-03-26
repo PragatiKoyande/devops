@@ -1,21 +1,23 @@
-# --------------------------------------------
-# Service Account (security baseline)
-# --------------------------------------------
+# ------------------------------------------------
+# Service Account
+# ------------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: report-sa
+  name: notification-sa
   namespace: backend
 
 ---
-# --------------------------------------------
+# ------------------------------------------------
 # Deployment
-# --------------------------------------------
+# ------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: report-deployment
+  name: notification-deployment
   namespace: backend
+  labels:
+    app: notification-backend
 
 spec:
   replicas: 1
@@ -29,17 +31,23 @@ spec:
 
   selector:
     matchLabels:
-      app: report-backend
+      app: notification-backend
 
   template:
     metadata:
       labels:
-        app: report-backend
+        app: notification-backend
 
     spec:
-      serviceAccountName: report-sa
-      terminationGracePeriodSeconds: 30
+      serviceAccountName: notification-sa
       enableServiceLinks: false
+      terminationGracePeriodSeconds: 30
+
+      volumes:
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
 
       securityContext:
         runAsNonRoot: true
@@ -47,68 +55,52 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
-      hostAliases:
-        - ip: "10.177.224.102"
-          hostnames:
-            - "fincore"
-        - ip: "10.177.224.103"
-          hostnames:
-            - "fincore"
-        - ip: "10.177.224.104"
-          hostnames:
-            - "fincore"
-        - ip: "10.177.224.105"
-          hostnames:
-            - "fincore"
-        - ip: "10.177.224.106"
-          hostnames:
-            - "fincore"
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: report-backend
-
       containers:
-        - name: report-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-01
+        - name: notification-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/notification-service:PR-01
           imagePullPolicy: Always
 
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
+
+          ports:
+            - containerPort: 9010
+
           envFrom:
+            - configMapRef:
+                name: postgres-config
+            - secretRef:
+                name: postgres-secret
             - configMapRef:
                 name: redis-config
             - configMapRef:
                 name: kafka-config
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
-            - configMapRef:
-                name: hadoop-config
+			
+		  env:
+		    - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "notification-service-group"
+
+            - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+              value: "earliest"
 
           resources:
             requests:
-              memory: "1Gi"
-              cpu: "500m"
+              cpu: "200m"
+              memory: "512Mi"
             limits:
-              memory: "8Gi"
-              cpu: "4"
-
-          ports:
-            - containerPort: 9005
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: 9005
+              port: 9010
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 9005
+              port: 9010
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -116,7 +108,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 9005
+              port: 9010
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -127,52 +119,51 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
 ---
-# --------------------------------------------
+# ------------------------------------------------
 # Service
-# --------------------------------------------
+# ------------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: report-service
+  name: notification-service
   namespace: backend
 
 spec:
+  type: ClusterIP
   selector:
-    app: report-backend
+    app: notification-backend
 
   ports:
-    - name: http
+    - port: 80
+      targetPort: 9010
       protocol: TCP
-      port: 80
-      targetPort: 9005
-
-  type: ClusterIP
 
 ---
-# --------------------------------------------
+# ------------------------------------------------
 # Horizontal Pod Autoscaler
-# --------------------------------------------
+# ------------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: report-hpa
+  name: notification-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: report-deployment
+    name: notification-deployment
 
   minReplicas: 1
   maxReplicas: 5
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -183,17 +174,20 @@ spec:
           averageUtilization: 70
 
 ---
-# --------------------------------------------
+# ------------------------------------------------
 # Pod Disruption Budget
-# --------------------------------------------
+# ------------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: report-pdb
+  name: notification-pdb
   namespace: backend
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: report-backend
+      app: notification-backend
+
+
+      Please fix any indentation issue if present and send me back entire correct file
