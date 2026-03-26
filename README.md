@@ -1,23 +1,21 @@
-# ------------------------------------------------
+# --------------------------------------------
 # Service Account
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: notification-sa
+  name: process-status-sa
   namespace: backend
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Deployment
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-deployment
+  name: process-status-deployment
   namespace: backend
-  labels:
-    app: notification-backend
 
 spec:
   replicas: 1
@@ -31,23 +29,23 @@ spec:
 
   selector:
     matchLabels:
-      app: notification-backend
+      app: process-status-backend
 
   template:
     metadata:
       labels:
-        app: notification-backend
+        app: process-status-backend
 
     spec:
-      serviceAccountName: notification-sa
-      enableServiceLinks: false
+      serviceAccountName: process-status-sa
       terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
       volumes:
-        - name: tmp-dir
-          emptyDir:
-            medium: Memory
-            sizeLimit: 64Mi
+      - name: tmp-dir
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Mi
 
       securityContext:
         runAsNonRoot: true
@@ -55,45 +53,53 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: process-status-backend
+
       containers:
-        - name: notification-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/notification-service:PR-01
+        - name: process-status-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/process-status-service:PR-01
           imagePullPolicy: Always
 
           volumeMounts:
-            - name: tmp-dir
-              mountPath: /tmp
-
-          ports:
-            - containerPort: 9010
+          - name: tmp-dir
+            mountPath: /tmp
 
           envFrom:
             - configMapRef:
-                name: postgres-config
-            - secretRef:
-                name: postgres-secret
-            - configMapRef:
                 name: redis-config
             - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
                 name: kafka-config
+                
+          ports:
+            - containerPort: 3000
 
           resources:
             requests:
               cpu: "200m"
-              memory: "512Mi"
+              memory: "256Mi"
             limits:
               cpu: "500m"
-              memory: "1Gi"
+              memory: "512Mi"
 
           startupProbe:
             tcpSocket:
-              port: 9010
+              port: 3000
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 9010
+              port: 3000
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -101,7 +107,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 9010
+              port: 3000
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -120,43 +126,51 @@ spec:
                 - ALL
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Service
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: notification-service
+  name: process-status-service
   namespace: backend
 
 spec:
-  type: ClusterIP
   selector:
-    app: notification-backend
+    app: process-status-backend
 
   ports:
-    - port: 80
-      targetPort: 9010
+    - name: http
       protocol: TCP
+      port: 80
+      targetPort: 3000
+
+  type: ClusterIP
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Horizontal Pod Autoscaler
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: notification-hpa
+  name: process-status-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: notification-deployment
+    name: process-status-deployment
 
   minReplicas: 1
   maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -167,17 +181,21 @@ spec:
           averageUtilization: 70
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Pod Disruption Budget
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: notification-pdb
+  name: process-status-pdb
   namespace: backend
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: notification-backend
+      app: process-status-backend
+
+
+
+      please solve the issue for indentation and send me back correct entire file
