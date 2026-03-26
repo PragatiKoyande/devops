@@ -1,23 +1,21 @@
-# ------------------------------------------------
+# --------------------------------------------
 # Service Account
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: notification-sa
+  name: user-sa
   namespace: backend
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Deployment
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-deployment
+  name: user-deployment
   namespace: backend
-  labels:
-    app: notification-backend
 
 spec:
   replicas: 1
@@ -31,23 +29,17 @@ spec:
 
   selector:
     matchLabels:
-      app: notification-backend
+      app: user-backend
 
   template:
     metadata:
       labels:
-        app: notification-backend
+        app: user-backend
 
     spec:
-      serviceAccountName: notification-sa
-      enableServiceLinks: false
+      serviceAccountName: user-sa
       terminationGracePeriodSeconds: 30
-
-      volumes:
-        - name: tmp-dir
-          emptyDir:
-            medium: Memory
-            sizeLimit: 64Mi
+      enableServiceLinks: false
 
       securityContext:
         runAsNonRoot: true
@@ -55,135 +47,184 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
+      hostAliases:
+      - ip: "10.176.53.145"
+        hostnames:
+        - "corp.ad.sbi"
+        - "corpdcmdgbl01.corp.ad.sbi"
+      - ip: "10.176.54.30"
+        hostnames:
+        - "corpdcmdgbl02.corp.ad.sbi"
+      - ip: "10.176.54.31"
+        hostnames:
+        - "corpdcmdgbl03.corp.ad.sbi"
+      - ip: "10.176.54.32"
+        hostnames:
+        - "corpdcmdgbl04.corp.ad.sbi"
+      - ip: "10.189.37.135"
+        hostnames:
+        - "corpdcmdrbl01.corp.ad.sbi"
+      - ip: "10.189.37.136"
+        hostnames:
+        - "corpdcmdrbl02.corp.ad.sbi"
+      - ip: "10.189.37.137"
+        hostnames:
+        - "corpdcmdrbl03.corp.ad.sbi"
+      - ip: "10.189.37.138"
+        hostnames:
+        - "corpdcmdrbl04.corp.ad.sbi"
+
+      # LDAP Truststore Secret Volume
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
+
       containers:
-        - name: notification-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/notification-service:PR-01
-          imagePullPolicy: Always
+      - name: user-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/user-service:PR-01
+        imagePullPolicy: Always
 
-          volumeMounts:
-            - name: tmp-dir
-              mountPath: /tmp
-
-          ports:
-            - containerPort: 9010
-
-          envFrom:
+        volumeMounts:
+        - name: truststore-volume
+          mountPath: /etc/fincore/secrets
+          readOnly: true
+          
+        envFrom: 
             - configMapRef:
-                name: postgres-config
+                name: oracle-config
             - secretRef:
-                name: postgres-secret
+                name: oracle-secret
             - configMapRef:
-                name: redis-config
+                name: kafka-config 
             - configMapRef:
-                name: kafka-config
+                name: redis-config 
+            - configMapRef:
+                name: ldap-config
+            - secretRef:
+                name: ldap-secret                
 
-          env:
-            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-              value: "notification-service-group"
-            - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-              value: "earliest"
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"        
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Djava.net.preferIPv4Stack=true"         
+        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+          value: "rbac-cache-group"
 
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "512Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
+        ports:
+        - containerPort: 8087
 
-          startupProbe:
-            tcpSocket:
-              port: 9010
-            failureThreshold: 60
-            periodSeconds: 10
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 
-          livenessProbe:
-            tcpSocket:
-              port: 9010
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+        startupProbe:
+          tcpSocket:
+            port: 8087
+          failureThreshold: 60
+          periodSeconds: 10
 
-          readinessProbe:
-            tcpSocket:
-              port: 9010
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+        livenessProbe:
+          tcpSocket:
+            port: 8087
+          initialDelaySeconds: 90
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
 
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+        readinessProbe:
+          tcpSocket:
+            port: 8087
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
 
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Service
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: notification-service
+  name: user-service
   namespace: backend
 
 spec:
-  type: ClusterIP
   selector:
-    app: notification-backend
+    app: user-backend
 
   ports:
-    - port: 80
-      targetPort: 9010
-      protocol: TCP
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8087
+
+  type: ClusterIP
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Horizontal Pod Autoscaler
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: notification-hpa
+  name: user-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: notification-deployment
+    name: user-deployment
 
   minReplicas: 1
   maxReplicas: 5
 
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
   metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Pod Disruption Budget
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: notification-pdb
+  name: user-pdb
   namespace: backend
 
 spec:
   minAvailable: 1
+
   selector:
     matchLabels:
-      app: notification-backend
+      app: user-backend
+
+
+
+      Please fix this file if there are any indentation issue and send me vack the correct file with proper indenatation
