@@ -1,76 +1,177 @@
+The request is invalid: patch: Invalid value: "map[metadata:map[annotations:map[kubectl.kubernetes.io/last-applied-configuration:{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"name\":\"common-request-deployment\",\"namespace\":\"backend\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"app\":\"common-request-backend\"}},\"strategy\":{\"rollingUpdate\":{\"maxSurge\":1,\"maxUnavailable\":0},\"type\":\"RollingUpdate\"},\"template\":{\"metadata\":{\"labels\":{\"app\":\"common-request-backend\"}},\"spec\":{\"containers\":[{\"envFrom\":[{\"configMapRef\":null,\"name\":\"redis-config\"},{\"configMapRef\":null,\"name\":\"kafka-config\"},{\"configMapRef\":null,\"name\":\"spring-datasource-config\"},{\"name\":\"spring-datasource-secret\",\"secretRef\":null}],\"image\":\"a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01\",\"imagePullPolicy\":\"Always\",\"lifecycle\":{\"preStop\":{\"exec\":{\"command\":[\"/bin/sh\",\"-c\",\"sleep 10\"]}}},\"livenessProbe\":{\"failureThreshold\":5,\"initialDelaySeconds\":90,\"periodSeconds\":15,\"tcpSocket\":{\"port\":9000},\"timeoutSeconds\":5},\"name\":\"common-request-container\",\"ports\":[{\"containerPort\":9000}],\"readinessProbe\":{\"failureThreshold\":5,\"initialDelaySeconds\":30,\"periodSeconds\":10,\"tcpSocket\":{\"port\":9000},\"timeoutSeconds\":5},\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":false},\"startupProbe\":{\"failureThreshold\":60,\"periodSeconds\":10,\"tcpSocket\":{\"port\":9000}}}],\"securityContext\":{\"fsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"common-request-sa\",\"terminationGracePeriodSeconds\":30,\"topologySpreadConstraints\":[{\"labelSelector\":{\"matchLabels\":{\"app\":\"common-request-backend\"}},\"maxSkew\":1,\"topologyKey\":\"kubernetes.io/hostname\",\"whenUnsatisfiable\":\"ScheduleAnyway\"}]}}}}\n]] spec:map[template:map[spec:map[]]]]": strict decoding error: unknown field "spec.template.spec.containers[0].envFrom[0].name", unknown field "spec.template.spec.containers[0].envFrom[1].name", unknown field "spec.template.spec.containers[0].envFrom[2].name", unknown field "spec.template.spec.containers[0].envFrom[3].name"
+
+getting this issue :
+
+below is my mnaifest file:
+
+# =====================================================
+# Service Account (Dedicated Identity for Pod Security)
+# =====================================================
 apiVersion: v1
-kind: ConfigMap
+kind: ServiceAccount
 metadata:
-  name: report-redis-config
+  name: common-request-sa
   namespace: backend
+automountServiceAccountToken: false
+---
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: common-request-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: common-request-backend
+---
+# =====================================================
+# Deployment (Enterprise Hardened)
+# =====================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-request-deployment
+  namespace: backend
+spec:
+  replicas: 1
 
-data:
-  SPRING_DATA_REDIS_HOST: "redis-service"
-  SPRING_DATA_REDIS_PORT: "6379"
-  SPRING_DATA_REDIS_CLIENT_TYPE: "lettuce"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
+  selector:
+    matchLabels:
+      app: common-request-backend
 
+  template:
+    metadata:
+      labels:
+        app: common-request-backend
+    spec:
 
-kafka
+      serviceAccountName: common-request-sa
+      terminationGracePeriodSeconds: 30
 
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: common-request-backend
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+
+      containers:
+      - name: common-request-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-01
+        imagePullPolicy: Always
+
+        envFrom:
+          - configMapRef:
+            name: redis-config
+          - configMapRef:
+            name: kafka-config
+          - configMapRef:
+            name: spring-datasource-config
+          - secretRef:
+            name: spring-datasource-secret
+
+        ports:
+        - containerPort: 9000
+
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+        startupProbe:
+          tcpSocket:
+            port: 9000
+          failureThreshold: 60     # was 30 - doubled
+          periodSeconds: 10        # total startup time = 10 min
+
+        livenessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 90   # was 30 - increased
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
+
+        readinessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 30   # was 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 5
+
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+---
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: common-request-hpa
+  namespace: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: common-request-deployment
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+# =====================================================
+# Service
+# =====================================================
 apiVersion: v1
-kind: ConfigMap
+kind: Service
 metadata:
-  name: report-kafka-config
+  name: common-request-service
   namespace: backend
-
-data:
-  SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: "kafka.backend.svc.cluster.local:9092"
-  SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: "kafka.backend.svc.cluster.local:9092"
-
-
-spring
-
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: report-spring-config
-  namespace: backend
-
-data:
-  SPRING_DATASOURCE_URL: "jdbc:oracle:thin:@10.190.224.79:1523/fincorepdb1"
-  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "oracle.jdbc.OracleDriver"
+spec:
+  selector:
+    app: common-request-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9000
+  type: ClusterIP
 
 
-Hadoop
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: report-hadoop-config
-  namespace: backend
-
-data:
-  HADOOP_FS_HA_NN1: "hdfs://10.177.224.102:8022"
-  HADOOP_FS_HA_NN2: "hdfs://10.177.224.103:8022"
-  HADOOP_FS_HA_NN3: "hdfs://10.177.224.104:8022"
-  HADOOP_FS_HA_NN4: "hdfs://10.177.224.105:8022"
-  HADOOP_FS_HA_NN5: "hdfs://10.177.224.106:8022"
-
-  HADOOP_FS_USER: "root"
-  HADOOP_FS_URI: "hdfs://fincore"
-  GLIF_REPORTS_BASE_PATH: "/reports"
-
-
-secrets
-
-echo -n "fincore" | base64
-echo -n "Password#1234" | base64
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: report-secret
-  namespace: backend
-
-type: Opaque
-
-data:
-  SPRING_DATASOURCE_USERNAME: ZmluY29yZQ==
-  SPRING_DATASOURCE_PASSWORD: UGFzc3dvcmQjMTIzNA==
+  please correct me
