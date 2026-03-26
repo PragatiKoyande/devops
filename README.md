@@ -36,7 +36,6 @@ spec:
     metadata:
       labels:
         app: common-master-backend
-
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "2000"
@@ -55,55 +54,55 @@ spec:
               app: common-master-backend
 
       containers:
-      - name: common-master-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service:PR-01
-        imagePullPolicy: Always
+        - name: common-master-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service:PR-01
+          imagePullPolicy: Always
 
-        envFrom:
-         - configMapRef:
-           name: redis-config
-         - configMapRef:
-           name: spring-datasource-config
-         - secretRef:
-           name: spring-datasource-secret
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: spring-datasource-config
+            - secretRef:
+                name: spring-datasource-secret
 
-        ports:
-        - containerPort: 2000
+          ports:
+            - containerPort: 2000
 
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
-        startupProbe:
-          tcpSocket:
-            port: 2000
-          failureThreshold: 60
-          periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 2000
+            failureThreshold: 60
+            periodSeconds: 10
 
-        livenessProbe:
-          tcpSocket:
-            port: 2000
-          initialDelaySeconds: 90
-          periodSeconds: 15
-          timeoutSeconds: 5
-          failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: 2000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        readinessProbe:
-          tcpSocket:
-            port: 2000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 2000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
 # --------------------------------------------
@@ -175,7 +174,3 @@ spec:
   selector:
     matchLabels:
       app: common-master-backend
-
-
-
-      i this file also please fix indenation issue and send me back
