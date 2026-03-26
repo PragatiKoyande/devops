@@ -32,6 +32,7 @@ kind: Deployment
 metadata:
   name: login-deployment
   namespace: backend
+
 spec:
   replicas: 1
   revisionHistoryLimit: 5
@@ -62,31 +63,31 @@ spec:
         fsGroup: 10001
 
       hostAliases:
-      - ip: "10.176.53.145"
-        hostnames:
-        - "corp.ad.sbi"
-        - "corpdcmdgbl01.corp.ad.sbi"
-      - ip: "10.176.54.30"
-        hostnames:
-        - "corpdcmdgbl02.corp.ad.sbi"
-      - ip: "10.176.54.31"
-        hostnames:
-        - "corpdcmdgbl03.corp.ad.sbi"
-      - ip: "10.176.54.32"
-        hostnames:
-        - "corpdcmdgbl04.corp.ad.sbi"
-      - ip: "10.189.37.135"
-        hostnames:
-        - "corpdcmdrbl01.corp.ad.sbi"
-      - ip: "10.189.37.136"
-        hostnames:
-        - "corpdcmdrbl02.corp.ad.sbi"
-      - ip: "10.189.37.137"
-        hostnames:
-        - "corpdcmdrbl03.corp.ad.sbi"
-      - ip: "10.189.37.138"
-        hostnames:
-        - "corpdcmdrbl04.corp.ad.sbi"
+        - ip: "10.176.53.145"
+          hostnames:
+            - "corp.ad.sbi"
+            - "corpdcmdgbl01.corp.ad.sbi"
+        - ip: "10.176.54.30"
+          hostnames:
+            - "corpdcmdgbl02.corp.ad.sbi"
+        - ip: "10.176.54.31"
+          hostnames:
+            - "corpdcmdgbl03.corp.ad.sbi"
+        - ip: "10.176.54.32"
+          hostnames:
+            - "corpdcmdgbl04.corp.ad.sbi"
+        - ip: "10.189.37.135"
+          hostnames:
+            - "corpdcmdrbl01.corp.ad.sbi"
+        - ip: "10.189.37.136"
+          hostnames:
+            - "corpdcmdrbl02.corp.ad.sbi"
+        - ip: "10.189.37.137"
+          hostnames:
+            - "corpdcmdrbl03.corp.ad.sbi"
+        - ip: "10.189.37.138"
+          hostnames:
+            - "corpdcmdrbl04.corp.ad.sbi"
 
       # =================================================
       # Volumes
@@ -115,15 +116,14 @@ spec:
           # =================================================
           volumeMounts:
             - name: truststore-volume
-              mountPath: "/etc/fincore/secrets"
+              mountPath: /etc/fincore/secrets
               readOnly: true
-
             - name: logs-volume
               mountPath: /logs
-         
+
           envFrom:
             - configMapRef:
-                name: redis-config  
+                name: redis-config
             - configMapRef:
                 name: oracle-config
             - secretRef:
@@ -131,7 +131,7 @@ spec:
             - configMapRef:
                 name: ldap-config
             - secretRef:
-                name: ldap-secret                
+                name: ldap-secret
 
           env:
             - name: SPRING_PROFILES_ACTIVE
@@ -196,13 +196,16 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: login-hpa
   namespace: backend
+
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: login-deployment
+
   minReplicas: 1
   maxReplicas: 3
+
   metrics:
     - type: Resource
       resource:
@@ -220,16 +223,15 @@ kind: Service
 metadata:
   name: login-service
   namespace: backend
+
 spec:
   selector:
     app: login-backend
+
   ports:
     - name: http
       protocol: TCP
       port: 80
       targetPort: 8085
+
   type: ClusterIP
-
-
-
-  please fix the indentaion issue for the above file and send me back the entire file
