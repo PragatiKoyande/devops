@@ -59,8 +59,8 @@ spec:
         - name: template-config-container
           image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:UAT04
           imagePullPolicy: Always
-	  
-	  env:
+
+          env:
             - name: SPRING_PROFILES_ACTIVE
               value: "uat"
 
@@ -180,5 +180,3 @@ spec:
   selector:
     matchLabels:
       app: template-app
-
-      please resolve the indentation error and send me back the entire file
