@@ -19,7 +19,6 @@ metadata:
 
 spec:
   replicas: 1
-
   revisionHistoryLimit: 5
 
   strategy:
@@ -57,9 +56,9 @@ spec:
               app: template-app
 
       containers:
-      - name: template-config-container
-        image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:UAT04
-        imagePullPolicy: Always
+        - name: template-config-container
+          image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:UAT04
+          imagePullPolicy: Always
 
           envFrom:
             - configMapRef:
@@ -68,43 +67,45 @@ spec:
                 name: oracle-config
             - secretRef:
                 name: oracle-secret
-        ports:
-        - containerPort: 8090
 
-        resources:
-          requests:
-            cpu: "40m"
-            memory: "256Mi"
-          limits:
-            cpu: "100m"
-            memory: "512Mi"
+          ports:
+            - containerPort: 8090
 
-        startupProbe:
-          tcpSocket:
-            port: 8090
-          failureThreshold: 30
-          periodSeconds: 10
+          resources:
+            requests:
+              cpu: "40m"
+              memory: "256Mi"
+            limits:
+              cpu: "100m"
+              memory: "512Mi"
 
-        livenessProbe:
-          tcpSocket:
-            port: 8090
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 8090
+            failureThreshold: 30
+            periodSeconds: 10
 
-        readinessProbe:
-          tcpSocket:
-            port: 8090
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          readinessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
 ---
 # --------------------------------------------
 # Service (internal cluster communication)
@@ -175,7 +176,3 @@ spec:
   selector:
     matchLabels:
       app: template-app
-
-
-
-correct the entire file i am having idenattion issue so kindly fix it and send me back
