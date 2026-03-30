@@ -1,26 +1,184 @@
-[root@i Replicate-UAT-Production-ready]# k logs template-config-deployment-cd956888d-5762j -n backend
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: template-config-sa
+  namespace: backend
 
- :: Spring Boot ::                (v3.3.0)
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: template-config-deployment
+  namespace: backend
 
-2026-03-30T10:58:28.489Z  INFO 1 --- [TemplateConfigurationService] [           main] .TemplateConfigurationServiceApplication : Starting TemplateConfigurationServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)
-2026-03-30T10:58:28.491Z  INFO 1 --- [TemplateConfigurationService] [           main] .TemplateConfigurationServiceApplication : The following 1 profile is active: "dev"
-2026-03-30T10:59:09.986Z  INFO 1 --- [TemplateConfigurationService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-03-30T10:59:09.990Z  INFO 1 --- [TemplateConfigurationService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-03-30T10:59:14.285Z  INFO 1 --- [TemplateConfigurationService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3900 ms. Found 8 JPA repository interfaces.
-2026-03-30T10:59:15.086Z  INFO 1 --- [TemplateConfigurationService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2026-03-30T10:59:15.089Z  INFO 1 --- [TemplateConfigurationService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-03-30T10:59:15.586Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.AllowedColumnsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.587Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.AllowedTablesRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.CommonRequestRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.FilterRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.ReportTemplateHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.ReportTemplateRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.ReportVariantRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.TemplateConfigurationService.repository.VariantParamDefRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-03-30T10:59:15.588Z  INFO 1 --- [TemplateConfigurationService] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 202 ms. Found 0 Redis repository interfaces.
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: template-app
+
+  template:
+    metadata:
+      labels:
+        app: template-app
+
+    spec:
+      serviceAccountName: template-config-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: template-app
+
+      containers:
+        - name: template-config-container
+          image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:UAT04
+          imagePullPolicy: Always
+	  
+	  env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "uat"
+
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+
+          ports:
+            - containerPort: 8090
+
+          resources:
+            requests:
+              cpu: "40m"
+              memory: "256Mi"
+            limits:
+              cpu: "100m"
+              memory: "512Mi"
+
+          startupProbe:
+            tcpSocket:
+              port: 8090
+            failureThreshold: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service (internal cluster communication)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: template-config-service
+  namespace: backend
+
+spec:
+  selector:
+    app: template-app
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8090
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: template-config-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: template-config-deployment
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: template-config-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: template-app
+
+      please resolve the indentation error and send me back the entire file
