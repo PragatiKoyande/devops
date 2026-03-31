@@ -1,10 +1,10 @@
 # --------------------------------------------
-# Service Account (security baseline)
+# Service Account
 # --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: report-builder-sa
+  name: user-sa
   namespace: backend
 
 ---
@@ -14,7 +14,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: report-builder-deployment
+  name: user-deployment
   namespace: backend
 
 spec:
@@ -29,15 +29,15 @@ spec:
 
   selector:
     matchLabels:
-      app: report-builder-app
+      app: user-backend
 
   template:
     metadata:
       labels:
-        app: report-builder-app
+        app: user-backend
 
     spec:
-      serviceAccountName: report-builder-sa
+      serviceAccountName: user-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
@@ -47,106 +47,131 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: report-builder-app
+      hostAliases:
+      - ip: "10.189.42.83"
+        hostnames:
+        - "uatrootdc1.uatad.sbi"
+
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
 
       containers:
-      - name: report-builder-container
-        image: h06vksharbor.corp.ad.sbi/cbops/report-builder-service:UAT05
-        imagePullPolicy: Always
-        envFrom:
-          - configMapRef:
-              name: redis-config
-          - configMapRef:
-              name: kafka-config
-          - configMapRef:
-              name: oracle-config
-          - secretRef:
-              name: oracle-secret
-          - configMapRef:
-              name: hadoop-config
+        - name: user-container
+          image: h06vksharbor.corp.ad.sbi/cbops/user-service:UAT10
+          imagePullPolicy: Always
 
-        env:      
-            value: "kafka-0.kafka.backend.svc.cluster.local:9092"
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
 
-        ports:
-        - containerPort: 8091
+          envFrom:
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: ldap-config
+            - secretRef:
+                name: ldap-secret
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                 name: ldap-creds
+                 key: truststore-password 
 
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "uat"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
 
-        startupProbe:
-          tcpSocket:
-            port: 8091
-          failureThreshold: 30
-          periodSeconds: 10
+          ports:
+            - containerPort: 8087
 
-        livenessProbe:
-          tcpSocket:
-            port: 8091
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
-        readinessProbe:
-          tcpSocket:
-            port: 8091
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 8087
+            failureThreshold: 60
+            periodSeconds: 10
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          livenessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
 ---
 # --------------------------------------------
-# Service (internal communication)
+# Service
 # --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: report-builder-service
+  name: user-service
   namespace: backend
 
 spec:
   selector:
-    app: report-builder-app
+    app: user-backend
 
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 8091
+      targetPort: 8087
 
   type: ClusterIP
+
 ---
 # --------------------------------------------
-# Horizontal Pod Autoscaler (CPU-based)
+# Horizontal Pod Autoscaler
 # --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: report-builder-hpa
+  name: user-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: report-builder-deployment
+    name: user-deployment
 
   minReplicas: 1
   maxReplicas: 5
@@ -172,17 +197,16 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: report-builder-pdb
+  name: user-pdb
   namespace: backend
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: report-builder-app
+      app: user-backend
 
 
 
-I am getting this issue Error from server (BadRequest): error when creating "uat-report-builder-deployment.yaml": Deployment in version "v1" cannot be handled as a Deployment: json: cannot unmarshal object into Go struct field Container.spec.template.spec.containers.env of type []v1.EnvVar
 
-above is my manifest file kindly correct the maniofest and send me accordingly
+Please resolve if any indentation issue are there and sen dme back entire correct manisfest file
