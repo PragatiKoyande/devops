@@ -43,86 +43,86 @@ spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: 30
 
-      volumes:
-      - name: tmp-dir
-        emptyDir:
-          medium: Memory
-          sizeLimit: 64Mi
-
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-        fsGroup: 2000  
+        fsGroup: 2000
+
+      volumes:
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
 
       containers:
-      - name: notification-container
-        image: h06vksharbor.corp.ad.sbi/cbops/notification-service:UAT05
-        imagePullPolicy: Always
+        - name: notification-container
+          image: h06vksharbor.corp.ad.sbi/cbops/notification-service:UAT05
+          imagePullPolicy: Always
 
-        volumeMounts:
-        - name: tmp-dir
-          mountPath: /tmp        
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
 
-        ports:
-        - containerPort: 9010
+          ports:
+            - containerPort: 9010
 
-        envFrom:
-          - configMapRef:
-              name: redis-config
-          - configMapRef:
-              name: kafka-config
-          - configMapRef:
-              name: postgres-config
-          - secretRef:
-              name: postgres-secret
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: postgres-config
+            - secretRef:
+                name: postgres-secret
 
-        env:
+          env:
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "notification-service-group"
 
-        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-          value: "notification-service-group"
+            - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+              value: "earliest"
 
-        - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-          value: "earliest"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+          startupProbe:
+            tcpSocket:
+              port: 9010
+            failureThreshold: 30
+            periodSeconds: 10
 
-        startupProbe:
-          tcpSocket:
-            port: 9010
-          failureThreshold: 30
-          periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9010
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
 
-        livenessProbe:
-          tcpSocket:
-            port: 9010
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
+          readinessProbe:
+            tcpSocket:
+              port: 9010
+            initialDelaySeconds: 15
+            periodSeconds: 5
 
-        readinessProbe:
-          tcpSocket:
-            port: 9010
-          initialDelaySeconds: 15
-          periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh","-c","sleep 10"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
 
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
 ---
 # ------------------------------------------------
 # Service
@@ -140,9 +140,9 @@ spec:
     app: notification-backend
 
   ports:
-  - port: 80
-    targetPort: 9010
-    protocol: TCP
+    - port: 80
+      targetPort: 9010
+      protocol: TCP
 
 ---
 # ------------------------------------------------
@@ -164,12 +164,12 @@ spec:
   maxReplicas: 5
 
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
 ---
 # ------------------------------------------------
@@ -187,7 +187,3 @@ spec:
   selector:
     matchLabels:
       app: notification-backend
-
-
-
-please correct all indentation issue and send me back the entire corrected file
