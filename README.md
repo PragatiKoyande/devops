@@ -56,61 +56,64 @@ spec:
               app: report-builder-app
 
       containers:
-      - name: report-builder-container
-        image: h06vksharbor.corp.ad.sbi/cbops/report-builder-service:UAT05
-        imagePullPolicy: Always
-        envFrom:
-          - configMapRef:
-              name: redis-config
-          - configMapRef:
-              name: kafka-config
-          - configMapRef:
-              name: oracle-config
-          - secretRef:
-              name: oracle-secret
-          - configMapRef:
-              name: hadoop-config
+        - name: report-builder-container
+          image: h06vksharbor.corp.ad.sbi/cbops/report-builder-service:UAT05
+          imagePullPolicy: Always
 
-        env:      
-            value: "kafka-0.kafka.backend.svc.cluster.local:9092"
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: hadoop-config
 
-        ports:
-        - containerPort: 8091
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-0.kafka.backend.svc.cluster.local:9092"
 
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+          ports:
+            - containerPort: 8091
 
-        startupProbe:
-          tcpSocket:
-            port: 8091
-          failureThreshold: 30
-          periodSeconds: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
-        livenessProbe:
-          tcpSocket:
-            port: 8091
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 8091
+            failureThreshold: 30
+            periodSeconds: 10
 
-        readinessProbe:
-          tcpSocket:
-            port: 8091
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8091
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          readinessProbe:
+            tcpSocket:
+              port: 8091
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
 ---
 # --------------------------------------------
 # Service (internal communication)
@@ -132,6 +135,7 @@ spec:
       targetPort: 8091
 
   type: ClusterIP
+
 ---
 # --------------------------------------------
 # Horizontal Pod Autoscaler (CPU-based)
@@ -180,8 +184,3 @@ spec:
   selector:
     matchLabels:
       app: report-builder-app
-
-
-
-
-send you entire file please correct it and send me back entire file also resolve the indentation issue
