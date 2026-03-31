@@ -1,8 +1,3 @@
-Error from server (BadRequest): error when creating "uat-report-builder-deployment.yaml": Deployment in version "v1" cannot be handled as a Deployment: json: cannot unmarshal object into Go struct field Container.spec.template.spec.containers.env of type []v1.EnvVar
-
-
-getting this issue and below is my manifest file:
-
 # --------------------------------------------
 # Service Account (security baseline)
 # --------------------------------------------
@@ -188,4 +183,5 @@ spec:
 
 
 
-can you please help me with this
+
+send you entire file please correct it and send me back entire file also resolve the indentation issue
