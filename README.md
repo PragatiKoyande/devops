@@ -48,9 +48,9 @@ spec:
         fsGroup: 2000
 
       hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-        - "uatrootdc1.uatad.sbi"
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
 
       volumes:
         - name: truststore-volume
@@ -83,19 +83,22 @@ spec:
                 name: ldap-config
             - secretRef:
                 name: ldap-secret
-            - name: LDAP_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                 name: ldap-creds
-                 key: truststore-password 
 
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "uat"
+
             - name: JAVA_TOOL_OPTIONS
               value: "-Djava.net.preferIPv4Stack=true"
+
             - name: SPRING_KAFKA_CONSUMER_GROUP_ID
               value: "rbac-cache-group"
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
 
           ports:
             - containerPort: 8087
@@ -205,8 +208,3 @@ spec:
   selector:
     matchLabels:
       app: user-backend
-
-
-
-
-Please resolve if any indentation issue are there and sen dme back entire correct manisfest file
