@@ -63,9 +63,9 @@ spec:
         fsGroup: 10001
 
       hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-        - "uatrootdc1.uatad.sbi"
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
 
       # =================================================
       # Volumes
@@ -114,13 +114,15 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
+
             - name: JAVA_TOOL_OPTIONS
               value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
-          - name: LDAP_TRUSTSTORE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-               name: ldap-creds
-               key: truststore-password
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
 
           # =================================================
           # Resources
@@ -218,7 +220,3 @@ spec:
       targetPort: 8085
 
   type: ClusterIP
-
-
-
-please resolve the indentation issue and send me back entire manifest correct file
