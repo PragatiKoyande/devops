@@ -1,20 +1,36 @@
-# --------------------------------------------
+# =====================================================
 # Service Account
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: user-sa
+  name: login-sa
   namespace: backend
+automountServiceAccountToken: false
 
 ---
-# --------------------------------------------
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: login-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: login-backend
+
+---
+# =====================================================
 # Deployment
-# --------------------------------------------
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-deployment
+  name: login-deployment
   namespace: backend
 
 spec:
@@ -29,29 +45,31 @@ spec:
 
   selector:
     matchLabels:
-      app: user-backend
+      app: login-backend
 
   template:
     metadata:
       labels:
-        app: user-backend
+        app: login-backend
 
     spec:
-      serviceAccountName: user-sa
+      serviceAccountName: login-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
+        runAsUser: 10001
+        fsGroup: 10001
 
       hostAliases:
-        - ip: "10.189.42.83"
-          hostnames:
-            - "uatrootdc1.uatad.sbi"
+      - ip: "10.189.42.83"
+        hostnames:
+        - "uatrootdc1.uatad.sbi"
 
+      # =================================================
+      # Volumes
+      # =================================================
       volumes:
         - name: truststore-volume
           secret:
@@ -60,25 +78,34 @@ spec:
               - key: ad-truststore.jks
                 path: ad-truststore.jks
 
+        - name: logs-volume
+          emptyDir: {}
+
       containers:
-        - name: user-container
-          image: h06vksharbor.corp.ad.sbi/cbops/user-service:UAT10
+        - name: login-backend-container
+          image: h06vksharbor.corp.ad.sbi/cbops/login-service:UAT13
           imagePullPolicy: Always
 
+          ports:
+            - containerPort: 8085
+
+          # =================================================
+          # Volume Mounts
+          # =================================================
           volumeMounts:
             - name: truststore-volume
               mountPath: /etc/fincore/secrets
               readOnly: true
+            - name: logs-volume
+              mountPath: /logs
 
           envFrom:
+            - configMapRef:
+                name: redis-config
             - configMapRef:
                 name: oracle-config
             - secretRef:
                 name: oracle-secret
-            - configMapRef:
-                name: kafka-config
-            - configMapRef:
-                name: redis-config
             - configMapRef:
                 name: ldap-config
             - secretRef:
@@ -86,23 +113,18 @@ spec:
 
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "uat"
-
+              value: "prod"
             - name: JAVA_TOOL_OPTIONS
-              value: "-Djava.net.preferIPv4Stack=true"
+              value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
+          - name: LDAP_TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+               name: ldap-creds
+               key: truststore-password
 
-            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-              value: "rbac-cache-group"
-
-            - name: LDAP_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ldap-creds
-                  key: truststore-password
-
-          ports:
-            - containerPort: 8087
-
+          # =================================================
+          # Resources
+          # =================================================
           resources:
             requests:
               cpu: "250m"
@@ -111,79 +133,61 @@ spec:
               cpu: "500m"
               memory: "1Gi"
 
-          startupProbe:
+          # =================================================
+          # Probes
+          # =================================================
+          readinessProbe:
             tcpSocket:
-              port: 8087
-            failureThreshold: 60
+              port: 8085
+            initialDelaySeconds: 30
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           livenessProbe:
             tcpSocket:
-              port: 8087
+              port: 8085
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 5
 
-          readinessProbe:
+          startupProbe:
             tcpSocket:
-              port: 8087
-            initialDelaySeconds: 30
+              port: 8085
+            failureThreshold: 60
             periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
 
           lifecycle:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
----
-# --------------------------------------------
-# Service
-# --------------------------------------------
-apiVersion: v1
-kind: Service
-metadata:
-  name: user-service
-  namespace: backend
-
-spec:
-  selector:
-    app: user-backend
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 8087
-
-  type: ClusterIP
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
 
 ---
-# --------------------------------------------
+# =====================================================
 # Horizontal Pod Autoscaler
-# --------------------------------------------
+# =====================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: user-hpa
+  name: login-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: user-deployment
+    name: login-deployment
 
   minReplicas: 1
-  maxReplicas: 5
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
+  maxReplicas: 3
 
   metrics:
     - type: Resource
@@ -194,17 +198,27 @@ spec:
           averageUtilization: 70
 
 ---
-# --------------------------------------------
-# Pod Disruption Budget
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
+# =====================================================
+# Service
+# =====================================================
+apiVersion: v1
+kind: Service
 metadata:
-  name: user-pdb
+  name: login-service
   namespace: backend
 
 spec:
-  minAvailable: 1
   selector:
-    matchLabels:
-      app: user-backend
+    app: login-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8085
+
+  type: ClusterIP
+
+
+
+please resolve the indentation issue and send me back entire manifest correct file
