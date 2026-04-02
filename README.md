@@ -13,6 +13,7 @@ spec:
   resources:
     requests:
       storage: 50Gi
+
 ---
 # ================================
 # Service Account
@@ -23,6 +24,7 @@ metadata:
   name: loki-sa
   namespace: logging
 automountServiceAccountToken: false
+
 ---
 # ================================
 # Pod Disruption Budget
@@ -37,6 +39,7 @@ spec:
   selector:
     matchLabels:
       app: loki
+
 ---
 # ================================
 # Deployment
@@ -49,11 +52,11 @@ metadata:
 spec:
   replicas: 1
 
+  # 🔥 FIX: Avoid multi-attach PVC issue
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+    type: Recreate
+
+  revisionHistoryLimit: 1
 
   selector:
     matchLabels:
@@ -63,22 +66,13 @@ spec:
     metadata:
       labels:
         app: loki
-    spec:
 
+    spec:
       serviceAccountName: loki-sa
       terminationGracePeriodSeconds: 60
 
-      # FIX ADDED: Required for PVC write permission
       securityContext:
         fsGroup: 10001
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: loki
 
       containers:
         - name: loki
@@ -101,7 +95,7 @@ spec:
             httpGet:
               path: /ready
               port: 3100
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 5
 
@@ -109,7 +103,7 @@ spec:
             httpGet:
               path: /ready
               port: 3100
-            initialDelaySeconds: 30
+            initialDelaySeconds: 45
             periodSeconds: 20
             failureThreshold: 5
 
@@ -146,6 +140,7 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: loki-pvc
+
 ---
 # ================================
 # Service
@@ -160,9 +155,11 @@ spec:
   selector:
     app: loki
   ports:
-    - port: 3100
+    - name: http
+      port: 3100
       targetPort: 3100
       protocol: TCP
+
 ---
 # ================================
 # Network Policy
@@ -182,7 +179,9 @@ spec:
     - Egress
 
   ingress:
-    - ports:
+    - from:
+        - namespaceSelector: {}
+      ports:
         - protocol: TCP
           port: 3100
 
@@ -190,7 +189,55 @@ spec:
     - to:
         - namespaceSelector: {}
 
+---
+# ================================
+# Loki ConfigMap (IMPORTANT ADDITION)
+# ================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-config
+  namespace: logging
+data:
+  loki.yaml: |
+    auth_enabled: false
 
+    server:
+      http_listen_port: 3100
 
+    common:
+      path_prefix: /var/loki
+      replication_factor: 1
 
-        this is my current configuration file can you please add production grade requiremnt in this what you have mentione dand send me back the entire file
+    schema_config:
+      configs:
+        - from: 2024-01-01
+          store: boltdb-shipper
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: index_
+            period: 24h
+
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/cache
+        shared_store: filesystem
+
+      filesystem:
+        directory: /var/loki/chunks
+
+    limits_config:
+      retention_period: 720h   # 🔥 30 days (change as needed)
+
+    compactor:
+      working_directory: /var/loki/compactor
+      shared_store: filesystem
+
+    chunk_store_config:
+      max_look_back_period: 720h
+
+    table_manager:
+      retention_deletes_enabled: true
+      retention_period: 720h
