@@ -26,7 +26,6 @@ data:
     common:
       path_prefix: /var/loki
       replication_factor: 1
-
       ring:
         kvstore:
           store: inmemory
@@ -85,7 +84,8 @@ data:
     frontend:
       log_queries_longer_than: 5s
 
-      # ================================
+---
+# ================================
 # Persistent Volume Claim
 # ================================
 apiVersion: v1
@@ -138,10 +138,8 @@ metadata:
   namespace: logging
 spec:
   replicas: 1
-
   strategy:
     type: Recreate  
-
   revisionHistoryLimit: 1
 
   selector:
@@ -205,7 +203,6 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
@@ -216,6 +213,8 @@ spec:
               readOnly: true
             - name: storage
               mountPath: /var/loki
+            - name: tmp
+              mountPath: /tmp   # ✅ required for Loki stability
 
       volumes:
         - name: config
@@ -224,6 +223,8 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: loki-pvc
+        - name: tmp
+          emptyDir: {}
 
 ---
 # ================================
@@ -272,5 +273,3 @@ spec:
   egress:
     - to:
         - namespaceSelector: {}
-
-These are my loki configuartion file
