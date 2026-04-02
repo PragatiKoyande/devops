@@ -52,7 +52,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: Recreate  
+    type: Recreate
   revisionHistoryLimit: 1
 
   selector:
@@ -94,7 +94,7 @@ spec:
               port: 3100
             initialDelaySeconds: 60
             periodSeconds: 10
-			timeoutSeconds: 2
+            timeoutSeconds: 2
 
           livenessProbe:
             httpGet:
@@ -102,7 +102,7 @@ spec:
               port: 3100
             initialDelaySeconds: 180
             periodSeconds: 10
-			timeoutSeconds: 2
+            timeoutSeconds: 2
 
           startupProbe:
             httpGet:
@@ -110,7 +110,7 @@ spec:
               port: 3100
             failureThreshold: 120
             periodSeconds: 10
-			timeoutSeconds: 2
+            timeoutSeconds: 2
 
           lifecycle:
             preStop:
@@ -130,7 +130,7 @@ spec:
             - name: storage
               mountPath: /var/loki
             - name: tmp
-              mountPath: /tmp   
+              mountPath: /tmp
 
       volumes:
         - name: config
@@ -160,9 +160,3 @@ spec:
       port: 3100
       targetPort: 3100
       protocol: TCP
-
----
-
-
-
-correct the identation issue and send me nack entire file
