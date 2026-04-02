@@ -1,295 +1,69 @@
-Label browser
-
-1. Select labels to search in
-Which labels would you like to consider for your search?
-job
-2. Find values for the selected labels
-Choose the label values that you would like to use for the query. Use the search field to find values across selected labels.
-Enter a label value
-job (1)
-fluentbit
-3. Resulting selector
-
-{}
-
-I am not able to see the filters here which are present in fluent-bit config maps I want these lables to be visible ( $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']) and below i have pasted the file I and not having access to alter the file as different team has deployed the fluent-bit configuration : 
-
-D:\Pragati\DEV-Deployment\Grafana-Deployment>kubectl describe cm fluent-bit-config -n tanzu-system-logging --kubeconfig h06vksuatcbopscls.conf
-Name:         fluent-bit-config
-Namespace:    tanzu-system-logging
-Labels:       k8s-app=fluent-bit
-              kapp.k14s.io/app=1774341192231442519
-              kapp.k14s.io/association=v1.1eef7be45479a3b8c126212f0855b047
-Annotations:  kapp.k14s.io/identity: v1;tanzu-system-logging//ConfigMap/fluent-bit-config;v1
-              kapp.k14s.io/original:
-                {"apiVersion":"v1","data":{"filters.conf":"[FILTER]\n  Name                kubernetes\n  Match               kube.*\n  Kube_URL           ...
-              kapp.k14s.io/original-diff-md5: c6e94dc94aed3401b5d0f26ed6c0bff3
-
-Data
-====
-filters.conf:
-----
-[FILTER]
-  Name                kubernetes
-  Match               kube.*
-  Kube_URL            https://kubernetes.default.svc:443
-  Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-  Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-  Kube_Tag_Prefix     kube.var.log.containers.
-  Merge_Log           On
-  Merge_Log_Key       log_processed
-  K8S-Logging.Parser  On
-  K8S-Logging.Exclude On
-
-[FILTER]
-  Name                record_modifier
-  Match               *
-  Record tkg_instance h06vkspreprodscfucls
-  Record tkg_cluster  h06vkspreprodscfucls
-
-[FILTER]
-  Name                record_modifier
-  Match               apiserver_audit
-  Record tkg_instance h06vksuatcbopscls
-  Record tkg_cluster  h06vksuatcbopscls
-
-[FILTER]
-  Name        record_modifier
-  Match       audit.*
-  Record      node_name ${HOSTNAME}
-
-
-[FILTER]
-  Name                  modify
-  Match                 kube.*
-  Copy                  kubernetes k8s
-
-
-[FILTER]
-  Name                  nest
-  Match                 kube.*
-  Operation             lift
-  Nested_Under          kubernetes
+D:\Pragati\DEV-Deployment\Grafana-Deployment>kubectl describe pod loki-58595d499c-t7k8b -n logging --kubeconfig h06vksuatcbopscls.conf
+Name:             loki-58595d499c-t7k8b
+Namespace:        logging
+Priority:         0
+Service Account:  loki-sa
+Node:             h06vksuatcbopscls-node-pool-1-xg7gx-rrg8c-vzw4b/10.244.5.99
+Start Time:       Thu, 02 Apr 2026 12:12:28 +0530
+Labels:           app=loki
+                  pod-template-hash=58595d499c
+Annotations:      <none>
+Status:           Pending
+IP:
+IPs:              <none>
+Controlled By:    ReplicaSet/loki-58595d499c
+Containers:
+  loki:
+    Container ID:
+    Image:         h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4
+    Image ID:
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/loki.yaml
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      cpu:     1
+      memory:  1Gi
+    Requests:
+      cpu:        250m
+      memory:     512Mi
+    Liveness:     http-get http://:3100/ready delay=30s timeout=1s period=20s #success=1 #failure=5
+    Readiness:    http-get http://:3100/ready delay=10s timeout=1s period=10s #success=1 #failure=5
+    Startup:      http-get http://:3100/ready delay=0s timeout=1s period=10s #success=1 #failure=30
+    Environment:  <none>
+    Mounts:
+      /etc/loki from config (ro)
+      /var/loki from storage (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  storage:
+    Type:                     PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:                loki-pvc
+    ReadOnly:                 false
+QoS Class:                    Burstable
+Node-Selectors:               <none>
+Tolerations:                  node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Topology Spread Constraints:  kubernetes.io/hostname:ScheduleAnyway when max skew 1 is exceeded for selector app=loki
+Events:
+  Type     Reason              Age   From                     Message
+  ----     ------              ----  ----                     -------
+  Normal   Scheduled           3m    default-scheduler        Successfully assigned logging/loki-58595d499c-t7k8b to h06vksuatcbopscls-node-pool-1-xg7gx-rrg8c-vzw4b
+  Warning  FailedAttachVolume  3m    attachdetach-controller  Multi-Attach error for volume "pvc-2ce37aeb-8eb4-46a1-99e1-c5768c16a39b" Volume is already used by pod(s) loki-58595d499c-hqtzg
 
 
-fluent-bit.conf:
-----
-[Service]
-  Flush         1
-  Log_Level     info
-  Daemon        off
-  Parsers_File  parsers.conf
-  HTTP_Server   On
-  HTTP_Listen   0.0.0.0
-  HTTP_Port     2020
-  HTTP_Listen   0.0.0.0
-@INCLUDE inputs.conf
-@INCLUDE filters.conf
-@INCLUDE outputs.conf
-
-
-inputs.conf:
-----
-[INPUT]
-  Name                tail
-  Path                /var/log/containers/*.log
-  Parser              cri
-  DB                  /var/log/flb_kube.db
-  Tag                 kube.*
-  Mem_Buf_Limit       50MB
-  Skip_Long_Lines     On
-  Refresh_Interval    10
-
-[INPUT]
-  Name                systemd
-  Tag                 kube_systemd.*
-  Path                /var/log/journal
-  DB                  /var/log/flb_kube_systemd.db
-  Systemd_Filter      _SYSTEMD_UNIT=kubelet.service
-  Systemd_Filter      _SYSTEMD_UNIT=containerd.service
-  Read_From_Tail      On
-  Strip_Underscores   On
-
-[INPUT]
-  Name              tail
-  Tag               apiserver_audit
-  Path              /var/log/kubernetes/audit.log
-  Parser            syslog
-  DB                /var/log/flb_kube_audit.db
-  Mem_Buf_Limit     50MB
-  Refresh_Interval  10
-  Skip_Long_Lines   On
-
-[INPUT]
-  Name                tail
-  Tag                 audit.*
-  Path                /var/log/audit/audit.log
-  Parser              auditlog
-  DB                  /var/log/flb_system_audit.db
-  Mem_Buf_Limit       50MB
-  Buffer_Chunk_Size   10MB
-  Buffer_Max_Size     50MB
-  Skip_Long_Lines     On
-  Refresh_Interval    10
-
-
-outputs.conf:
-----
-[OUTPUT]
-  Name                 stdout
-  Match                *
-
-[OUTPUT]
-  Name                 syslog
-  Match                kube.*
-  Host                 10.176.58.109
-  Port                 514
-  Mode                 tcp
-  Syslog_Format        rfc5424
-  Syslog_Hostname_key  tkg_cluster
-  Syslog_Appname_key   pod_name
-  Syslog_Procid_key    container_name
-  Syslog_Message_key   message
-  Syslog_SD_key        k8s
-  Syslog_SD_key        labels
-  Syslog_SD_key        annotations
-  Syslog_SD_key        tkg
-# Syslog - systemd
-
-[OUTPUT]
-  Name                  syslog
-  Match                 kube.audit
-  Host                  10.176.58.109
-  Port                  514
-  Mode                  tcp
-  Syslog_Format         rfc5424
-  Syslog_Hostname_key   node_name
-  Syslog_Appname_key    kubernetes
-  Syslog_Message_key    message
-
-[OUTPUT]
-  Name                  syslog
-  Match                 audit.*
-  Host                  10.176.58.109
-  Port                  514
-  Mode                  tcp
-  Syslog_Format         rfc5424
-  Syslog_Hostname_key   node_name
-  Syslog_Appname_key    kubernetes
-  Syslog_Message_key    message
-
-[OUTPUT]
-  Name                  syslog
-  Match                 apiserver_audit
-  Host                  10.176.58.109
-  Port                  514
-  Mode                  tcp
-  Syslog_Format         rfc5424
-  #Syslog_Hostname_key   host
-  #Syslog_Appname_key    userAgent
-  #Syslog_Procid_key     auditID
-  Syslog_Message_key    log
-  syslog_maxsize        8192
-
-[OUTPUT]
-  Name                  loki
-  Match                 *
-  Host                  loki.logging.svc.cluster.local
-  Port                  3100
-  uri                   /loki/api/v1/push
-  labels                job=fluentbit
-  label_keys            $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
-  line_format           json
-
-
-parsers.conf:
-----
-[PARSER]
-  Name multiline
-  Format regex
-  Regex /(?<time>[A-Za-z]+ \d+ \d+\:\d+\:\d+)(?<message>.*)/
-  Time_Key  time
-  Time_Format %b %d %H:%M:%S
-[PARSER]
-  Name                  json
-  Format                json
-  Time_Key              time
-  Time_Format           %d/%b/%Y:%H:%M:%S %z
-
-
-[PARSER]
-  Name                 logfmt
-  Format               logfmt
-
-[PARSER]
-  Name                 auditlog
-  Format               regex
-  Regex                ^(type=\w+)\s+msg=audit\((\d+\.\d+:\d+)\):\s+(.*)
-  Time_Key             timestamp
-  Time_Format          %s.%L
-
-[PARSER]
-  Name                 docker
-  Format               json
-  Time_Key             time
-  Time_Format          %Y-%m-%dT%H:%M:%S.%L
-  Time_Keep            On
-
-[PARSER]
-  Name                 docker-daemon
-  Format               regex
-  Regex                time="(?<time>[^ ]*)" level=(?<level>[^ ]*) msg="(?<msg>[^ ].*)"
-  Time_Key             time
-  Time_Format          %Y-%m-%dT%H:%M:%S.%L
-  Time_Keep            On
-
-[PARSER]
-  Name                 cri
-  Format               regex
-  Regex                ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
-  Time_Key             time
-  Time_Format          %Y-%m-%dT%H:%M:%S.%L%z
-
-[PARSER]
-  Name   auditlog
-  Format regex
-  Regex  ^(type=\w+)\s+msg=audit\((\d+\.\d+:\d+)\):\s+(.*)
-  Time_Key timestamp
-  Time_Format %s.%L
-
-[PARSER]
-  Name        syslog
-  Format      regex
-  Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
-  Time_Key    time
-  Time_Format %b %d %H:%M:%S
-
-[PARSER]
-  Name                 syslog-rfc5424
-  Format               regex
-  Regex                ^\<(?<pri>[0-9]{1,5})\>1 (?<time>[^ ]+) (?<host>[^ ]+) (?<ident>[^ ]+) (?<pid>[-0-9]+) (?<msgid>[^ ]+) (?<extradata>(\[(.*)\]|-)) (?<message>.+)$
-  Time_Key             time
-  Time_Format          %Y-%m-%dT%H:%M:%S.%L
-  Time_Keep            On
-
-[PARSER]
-  Name                 kube-custom
-  Format               regex
-  Regex                (?<tag>[^.]+)?\.?(?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<docker_id>[a-z0-9]{64})\.log$
-
-
-plugins.conf:
-----
-
-
-streams.conf:
-----
-
-
-
-BinaryData
-====
-
-Events:  <none>
-
-Kindly help we with this
+  this is decribe command
