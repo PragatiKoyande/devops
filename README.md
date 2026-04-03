@@ -1,6 +1,5 @@
-
-D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl describe pod loki-7974ccfdd5-lgtc4 -n logging --kubeconfig h06vksuatcbopscls.conf
-Name:             loki-7974ccfdd5-lgtc4
+D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl describe pod loki-7974ccfdd5-hq4zl -n logging --kubeconfig h06vksuatcbopscls.conf
+Name:             loki-7974ccfdd5-hq4zl
 Namespace:        logging
 Priority:         0
 Service Account:  loki-sa
@@ -54,47 +53,6 @@ Node-Selectors:  <none>
 Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
                  node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
 Events:
-  Type     Reason            Age                    From               Message
-  ----     ------            ----                   ----               -------
-  Warning  FailedScheduling  2m22s                  default-scheduler  0/6 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
-  Warning  FailedScheduling  2m18s (x2 over 2m21s)  default-scheduler  0/6 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
-
-D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl get sc -n logging --kubeconfig h06vksuatcbopscls.conf
-NAME                       PROVISIONER              RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
-h06-vks-sp-3 (default)     csi.vsphere.vmware.com   Delete          Immediate              true                   257d
-h06-vks-sp-3-latebinding   csi.vsphere.vmware.com   Delete          WaitForFirstConsumer   true                   257d
-h06-vks-sp-6               csi.vsphere.vmware.com   Delete          Immediate              true                   175d
-h06-vks-sp-6-latebinding   csi.vsphere.vmware.com   Delete          WaitForFirstConsumer   true                   175d
-
-D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl get pods -n logging --kubeconfig h06vksuatcbopscls.conf
-NAME                    READY   STATUS    RESTARTS   AGE
-loki-7974ccfdd5-lgtc4   0/1     Pending   0          3m6s
-
-D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl get pods -n logging --kubeconfig h06vksuatcbopscls.conf
-NAME                    READY   STATUS    RESTARTS   AGE
-loki-7974ccfdd5-lgtc4   0/1     Pending   0          4m52s
-
-D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl describe pvc loki-pvc -n logging --kubeconfig h06vksuatcbopscls.conf
-Name:          loki-pvc
-Namespace:     logging
-StorageClass:  h06-vks-sp-6
-Status:        Bound
-Volume:        pvc-6aa541cb-6609-4b30-ac09-ca788ffcc527
-Labels:        <none>
-Annotations:   pv.kubernetes.io/bind-completed: yes
-               pv.kubernetes.io/bound-by-controller: yes
-               volume.beta.kubernetes.io/storage-provisioner: csi.vsphere.vmware.com
-               volume.kubernetes.io/storage-provisioner: csi.vsphere.vmware.com
-               volumehealth.storage.kubernetes.io/health: accessible
-               volumehealth.storage.kubernetes.io/health-timestamp: Fri Apr  3 09:32:36 UTC 2026
-Finalizers:    [kubernetes.io/pvc-protection]
-Capacity:      50Gi
-Access Modes:  RWO
-VolumeMode:    Filesystem
-Used By:       loki-7974ccfdd5-lgtc4
-Events:
-  Type    Reason                 Age    From                                                                                                 Message
-  ----    ------                 ----   ----                                                                                                 -------
-  Normal  ExternalProvisioning   8m20s  persistentvolume-controller                                                                          Waiting for a volume to be created either by the external provisioner 'csi.vsphere.vmware.com' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.
-  Normal  Provisioning           8m20s  csi.vsphere.vmware.com_vsphere-csi-controller-78b766d779-gttfr_af8ce061-ba45-4dcd-9b37-5997e132026e  External provisioner is provisioning volume for claim "logging/loki-pvc"
-  Normal  ProvisioningSucceeded  8m18s  csi.vsphere.vmware.com_vsphere-csi-controller-78b766d779-gttfr_af8ce061-ba45-4dcd-9b37-5997e132026e  Successfully provisioned volume pvc-6aa541cb-6609-4b30-ac09-ca788ffcc527
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  39s   default-scheduler  0/6 nodes are available: 3 Insufficient memory, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/6 nodes are available: 3 No preemption victims found for incoming pod, 3 Preemption is not helpful for scheduling.
