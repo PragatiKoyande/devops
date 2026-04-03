@@ -1,87 +1,59 @@
-# ================================
-# Loki ConfigMap 
-# ================================
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: loki-config
-  namespace: logging
-  annotations:
-    description: "Loki production configuration"
-  labels:
-    app: loki
-immutable: true
-
-data:
-  loki.yaml: |
-    auth_enabled: false
-
-    server:
-      http_listen_port: 3100
-      graceful_shutdown_timeout: 60s
-      http_server_read_timeout: 30s
-      http_server_write_timeout: 30s
-      http_server_idle_timeout: 120s
-
-    common:
-      path_prefix: /var/loki
-      replication_factor: 1
-      ring:
-        kvstore:
-          store: inmemory
-
-    schema_config:
-      configs:
-        - from: 2024-01-01
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v13
-          index:
-            prefix: index_
-            period: 24h
-
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/index_cache
-        shared_store: filesystem
-
-      filesystem:
-        directory: /var/loki/chunks
-
-    limits_config:
-      retention_period: 168h
-      ingestion_rate_mb: 4
-      ingestion_burst_size_mb: 6
-      max_streams_per_user: 5000
-      max_query_parallelism: 2
-      max_query_series: 10000
-
-    chunk_store_config:
-      max_look_back_period: 720h
-
-    compactor:
-      working_directory: /var/loki/compactor
-      shared_store: filesystem
-      retention_enabled: true
-
-    table_manager:
-      retention_deletes_enabled: true
-      retention_period: 168h
-
-    ingester:
-      chunk_idle_period: 3m
-      chunk_retain_period: 30s
-      chunk_target_size: 1048576
-      max_chunk_age: 1h
-      wal:
-        enabled: false
-        dir: /var/loki/wal
-
-    query_range:
-      align_queries_with_step: true
-      max_retries: 5
-      cache_results: false
-
-    frontend:
-      log_queries_longer_than: 5s
+D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl describe pod loki-7974ccfdd5-c5mxr  -n logging --kubeconfig h06vksuatcbopscls.conf
+Name:             loki-7974ccfdd5-c5mxr
+Namespace:        logging
+Priority:         0
+Service Account:  loki-sa
+Node:             <none>
+Labels:           app=loki
+                  pod-template-hash=7974ccfdd5
+Annotations:      <none>
+Status:           Pending
+IP:
+IPs:              <none>
+Controlled By:    ReplicaSet/loki-7974ccfdd5
+Containers:
+  loki:
+    Image:      h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4
+    Port:       3100/TCP
+    Host Port:  0/TCP
+    Args:
+      -config.file=/etc/loki/loki.yaml
+    Limits:
+      cpu:     1
+      memory:  4Gi
+    Requests:
+      cpu:        250m
+      memory:     2Gi
+    Liveness:     http-get http://:3100/ready delay=180s timeout=2s period=10s #success=1 #failure=3
+    Readiness:    http-get http://:3100/ready delay=60s timeout=2s period=10s #success=1 #failure=3
+    Startup:      http-get http://:3100/ready delay=0s timeout=2s period=10s #success=1 #failure=120
+    Environment:  <none>
+    Mounts:
+      /etc/loki from config (ro)
+      /tmp from tmp (rw)
+      /var/loki from storage (rw)
+Conditions:
+  Type           Status
+  PodScheduled   False
+Volumes:
+  config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  storage:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  loki-pvc
+    ReadOnly:   false
+  tmp:
+    Type:        EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:   <unset>
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  64s                default-scheduler  0/6 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
+  Warning  FailedScheduling  60s (x2 over 62s)  default-scheduler  0/6 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
