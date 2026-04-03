@@ -35,7 +35,7 @@ data:
         - from: 2024-01-01
           store: boltdb-shipper
           object_store: filesystem
-          schema: v13   
+          schema: v13
           index:
             prefix: index_
             period: 24h
@@ -73,7 +73,7 @@ data:
       chunk_idle_period: 3m
       chunk_retain_period: 30s
       chunk_target_size: 1048576
-	  max_chunk_age: 1h
+      max_chunk_age: 1h
       wal:
         enabled: false
         dir: /var/loki/wal
@@ -81,12 +81,7 @@ data:
     query_range:
       align_queries_with_step: true
       max_retries: 5
-	  cache_results: false
+      cache_results: false
 
     frontend:
       log_queries_longer_than: 5s
-
----
-
-
-Please resolve the indentation issue and send me back the entire file
