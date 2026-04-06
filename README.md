@@ -1,7 +1,4 @@
-This is a Windows command prompt issue — single quotes don't work in cmd.exe for JSON. You need to escape the JSON differently. Try this:
-kubectl run loki-fix --rm -it --image=busybox --kubeconfig h06vksuatcbopscls.conf -n logging --overrides="{\"spec\":{\"volumes\":[{\"name\":\"storage\",\"persistentVolumeClaim\":{\"claimName\":\"loki-pvc\"}}],\"containers\":[{\"name\":\"loki-fix\",\"image\":\"busybox\",\"command\":[\"sh\"],\"stdin\":true,\"tty\":true,\"volumeMounts\":[{\"name\":\"storage\",\"mountPath\":\"/var/loki\"}]}]}}"
-All single quotes replaced with escaped double quotes \" which is what Windows CMD requires.
-Once you get the shell prompt, run:
-rm -rf /var/loki/index/index_20549
-exit
-If you're using PowerShell instead of CMD, the command would be different — let me know which terminal you're using if this still fails.
+You're using a private registry. The busybox image can't be pulled from Docker Hub because your cluster is likely restricted to your internal registry (h06vksharbor.corp.ad.sbi).
+Use the same registry prefix as your Loki image:
+kubectl run loki-fix --rm -it --image=h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4 --kubeconfig h06vksuatcbopscls.conf -n logging --overrides="{\"spec\":{\"volumes\":[{\"name\":\"storage\",\"persistentVolumeClaim\":{\"claimName\":\"loki-pvc\"}}],\"containers\":[{\"name\":\"loki-fix\",\"image\":\"h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4\",\"command\":[\"sh\"],\"stdin\":true,\"tty\":true,\"volumeMounts\":[{\"name\":\"storage\",\"mountPath\":\"/var/loki\"}]}]}}"
+We're reusing the Loki image itself since it's already cached on the node and has sh available.
