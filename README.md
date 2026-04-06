@@ -1,21 +1,82 @@
-The compactor is still timing out which means the corrupt index files are still on the PVC — they were never deleted. The config change alone won't fix it until we clean the data.
-Let's directly exec into the crashing pod before it dies — but since it crashes too fast, we need to override the command so it doesn't start Loki, just gives us a shell.
-Step 1 — Scale down Loki:
-kubectl scale deployment loki --replicas=0 -n logging --kubeconfig h06vksuatcbopscls.conf
-Step 2 — Run a debug pod using your internal registry image with sleep so it stays alive:
-kubectl run loki-fix --rm -it --image=h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4 --kubeconfig h06vksuatcbopscls.conf -n logging --overrides="{\"spec\":{\"volumes\":[{\"name\":\"storage\",\"persistentVolumeClaim\":{\"claimName\":\"loki-pvc\"}}],\"containers\":[{\"name\":\"loki-fix\",\"image\":\"h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4\",\"command\":[\"sleep\",\"3600\"],\"volumeMounts\":[{\"name\":\"storage\",\"mountPath\":\"/var/loki\"}]}]}}"
-Note: using sleep 3600 instead of sh — this keeps the pod alive without starting Loki.
-Step 3 — Open a second terminal and exec into it:
-kubectl exec -it loki-fix -n logging --kubeconfig h06vksuatcbopscls.conf -- sh
-Step 4 — Inside the shell, wipe the corrupt index and compactor directories:
-ls /var/loki/index/
-rm -rf /var/loki/index/
-rm -rf /var/loki/compactor/
-mkdir -p /var/loki/index
-mkdir -p /var/loki/compactor
-exit
-Step 5 — Scale Loki back up:
-kubectl scale deployment loki --replicas=1 -n logging --kubeconfig h06vksuatcbopscls.conf
-Step 6 — Check logs:
-kubectl logs -f $(kubectl get pod -n logging -l app=loki -o jsonpath='{.items[0].metadata.name}' --kubeconfig h06vksuatcbopscls.conf) -n logging --kubeconfig h06vksuatcbopscls.conf
-The index will be rebuilt automatically from the chunks — you won't lose your log data, only the index which Loki regenerates on startup.
+D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl describe pod loki-7974ccfdd5-j8c7p  -n logging --kubeconfig h06vksuatcbopscls.conf
+Name:             loki-7974ccfdd5-j8c7p
+Namespace:        logging
+Priority:         0
+Service Account:  loki-sa
+Node:             h06vksuatcbopscls-node-pool-1-xg7gx-rrg8c-bcssn/10.244.5.101
+Start Time:       Mon, 06 Apr 2026 15:58:11 +0530
+Labels:           app=loki
+                  pod-template-hash=7974ccfdd5
+Annotations:      <none>
+Status:           Pending
+IP:
+IPs:              <none>
+Controlled By:    ReplicaSet/loki-7974ccfdd5
+Containers:
+  loki:
+    Container ID:
+    Image:         h06vksharbor.corp.ad.sbi/cbops/grafana/loki:2.9.4
+    Image ID:
+    Port:          3100/TCP
+    Host Port:     0/TCP
+    Args:
+      -config.file=/etc/loki/loki.yaml
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      cpu:     1
+      memory:  4Gi
+    Requests:
+      cpu:        250m
+      memory:     2Gi
+    Liveness:     http-get http://:3100/ready delay=180s timeout=2s period=10s #success=1 #failure=3
+    Readiness:    http-get http://:3100/ready delay=60s timeout=2s period=10s #success=1 #failure=3
+    Startup:      http-get http://:3100/ready delay=0s timeout=2s period=10s #success=1 #failure=120
+    Environment:  <none>
+    Mounts:
+      /etc/loki from config (ro)
+      /tmp from tmp (rw)
+      /var/loki from storage (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  config:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      loki-config
+    Optional:  false
+  storage:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  loki-pvc
+    ReadOnly:   false
+  tmp:
+    Type:        EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:   <unset>
+QoS Class:       Burstable
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason              Age   From                     Message
+  ----     ------              ----  ----                     -------
+  Normal   Scheduled           96s   default-scheduler        Successfully assigned logging/loki-7974ccfdd5-j8c7p to h06vksuatcbopscls-node-pool-1-xg7gx-rrg8c-bcssn
+  Warning  FailedAttachVolume  96s   attachdetach-controller  Multi-Attach error for volume "pvc-e6c7bb00-68f9-49db-8e10-a4b8663e6bea" Volume is already used by pod(s) loki-7974ccfdd5-h7wnq
+
+
+
+  
+D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl get pods -n logging --kubeconfig h06vksuatcbopscls.conf
+NAME                    READY   STATUS              RESTARTS   AGE
+loki-7974ccfdd5-dlzw5   0/1     ContainerCreating   0          2m5s
+loki-7974ccfdd5-h7wnq   1/1     Running             0          4m44s
+loki-7974ccfdd5-j8c7p   0/1     ContainerCreating   0          2m5s
+
+
+container are going in cretaing state and starting again and above is the describation
