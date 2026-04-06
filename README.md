@@ -10,7 +10,7 @@ metadata:
     description: "Loki production configuration"
   labels:
     app: loki
-immutable: true
+immutable: false
 
 data:
   loki.yaml: |
@@ -29,7 +29,6 @@ data:
       ring:
         kvstore:
           store: inmemory
-      compactor_address: ""
 
     schema_config:
       configs:
@@ -46,7 +45,6 @@ data:
         active_index_directory: /var/loki/index
         cache_location: /var/loki/index_cache
         shared_store: filesystem
-
       filesystem:
         directory: /var/loki/chunks
 
@@ -58,19 +56,6 @@ data:
       max_query_parallelism: 2
       max_query_series: 10000
 
-    # chunk_store_config:
-    #   max_look_back_period: 720h
-
-    compactor:
-      working_directory: /var/loki/compactor
-      shared_store: filesystem
-      retention_enabled: false
-      compaction_interval: 999999h
-
-    table_manager:
-      retention_deletes_enabled: true
-      retention_period: 168h
-
     ingester:
       chunk_idle_period: 3m
       chunk_retain_period: 30s
@@ -79,6 +64,11 @@ data:
       wal:
         enabled: false
         dir: /var/loki/wal
+
+    compactor:
+      working_directory: /var/loki/compactor
+      shared_store: filesystem
+      retention_enabled: true
 
     query_range:
       align_queries_with_step: true
