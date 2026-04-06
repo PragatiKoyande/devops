@@ -29,7 +29,7 @@ data:
       ring:
         kvstore:
           store: inmemory
-	  compactor_address: ""
+      compactor_address: ""
 
     schema_config:
       configs:
@@ -58,14 +58,14 @@ data:
       max_query_parallelism: 2
       max_query_series: 10000
 
-#    chunk_store_config:
-#      max_look_back_period: 720h
+    # chunk_store_config:
+    #   max_look_back_period: 720h
 
     compactor:
       working_directory: /var/loki/compactor
       shared_store: filesystem
       retention_enabled: false
-	  compaction_interval: 999999h
+      compaction_interval: 999999h
 
     table_manager:
       retention_deletes_enabled: true
@@ -87,7 +87,3 @@ data:
 
     frontend:
       log_queries_longer_than: 5s
-
-
-
-      Please resolve the indentation issue and and send back the entire file
