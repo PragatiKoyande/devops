@@ -1,79 +1,21 @@
-# ================================
-# Loki ConfigMap 
-# ================================
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: loki-config
-  namespace: logging
-  annotations:
-    description: "Loki production configuration"
-  labels:
-    app: loki
-immutable: false
 
-data:
-  loki.yaml: |
-    auth_enabled: false
-
-    server:
-      http_listen_port: 3100
-      graceful_shutdown_timeout: 60s
-      http_server_read_timeout: 30s
-      http_server_write_timeout: 30s
-      http_server_idle_timeout: 120s
-
-    common:
-      path_prefix: /var/loki
-      replication_factor: 1
-      ring:
-        kvstore:
-          store: inmemory
-
-    schema_config:
-      configs:
-        - from: 2024-01-01
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v13
-          index:
-            prefix: index_
-            period: 24h
-
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/index_cache
-        shared_store: filesystem
-      filesystem:
-        directory: /var/loki/chunks
-
-    limits_config:
-      retention_period: 168h
-      ingestion_rate_mb: 4
-      ingestion_burst_size_mb: 6
-      max_streams_per_user: 5000
-      max_query_parallelism: 2
-      max_query_series: 10000
-
-    ingester:
-      chunk_idle_period: 3m
-      chunk_retain_period: 30s
-      chunk_target_size: 1048576
-      max_chunk_age: 1h
-      wal:
-        enabled: false
-        dir: /var/loki/wal
-
-    compactor:
-      working_directory: /var/loki/compactor
-      shared_store: filesystem
-      retention_enabled: true
-
-    query_range:
-      align_queries_with_step: true
-      max_retries: 5
-      cache_results: false
-
-    frontend:
-      log_queries_longer_than: 5s
+D:\Pragati\DEV-Deployment\Grafana-Deployment\Loki>kubectl logs loki-7974ccfdd5-q9b45  -n logging --kubeconfig h06vksuatcbopscls.conf
+level=warn ts=2026-04-06T08:05:13.759820826Z caller=loki.go:288 msg="global timeout not configured, using default engine timeout (\"5m0s\"). This behavior will change in the next major to always use the default global timeout (\"5m\")."
+level=info ts=2026-04-06T08:05:13.760591963Z caller=main.go:108 msg="Starting Loki" version="(version=2.9.4, branch=HEAD, revision=f599ebc535)"
+level=info ts=2026-04-06T08:05:13.761511119Z caller=server.go:322 http=[::]:3100 grpc=[::]:9095 msg="server listening on addresses"
+level=info ts=2026-04-06T08:05:13.762318335Z caller=modules.go:932 msg="Ruler storage is not configured; ruler will not be started."
+failed to init delete store: timeout
+error initialising module: compactor
+github.com/grafana/dskit/modules.(*Manager).initModule
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138
+github.com/grafana/dskit/modules.(*Manager).InitModuleServices
+        /src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108
+github.com/grafana/loki/pkg/loki.(*Loki).Run
+        /src/loki/pkg/loki/loki.go:461
+main.main
+        /src/loki/cmd/loki/main.go:110
+runtime.main
+        /usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1650
+level=error ts=2026-04-06T08:05:18.745979124Z caller=log.go:230 msg="error running loki" err="failed to init delete store: timeout\nerror initialising module: compactor\ngithub.com/grafana/dskit/modules.(*Manager).initModule\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:138\ngithub.com/grafana/dskit/modules.(*Manager).InitModuleServices\n\t/src/loki/vendor/github.com/grafana/dskit/modules/modules.go:108\ngithub.com/grafana/loki/pkg/loki.(*Loki).Run\n\t/src/loki/pkg/loki/loki.go:461\nmain.main\n\t/src/loki/cmd/loki/main.go:110\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:267\nruntime.goexit\n\t/usr/local/go/src/runtime/asm_amd64.s:1650"
