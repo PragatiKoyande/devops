@@ -1,5 +1,5 @@
 # =====================================================
-# Service Account (Dedicated Identity for Pod Security)
+# Service Account 
 # =====================================================
 apiVersion: v1
 kind: ServiceAccount
@@ -23,7 +23,7 @@ spec:
       app: journal-app
 ---
 # =====================================================
-# Deployment (Enterprise Hardened)
+# Deployment
 # =====================================================
 apiVersion: apps/v1
 kind: Deployment
@@ -72,9 +72,11 @@ spec:
 
           envFrom:
             - configMapRef:
-                name: uat-common-app-config
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
             - secretRef:
-                name: uat-common-app-secret
+                name: oracle-secret
 
           ports:
             - containerPort: 9999
@@ -161,3 +163,7 @@ spec:
       port: 80
       targetPort: 9999
   type: ClusterIP
+
+
+
+  resolve all identation issues and me back the entire file
