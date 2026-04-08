@@ -1,10 +1,12 @@
+I want to make my file same like this file: below is the format i want similar format for another file
+
 # =====================================================
 # Service Account (Dedicated Identity for Pod Security)
 # =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: dashboard-sa
+  name: common-request-sa
   namespace: backend
 automountServiceAccountToken: false
 ---
@@ -14,13 +16,13 @@ automountServiceAccountToken: false
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: dashboard-pdb
+  name: common-request-pdb
   namespace: backend
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: dashboard-backend
+      app: common-request-backend
 ---
 # =====================================================
 # Deployment (Enterprise Hardened)
@@ -28,7 +30,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dashboard-deployment
+  name: common-request-deployment
   namespace: backend
 spec:
   replicas: 1
@@ -41,14 +43,15 @@ spec:
 
   selector:
     matchLabels:
-      app: dashboard-backend
+      app: common-request-backend
 
   template:
     metadata:
       labels:
-        app: dashboard-backend
+        app: common-request-backend
     spec:
-      serviceAccountName: dashboard-sa
+
+      serviceAccountName: common-request-sa
       terminationGracePeriodSeconds: 30
 
       topologySpreadConstraints:
@@ -57,7 +60,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: dashboard-backend
+              app: common-request-backend
 
       securityContext:
         runAsNonRoot: true
@@ -65,18 +68,22 @@ spec:
         fsGroup: 10001
 
       containers:
-        - name: dashboard-container
-          image: h06vksharbor.corp.ad.sbi/cbops/dashboard-service:UAT03
+        - name: common-request-container
+          image: h06vksharbor.corp.ad.sbi/cbops/common-request-service:UAT14
           imagePullPolicy: Always
 
           envFrom:
             - configMapRef:
-                name: uat-common-app-config
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: oracle-config
             - secretRef:
-                name: uat-common-app-secret
+                name: oracle-secret
 
           ports:
-            - containerPort: 9015
+            - containerPort: 9000
 
           resources:
             requests:
@@ -88,13 +95,13 @@ spec:
 
           startupProbe:
             tcpSocket:
-              port: 9015
+              port: 9000
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 9015
+              port: 9000
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -102,7 +109,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 9015
+              port: 9000
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -126,13 +133,13 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: dashboard-hpa
+  name: common-request-hpa
   namespace: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: dashboard-deployment
+    name: common-request-deployment
   minReplicas: 1
   maxReplicas: 3
   metrics:
@@ -149,14 +156,66 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: dashboard-service
+  name: common-request-service
   namespace: backend
 spec:
   selector:
-    app: dashboard-backend
+    app: common-request-backend
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 9015
+      targetPort: 9000
   type: ClusterIP
+
+
+below I am pasting my file for dashboard:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transactions-deployment
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transactions-backend
+  template:
+    metadata:
+      labels:
+        app: transactions-backend
+    spec:
+      containers:
+      - name: transactions-container
+        image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:UAT03        
+        envFrom:
+            - configMapRef:
+                name: uat-common-app-config
+            - secretRef:
+                name: uat-common-app-secret           
+        ports:
+        - containerPort: 4000
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transactions-service
+  namespace: backend
+spec:
+  selector:
+    app: transactions-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 4000
+  type: ClusterIP
+
+
+
+
+so i wnat to make configuartion for transactions-app like the common-request service:
+
+please make and send me the entire file with proper indentation
