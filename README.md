@@ -1,5 +1,5 @@
 # =====================================================
-# Service Account 
+# Service Account
 # =====================================================
 apiVersion: v1
 kind: ServiceAccount
@@ -48,7 +48,6 @@ spec:
       labels:
         app: journal-app
     spec:
-
       serviceAccountName: journal-sa
       terminationGracePeriodSeconds: 30
 
@@ -163,7 +162,3 @@ spec:
       port: 80
       targetPort: 9999
   type: ClusterIP
-
-
-
-  resolve all identation issues and me back the entire file
