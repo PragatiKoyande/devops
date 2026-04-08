@@ -1,12 +1,10 @@
-I want to make my file same like this file: below is the format i want similar format for another file
-
 # =====================================================
 # Service Account (Dedicated Identity for Pod Security)
 # =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: common-request-sa
+  name: transactions-sa
   namespace: backend
 automountServiceAccountToken: false
 ---
@@ -16,13 +14,13 @@ automountServiceAccountToken: false
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: common-request-pdb
+  name: transactions-pdb
   namespace: backend
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: common-request-backend
+      app: transactions-backend
 ---
 # =====================================================
 # Deployment (Enterprise Hardened)
@@ -30,7 +28,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: common-request-deployment
+  name: transactions-deployment
   namespace: backend
 spec:
   replicas: 1
@@ -43,15 +41,14 @@ spec:
 
   selector:
     matchLabels:
-      app: common-request-backend
+      app: transactions-backend
 
   template:
     metadata:
       labels:
-        app: common-request-backend
+        app: transactions-backend
     spec:
-
-      serviceAccountName: common-request-sa
+      serviceAccountName: transactions-sa
       terminationGracePeriodSeconds: 30
 
       topologySpreadConstraints:
@@ -60,7 +57,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: common-request-backend
+              app: transactions-backend
 
       securityContext:
         runAsNonRoot: true
@@ -68,22 +65,18 @@ spec:
         fsGroup: 10001
 
       containers:
-        - name: common-request-container
-          image: h06vksharbor.corp.ad.sbi/cbops/common-request-service:UAT14
+        - name: transactions-container
+          image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:UAT03
           imagePullPolicy: Always
 
           envFrom:
             - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: kafka-config
-            - configMapRef:
-                name: oracle-config
+                name: uat-common-app-config
             - secretRef:
-                name: oracle-secret
+                name: uat-common-app-secret
 
           ports:
-            - containerPort: 9000
+            - containerPort: 4000
 
           resources:
             requests:
@@ -95,13 +88,13 @@ spec:
 
           startupProbe:
             tcpSocket:
-              port: 9000
+              port: 4000
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 9000
+              port: 4000
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -109,7 +102,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 9000
+              port: 4000
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -133,13 +126,13 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: common-request-hpa
+  name: transactions-hpa
   namespace: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: common-request-deployment
+    name: transactions-deployment
   minReplicas: 1
   maxReplicas: 3
   metrics:
@@ -156,51 +149,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: common-request-service
-  namespace: backend
-spec:
-  selector:
-    app: common-request-backend
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 9000
-  type: ClusterIP
-
-
-below I am pasting my file for dashboard:
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: transactions-deployment
-  namespace: backend
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: transactions-backend
-  template:
-    metadata:
-      labels:
-        app: transactions-backend
-    spec:
-      containers:
-      - name: transactions-container
-        image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:UAT03        
-        envFrom:
-            - configMapRef:
-                name: uat-common-app-config
-            - secretRef:
-                name: uat-common-app-secret           
-        ports:
-        - containerPort: 4000
-        imagePullPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
   name: transactions-service
   namespace: backend
 spec:
@@ -212,10 +160,3 @@ spec:
       port: 80
       targetPort: 4000
   type: ClusterIP
-
-
-
-
-so i wnat to make configuartion for transactions-app like the common-request service:
-
-please make and send me the entire file with proper indentation
