@@ -1,24 +1,43 @@
-{{- if .Values.hpa.enabled }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
+namespace: backend
 
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.name }}-deployment
+name: common-master
 
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+replicaCount: 1
 
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpa.cpuUtilization }}
-{{- end }}
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/common-master-service
+  tag: DEV02
+  pullPolicy: Always
+
+serviceAccount:
+  name: common-master-sa
+
+service:
+  name: common-master-service
+  port: 80
+  targetPort: 2000
+  type: ClusterIP
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+configMaps:
+  - redis-config
+  - oracle-config
+
+secretRefs:
+  - oracle-secret
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 70
+
+pdb:
+  minAvailable: 1
