@@ -1,6 +1,24 @@
-apiVersion: v1
-kind: ServiceAccount
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ .Values.name }}-hpa
   namespace: {{ .Values.namespace }}
-automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.name }}-deployment
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}
