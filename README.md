@@ -1,162 +1,36 @@
-# =====================================================
-# Service Account (Dedicated Identity for Pod Security)
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: transactions-sa
-  namespace: backend
-automountServiceAccountToken: false
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: transactions-pdb
-  namespace: backend
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: transactions-backend
----
-# =====================================================
-# Deployment (Enterprise Hardened)
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: transactions-deployment
-  namespace: backend
-spec:
-  replicas: 1
+I wanted to setup helm for my entire setup so let me start from giving you brief about my application, I have having total 4 environments: dev, st, uat and prod. Having 1 react microservice application as my frontend and backned i have spring boot applications total 13 or 14 microservices. In which also I have kafka and few minor things related to applications like db and ladp services. Now I want to make all this or convert it into helm, right now I am having normal deployment I go in every file and edit file and use kubectl to apply. Now my requirement is I want automation between all environments and also I want to make use of environmnet variables and not the hard coded values as I am referring lots of secrtes and configmaps which are different for different environments and also some are common for all 4 environments. and also I want proper directory structure for all the microservices and environmnets I wanted so smooth that i can only change at one place and it will get apply.
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+I am not having that much knowlegde on helm i m completely new lets go step by step if you want before deploying things you make me understand the working of helm and give me more knowldege and later we can start with the deployment part below I m keeping my application details: 
 
-  selector:
-    matchLabels:
-      app: transactions-backend
+Microservices - frontend and backend
+common-master-deployment
+common-request-deployment
+dashboard-deployment
+journal-deployment
+login-deployment
+notification-deployment
+process-status-deployment
+react-deployment -- frontend
+redis-server-deployment 
+report-builder-deployment
+report-deployment
+template-config-deployment
+transactions-deployment
+user-deployment
 
-  template:
-    metadata:
-      labels:
-        app: transactions-backend
-    spec:
-      serviceAccountName: transactions-sa
-      terminationGracePeriodSeconds: 30
+Kafka related things -
+Kafka-connect-server
+sit-apache-kafka 
+sit-kafka-connect
+sit-kafka-ui
 
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: transactions-backend
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
-
-      containers:
-        - name: transactions-container
-          image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:UAT03
-          imagePullPolicy: Always
-
-          envFrom:
-            - configMapRef:
-                name: uat-common-app-config
-            - secretRef:
-                name: uat-common-app-secret
-
-          ports:
-            - containerPort: 4000
-
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-
-          startupProbe:
-            tcpSocket:
-              port: 4000
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 4000
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: 4000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: transactions-hpa
-  namespace: backend
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: transactions-deployment
-  minReplicas: 1
-  maxReplicas: 3
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: transactions-service
-  namespace: backend
-spec:
-  selector:
-    app: transactions-backend
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 4000
-  type: ClusterIP
+These are configmaps and secrtes required for my applications-
+hadoop-config
+kafka-config
+ldap-config
+ldap-secret
+oracle-config
+oracle-secret
+postgres-config
+postgres-secret
+redis-config
