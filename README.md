@@ -1,17 +1,6 @@
 apiVersion: v1
-kind: Service
+kind: ServiceAccount
 metadata:
-  name: {{ .Values.service.name }}
+  name: {{ .Values.serviceAccount.name }}
   namespace: {{ .Values.namespace }}
-
-spec:
-  selector:
-    app: {{ .Values.name }}-backend
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-
-  type: {{ .Values.service.type }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
