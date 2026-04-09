@@ -1,24 +1,4 @@
-{{- if .Values.hpa.enabled }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.name }}-deployment
-
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpa.cpuUtilization }}
-{{- end }}
+D:\Pragati\HELM-Latest-0904\Deployment>helm template cm ./common-master -f common-master/values.yaml
+Error: common-master/templates/httproute.yaml:1:14
+  executing "common-master/templates/httproute.yaml" at <.Values.httpRoute.enabled>:
+    nil pointer evaluating interface {}.enabled
