@@ -1,200 +1,290 @@
-Great — you’re thinking in exactly the right direction. Moving this kind of multi-service setup to Helm will save you huge time and eliminate manual errors.
-Let’s do this properly, step by step, so you actually understand Helm deeply, not just copy-paste.
-🚀 Step 1: What Helm Actually Is (Simple Understanding)
-Right now you are doing:
+sharing the manifest file: 
+user-deployment in this file only i have service:
 
-kubectl apply -f deployment.yaml
-Problem:
-Hardcoded values ❌
-Manual edits ❌
-No reuse ❌
-Pain across environments ❌
-🧠 Helm = Package Manager for Kubernetes
-Think of Helm like:
-apt (Ubuntu) or npm (Node.js) but for Kubernetes
-Instead of raw YAMLs, Helm gives you:
-🔹 1. Chart
-A Helm Chart = Folder containing templates of your Kubernetes YAMLs
-🔹 2. Values
-A single file where you define:
-environment-specific configs
-secrets references
-image tags
-replicas
-🔹 3. Templates
-Dynamic YAML files using variables
-Example:
-YAML
-replicas: {{ .Values.replicaCount }}
-🧩 Your Current Problem → Helm Solution
-Your Problem
-Helm Solution
-Editing files manually
-Use values.yaml
-Different configs per env
-Use values-dev.yaml, values-prod.yaml
-Repeated YAML
-Use templates
-Many microservices
-Use umbrella chart
-🏗️ Step 2: Recommended Architecture (VERY IMPORTANT)
-Since you have:
-14 backend services
-1 frontend
-Kafka ecosystem
-DB + Redis + LDAP
-👉 You should NOT create one big messy chart.
-✅ Best Practice: Umbrella Chart (Parent Chart)
-Structure:
+# --------------------------------------------
+# Service Account
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: user-sa
+  namespace: backend
 
-my-platform/
-│
-├── Chart.yaml
-├── values.yaml
-├── values-dev.yaml
-├── values-uat.yaml
-├── values-prod.yaml
-│
-├── charts/
-│   ├── user-service/
-│   ├── login-service/
-│   ├── notification-service/
-│   ├── frontend/
-│   ├── kafka/
-│   ├── redis/
-│
-└── templates/
-🧱 Step 3: How We Will Build This (Plan)
-We won’t jump into everything at once.
-✅ Phase 1 (Today)
-Understand Helm basics
-Install Helm
-Create first simple chart (1 microservice)
-✅ Phase 2
-Add environment-based values
-Use ConfigMaps & Secrets dynamically
-✅ Phase 3
-Convert all microservices into reusable charts
-✅ Phase 4
-Build umbrella chart
-✅ Phase 5
-Add automation (CI/CD later)
-⚙️ Step 4: Install Helm
-Run:
-Bash
-helm version
-If not installed:
-Bash
-# Linux
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-🧪 Step 5: Create Your First Helm Chart
-Let’s start with user-deployment (example)
-Bash
-helm create user-service
-This creates:
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: backend
 
-user-service/
-├── Chart.yaml
-├── values.yaml
-├── templates/
-│   ├── deployment.yaml
-│   ├── service.yaml
-🧠 Step 6: Understand values.yaml (VERY IMPORTANT)
-Example:
-YAML
-replicaCount: 2
-
-image:
-  repository: myrepo/user-service
-  tag: latest
-
-service:
-  port: 8080
-🧾 Step 7: Template Example
-Inside templates/deployment.yaml:
-YAML
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
+  revisionHistoryLimit: 5
 
-containers:
-  - name: user-service
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-👉 Now no hardcoding!
-🌍 Step 8: Environment-Based Config
-Create files:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-values-dev.yaml
-values-uat.yaml
-values-prod.yaml
-Example:
-values-dev.yaml
-YAML
-replicaCount: 1
-image:
-  tag: dev
-values-prod.yaml
-YAML
-replicaCount: 5
-image:
-  tag: prod
-🚀 Step 9: Deploy Using Helm
-Bash
-helm install user-service ./user-service -f values-dev.yaml
-Upgrade:
-Bash
-helm upgrade user-service ./user-service -f values-prod.yaml
-🔐 Step 10: Handling Secrets & ConfigMaps
-Instead of hardcoding:
-values.yaml
-YAML
-config:
-  dbHost: postgres
-  kafkaBroker: kafka:9092
+  selector:
+    matchLabels:
+      app: user-backend
 
-secret:
-  dbPassword: ""
-Template:
-YAML
-env:
-  - name: DB_HOST
-    value: {{ .Values.config.dbHost }}
-🧠 Important Concepts You Must Know
-.Values → values.yaml data
-.Release.Name → deployment name
-.Chart.Name → chart name
-{{ }} → templating engine
-⚠️ Important Design Advice (Based on Your Setup)
-You have:
-Shared configs (Kafka, DB, LDAP)
-Service-specific configs
-👉 So split like this:
-Common values
-YAML
-global:
-  kafkaBroker: kafka:9092
-  dbHost: postgres
-Service-specific
-YAML
-userService:
-  replicaCount: 2
-📌 What I Need From You Next
-Before we go to Phase 2, I want you to share:
-1️⃣ One microservice YAML (full)
-Example:
-user-deployment.yaml
-service.yaml
-configmap
-secret
-👉 I will convert it into Helm step-by-step
-2️⃣ Confirm:
-Are all services in same namespace?
-Are Kafka/DB managed inside K8s or external?
-Do you want one chart per microservice or grouped?
-🎯 Final Thought
-You’re moving from:
-❌ Manual Kubernetes
-➡️
-✅ Scalable Platform Engineering
-This is exactly how real production systems are managed.
-Reply with: 👉 one microservice YAML
-Next step: I’ll convert it into a clean Helm chart with proper structure 🔥
+  template:
+    metadata:
+      labels:
+        app: user-backend
+
+    spec:
+      serviceAccountName: user-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      hostAliases:
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
+
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
+
+      containers:
+        - name: user-container
+          image: h06vksharbor.corp.ad.sbi/cbops/user-service:UAT10
+          imagePullPolicy: Always
+
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
+
+          envFrom:
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: ldap-config
+            - secretRef:
+                name: ldap-secret
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "uat"
+
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
+
+          ports:
+            - containerPort: 8087
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          startupProbe:
+            tcpSocket:
+              port: 8087
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: backend
+
+spec:
+  selector:
+    app: user-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8087
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user-deployment
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: user-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: user-backend
+
+
+oracle-config:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oracle-config
+  namespace: backend
+
+data:
+  SPRING_DATASOURCE_URL: "jdbc:oracle:thin:@10.177.179.85:1523/fincorepdb1"
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "oracle.jdbc.OracleDriver"
+  
+oracle-secret:
+apiVersion: v1
+kind: Secret
+metadata:
+  name: oracle-secret
+  namespace: backend
+
+type: Opaque
+
+data:
+  SPRING_DATASOURCE_USERNAME: ZmluY29yZQ==
+  SPRING_DATASOURCE_PASSWORD: UGFzc3dvcmQjMTIzNA==
+
+redis-config:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: backend
+
+data:
+  SPRING_DATA_REDIS_HOST: "redis-service"
+  SPRING_DATA_REDIS_PORT: "6379"
+  SPRING_DATA_REDIS_CLIENT_TYPE: "lettuce"
+
+  kafka-config:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config
+  namespace: backend
+
+data:
+  SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: "kafka-0.kafka.backend.svc.cluster.local:9092"
+  SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: "kafka-0.kafka.backend.svc.cluster.local:9092"
+
+  ldap-config:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ldap-config
+  namespace: backend
+data:
+  SPRING_LDAP_URLS: "ldaps://uatrootdc1.uatad.sbi:3269"
+  LDAP_TRUSTSTORE_PATH: "file:/etc/fincore/secrets/ad-truststore.jks"
+  SPRING_LDAP_USERNAME: "fincorecbops@UATAD.SBI"
+
+  ldap-secret:
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ldap-secret
+  namespace: backend
+type: Opaque
+data:
+  SPRING_LDAP_PASSWORD: RjFDMHJlIzE1
+
+
+  As you can see here I am having secrets and configmaps please be very careful 
+
+  your query: 
+  1) for namepasces: my all backend services those 14 microservioces and kafka are present in one namespace and only one frontend microservice is present in another name so i have 2 nampaces one for backend and another for frontend deployment
+  2) kafka is manages inside k8s only as statefulset and also DB
+  3) i want one chart per microservice I think that will be better
