@@ -1,53 +1,117 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.namespace }}
 
-replicaCount: 1
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/user-service
-  tag: UAT10
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-serviceAccount:
-  name: user-sa
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
 
-service:
-  name: user-service
-  port: 80
-  targetPort: 8087
-  type: ClusterIP
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-env:
-  SPRING_PROFILES_ACTIVE: uat
-  JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
-  SPRING_KAFKA_CONSUMER_GROUP_ID: "rbac-cache-group"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-secrets:
-  ldapTruststoreSecret: ldap-truststore-file
-  ldapCredsSecret: ldap-creds
+      hostAliases:
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
 
-configMaps:
-  - oracle-config
-  - kafka-config
-  - redis-config
-  - ldap-config
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: {{ .Values.secrets.ldapTruststoreSecret }}
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
 
-secretRefs:
-  - oracle-secret
-  - ldap-secret
+      containers:
+        - name: user-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-hpa:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
 
-pdb:
-  minAvailable: 1
+          envFrom:
+            {{- range .Values.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.secretRefs }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.env.SPRING_PROFILES_ACTIVE | quote }}
+
+            - name: JAVA_TOOL_OPTIONS
+              value: {{ .Values.env.JAVA_TOOL_OPTIONS | quote }}
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: {{ .Values.env.SPRING_KAFKA_CONSUMER_GROUP_ID | quote }}
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.ldapCredsSecret }}
+                  key: truststore-password
+
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
