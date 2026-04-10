@@ -1,31 +1,27 @@
-Now I am sharing with you another microservice manifest file and details kilndly make proper congiuartion in hem format like yestaerday and send me backk all files:
-
-# --------------------------------------------
-# Service Account 
-# --------------------------------------------
+# =====================================================
+# Service Account
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: react-app-sa
-  namespace: backend
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: false
 
 ---
-# --------------------------------------------
+# =====================================================
 # Deployment
-# --------------------------------------------
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: react-app-deployment
-  namespace: backend
+  name: {{ .Values.deploymentName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: 1
-
-  # Keeps old ReplicaSets for rollback safety
+  replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 5
 
-  # Zero-downtime rolling updates
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -34,123 +30,111 @@ spec:
 
   selector:
     matchLabels:
-      app: reactive-app
+      app: {{ .Values.appLabel }}
 
   template:
     metadata:
       labels:
-        app: reactive-app
+        app: {{ .Values.appLabel }}
 
     spec:
-      # Use dedicated service account
-      serviceAccountName: react-app-sa
-
-      # Graceful shutdown time before force kill
+      serviceAccountName: {{ .Values.serviceAccountName }}
       terminationGracePeriodSeconds: 30
-
-      # Prevent automatic service env injection
       enableServiceLinks: false
 
-      # Spread pods across nodes for HA readiness
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: reactive-app
+              app: {{ .Values.appLabel }}
 
       containers:
-      - name: reactive-container
-        image: h06vksharbor.corp.ad.sbi/cbops/react-service:DEV46
-        imagePullPolicy: Always
+        - name: {{ .Values.containerName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-        ports:
-        - containerPort: 80
+          ports:
+            - containerPort: {{ .Values.containerPort }}
 
-        # Resource requests/limits for stable scheduling
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
 
-        # Startup probe prevents premature restarts
-        startupProbe:
-          tcpSocket:
-            port: 80
-          failureThreshold: 30
-          periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.containerPort }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
 
-        # Checks if container is alive
-        livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
 
-        # Controls traffic routing to healthy pods
-        readinessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
 
-        # Graceful shutdown for active connections
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
-# --------------------------------------------
-# Service (internal access)
-# --------------------------------------------
+# =====================================================
+# Service
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: react-service
-  namespace: backend
+  name: {{ .Values.serviceName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   selector:
-    app: reactive-app
+    app: {{ .Values.appLabel }}
 
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 80
+      port: {{ .Values.servicePort }}
+      targetPort: {{ .Values.containerPort }}
 
   type: ClusterIP
 
 ---
-# --------------------------------------------
+# =====================================================
 # Horizontal Pod Autoscaler
-# Auto-scales based on CPU usage
-# --------------------------------------------
+# =====================================================
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: react-app-hpa
-  namespace: backend
+  name: {{ .Values.hpaName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: react-app-deployment
+    name: {{ .Values.deploymentName }}
 
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
-  # Stabilization avoids rapid scale up/down
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
@@ -163,23 +147,23 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}
 
 ---
-# --------------------------------------------
+# =====================================================
 # Pod Disruption Budget
-# Prevents downtime during node upgrades
-# --------------------------------------------
+# =====================================================
+{{- if .Values.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: react-app-pdb
-  namespace: backend
+  name: {{ .Values.pdbName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: reactive-app
-
----
+      app: {{ .Values.appLabel }}
+{{- end }}
