@@ -1,180 +1,67 @@
-# =====================================================
-# Service Account
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccountName }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: false
+namespace: backend
 
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-{{- if .Values.pdb.enabled }}
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ .Values.pdbName }}
-  namespace: {{ .Values.namespace }}
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: {{ .Values.appLabel }}
-{{- end }}
+serviceAccountName: transactions-sa
+deploymentName: transactions-deployment
+serviceName: transactions-service
 
----
-# =====================================================
-# Deployment
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.deploymentName }}
-  namespace: {{ .Values.namespace }}
+appLabel: transactions-backend
+containerName: transactions-container
 
-spec:
-  replicas: {{ .Values.replicaCount }}
+replicaCount: 1
+containerPort: 4000
+servicePort: 80
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
+  tag: DEV01
+  pullPolicy: Always
 
-  selector:
-    matchLabels:
-      app: {{ .Values.appLabel }}
+# Existing configs & secrets
+env:
+  configMaps:
+    redis: redis-config
+    oracle: oracle-config
+  secrets:
+    oracle: oracle-secret
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.appLabel }}
+# Pod security
+securityContext:
+  runAsUser: 10001
+  fsGroup: 10001
 
-    spec:
-      serviceAccountName: {{ .Values.serviceAccountName }}
-      terminationGracePeriodSeconds: 30
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
 
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        fsGroup: {{ .Values.securityContext.fsGroup }}
+startupProbe:
+  failureThreshold: 60
+  periodSeconds: 10
 
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: {{ .Values.appLabel }}
+livenessProbe:
+  initialDelaySeconds: 90
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 5
 
-      containers:
-        - name: {{ .Values.containerName }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 5
 
-          envFrom:
-            - configMapRef:
-                name: {{ .Values.env.configMaps.redis }}
-            - configMapRef:
-                name: {{ .Values.env.configMaps.oracle }}
-            - secretRef:
-                name: {{ .Values.env.secrets.oracle }}
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  cpuUtilization: 70
 
-          ports:
-            - containerPort: {{ .Values.containerPort }}
+hpaName: transactions-hpa
 
-          resources:
-            requests:
-              cpu: {{ .Values.resources.requests.cpu }}
-              memory: {{ .Values.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.resources.limits.cpu }}
-              memory: {{ .Values.resources.limits.memory }}
+pdb:
+  enabled: true
 
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.serviceName }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  selector:
-    app: {{ .Values.appLabel }}
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.servicePort }}
-      targetPort: {{ .Values.containerPort }}
-
-  type: ClusterIP
-
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-{{- if .Values.hpa.enabled }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.hpaName }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.deploymentName }}
-
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpa.cpuUtilization }}
-{{- end }}
+pdbName: transactions-pdb
