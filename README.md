@@ -1,17 +1,24 @@
-apiVersion: v1
-kind: Service
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.service.name }}
+  name: {{ .Values.name }}-hpa
   namespace: {{ .Values.namespace }}
 
 spec:
-  selector:
-    app: {{ .Values.name }}-app
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.name }}-deployment
 
-  ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
-  type: {{ .Values.service.type }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}
