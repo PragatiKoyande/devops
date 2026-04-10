@@ -1,72 +1,180 @@
-namespace: backend
+Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
 
-serviceAccountName: report-sa
-deploymentName: report-deployment
-serviceName: report-service
+# --------------------------------------------
+# Service Account 
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: template-config-sa
+  namespace: backend
 
-appLabel: report-backend
-containerName: report-container
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: template-config-deployment
+  namespace: backend
 
-replicaCount: 1
-containerPort: 9005
-servicePort: 80
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/report-service
-  tag: DEV16
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-# Existing configs & secrets
-env:
-  configMaps:
-    redis: redis-config
-    oracle: oracle-config
-    kafka: kafka-config
-  secrets:
-    oracle: oracle-secret
+  selector:
+    matchLabels:
+      app: template-app
 
-# Spring profile
-springProfile: "dev"
+  template:
+    metadata:
+      labels:
+        app: template-app
 
-# Security
-securityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
-  fsGroup: 2000
+    spec:
+      serviceAccountName: template-config-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-startupProbe:
-  failureThreshold: 60
-  periodSeconds: 10
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: template-app
 
-livenessProbe:
-  initialDelaySeconds: 90
-  periodSeconds: 15
-  timeoutSeconds: 5
-  failureThreshold: 5
+      containers:
+        - name: template-config-container
+          image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:DEV01
+          imagePullPolicy: Always
 
-readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 5
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
 
-hpa:
-  enabled: true
+          ports:
+            - containerPort: 8090
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          startupProbe:
+            tcpSocket:
+              port: 8090
+            failureThreshold: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service 
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: template-config-service
+  namespace: backend
+
+spec:
+  selector:
+    app: template-app
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8090
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: template-config-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: template-config-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
 
-hpaName: report-hpa
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-pdb:
-  enabled: true
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-pdbName: report-pdb
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: template-config-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: template-app
