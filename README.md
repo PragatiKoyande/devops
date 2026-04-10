@@ -1,4 +1,4 @@
-Now I am sharing with you another microservice manifest files and details kilndly make proper congiuartion and send me backk all files:
+Now I am sharing with you another microservice manifest files and details kilndly make proper congiuartion and send me backk all files: make it in the helm format as we made yyesterday
 
 # --------------------------------------------
 # Service Account
