@@ -1,212 +1,94 @@
-# =====================================================
-# Service Account
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccountName }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: false
+namespace: backend
 
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-{{- if .Values.pdb.enabled }}
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ .Values.pdbName }}
-  namespace: {{ .Values.namespace }}
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: {{ .Values.appLabel }}
-{{- end }}
+serviceAccountName: user-sa
+deploymentName: user-deployment
+serviceName: user-service
 
----
-# =====================================================
-# Deployment
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.deploymentName }}
-  namespace: {{ .Values.namespace }}
+appLabel: user-backend
+containerName: user-container
 
-spec:
-  replicas: {{ .Values.replicaCount }}
-  revisionHistoryLimit: 5
+replicaCount: 1
+containerPort: 8087
+servicePort: 80
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/user-service
+  tag: DEV06
+  pullPolicy: Always
 
-  selector:
-    matchLabels:
-      app: {{ .Values.appLabel }}
+# Configs & Secrets
+env:
+  configMaps:
+    oracle: oracle-config
+    kafka: kafka-config
+    redis: redis-config
+    ldap: ldap-config
+  secrets:
+    oracle: oracle-secret
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.appLabel }}
+# Extra env
+springProfile: "dev"
+javaOpts: "-Djava.net.preferIPv4Stack=true"
+kafkaGroup: "rbac-cache-group"
 
-    spec:
-      serviceAccountName: {{ .Values.serviceAccountName }}
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
+ldapSecret:
+  name: ldap-creds
+  key: truststore-password
 
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        runAsGroup: {{ .Values.securityContext.runAsGroup }}
-        fsGroup: {{ .Values.securityContext.fsGroup }}
+# Host alias
+hostAliases:
+  ip: "10.189.42.83"
+  hostname: "uatrootdc1.uatad.sbi"
 
-      hostAliases:
-        - ip: {{ .Values.hostAliases.ip }}
-          hostnames:
-            - {{ .Values.hostAliases.hostname }}
+# Volume config
+volumes:
+  truststore:
+    secretName: ldap-truststore-file
+    key: ad-truststore.jks
+    path: ad-truststore.jks
 
-      volumes:
-        - name: truststore-volume
-          secret:
-            secretName: {{ .Values.volumes.truststore.secretName }}
-            items:
-              - key: {{ .Values.volumes.truststore.key }}
-                path: {{ .Values.volumes.truststore.path }}
+volumeMounts:
+  mountPath: /etc/fincore/secrets
 
-      containers:
-        - name: {{ .Values.containerName }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+# Security
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 2000
 
-          volumeMounts:
-            - name: truststore-volume
-              mountPath: {{ .Values.volumeMounts.mountPath }}
-              readOnly: true
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
 
-          envFrom:
-            - configMapRef:
-                name: {{ .Values.env.configMaps.oracle }}
-            - secretRef:
-                name: {{ .Values.env.secrets.oracle }}
-            - configMapRef:
-                name: {{ .Values.env.configMaps.kafka }}
-            - configMapRef:
-                name: {{ .Values.env.configMaps.redis }}
-            - configMapRef:
-                name: {{ .Values.env.configMaps.ldap }}
+startupProbe:
+  failureThreshold: 60
+  periodSeconds: 10
 
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.springProfile }}
+livenessProbe:
+  initialDelaySeconds: 90
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 5
 
-            - name: JAVA_TOOL_OPTIONS
-              value: {{ .Values.javaOpts }}
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 5
 
-            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-              value: {{ .Values.kafkaGroup }}
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 70
 
-            - name: LDAP_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.ldapSecret.name }}
-                  key: {{ .Values.ldapSecret.key }}
+hpaName: user-hpa
 
-          ports:
-            - containerPort: {{ .Values.containerPort }}
+pdb:
+  enabled: true
 
-          resources:
-            requests:
-              cpu: {{ .Values.resources.requests.cpu }}
-              memory: {{ .Values.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.resources.limits.cpu }}
-              memory: {{ .Values.resources.limits.memory }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
-            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.serviceName }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  selector:
-    app: {{ .Values.appLabel }}
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.servicePort }}
-      targetPort: {{ .Values.containerPort }}
-
-  type: ClusterIP
-
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-{{- if .Values.hpa.enabled }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.hpaName }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.deploymentName }}
-
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpa.cpuUtilization }}
-{{- end }}
+pdbName: user-pdb
