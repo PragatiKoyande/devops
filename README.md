@@ -1,26 +1,25 @@
-Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
-
-# --------------------------------------------
-# Service Account 
-# --------------------------------------------
+# =====================================================
+# Service Account
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: template-config-sa
-  namespace: backend
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: false
 
 ---
-# --------------------------------------------
+# =====================================================
 # Deployment
-# --------------------------------------------
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: template-config-deployment
-  namespace: backend
+  name: {{ .Values.deploymentName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 5
 
   strategy:
@@ -31,23 +30,23 @@ spec:
 
   selector:
     matchLabels:
-      app: template-app
+      app: {{ .Values.appLabel }}
 
   template:
     metadata:
       labels:
-        app: template-app
+        app: {{ .Values.appLabel }}
 
     spec:
-      serviceAccountName: template-config-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
 
       topologySpreadConstraints:
         - maxSkew: 1
@@ -55,53 +54,53 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: template-app
+              app: {{ .Values.appLabel }}
 
       containers:
-        - name: template-config-container
-          image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:DEV01
-          imagePullPolicy: Always
+        - name: {{ .Values.containerName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           envFrom:
             - configMapRef:
-                name: redis-config
+                name: {{ .Values.env.configMaps.redis }}
             - configMapRef:
-                name: oracle-config
+                name: {{ .Values.env.configMaps.oracle }}
             - secretRef:
-                name: oracle-secret
+                name: {{ .Values.env.secrets.oracle }}
 
           ports:
-            - containerPort: 8090
+            - containerPort: {{ .Values.containerPort }}
 
           resources:
             requests:
-              cpu: "250m"
-              memory: "512Mi"
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
             limits:
-              cpu: "500m"
-              memory: "1Gi"
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
 
           startupProbe:
             tcpSocket:
-              port: 8090
-            failureThreshold: 30
-            periodSeconds: 10
+              port: {{ .Values.containerPort }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
 
           livenessProbe:
             tcpSocket:
-              port: 8090
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 3
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
-              port: 8090
-            initialDelaySeconds: 15
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
 
           lifecycle:
             preStop:
@@ -109,45 +108,46 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
-# --------------------------------------------
-# Service 
-# --------------------------------------------
+# =====================================================
+# Service
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: template-config-service
-  namespace: backend
+  name: {{ .Values.serviceName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   selector:
-    app: template-app
+    app: {{ .Values.appLabel }}
 
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 8090
+      port: {{ .Values.servicePort }}
+      targetPort: {{ .Values.containerPort }}
 
   type: ClusterIP
 
 ---
-# --------------------------------------------
-# Horizontal Pod Autoscaler (CPU-based)
-# --------------------------------------------
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: template-config-hpa
-  namespace: backend
+  name: {{ .Values.hpaName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: template-config-deployment
+    name: {{ .Values.deploymentName }}
 
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
   behavior:
     scaleUp:
@@ -161,20 +161,23 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}
 
 ---
-# --------------------------------------------
+# =====================================================
 # Pod Disruption Budget
-# --------------------------------------------
+# =====================================================
+{{- if .Values.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: template-config-pdb
-  namespace: backend
+  name: {{ .Values.pdbName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: template-app
+      app: {{ .Values.appLabel }}
+{{- end }}
