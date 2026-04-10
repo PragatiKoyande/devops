@@ -1,200 +1,43 @@
-# =====================================================
-# Service Account
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.processStatus.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: false
+namespace: backend
 
----
-# =====================================================
-# Deployment
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.processStatus.deployment.name }}
-  namespace: {{ .Values.namespace }}
+serviceAccountName: process-status-sa
+deploymentName: process-status-deployment
+serviceName: process-status-service
 
-spec:
-  replicas: {{ .Values.processStatus.replicaCount }}
-  revisionHistoryLimit: 5
+appLabel: process-status-backend
+containerName: process-status-container
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+replicaCount: 1
+containerPort: 3000
+servicePort: 80
 
-  selector:
-    matchLabels:
-      app: {{ .Values.processStatus.appLabel }}
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/process-status-service
+  tag: SV16
+  pullPolicy: Always
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.processStatus.appLabel }}
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
 
-    spec:
-      serviceAccountName: {{ .Values.processStatus.serviceAccount.name }}
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
+# only references (no creation)
+redisConfigName: redis-config
+oracleConfigName: oracle-config
+oracleSecretName: oracle-secret
 
-      volumes:
-        - name: tmp-dir
-          emptyDir:
-            medium: Memory
-            sizeLimit: 64Mi
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 70
 
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
+hpaName: process-status-hpa
 
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: {{ .Values.processStatus.appLabel }}
+pdb:
+  enabled: true
 
-      containers:
-        - name: process-status-container
-          image: "{{ .Values.processStatus.image.repository }}:{{ .Values.processStatus.image.tag }}"
-          imagePullPolicy: {{ .Values.processStatus.image.pullPolicy }}
-
-          volumeMounts:
-            - name: tmp-dir
-              mountPath: /tmp
-
-          envFrom:
-            - configMapRef:
-                name: {{ .Values.processStatus.redisConfigName }}
-            - configMapRef:
-                name: {{ .Values.processStatus.oracleConfigName }}
-            - secretRef:
-                name: {{ .Values.processStatus.oracleSecretName }}
-
-          ports:
-            - containerPort: {{ .Values.processStatus.containerPort }}
-
-          resources:
-            requests:
-              cpu: {{ .Values.processStatus.resources.requests.cpu }}
-              memory: {{ .Values.processStatus.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.processStatus.resources.limits.cpu }}
-              memory: {{ .Values.processStatus.resources.limits.memory }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.processStatus.containerPort }}
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.processStatus.containerPort }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.processStatus.containerPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.processStatus.service.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  selector:
-    app: {{ .Values.processStatus.appLabel }}
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.processStatus.service.port }}
-      targetPort: {{ .Values.processStatus.containerPort }}
-
-  type: ClusterIP
-
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-{{- if .Values.processStatus.hpa.enabled }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.processStatus.hpa.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.processStatus.deployment.name }}
-
-  minReplicas: {{ .Values.processStatus.hpa.minReplicas }}
-  maxReplicas: {{ .Values.processStatus.hpa.maxReplicas }}
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.processStatus.hpa.cpuUtilization }}
-{{- end }}
-
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-{{- if .Values.processStatus.pdb.enabled }}
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ .Values.processStatus.pdb.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: {{ .Values.processStatus.appLabel }}
-{{- end }}
+pdbName: process-status-pdb
