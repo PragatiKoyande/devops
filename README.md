@@ -1,26 +1,42 @@
-Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
-
-# --------------------------------------------
+# =====================================================
 # Service Account
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: user-sa
-  namespace: backend
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: false
 
 ---
-# --------------------------------------------
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdbName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appLabel }}
+{{- end }}
+
+---
+# =====================================================
 # Deployment
-# --------------------------------------------
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-deployment
-  namespace: backend
+  name: {{ .Values.deploymentName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 5
 
   strategy:
@@ -31,108 +47,107 @@ spec:
 
   selector:
     matchLabels:
-      app: user-backend
+      app: {{ .Values.appLabel }}
 
   template:
     metadata:
       labels:
-        app: user-backend
+        app: {{ .Values.appLabel }}
 
     spec:
-      serviceAccountName: user-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
 
       hostAliases:
-        - ip: "10.189.42.83"
+        - ip: {{ .Values.hostAliases.ip }}
           hostnames:
-            - "uatrootdc1.uatad.sbi"
+            - {{ .Values.hostAliases.hostname }}
 
       volumes:
         - name: truststore-volume
           secret:
-            secretName: ldap-truststore-file
+            secretName: {{ .Values.volumes.truststore.secretName }}
             items:
-              - key: ad-truststore.jks
-                path: ad-truststore.jks
+              - key: {{ .Values.volumes.truststore.key }}
+                path: {{ .Values.volumes.truststore.path }}
 
       containers:
-        - name: user-container
-          image: h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06
-          imagePullPolicy: Always
+        - name: {{ .Values.containerName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           volumeMounts:
             - name: truststore-volume
-              mountPath: /etc/fincore/secrets
+              mountPath: {{ .Values.volumeMounts.mountPath }}
               readOnly: true
 
           envFrom:
             - configMapRef:
-                name: oracle-config
+                name: {{ .Values.env.configMaps.oracle }}
             - secretRef:
-                name: oracle-secret
+                name: {{ .Values.env.secrets.oracle }}
             - configMapRef:
-                name: kafka-config
+                name: {{ .Values.env.configMaps.kafka }}
             - configMapRef:
-                name: redis-config
+                name: {{ .Values.env.configMaps.redis }}
             - configMapRef:
-                name: ldap-config
-
+                name: {{ .Values.env.configMaps.ldap }}
 
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: "dev"
+              value: {{ .Values.springProfile }}
 
             - name: JAVA_TOOL_OPTIONS
-              value: "-Djava.net.preferIPv4Stack=true"
+              value: {{ .Values.javaOpts }}
 
             - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-              value: "rbac-cache-group"
+              value: {{ .Values.kafkaGroup }}
 
             - name: LDAP_TRUSTSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ldap-creds
-                  key: truststore-password
+                  name: {{ .Values.ldapSecret.name }}
+                  key: {{ .Values.ldapSecret.key }}
 
           ports:
-            - containerPort: 8087
+            - containerPort: {{ .Values.containerPort }}
 
           resources:
             requests:
-              cpu: "250m"
-              memory: "512Mi"
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
             limits:
-              cpu: "500m"
-              memory: "1Gi"
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
 
           startupProbe:
             tcpSocket:
-              port: 8087
-            failureThreshold: 60
-            periodSeconds: 10
+              port: {{ .Values.containerPort }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
 
           livenessProbe:
             tcpSocket:
-              port: 8087
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
-              port: 8087
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
 
           lifecycle:
             preStop:
@@ -140,45 +155,46 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
-# --------------------------------------------
+# =====================================================
 # Service
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-service
-  namespace: backend
+  name: {{ .Values.serviceName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   selector:
-    app: user-backend
+    app: {{ .Values.appLabel }}
 
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 8087
+      port: {{ .Values.servicePort }}
+      targetPort: {{ .Values.containerPort }}
 
   type: ClusterIP
 
 ---
-# --------------------------------------------
+# =====================================================
 # Horizontal Pod Autoscaler
-# --------------------------------------------
+# =====================================================
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: user-hpa
-  namespace: backend
+  name: {{ .Values.hpaName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: user-deployment
+    name: {{ .Values.deploymentName }}
 
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
   behavior:
     scaleUp:
@@ -192,20 +208,5 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
-
----
-# --------------------------------------------
-# Pod Disruption Budget
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: user-pdb
-  namespace: backend
-
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: user-backend
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}
