@@ -1,27 +1,31 @@
-# =====================================================
-# Service Account
-# =====================================================
+Now I am sharing with you another microservice manifest file and details kilndly make proper congiuartion in hem format like yestaerday and send me backk all files:
+
+# --------------------------------------------
+# Service Account 
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.serviceAccountName }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: false
+  name: react-app-sa
+  namespace: backend
 
 ---
-# =====================================================
+# --------------------------------------------
 # Deployment
-# =====================================================
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deploymentName }}
-  namespace: {{ .Values.namespace }}
+  name: react-app-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
+
+  # Keeps old ReplicaSets for rollback safety
   revisionHistoryLimit: 5
 
+  # Zero-downtime rolling updates
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -30,142 +34,123 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.appLabel }}
+      app: reactive-app
 
   template:
     metadata:
       labels:
-        app: {{ .Values.appLabel }}
+        app: reactive-app
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccountName }}
+      # Use dedicated service account
+      serviceAccountName: react-app-sa
+
+      # Graceful shutdown time before force kill
       terminationGracePeriodSeconds: 30
+
+      # Prevent automatic service env injection
       enableServiceLinks: false
 
-      volumes:
-        - name: tmp-dir
-          emptyDir:
-            medium: Memory
-            sizeLimit: 64Mi
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
-
+      # Spread pods across nodes for HA readiness
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: {{ .Values.appLabel }}
+              app: reactive-app
 
       containers:
-        - name: {{ .Values.containerName }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+      - name: reactive-container
+        image: h06vksharbor.corp.ad.sbi/cbops/react-service:DEV46
+        imagePullPolicy: Always
 
-          volumeMounts:
-            - name: tmp-dir
-              mountPath: /tmp
+        ports:
+        - containerPort: 80
 
-          envFrom:
-            - configMapRef:
-                name: {{ .Values.redisConfigName }}
-            - configMapRef:
-                name: {{ .Values.oracleConfigName }}
-            - secretRef:
-                name: {{ .Values.oracleSecretName }}
+        # Resource requests/limits for stable scheduling
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
 
-          ports:
-            - containerPort: {{ .Values.containerPort }}
+        # Startup probe prevents premature restarts
+        startupProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 30
+          periodSeconds: 10
 
-          resources:
-            requests:
-              cpu: {{ .Values.resources.requests.cpu }}
-              memory: {{ .Values.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.resources.limits.cpu }}
-              memory: {{ .Values.resources.limits.memory }}
+        # Checks if container is alive
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            failureThreshold: 60
-            periodSeconds: 10
+        # Controls traffic routing to healthy pods
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+        # Graceful shutdown for active connections
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
 
 ---
-# =====================================================
-# Service
-# =====================================================
+# --------------------------------------------
+# Service (internal access)
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.serviceName }}
-  namespace: {{ .Values.namespace }}
+  name: react-service
+  namespace: backend
 
 spec:
   selector:
-    app: {{ .Values.appLabel }}
+    app: reactive-app
 
   ports:
     - name: http
       protocol: TCP
-      port: {{ .Values.servicePort }}
-      targetPort: {{ .Values.containerPort }}
+      port: 80
+      targetPort: 80
 
   type: ClusterIP
 
 ---
-# =====================================================
+# --------------------------------------------
 # Horizontal Pod Autoscaler
-# =====================================================
-{{- if .Values.hpa.enabled }}
+# Auto-scales based on CPU usage
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.hpaName }}
-  namespace: {{ .Values.namespace }}
+  name: react-app-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.deploymentName }}
+    name: react-app-deployment
 
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
 
+  # Stabilization avoids rapid scale up/down
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
@@ -178,23 +163,23 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.cpuUtilization }}
-{{- end }}
+          averageUtilization: 70
 
 ---
-# =====================================================
+# --------------------------------------------
 # Pod Disruption Budget
-# =====================================================
-{{- if .Values.pdb.enabled }}
+# Prevents downtime during node upgrades
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.pdbName }}
-  namespace: {{ .Values.namespace }}
+  name: react-app-pdb
+  namespace: backend
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Values.appLabel }}
-{{- end }}
+      app: reactive-app
+
+---
