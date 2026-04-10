@@ -1,28 +1,25 @@
-
-Now I am sharing with you another microservice manifest files and details kilndly make proper congiuartion and send me backk all files: please send me in helm format which we discussed yesterday
-
-
-# --------------------------------------------
+# =====================================================
 # Service Account
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: process-status-sa
-  namespace: backend
+  name: {{ .Values.processStatus.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: false
 
 ---
-# --------------------------------------------
+# =====================================================
 # Deployment
-# --------------------------------------------
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: process-status-deployment
-  namespace: backend
+  name: {{ .Values.processStatus.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.processStatus.replicaCount }}
   revisionHistoryLimit: 5
 
   strategy:
@@ -33,15 +30,15 @@ spec:
 
   selector:
     matchLabels:
-      app: process-status-backend
+      app: {{ .Values.processStatus.appLabel }}
 
   template:
     metadata:
       labels:
-        app: process-status-backend
+        app: {{ .Values.processStatus.appLabel }}
 
     spec:
-      serviceAccountName: process-status-sa
+      serviceAccountName: {{ .Values.processStatus.serviceAccount.name }}
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
@@ -63,12 +60,12 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: process-status-backend
+              app: {{ .Values.processStatus.appLabel }}
 
       containers:
         - name: process-status-container
-          image: h06vksharbor.corp.ad.sbi/cbops/process-status-service:SV16
-          imagePullPolicy: Always
+          image: "{{ .Values.processStatus.image.repository }}:{{ .Values.processStatus.image.tag }}"
+          imagePullPolicy: {{ .Values.processStatus.image.pullPolicy }}
 
           volumeMounts:
             - name: tmp-dir
@@ -76,32 +73,32 @@ spec:
 
           envFrom:
             - configMapRef:
-                name: redis-config
+                name: {{ .Values.processStatus.redisConfigName }}
             - configMapRef:
-                name: oracle-config
+                name: {{ .Values.processStatus.oracleConfigName }}
             - secretRef:
-                name: oracle-secret
+                name: {{ .Values.processStatus.oracleSecretName }}
 
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.processStatus.containerPort }}
 
           resources:
             requests:
-              cpu: "250m"
-              memory: "512Mi"
+              cpu: {{ .Values.processStatus.resources.requests.cpu }}
+              memory: {{ .Values.processStatus.resources.requests.memory }}
             limits:
-              cpu: "500m"
-              memory: "1Gi"
+              cpu: {{ .Values.processStatus.resources.limits.cpu }}
+              memory: {{ .Values.processStatus.resources.limits.memory }}
 
           startupProbe:
             tcpSocket:
-              port: 3000
+              port: {{ .Values.processStatus.containerPort }}
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 3000
+              port: {{ .Values.processStatus.containerPort }}
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -109,7 +106,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 3000
+              port: {{ .Values.processStatus.containerPort }}
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -127,47 +124,47 @@ spec:
               drop:
                 - ALL
 
-
 ---
-# --------------------------------------------
+# =====================================================
 # Service
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: process-status-service
-  namespace: backend
+  name: {{ .Values.processStatus.service.name }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   selector:
-    app: process-status-backend
+    app: {{ .Values.processStatus.appLabel }}
 
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 3000
+      port: {{ .Values.processStatus.service.port }}
+      targetPort: {{ .Values.processStatus.containerPort }}
 
   type: ClusterIP
 
 ---
-# --------------------------------------------
+# =====================================================
 # Horizontal Pod Autoscaler
-# --------------------------------------------
+# =====================================================
+{{- if .Values.processStatus.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: process-status-hpa
-  namespace: backend
+  name: {{ .Values.processStatus.hpa.name }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: process-status-deployment
+    name: {{ .Values.processStatus.deployment.name }}
 
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: {{ .Values.processStatus.hpa.minReplicas }}
+  maxReplicas: {{ .Values.processStatus.hpa.maxReplicas }}
 
   behavior:
     scaleUp:
@@ -181,20 +178,23 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: {{ .Values.processStatus.hpa.cpuUtilization }}
+{{- end }}
 
 ---
-# --------------------------------------------
+# =====================================================
 # Pod Disruption Budget
-# --------------------------------------------
+# =====================================================
+{{- if .Values.processStatus.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: process-status-pdb
-  namespace: backend
+  name: {{ .Values.processStatus.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: process-status-backend
+      app: {{ .Values.processStatus.appLabel }}
+{{- end }}
