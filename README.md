@@ -1,43 +1,197 @@
-namespace: backend
+Now I am sharing with you another microservice manifest files in roder to make in helm and details kilndly make proper congiuartion and send me backk all files:
 
-serviceAccountName: process-status-sa
-deploymentName: process-status-deployment
-serviceName: process-status-service
+# --------------------------------------------
+# Service Account
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: process-status-sa
+  namespace: backend
 
-appLabel: process-status-backend
-containerName: process-status-container
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: process-status-deployment
+  namespace: backend
 
-replicaCount: 1
-containerPort: 3000
-servicePort: 80
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/process-status-service
-  tag: SV16
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+  selector:
+    matchLabels:
+      app: process-status-backend
 
-# only references (no creation)
-redisConfigName: redis-config
-oracleConfigName: oracle-config
-oracleSecretName: oracle-secret
+  template:
+    metadata:
+      labels:
+        app: process-status-backend
 
-hpa:
-  enabled: true
+    spec:
+      serviceAccountName: process-status-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      volumes:
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: process-status-backend
+
+      containers:
+        - name: process-status-container
+          image: h06vksharbor.corp.ad.sbi/cbops/process-status-service:SV16
+          imagePullPolicy: Always
+
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
+
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+
+          ports:
+            - containerPort: 3000
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          startupProbe:
+            tcpSocket:
+              port: 3000
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: process-status-service
+  namespace: backend
+
+spec:
+  selector:
+    app: process-status-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: process-status-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: process-status-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
 
-hpaName: process-status-hpa
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-pdb:
-  enabled: true
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-pdbName: process-status-pdb
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: process-status-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: process-status-backend
