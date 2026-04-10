@@ -1,26 +1,25 @@
-Now I am sharing with you another microservice manifest files in roder to make in helm and details kilndly make proper congiuartion and send me backk all files:
-
-# --------------------------------------------
+# =====================================================
 # Service Account
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: process-status-sa
-  namespace: backend
+  name: {{ .Values.serviceAccountName }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: false
 
 ---
-# --------------------------------------------
+# =====================================================
 # Deployment
-# --------------------------------------------
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: process-status-deployment
-  namespace: backend
+  name: {{ .Values.deploymentName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 5
 
   strategy:
@@ -31,15 +30,15 @@ spec:
 
   selector:
     matchLabels:
-      app: process-status-backend
+      app: {{ .Values.appLabel }}
 
   template:
     metadata:
       labels:
-        app: process-status-backend
+        app: {{ .Values.appLabel }}
 
     spec:
-      serviceAccountName: process-status-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
@@ -61,12 +60,12 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: process-status-backend
+              app: {{ .Values.appLabel }}
 
       containers:
-        - name: process-status-container
-          image: h06vksharbor.corp.ad.sbi/cbops/process-status-service:SV16
-          imagePullPolicy: Always
+        - name: {{ .Values.containerName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           volumeMounts:
             - name: tmp-dir
@@ -74,32 +73,32 @@ spec:
 
           envFrom:
             - configMapRef:
-                name: redis-config
+                name: {{ .Values.redisConfigName }}
             - configMapRef:
-                name: oracle-config
+                name: {{ .Values.oracleConfigName }}
             - secretRef:
-                name: oracle-secret
+                name: {{ .Values.oracleSecretName }}
 
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.containerPort }}
 
           resources:
             requests:
-              cpu: "250m"
-              memory: "512Mi"
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
             limits:
-              cpu: "500m"
-              memory: "1Gi"
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
 
           startupProbe:
             tcpSocket:
-              port: 3000
+              port: {{ .Values.containerPort }}
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 3000
+              port: {{ .Values.containerPort }}
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -107,7 +106,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 3000
+              port: {{ .Values.containerPort }}
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -126,45 +125,46 @@ spec:
                 - ALL
 
 ---
-# --------------------------------------------
+# =====================================================
 # Service
-# --------------------------------------------
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: process-status-service
-  namespace: backend
+  name: {{ .Values.serviceName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   selector:
-    app: process-status-backend
+    app: {{ .Values.appLabel }}
 
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 3000
+      port: {{ .Values.servicePort }}
+      targetPort: {{ .Values.containerPort }}
 
   type: ClusterIP
 
 ---
-# --------------------------------------------
+# =====================================================
 # Horizontal Pod Autoscaler
-# --------------------------------------------
+# =====================================================
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: process-status-hpa
-  namespace: backend
+  name: {{ .Values.hpaName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: process-status-deployment
+    name: {{ .Values.deploymentName }}
 
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
   behavior:
     scaleUp:
@@ -178,20 +178,23 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}
 
 ---
-# --------------------------------------------
+# =====================================================
 # Pod Disruption Budget
-# --------------------------------------------
+# =====================================================
+{{- if .Values.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: process-status-pdb
-  namespace: backend
+  name: {{ .Values.pdbName }}
+  namespace: {{ .Values.namespace }}
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: process-status-backend
+      app: {{ .Values.appLabel }}
+{{- end }}
