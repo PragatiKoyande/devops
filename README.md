@@ -1,54 +1,182 @@
-namespace: backend
+Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
 
-serviceAccountName: react-app-sa
-deploymentName: react-app-deployment
-serviceName: react-service
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: report-builder-sa
+  namespace: backend
 
-appLabel: reactive-app
-containerName: reactive-container
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-builder-deployment
+  namespace: backend
 
-replicaCount: 1
-containerPort: 80
-servicePort: 80
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/react-service
-  tag: DEV46
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+  selector:
+    matchLabels:
+      app: report-builder-app
 
-startupProbe:
-  failureThreshold: 30
-  periodSeconds: 10
+  template:
+    metadata:
+      labels:
+        app: report-builder-app
 
-livenessProbe:
-  initialDelaySeconds: 20
-  periodSeconds: 10
-  timeoutSeconds: 3
-  failureThreshold: 3
+    spec:
+      serviceAccountName: report-builder-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-readinessProbe:
-  initialDelaySeconds: 10
-  periodSeconds: 5
-  timeoutSeconds: 3
-  failureThreshold: 3
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-hpa:
-  enabled: true
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: report-builder-app
+
+      containers:
+        - name: report-builder-container
+          image: h06vksharbor.corp.ad.sbi/cbops/report-builder-service:DEV01
+          imagePullPolicy: Always
+
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: hadoop-config
+
+          ports:
+            - containerPort: 8091
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          startupProbe:
+            tcpSocket:
+              port: 8091
+            failureThreshold: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8091
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: 8091
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service (internal communication)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-builder-service
+  namespace: backend
+
+spec:
+  selector:
+    app: report-builder-app
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8091
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: report-builder-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: report-builder-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
 
-hpaName: react-app-hpa
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-pdb:
-  enabled: true
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-pdbName: react-app-pdb
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: report-builder-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: report-builder-app
