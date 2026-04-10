@@ -1,6 +1,11 @@
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ .Values.name }}-pdb
   namespace: {{ .Values.namespace }}
-automountServiceAccountToken: false
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-backend
