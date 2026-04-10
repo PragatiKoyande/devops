@@ -1,67 +1,211 @@
-namespace: backend
+Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
 
-serviceAccountName: transactions-sa
-deploymentName: transactions-deployment
-serviceName: transactions-service
+# --------------------------------------------
+# Service Account
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: user-sa
+  namespace: backend
 
-appLabel: transactions-backend
-containerName: transactions-container
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: backend
 
-replicaCount: 1
-containerPort: 4000
-servicePort: 80
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-  tag: DEV01
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-# Existing configs & secrets
-env:
-  configMaps:
-    redis: redis-config
-    oracle: oracle-config
-  secrets:
-    oracle: oracle-secret
+  selector:
+    matchLabels:
+      app: user-backend
 
-# Pod security
-securityContext:
-  runAsUser: 10001
-  fsGroup: 10001
+  template:
+    metadata:
+      labels:
+        app: user-backend
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+    spec:
+      serviceAccountName: user-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-startupProbe:
-  failureThreshold: 60
-  periodSeconds: 10
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-livenessProbe:
-  initialDelaySeconds: 90
-  periodSeconds: 15
-  timeoutSeconds: 5
-  failureThreshold: 5
+      hostAliases:
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
 
-readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 5
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
 
-hpa:
-  enabled: true
+      containers:
+        - name: user-container
+          image: h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06
+          imagePullPolicy: Always
+
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
+
+          envFrom:
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: ldap-config
+
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
+
+          ports:
+            - containerPort: 8087
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          startupProbe:
+            tcpSocket:
+              port: 8087
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: backend
+
+spec:
+  selector:
+    app: user-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8087
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user-deployment
+
   minReplicas: 1
-  maxReplicas: 3
-  cpuUtilization: 70
+  maxReplicas: 5
 
-hpaName: transactions-hpa
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-pdb:
-  enabled: true
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-pdbName: transactions-pdb
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: user-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: user-backend
