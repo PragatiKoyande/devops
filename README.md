@@ -1,69 +1,186 @@
-namespace: backend
+Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
 
-serviceAccountName: report-builder-sa
-deploymentName: report-builder-deployment
-serviceName: report-builder-service
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: report-sa
+  namespace: backend
 
-appLabel: report-builder-app
-containerName: report-builder-container
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-deployment
+  namespace: backend
 
-replicaCount: 1
-containerPort: 8091
-servicePort: 80
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: DEV01
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-# ✅ Existing configs & secrets (NOT created by Helm)
-env:
-  configMaps:
-    redis: redis-config
-    oracle: oracle-config
-    hadoop: hadoop-config
-  secrets:
-    oracle: oracle-secret
+  selector:
+    matchLabels:
+      app: report-backend
 
-# ✅ Security (important - kept from your manifest)
-securityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
-  fsGroup: 2000
+  template:
+    metadata:
+      labels:
+        app: report-backend
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+    spec:
+      serviceAccountName: report-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-startupProbe:
-  failureThreshold: 30
-  periodSeconds: 10
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-livenessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 3
-  failureThreshold: 3
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: report-backend
 
-readinessProbe:
-  initialDelaySeconds: 15
-  periodSeconds: 5
-  timeoutSeconds: 3
-  failureThreshold: 3
+      containers:
+        - name: report-container
+          image: h06vksharbor.corp.ad.sbi/cbops/report-service:DEV16
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+         
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"           
 
-hpa:
-  enabled: true
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+
+          ports:
+            - containerPort: 9005
+
+          startupProbe:
+            tcpSocket:
+              port: 9005
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 9005
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 9005
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-service
+  namespace: backend
+
+spec:
+  selector:
+    app: report-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9005
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: report-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: report-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
 
-hpaName: report-builder-hpa
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-pdb:
-  enabled: true
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-pdbName: report-builder-pdb
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: report-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: report-backend
