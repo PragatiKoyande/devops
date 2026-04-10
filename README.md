@@ -1,6 +1,42 @@
-apiVersion: v2
 name: journal
-description: Journal microservice
-type: application
-version: 0.1.0
-appVersion: "1.0"
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
+  tag: DEV04
+  pullPolicy: Always
+
+serviceAccount:
+  name: journal-sa
+
+service:
+  name: journal-service
+  port: 80
+  targetPort: 9999
+  type: ClusterIP
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+configMaps:
+  - redis-config
+  - oracle-config
+
+secretRefs:
+  - oracle-secret
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  cpuUtilization: 70
+
+pdb:
+  minAvailable: 1
