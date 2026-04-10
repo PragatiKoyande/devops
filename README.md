@@ -1,68 +1,166 @@
-namespace: backend
+Now I am sharing with you another microservice manifest file please make in helm format like yesterday and add details kilndly make proper congiuartion and send me backk all files:
 
-serviceAccountName: template-config-sa
-deploymentName: template-config-deployment
-serviceName: template-config-service
+# =====================================================
+# Service Account 
+# =====================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: transactions-sa
+  namespace: backend
+automountServiceAccountToken: false
+---
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: transactions-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: transactions-backend
+---
+# =====================================================
+# Deployment 
+# =====================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transactions-deployment
+  namespace: backend
+spec:
+  replicas: 1
 
-appLabel: template-app
-containerName: template-config-container
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-replicaCount: 1
-containerPort: 8090
-servicePort: 80
+  selector:
+    matchLabels:
+      app: transactions-backend
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/template-config-service
-  tag: DEV01
-  pullPolicy: Always
+  template:
+    metadata:
+      labels:
+        app: transactions-backend
+    spec:
+      serviceAccountName: transactions-sa
+      terminationGracePeriodSeconds: 30
 
-# Existing configs & secrets
-env:
-  configMaps:
-    redis: redis-config
-    oracle: oracle-config
-  secrets:
-    oracle: oracle-secret
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: transactions-backend
 
-# Security
-securityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
-  fsGroup: 2000
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+      containers:
+        - name: transactions-container
+          image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:DEV01
+          imagePullPolicy: Always
 
-startupProbe:
-  failureThreshold: 30
-  periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
 
-livenessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 3
-  failureThreshold: 3
+          ports:
+            - containerPort: 4000
 
-readinessProbe:
-  initialDelaySeconds: 15
-  periodSeconds: 5
-  timeoutSeconds: 3
-  failureThreshold: 3
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
-hpa:
-  enabled: true
+          startupProbe:
+            tcpSocket:
+              port: 4000
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 4000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 4000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+---
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: transactions-hpa
+  namespace: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: transactions-deployment
   minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
-
-hpaName: template-config-hpa
-
-pdb:
-  enabled: true
-
-pdbName: template-config-pdb
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+# =====================================================
+# Service
+# =====================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: transactions-service
+  namespace: backend
+spec:
+  selector:
+    app: transactions-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 4000
+  type: ClusterIP
