@@ -1,95 +1,15 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Values.deployment.name }}
+  name: {{ .Values.service.name }}
   namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: {{ .Values.deployment.replicas }}
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
+  type: ClusterIP
   selector:
-    matchLabels:
-      app: {{ .Values.app.name }}
+    app: {{ .Values.app.name }}
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.app.name }}
-
-    spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      terminationGracePeriodSeconds: 30
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: {{ .Values.app.name }}
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
-
-      containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
-
-          envFrom:
-            {{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
