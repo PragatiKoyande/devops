@@ -1,22 +1,11 @@
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 metadata:
-  name: {{ include "common-master.fullname" . }}-hpa
+  name: {{ include "common-master.fullname" . }}-pdb
   namespace: {{ .Release.Namespace }}
 
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ include "common-master.fullname" . }}
-
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpu }}
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: {{ include "common-master.name" . }}
