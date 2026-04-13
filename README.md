@@ -1,7 +1,6 @@
-{{- define "common-master.name" -}}
-common-master
-{{- end }}
-
-{{- define "common-master.fullname" -}}
-{{ .Release.Name }}
-{{- end }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "common-master.fullname" . }}-sa
+  namespace: {{ .Release.Namespace }}
+automountServiceAccountToken: false
