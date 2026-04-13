@@ -1,24 +1,11 @@
-{{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 metadata:
-  name: {{ .Chart.Name }}-hpa
+  name: {{ .Chart.Name }}-pdb
   namespace: {{ .Values.namespace }}
 
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.deployment.name }}
-
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpu }}
-{{- end }}
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
