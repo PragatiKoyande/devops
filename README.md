@@ -1,2 +1,2 @@
-D:\Pragati\HELM-Latest-0904\Deployment>helm install common-master ./common-master -f values.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: INSTALLATION FAILED: open values.yaml: The system cannot find the file specified.
+D:\Pragati\HELM-Latest-0904\Deployment\common-master>helm install common-master . -f values-dev.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
+Error: INSTALLATION FAILED: unable to continue with install: PodDisruptionBudget "user-pdb" in namespace "backend" exists and cannot be imported into the current release: invalid ownership metadata; annotation validation error: key "meta.helm.sh/release-name" must equal "common-master": current value is "user-service"
