@@ -1,6 +1,2 @@
-apiVersion: v2
-name: common-master
-description: Helm chart for common-master microservice
-type: application
-version: 0.1.0
-appVersion: "1.0"
+D:\Pragati\HELM-Latest-0904\Deployment>helm install common-master ./common-master -f values.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
+Error: INSTALLATION FAILED: open values.yaml: The system cannot find the file specified.
