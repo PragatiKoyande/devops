@@ -1,17 +1,22 @@
-apiVersion: v1
-kind: Service
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "common-master.fullname" . }}
+  name: {{ include "common-master.fullname" . }}-hpa
   namespace: {{ .Release.Namespace }}
 
 spec:
-  type: ClusterIP
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "common-master.fullname" . }}
 
-  selector:
-    app: {{ include "common-master.name" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
 
-  ports:
-    - name: http
-      port: 80
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: TCP
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.cpu }}
