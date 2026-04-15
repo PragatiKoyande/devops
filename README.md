@@ -1,164 +1,51 @@
-# =====================================================
-# Service Account
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+apiVersion: v2
+name: journal-service
+description: Journal Service Helm Chart
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+
+
+name: journal-service
+
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
+  tag: DEV04
+  pullPolicy: Always
+
+serviceAccount:
   name: journal-sa
-  namespace: backend
-automountServiceAccountToken: false
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: journal-pdb
-  namespace: backend
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: journal-app
----
-# =====================================================
-# Deployment
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: journal-deployment
-  namespace: backend
-spec:
-  replicas: 1
+  automount: false
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+service:
+  name: journal-service
+  port: 80
+  targetPort: 9999
 
-  selector:
-    matchLabels:
-      app: journal-app
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
 
-  template:
-    metadata:
-      labels:
-        app: journal-app
-    spec:
-      serviceAccountName: journal-sa
-      terminationGracePeriodSeconds: 30
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: journal-app
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
-
-      containers:
-        - name: journal-app-container
-          image: h06vksharbor.corp.ad.sbi/cbops/journal-service:DEV04
-          imagePullPolicy: Always
-
-          envFrom:
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
-
-          ports:
-            - containerPort: 9999
-
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-
-          startupProbe:
-            tcpSocket:
-              port: 9999
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 9999
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: 9999
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: journal-hpa
-  namespace: backend
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: journal-deployment
+autoscaling:
   minReplicas: 1
   maxReplicas: 3
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: journal-service
-  namespace: backend
-spec:
-  selector:
-    app: journal-app
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 9999
-  type: ClusterIP
+  cpuUtilization: 70
+
+pdb:
+  minAvailable: 1
+
+envFrom:
+  configMaps:
+    - redis-config
+    - oracle-config
+  secrets:
+    - oracle-secret
