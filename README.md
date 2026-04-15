@@ -1,10 +1,26 @@
+# ------------------------------------------------
+# Service Account
+# ------------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: notification-sa
+  namespace: backend
+
+---
+# ------------------------------------------------
+# Deployment
+# ------------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-deployment
-  namespace: {{ .Values.namespace }}
+  name: notification-deployment
+  namespace: backend
+  labels:
+    app: notification-backend
+
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
@@ -15,96 +31,90 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.name }}
+      app: notification-backend
 
   template:
     metadata:
       labels:
-        app: {{ .Values.name }}
+        app: notification-backend
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      terminationGracePeriodSeconds: 30
+      serviceAccountName: notification-sa
       enableServiceLinks: false
+      terminationGracePeriodSeconds: 30
 
       securityContext:
         runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-      {{- with .Values.hostAliases }}
-      hostAliases:
-{{ toYaml . | nindent 8 }}
-      {{- end }}
-
-      {{- with .Values.volumes }}
       volumes:
-{{ toYaml . | nindent 8 }}
-      {{- end }}
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
+        - name: logs-volume
+          emptyDir: {}
+
 
       containers:
-        - name: {{ .Values.name }}-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: notification-container
+          image: h06vksharbor.corp.ad.sbi/cbops/notification-service:TEST-1
+          imagePullPolicy: Always
+
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
+            - name: logs-volume
+              mountPath: /logs
 
           ports:
-            - containerPort: {{ .Values.service.targetPort }}
+            - containerPort: 9010
 
-          {{- with .Values.volumeMounts }}
-          volumeMounts:
-{{ toYaml . | nindent 12 }}
-          {{- end }}
-
-          {{- if or .Values.envFrom.configMaps .Values.envFrom.secrets }}
           envFrom:
-          {{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-          {{- end }}
-          {{- range .Values.envFrom.secrets }}
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: postgres-config
             - secretRef:
-                name: {{ . }}
-          {{- end }}
-          {{- end }}
+                name: postgres-secret
 
-          {{- if or .Values.extraEnv .Values.secretEnv }}
           env:
-          {{- with .Values.extraEnv }}
-{{ toYaml . | nindent 12 }}
-          {{- end }}
-          {{- range .Values.secretEnv }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .key }}
-          {{- end }}
-          {{- end }}
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "notification-service-group"
+
+            - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+              value: "earliest"
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            failureThreshold: 60
+              port: 9010
+            failureThreshold: 30
             periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 9010
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: 9010
+            initialDelaySeconds: 15
+            periodSeconds: 5
 
           lifecycle:
             preStop:
@@ -113,7 +123,72 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
+
+---
+# ------------------------------------------------
+# Service
+# ------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: backend
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: notification-backend
+
+  ports:
+    - port: 80
+      targetPort: 9010
+      protocol: TCP
+
+---
+# ------------------------------------------------
+# Horizontal Pod Autoscaler
+# ------------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: notification-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: notification-deployment
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# ------------------------------------------------
+# Pod Disruption Budget
+# ------------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: notification-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+
+  selector:
+    matchLabels:
+      app: notification-backend
