@@ -1,21 +1,37 @@
+# =====================================================
+# Service Account
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
+  name: journal-sa
+  namespace: backend
 automountServiceAccountToken: false
-
-
-
-
+---
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: journal-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: journal-app
+---
+# =====================================================
+# Deployment
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-
+  name: journal-deployment
+  namespace: backend
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: 1
 
   strategy:
     type: RollingUpdate
@@ -25,15 +41,14 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
+      app: journal-app
 
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
-
+        app: journal-app
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: journal-sa
       terminationGracePeriodSeconds: 30
 
       topologySpreadConstraints:
@@ -42,7 +57,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: {{ .Values.app.name }}
+              app: journal-app
 
       securityContext:
         runAsNonRoot: true
@@ -50,35 +65,38 @@ spec:
         fsGroup: 10001
 
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
+        - name: journal-app-container
+          image: h06vksharbor.corp.ad.sbi/cbops/journal-service:DEV04
+          imagePullPolicy: Always
 
           envFrom:
-            {{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
             - secretRef:
-                name: {{ . }}
-            {{- end }}
+                name: oracle-secret
+
+          ports:
+            - containerPort: 9999
 
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
+              port: 9999
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
+              port: 9999
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -86,7 +104,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
+              port: 9999
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -103,61 +121,44 @@ spec:
             capabilities:
               drop:
                 - ALL
-
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  type: ClusterIP
-  selector:
-    app: {{ .Values.app.name }}
-
-  ports:
-    - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-
-
-{{- if .Values.autoscaling.enabled }}
+---
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Chart.Name }}-hpa
-  namespace: {{ .Values.namespace }}
-
+  name: journal-hpa
+  namespace: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.deployment.name }}
-
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-
+    name: journal-deployment
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpu }}
-{{- end }}
-
-
-
-
-apiVersion: policy/v1
-kind: PodDisruptionBudget
+          averageUtilization: 70
+---
+# =====================================================
+# Service
+# =====================================================
+apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Chart.Name }}-pdb
-  namespace: {{ .Values.namespace }}
-
+  name: journal-service
+  namespace: backend
 spec:
-  minAvailable: 1
   selector:
-    matchLabels:
-      app: {{ .Values.app.name }}
+    app: journal-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9999
+  type: ClusterIP
