@@ -32,11 +32,15 @@ spec:
         runAsUser: 10001
         fsGroup: 10001
 
+      {{- with .Values.hostAliases }}
       hostAliases:
-      {{- toYaml .Values.hostAliases | nindent 6 }}
+{{ toYaml . | nindent 8 }}
+      {{- end }}
 
+      {{- with .Values.volumes }}
       volumes:
-      {{- toYaml .Values.volumes | nindent 6 }}
+{{ toYaml . | nindent 8 }}
+      {{- end }}
 
       containers:
         - name: {{ .Values.name }}-container
@@ -46,9 +50,12 @@ spec:
           ports:
             - containerPort: {{ .Values.service.targetPort }}
 
+          {{- with .Values.volumeMounts }}
           volumeMounts:
-          {{- toYaml .Values.volumeMounts | nindent 10 }}
+{{ toYaml . | nindent 12 }}
+          {{- end }}
 
+          {{- if or .Values.envFrom.configMaps .Values.envFrom.secrets }}
           envFrom:
           {{- range .Values.envFrom.configMaps }}
             - configMapRef:
@@ -58,9 +65,13 @@ spec:
             - secretRef:
                 name: {{ . }}
           {{- end }}
+          {{- end }}
 
+          {{- if or .Values.extraEnv .Values.secretEnv }}
           env:
-          {{- toYaml .Values.extraEnv | nindent 10 }}
+          {{- with .Values.extraEnv }}
+{{ toYaml . | nindent 12 }}
+          {{- end }}
           {{- range .Values.secretEnv }}
             - name: {{ .name }}
               valueFrom:
@@ -68,9 +79,10 @@ spec:
                   name: {{ .secretName }}
                   key: {{ .key }}
           {{- end }}
+          {{- end }}
 
           resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+{{ toYaml .Values.resources | nindent 12 }}
 
           readinessProbe:
             tcpSocket:
@@ -105,8 +117,3 @@ spec:
             capabilities:
               drop:
                 - ALL
-
-Error: YAML parse error on login-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 74: did not find expected key
-
-getting this issue
-
