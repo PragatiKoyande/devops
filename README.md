@@ -1,11 +1,3 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
-
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -114,57 +106,7 @@ spec:
               drop:
                 - ALL
 
+Error: YAML parse error on login-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 74: did not find expected key
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    app: {{ .Values.name }}
+getting this issue
 
-  ports:
-    - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: TCP
-
-  type: ClusterIP
-
-
-
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.name }}-deployment
-
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
-
-
-
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ .Values.name }}-pdb
-  namespace: {{ .Values.namespace }}
-spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-  selector:
-    matchLabels:
-      app: {{ .Values.name }}
