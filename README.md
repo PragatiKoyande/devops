@@ -1,3 +1,6 @@
+Similar to login service now I want to do the helm deployment with different 3 environments for another service which is notification service and I am sharing the manifest with you for the same.
+
+
 # ------------------------------------------------
 # Service Account
 # ------------------------------------------------
