@@ -1,28 +1,28 @@
 apiVersion: v2
-name: report-builder
-description: Report Builder Service Helm Chart
+name: report-service
+description: Report Service Helm Chart
 type: application
 version: 0.1.0
 appVersion: "1.0"
 
 
-name: report-builder-app
+name: report
 namespace: backend
 
 replicaCount: 1
 
 image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: latest
+  repository: h06vksharbor.corp.ad.sbi/cbops/report-service
+  tag: DEV16
   pullPolicy: Always
 
 serviceAccount:
-  name: report-builder-sa
+  name: report-sa
 
 service:
-  name: report-builder-service
+  name: report-service
   port: 80
-  targetPort: 8091
+  targetPort: 9005
 
 autoscaling:
   enabled: true
@@ -46,13 +46,16 @@ envFrom:
   configMaps:
     - redis-config
     - oracle-config
-    - hadoop-config
+    - kafka-config
   secrets:
     - oracle-secret
 
+extraEnv:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "dev"
+
+secretEnv: []
+
+hostAliases: []
 volumes: []
 volumeMounts: []
-hostAliases: []
-
-extraEnv: []
-secretEnv: []
