@@ -1,18 +1,26 @@
+Similar to notification service now I want to do the helm deployment with different 3 environments for another service which is process-status service and I am sharing the manifest with you for the same
+
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
+  name: report-sa
+  namespace: backend
 
-
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-deployment
-  namespace: {{ .Values.namespace }}
+  name: report-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
@@ -23,15 +31,15 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.name }}
+      app: report-backend
 
   template:
     metadata:
       labels:
-        app: {{ .Values.name }}
+        app: report-backend
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: report-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
@@ -47,95 +55,105 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: {{ .Values.name }}
+              app: report-backend
 
       containers:
-        - name: {{ .Values.name }}-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
-
+        - name: report-container
+          image: h06vksharbor.corp.ad.sbi/cbops/report-service:DEV16
+          imagePullPolicy: Always
           envFrom:
-{{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-{{- end }}
-{{- range .Values.envFrom.secrets }}
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
             - secretRef:
-                name: {{ . }}
-{{- end }}
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+         
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"           
+
 
           resources:
-{{- toYaml .Values.resources | nindent 12 }}
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+
+          ports:
+            - containerPort: 9005
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            failureThreshold: 30
+              port: 9005
+            failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 3
+              port: 9005
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 15
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
+              port: 9005
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           lifecycle:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
-
-
-
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: report-service
+  namespace: backend
 
 spec:
-  type: ClusterIP
-
   selector:
-    app: {{ .Values.name }}
+    app: report-backend
 
   ports:
     - name: http
       protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      port: 80
+      targetPort: 9005
 
+  type: ClusterIP
 
-
-
-{{- if .Values.autoscaling.enabled }}
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
+  name: report-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.name }}-deployment
+    name: report-deployment
 
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
 
   behavior:
     scaleUp:
@@ -149,23 +167,20 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
-{{- end }}
+          averageUtilization: 70
 
-
-
-
-{{- if .Values.pdb.enabled }}
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.name }}-pdb
-  namespace: {{ .Values.namespace }}
+  name: report-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-
+  minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Values.name }}
-{{- end }}
+      app: report-backend
