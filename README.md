@@ -1,19 +1,39 @@
+Similar to template-config service now I want to do the helm deployment with different 3 environments for another service which is transactions service and I am sharing the manifest with you for the same
+
+# =====================================================
+# Service Account 
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
-
-
+  name: transactions-sa
+  namespace: backend
+automountServiceAccountToken: false
+---
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: transactions-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: transactions-backend
+---
+# =====================================================
+# Deployment 
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-deployment
-  namespace: {{ .Values.namespace }}
-
+  name: transactions-deployment
+  namespace: backend
 spec:
-  replicas: {{ .Values.replicaCount }}
-  revisionHistoryLimit: 5
+  replicas: 1
 
   strategy:
     type: RollingUpdate
@@ -23,23 +43,15 @@ spec:
 
   selector:
     matchLabels:
-      app: template-app
+      app: transactions-backend
 
   template:
     metadata:
       labels:
-        app: template-app
-
+        app: transactions-backend
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: transactions-sa
       terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
 
       topologySpreadConstraints:
         - maxSkew: 1
@@ -47,132 +59,108 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: template-app
+              app: transactions-backend
 
-      {{- if .Values.volumes }}
-      volumes:
-{{ toYaml .Values.volumes | indent 8 }}
-      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
 
       containers:
-        - name: {{ .Values.name }}-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
-
-          {{- if .Values.volumeMounts }}
-          volumeMounts:
-{{ toYaml .Values.volumeMounts | indent 12 }}
-          {{- end }}
+        - name: transactions-container
+          image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:DEV01
+          imagePullPolicy: Always
 
           envFrom:
-          {{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-          {{- end }}
-          {{- range .Values.envFrom.secrets }}
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
             - secretRef:
-                name: {{ . }}
-          {{- end }}
+                name: oracle-secret
+
+          ports:
+            - containerPort: 4000
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            failureThreshold: 30
+              port: 4000
+            failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 3
-            failureThreshold: 3
+              port: 4000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 15
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
+              port: 4000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           lifecycle:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
-
-
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  type: ClusterIP
-  selector:
-    app: template-app
-
-  ports:
-    - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-
-
-
-
-{{- if .Values.autoscaling.enabled }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+---
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
-
+  name: transactions-hpa
+  namespace: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.name }}-deployment
-
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
+    name: transactions-deployment
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
-{{- end }}
-
-
-
-{{- if .Values.pdb.enabled }}
-apiVersion: policy/v1
-kind: PodDisruptionBudget
+          averageUtilization: 70
+---
+# =====================================================
+# Service
+# =====================================================
+apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Values.name }}-pdb
-  namespace: {{ .Values.namespace }}
-
+  name: transactions-service
+  namespace: backend
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-
   selector:
-    matchLabels:
-      app: template-app
-{{- end }}
+    app: transactions-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 4000
+  type: ClusterIP
