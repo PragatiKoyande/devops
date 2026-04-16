@@ -1,65 +1,190 @@
-apiVersion: v2
-name: process-status
-description: Process Status Service Helm Chart
-type: application
-version: 0.1.0
-appVersion: "1.0"
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
 
 
-name: process-status
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-deployment
+  namespace: {{ .Values.namespace }}
 
-replicaCount: 1
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 5
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/process-status-service
-  tag: latest
-  pullPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-serviceAccount:
-  name: process-status-sa
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-backend
 
-service:
-  name: process-status-service
-  port: 80
-  targetPort: 3000
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}-backend
 
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-pdb:
-  enabled: true
-  minAvailable: 1
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{ .Values.name }}-backend
 
-envFrom:
-  configMaps:
-    - redis-config
-    - oracle-config
-  secrets:
-    - oracle-secret
+      volumes:
+{{- toYaml .Values.volumes | nindent 8 }}
 
-volumes:
-  - name: tmp-dir
-    emptyDir:
-      medium: Memory
-      sizeLimit: 64Mi
+      containers:
+        - name: {{ .Values.name }}-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-volumeMounts:
-  - name: tmp-dir
-    mountPath: /tmp
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
 
-extraEnv: []
-secretEnv: []
+          volumeMounts:
+{{- toYaml .Values.volumeMounts | nindent 12 }}
 
-hostAliases: []
+          envFrom:
+{{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+{{- end }}
+{{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+{{- end }}
+
+          resources:
+{{- toYaml .Values.resources | nindent 12 }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: {{ .Values.name }}-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+
+
+
+
+
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.name }}-hpa
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.name }}-deployment
+
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
+{{- end }}
+
+
+
+
+
+
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.name }}-pdb
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}-backend
+{{- end }}
+
+
+
+
+
+
+
+
+
