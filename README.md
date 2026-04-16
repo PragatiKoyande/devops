@@ -1,18 +1,26 @@
+Similar to report service now I want to do the helm deployment with different 3 environments for another service which is template-config service and I am sharing the manifest with you for the same
+
+# --------------------------------------------
+# Service Account 
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
+  name: template-config-sa
+  namespace: backend
 
-
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-deployment
-  namespace: {{ .Values.namespace }}
+  name: template-config-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
@@ -23,15 +31,15 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.name }}-backend
+      app: template-app
 
   template:
     metadata:
       labels:
-        app: {{ .Values.name }}-backend
+        app: template-app
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: template-config-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
@@ -41,120 +49,111 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
-      {{- if .Values.hostAliases }}
-      hostAliases:
-{{ toYaml .Values.hostAliases | indent 8 }}
-      {{- end }}
-
-      {{- if .Values.volumes }}
-      volumes:
-{{ toYaml .Values.volumes | indent 8 }}
-      {{- end }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: template-app
 
       containers:
-        - name: {{ .Values.name }}-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
-
-          {{- if .Values.volumeMounts }}
-          volumeMounts:
-{{ toYaml .Values.volumeMounts | indent 12 }}
-          {{- end }}
+        - name: template-config-container
+          image: h06vksharbor.corp.ad.sbi/cbops/template-config-service:DEV01
+          imagePullPolicy: Always
 
           envFrom:
-          {{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-          {{- end }}
-          {{- range .Values.envFrom.secrets }}
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
             - secretRef:
-                name: {{ . }}
-          {{- end }}
+                name: oracle-secret
 
-          {{- if or .Values.extraEnv .Values.secretEnv }}
-          env:
-          {{- if .Values.extraEnv }}
-{{ toYaml .Values.extraEnv | indent 12 }}
-          {{- end }}
-          {{- range .Values.secretEnv }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .key }}
-          {{- end }}
-          {{- end }}
+          ports:
+            - containerPort: 8090
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            failureThreshold: 60
+              port: 8090
+            failureThreshold: 30
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: 8090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: 8090
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
 
           lifecycle:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
-
-
-
+---
+# --------------------------------------------
+# Service 
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: template-config-service
+  namespace: backend
 
 spec:
-  type: ClusterIP
   selector:
-    app: {{ .Values.name }}-backend
+    app: template-app
 
   ports:
     - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      port: 80
+      targetPort: 8090
 
+  type: ClusterIP
 
-
-
-{{- if .Values.autoscaling.enabled }}
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based)
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
+  name: template-config-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.name }}-deployment
+    name: template-config-deployment
 
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -162,23 +161,20 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
-{{- end }}
+          averageUtilization: 70
 
-
-
-
-{{- if .Values.pdb.enabled }}
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.name }}-pdb
-  namespace: {{ .Values.namespace }}
+  name: template-config-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-
+  minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Values.name }}-backend
-{{- end }}
+      app: template-app
