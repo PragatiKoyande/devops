@@ -1,20 +1,27 @@
+Similar to transactions service now I want to do the helm deployment with different 3 environments for another service which is user service and I am sharing the manifest with you for the same
+
+# --------------------------------------------
+# Service Account
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+  name: user-sa
+  namespace: backend
 
-
-
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-deployment
-  namespace: {{ .Values.namespace }}
+  name: user-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
+  revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
@@ -24,60 +31,96 @@ spec:
 
   selector:
     matchLabels:
-      app: transactions-backend
+      app: user-backend
 
   template:
     metadata:
       labels:
-        app: transactions-backend
+        app: user-backend
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: user-sa
       terminationGracePeriodSeconds: 30
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: transactions-backend
+      enableServiceLinks: false
 
       securityContext:
         runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      hostAliases:
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
+
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
 
       containers:
-        - name: {{ .Values.name }}-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: user-container
+          image: h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06
+          imagePullPolicy: Always
 
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
 
           envFrom:
-          {{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-          {{- end }}
-          {{- range .Values.envFrom.secrets }}
+                name: oracle-config
             - secretRef:
-                name: {{ . }}
-          {{- end }}
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: ldap-config
+
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
+
+          ports:
+            - containerPort: 8087
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
+              port: 8087
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
+              port: 8087
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -85,7 +128,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
+              port: 8087
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -96,49 +139,52 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-
-
-
-
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: user-service
+  namespace: backend
 
 spec:
-  type: ClusterIP
   selector:
-    app: transactions-backend
+    app: user-backend
 
   ports:
     - name: http
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      port: 80
+      targetPort: 8087
 
+  type: ClusterIP
 
-
-{{- if .Values.autoscaling.enabled }}
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.name }}-hpa
-  namespace: {{ .Values.namespace }}
+  name: user-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.name }}-deployment
+    name: user-deployment
 
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -146,22 +192,20 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
-{{- end }}
+          averageUtilization: 70
 
-
-
-{{- if .Values.pdb.enabled }}
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.name }}-pdb
-  namespace: {{ .Values.namespace }}
+  name: user-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-
+  minAvailable: 1
   selector:
     matchLabels:
-      app: transactions-backend
-{{- end }}
+      app: user-backend
