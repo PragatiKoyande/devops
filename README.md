@@ -1,185 +1,56 @@
-Similar to notification service now I want to do the helm deployment with different 3 environments for another service which is process-status service and I am sharing the manifest with you for the same
+apiVersion: v2
+name: react-service
+description: React Frontend Service Helm Chart
+type: application
+version: 0.1.0
+appVersion: "1.0"
 
-# --------------------------------------------
-# Service Account 
-# --------------------------------------------
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+
+
+name: reactive-app
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/react-service
+  tag: latest
+  pullPolicy: Always
+
+serviceAccount:
   name: react-app-sa
-  namespace: backend
 
----
-# --------------------------------------------
-# Deployment
-# --------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: react-app-deployment
-  namespace: backend
-
-spec:
-  replicas: 1
-
-  # Keeps old ReplicaSets for rollback safety
-  revisionHistoryLimit: 5
-
-  # Zero-downtime rolling updates
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-  selector:
-    matchLabels:
-      app: reactive-app
-
-  template:
-    metadata:
-      labels:
-        app: reactive-app
-
-    spec:
-      # Use dedicated service account
-      serviceAccountName: react-app-sa
-
-      # Graceful shutdown time before force kill
-      terminationGracePeriodSeconds: 30
-
-      # Prevent automatic service env injection
-      enableServiceLinks: false
-
-      # Spread pods across nodes for HA readiness
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: reactive-app
-
-      containers:
-      - name: reactive-container
-        image: h06vksharbor.corp.ad.sbi/cbops/react-service:DEV46
-        imagePullPolicy: Always
-
-        ports:
-        - containerPort: 80
-
-        # Resource requests/limits for stable scheduling
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
-
-        # Startup probe prevents premature restarts
-        startupProbe:
-          tcpSocket:
-            port: 80
-          failureThreshold: 30
-          periodSeconds: 10
-
-        # Checks if container is alive
-        livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
-
-        # Controls traffic routing to healthy pods
-        readinessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-
-        # Graceful shutdown for active connections
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
-
----
-# --------------------------------------------
-# Service (internal access)
-# --------------------------------------------
-apiVersion: v1
-kind: Service
-metadata:
+service:
   name: react-service
-  namespace: backend
+  port: 80
+  targetPort: 80
 
-spec:
-  selector:
-    app: reactive-app
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 80
-
-  type: ClusterIP
-
----
-# --------------------------------------------
-# Horizontal Pod Autoscaler
-# Auto-scales based on CPU usage
-# --------------------------------------------
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: react-app-hpa
-  namespace: backend
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: react-app-deployment
-
+autoscaling:
+  enabled: true
   minReplicas: 1
   maxReplicas: 5
+  cpuUtilization: 70
 
-  # Stabilization avoids rapid scale up/down
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
----
-# --------------------------------------------
-# Pod Disruption Budget
-# Prevents downtime during node upgrades
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: react-app-pdb
-  namespace: backend
-
-spec:
+pdb:
+  enabled: true
   minAvailable: 1
-  selector:
-    matchLabels:
-      app: reactive-app
 
----
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+# No envFrom, volumes for this service
+envFrom:
+  configMaps: []
+  secrets: []
+
+volumes: []
+volumeMounts: []
+hostAliases: []
+
+extraEnv: []
+secretEnv: []
