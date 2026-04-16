@@ -1,59 +1,171 @@
-apiVersion: v2
-name: report-builder
-description: Report Builder Service Helm Chart
-type: application
-version: 0.1.0
-appVersion: "1.0"
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-deployment
+  namespace: {{ .Values.namespace }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 5
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{ .Values.name }}
+
+      containers:
+        - name: {{ .Values.name }}-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+
+          envFrom:
+{{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+{{- end }}
+{{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+{{- end }}
+
+          resources:
+{{- toYaml .Values.resources | nindent 12 }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            failureThreshold: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
 
 
-name: report-builder-app
-namespace: backend
 
-replicaCount: 1
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: latest
-  pullPolicy: Always
+spec:
+  type: ClusterIP
 
-serviceAccount:
-  name: report-builder-sa
+  selector:
+    app: {{ .Values.name }}
 
-service:
-  name: report-builder-service
-  port: 80
-  targetPort: 8091
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
 
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
 
-pdb:
-  enabled: true
-  minAvailable: 1
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
 
-envFrom:
-  configMaps:
-    - redis-config
-    - oracle-config
-    - hadoop-config
-  secrets:
-    - oracle-secret
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.name }}-hpa
+  namespace: {{ .Values.namespace }}
 
-volumes: []
-volumeMounts: []
-hostAliases: []
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.name }}-deployment
 
-extraEnv: []
-secretEnv: []
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.cpuUtilization }}
+{{- end }}
+
+
+
+
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.name }}-pdb
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+{{- end }}
