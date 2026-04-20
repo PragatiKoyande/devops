@@ -1,181 +1,414 @@
+Now I want to make helm setup for my kafka configuration so the configuartion is the same I am having 3 envs dev,sit and uat and below I am pasting my yamls please guide me with proper steps and directory structure:
 
-2026-04-17 05:07:18.995 INFO  [main] o.s.b.StartupInfoLogger: Starting DashboardServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by root in /)
-{"@timestamp":"2026-04-17T10:37:18.995285298+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.D.DashboardServiceApplication","message":"Starting DashboardServiceApplication v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by root in /)","stack_trace":""}
-2026-04-17 05:07:19.002 INFO  [main] o.s.b.SpringApplication: The following 1 profile is active: "dev"
-{"@timestamp":"2026-04-17T10:37:19.002981336+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.D.DashboardServiceApplication","message":"The following 1 profile is active: \"dev\"","stack_trace":""}
-2026-04-17 05:07:19.688 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
-{"@timestamp":"2026-04-17T10:37:19.688336593+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
-2026-04-17 05:07:19.688 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-{"@timestamp":"2026-04-17T10:37:19.688862693+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","stack_trace":""}
-2026-04-17 05:07:19.819 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 123 ms. Found 8 JPA repository interfaces.
-{"@timestamp":"2026-04-17T10:37:19.819787387+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 123 ms. Found 8 JPA repository interfaces.","stack_trace":""}
-2026-04-17 05:07:20.263 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
-{"@timestamp":"2026-04-17T10:37:20.263294149+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
-2026-04-17 05:07:20.264 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-{"@timestamp":"2026-04-17T10:37:20.264959074+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data Redis repositories in DEFAULT mode.","stack_trace":""}
-2026-04-17 05:07:20.286 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.AnnouncementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.286852712+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.AnnouncementRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.287 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.CalenderConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.287506785+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.CalenderConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.287 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.CommonReqRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.287821861+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.CommonReqRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.287 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.DashboardStatsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.287985763+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.DashboardStatsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.288 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.JournalRequestRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.288721174+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.JournalRequestRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.290 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.NotificationOutboxRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.290163704+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.NotificationOutboxRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.290 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.PermissionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.290493536+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.PermissionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.290 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.UserLogsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-{"@timestamp":"2026-04-17T10:37:20.290800232+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.DashboardService.repository.UserLogsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
-2026-04-17 05:07:20.291 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
-{"@timestamp":"2026-04-17T10:37:20.291202398+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.","stack_trace":""}
-2026-04-17 05:07:21.289 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 9015 (http)
-{"@timestamp":"2026-04-17T10:37:21.28941637+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 9015 (http)","stack_trace":""}
-2026-04-17 05:07:21.300 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-9015"]
-{"@timestamp":"2026-04-17T10:37:21.300258879+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-9015\"]","stack_trace":""}
-2026-04-17 05:07:21.302 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
-{"@timestamp":"2026-04-17T10:37:21.302224914+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.catalina.core.StandardService","message":"Starting service [Tomcat]","stack_trace":""}
-2026-04-17 05:07:21.302 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.24]
-{"@timestamp":"2026-04-17T10:37:21.302546269+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.24]","stack_trace":""}
-2026-04-17 05:07:21.330 INFO  [main] o.a.j.l.DirectJDKLog: Initializing Spring embedded WebApplicationContext
-{"@timestamp":"2026-04-17T10:37:21.330264238+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.a.c.c.C.[Tomcat].[localhost].[/]","message":"Initializing Spring embedded WebApplicationContext","stack_trace":""}
-2026-04-17 05:07:21.331 INFO  [main] o.s.b.w.s.c.ServletWebServerApplicationContext: Root WebApplicationContext: initialization completed in 2292 ms
-{"@timestamp":"2026-04-17T10:37:21.331475754+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.s.c.ServletWebServerApplicationContext","message":"Root WebApplicationContext: initialization completed in 2292 ms","stack_trace":""}
-2026-04-17 05:07:22.006 INFO  [main] o.s.b.w.s.RegistrationBean: Filter mdcFilterRegistration was not registered (disabled)
-{"@timestamp":"2026-04-17T10:37:22.006500353+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.boot.web.servlet.RegistrationBean","message":"Filter mdcFilterRegistration was not registered (disabled)","stack_trace":""}
-2026-04-17 05:07:22.006 INFO  [main] o.s.b.w.s.RegistrationBean: Filter rbacFilterRegistration was not registered (disabled)
-{"@timestamp":"2026-04-17T10:37:22.006894393+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.boot.web.servlet.RegistrationBean","message":"Filter rbacFilterRegistration was not registered (disabled)","stack_trace":""}
-2026-04-17 05:07:22.152 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: oracle]
-{"@timestamp":"2026-04-17T10:37:22.152173759+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: oracle]","stack_trace":""}
-2026-04-17 05:07:22.196 INFO  [main] o.h.Version: HHH000412: Hibernate ORM core version 6.5.2.Final
-{"@timestamp":"2026-04-17T10:37:22.196488645+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.5.2.Final","stack_trace":""}
-2026-04-17 05:07:22.226 INFO  [main] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
-{"@timestamp":"2026-04-17T10:37:22.226488569+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.c.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled","stack_trace":""}
-2026-04-17 05:07:22.532 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
-{"@timestamp":"2026-04-17T10:37:22.532454453+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.p.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","stack_trace":""}
-2026-04-17 05:07:22.556 ERROR [main] c.z.h.HikariConfig: HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
-{"@timestamp":"2026-04-17T10:37:22.556310907+05:30","level":"ERROR","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariConfig","message":"HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.","stack_trace":""}
-2026-04-17 05:07:22.556 WARN  [main] o.h.e.j.e.i.JdbcEnvironmentInitiator: HHH000342: Could not obtain connection to query metadata
-java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.
-        at com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1032)
-        at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)
-        at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:437)
-        at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:290)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:123)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:77)
-        at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215)
-        at org.hibernate.boot.model.relational.Database.<init>(Database.java:45)
-        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:221)
-        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:189)
-        at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:171)
-        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1431)
-        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1502)
-        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
-        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
-        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-        at com.fincore.DashboardService.DashboardServiceApplication.main(DashboardServiceApplication.java:12)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
-{"@timestamp":"2026-04-17T10:37:22.556804532+05:30","level":"WARN","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.e.j.e.i.JdbcEnvironmentInitiator","message":"HHH000342: Could not obtain connection to query metadata","stack_trace":"java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.\n\tat com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1032)\n\tat com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)\n\tat org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:437)\n\tat org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:290)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:123)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:77)\n\tat org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)\n\tat org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)\n"}
-2026-04-17 05:07:22.575 WARN  [main] o.h.e.j.d.i.DialectFactoryImpl: HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-{"@timestamp":"2026-04-17T10:37:22.575123829+05:30","level":"WARN","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.hibernate.orm.deprecation","message":"HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)","stack_trace":""}
-2026-04-17 05:07:23.473 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-{"@timestamp":"2026-04-17T10:37:23.473085138+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.e.t.j.p.i.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","stack_trace":""}
-2026-04-17 05:07:23.488 ERROR [main] c.z.h.HikariConfig: HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.
-{"@timestamp":"2026-04-17T10:37:23.488331927+05:30","level":"ERROR","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariConfig","message":"HikariPool-1 - dataSource or dataSourceClassName or jdbcUrl is required.","stack_trace":""}
-2026-04-17 05:07:23.490 ERROR [main] o.s.o.j.AbstractEntityManagerFactoryBean: Failed to initialize JPA EntityManagerFactory: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.
-{"@timestamp":"2026-04-17T10:37:23.490550762+05:30","level":"ERROR","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.LocalContainerEntityManagerFactoryBean","message":"Failed to initialize JPA EntityManagerFactory: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.","stack_trace":""}
-2026-04-17 05:07:23.491 WARN  [main] o.s.c.s.AbstractApplicationContext: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'oracleEntityManagerFactory' defined in class path resource [com/fincore/DashboardService/config/OracleDbConfig.class]: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.
-{"@timestamp":"2026-04-17T10:37:23.491207445+05:30","level":"WARN","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext","message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'oracleEntityManagerFactory' defined in class path resource [com/fincore/DashboardService/config/OracleDbConfig.class]: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.","stack_trace":""}
-2026-04-17 05:07:23.503 INFO  [main] o.a.j.l.DirectJDKLog: Stopping service [Tomcat]
-{"@timestamp":"2026-04-17T10:37:23.503799573+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.catalina.core.StandardService","message":"Stopping service [Tomcat]","stack_trace":""}
-2026-04-17 05:07:23.621 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLogger:
+-----------------------------------------------------------
+apache-kafka.yaml
+-----------------------------------------------------------
+# =========================================================
+# KAFKA HEADLESS SERVICE (REQUIRED FOR KRaft)
+# =========================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: be-test
+  labels:
+    app: kafka
+spec:
+  clusterIP: None
+  selector:
+    app: kafka
+  ports:
+    - name: broker
+      port: 9092
+    - name: controller
+      port: 9093
 
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-{"@timestamp":"2026-04-17T10:37:23.621924834+05:30","level":"INFO","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
-2026-04-17 05:07:23.638 ERROR [main] o.s.b.SpringApplication: Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'oracleEntityManagerFactory' defined in class path resource [com/fincore/DashboardService/config/OracleDbConfig.class]: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-        at com.fincore.DashboardService.DashboardServiceApplication.main(DashboardServiceApplication.java:12)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
-Caused by: jakarta.persistence.PersistenceException: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:421)
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
-        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-        ... 20 common frames omitted
-Caused by: java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.
-        at com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1032)
-        at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)
-        at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:437)
-        at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:46)
-        at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:39)
-        at org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcConnection(ImprovedExtractionContextImpl.java:63)
-        at org.hibernate.tool.schema.extract.spi.ExtractionContext.getQueryResults(ExtractionContext.java:43)
-        at org.hibernate.tool.schema.extract.internal.SequenceInformationExtractorLegacyImpl.extractMetadata(SequenceInformationExtractorLegacyImpl.java:39)
-        at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.initializeSequences(DatabaseInformationImpl.java:66)
-        at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.<init>(DatabaseInformationImpl.java:60)
-        at org.hibernate.tool.schema.internal.Helper.buildDatabaseInformation(Helper.java:185)
-        at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:98)
-        at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
-        at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
-        at java.base/java.util.HashMap.forEach(HashMap.java:1429)
-        at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
-        at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
-        at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
-        at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:322)
-        at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:457)
-        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1506)
-        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
-        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
-        ... 24 common frames omitted
-{"@timestamp":"2026-04-17T10:37:23.63802364+05:30","level":"ERROR","service":"DashboardService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'oracleEntityManagerFactory' defined in class path resource [com/fincore/DashboardService/config/OracleDbConfig.class]: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)\n\tat org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)\n\tat org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)\nCaused by: jakarta.persistence.PersistenceException: [PersistenceUnit: oracle] Unable to build Hibernate SessionFactory; nested exception is java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.\n\tat org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:421)\n\tat org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)\n\tat org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\nCaused by: java.lang.IllegalArgumentException: dataSource or dataSourceClassName or jdbcUrl is required.\n\tat com.zaxxer.hikari.HikariConfig.validate(HikariConfig.java:1032)\n\tat com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:108)\n\tat org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:437)\n\tat org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:46)\n\tat org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:39)\n\tat org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcConnection(ImprovedExtractionContextImpl.java:63)\n\tat org.hibernate.tool.schema.extract.spi.ExtractionContext.getQueryResults(ExtractionContext.java:43)\n\tat org.hibernate.tool.schema.extract.internal.SequenceInformationExtractorLegacyImpl.extractMetadata(SequenceInformationExtractorLegacyImpl.java:39)\n\tat org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.initializeSequences(DatabaseInformationImpl.java:66)\n"}
+---
+# =========================================================
+# KAFKA STATEFULSET (Confluent cp-kafka, KRaft mode)
+# =========================================================
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: be-test
+spec:
+  serviceName: kafka
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: kafka
+          image: h06vksharbor.corp.ad.sbi/cbops/cp-kafka:v1
+          ports:
+            - name: broker
+              containerPort: 9092
+            - name: controller
+              containerPort: 9093
+
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+
+          env:
+            - name: CLUSTER_ID
+              value: "jgQjUybBSACbAFjwpKFQiA"
+
+            - name: KAFKA_NODE_ID
+              value: "1"
+
+            - name: KAFKA_PROCESS_ROLES
+              value: "broker,controller"
+
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "1@kafka-0.kafka.be-test.svc.cluster.local:9093"
+
+            - name: KAFKA_LISTENERS
+              value: "INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093"
+
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "INTERNAL://kafka-0.kafka.be-test.svc.cluster.local:9092,EXTERNAL://localhost:29092"
+
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "INTERNAL"
+
+            - name: KAFKA_LOG_DIRS
+              value: "/var/lib/kafka/data/kafka"
+
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
+
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data
+      spec:
+        storageClassName: h06-vks-sp-6
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+
+-----------------------------------------------------------------------
+kafka-connect.yaml
+-----------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connect
+  namespace: be-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: connect
+  template:
+    metadata:
+      labels:
+        app: connect
+    spec:
+      containers:
+        - name: connect
+          image: h06vksharbor.corp.ad.sbi/cbops/kafka-connect:x1
+          ports:
+            - containerPort: 8083
+              name: rest
+
+          env:
+            # ========= REQUIRED =========
+            - name: CONNECT_BOOTSTRAP_SERVERS
+              value: "kafka.be-test.svc.cluster.local:9092"
+
+            - name: CONNECT_GROUP_ID
+              value: "connect-cluster"
+
+            - name: CONNECT_CONFIG_STORAGE_TOPIC
+              value: "_connect-configs"
+
+            - name: CONNECT_OFFSET_STORAGE_TOPIC
+              value: "_connect-offsets"
+
+            - name: CONNECT_STATUS_STORAGE_TOPIC
+              value: "_connect-status"
+
+            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+              value: "1"
+
+            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+              value: "1"
+
+            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+              value: "1"
+
+            # ========= CONVERTERS =========
+            - name: CONNECT_KEY_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_VALUE_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_INTERNAL_KEY_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER
+              value: "org.apache.kafka.connect.json.JsonConverter"
+
+            - name: CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE
+              value: "true"
+
+            - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+              value: "true"
+
+            - name: CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+
+            # ========= REST =========
+            - name: CONNECT_REST_PORT
+              value: "8083"
+
+            - name: CONNECT_REST_ADVERTISED_HOST_NAME
+              value: "connect.be-test.svc.cluster.local"
+
+            - name: CONNECT_REST_ADVERTISED_PORT
+              value: "8083"
+
+            # ========= PLUGINS =========
+            - name: CONNECT_PLUGIN_PATH
+              value: "/usr/share/java,/usr/share/java/debezium-connector-oracle"
+
+            # ========= LOGGING =========
+            - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+              value: "INFO"
+
+          readinessProbe:
+            httpGet:
+              path: /connectors
+              port: 8083
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: connect
+  namespace: be-test
+spec:
+  selector:
+    app: connect
+  ports:
+    - name: rest
+      port: 8083
+      targetPort: 8083
+  type: ClusterIP
+
+-----------------------------------------------------------
+kafka-ui.yaml
+-----------------------------------------------------------
+# =========================================================
+# KAFKA UI - DEPLOYMENT + SERVICE (KRaft Compatible)
+# =========================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui
+  namespace: cbops
+  labels:
+    app: kafka-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui
+          image: h06vksharbor.corp.ad.sbi/cbops/kafka-ui:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            # Logical cluster name shown in UI
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: "cbops-kraft-cluster"
+
+            # MUST match Kafka advertised listener
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: "kafka.cbops.svc.cluster.local:9092"
+
+            # KRaft mode → no Zookeeper
+            - name: KAFKA_CLUSTERS_0_ZOOKEEPER
+              value: ""
+
+            - name: KAFKA_SERVLET_CONTEXT_PATH
+              value: "/kafka-ui"              
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui
+  namespace: cbops
+  labels:
+    app: kafka-ui
+spec:
+  type: ClusterIP
+  selector:
+    app: kafka-ui
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+
+--------------------------------------------------------------------
+register-oracle-connector.yaml
+--------------------------------------------------------------------
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: register-oracle-connector
+  namespace: be-test
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: register
+          image: h06vksharbor.corp.ad.sbi/cbops/curlimages/curl:v1
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Waiting for Kafka Connect..."
+
+              # Wait until Connect REST is up
+              until curl -sf http://connect.be-test.svc.cluster.local:8083/connectors ; do
+                echo "Connect not ready yet..."
+                sleep 5
+              done
+
+              echo "Sleeping 30s for worker + plugins to fully init..."
+              sleep 30
+
+              echo "Posting connector config from /config/oracle-connector.json ..."
+              HTTP_CODE=$(curl -s -o /tmp/out.txt -w "%{http_code}" \
+                -X POST \
+                -H "Content-Type: application/json" \
+                --data "@/config/oracle-connector.json" \
+                http://connect.be-test.svc.cluster.local:8083/connectors)
+
+              echo "HTTP_CODE=$HTTP_CODE"
+              echo "Response body:"
+              cat /tmp/out.txt || true
+
+              # 201 = created, 200 = ok, 409 = already exists
+              if [ "$HTTP_CODE" != "201" ] && [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "409" ]; then
+                echo "Registration failed (HTTP $HTTP_CODE)"
+                exit 1
+              fi
+
+              echo "Connector registration succeeded (or already existed)."
+          volumeMounts:
+            - name: connector-config
+              mountPath: /config
+
+      volumes:
+        - name: connector-config
+          configMap:
+            name: oracle-connector-config
+
+--------------------------------------------------------------------------------------
+oracle-configmap.yaml
+--------------------------------------------------------------------------------------
+
+apiVersion: v1
+data:
+  oracle-connector.json: |
+    {
+      "name": "fincore-connector-final",
+      "config": {
+        "connector.class": "io.debezium.connector.oracle.OracleConnector",
+        "tasks.max": "1",
+
+        "database.hostname": "10.177.103.192",
+        "database.port": "1523",
+        "database.user": "c##debezium",
+        "database.password": "Debe#123",
+        "database.dbname": "fincorepdb1",
+        "database.pdb.name": "fincorepdb1",
+        "database.sid": "fincorepdb1",
+        "database.servername": "fincorepdb1",
+
+        "topic.prefix": "fincore",
+        "table.include.list": "fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS",
+
+        "decimal.handling.mode": "string",
+        "database.connection.adapter": "logminer",
+
+        "database.history": "io.debezium.relational.history.KafkaDatabaseHistory",
+
+        "database.history.kafka.bootstrap.servers": "kafka.cbops.svc.cluster.local:9092",
+        "schema.history.internal.kafka.bootstrap.servers": "kafka.cbops.svc.cluster.local:9092",
+        "schema.history.internal.kafka.topic": "schema-changes.oracle",
+
+        "log.mining.strategy": "online_catalog",
+        "log.mining.continuous.mine": "true",
+        "log.mining.batch.size.default": "50000",
+        "log.mining.batch.size.max": "100000",
+        "log.mining.sleep.time.default": "50",
+        "log.mining.sleep.time.max": "2000",
+
+        "heartbeat.interval.ms": "2000",
+        "heartbeat.topics.prefix": "heartbeat",
+
+        "openlineage.integration.enabled": "true"
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"oracle-connector.json":"{\n  \"name\": \"fincore-connector-final\",\n  \"config\": {\n    \"connector.class\": \"io.debezium.connector.oracle.OracleConnector\",\n    \"tasks.max\": \"1\",\n\n    \"database.hostname\": \"10.177.103.192\",\n    \"database.port\": \"1523\",\n    \"database.user\": \"c##debezium\",\n    \"database.password\": \"Debe#123\",\n    \"database.dbname\": \"fincorepdb1\",\n    \"database.pdb.name\": \"fincorepdb1\",\n    \"database.sid\": \"fincorepdb1\",\n    \"database.servername\": \"fincorepdb1\",\n\n    \"topic.prefix\": \"fincore\",\n    \"table.include.list\": \"fincore.NOTIFICATIONS, fincore.USER_ROLES, fincore.PROCESS_STATUS, fincore.PERMISSIONS, fincore.ROLE_PERMISSIONS\",\n\n    \"decimal.handling.mode\": \"string\",\n    \"database.connection.adapter\": \"logminer\",\n\n    \"database.history\": \"io.debezium.relational.history.KafkaDatabaseHistory\",\n\n    \"database.history.kafka.bootstrap.servers\": \"kafka.cbops.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.bootstrap.servers\": \"kafka.cbops.svc.cluster.local:9092\",\n    \"schema.history.internal.kafka.topic\": \"schema-changes.oracle\",\n\n    \"log.mining.strategy\": \"online_catalog\",\n    \"log.mining.continuous.mine\": \"true\",\n    \"log.mining.batch.size.default\": \"50000\",\n    \"log.mining.batch.size.max\": \"100000\",\n    \"log.mining.sleep.time.default\": \"50\",\n    \"log.mining.sleep.time.max\": \"2000\",\n\n    \"heartbeat.interval.ms\": \"2000\",\n    \"heartbeat.topics.prefix\": \"heartbeat\",\n\n    \"openlineage.integration.enabled\": \"true\"\n  }\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"oracle-connector-config","namespace":"cbops"}}
+  creationTimestamp: "2025-12-10T10:16:10Z"
+  name: oracle-connector-config
+  namespace: cbops
+  resourceVersion: "46613478"
+  uid: d4abbc42-98d9-4883-bd30-4553baa9bb87
+
