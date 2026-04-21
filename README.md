@@ -1,120 +1,188 @@
-namespace: backend
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: template-config-sa
+  namespace: backend
 
-serviceAccount:
-  name: report-sa
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: template-config-deployment
+  namespace: backend
 
-deployment:
-  name: report-deployment
+spec:
+  replicas: 2
 
-  replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-  labels:
-    app: report-backend
+  selector:
+    matchLabels:
+      app: template-app
 
-  container:
-    name: report-container
-    image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-09
-    imagePullPolicy: Always
+  template:
+    metadata:
+      labels:
+        app: template-app
 
-    port: 9005
+    spec:
+      serviceAccountName: template-config-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-    env:
-      - name: SPRING_PROFILES_ACTIVE
-        value: "prod"
-      - name: HADOOP_FS_URI
-        value: "hdfs://10.190.224.102:8022"
-      - name: HADOOP_FS_USER
-        value: "root"
-      - name: JAVA_OPTS
-        value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-    envFrom:
-      configMaps:
-        - redis-config
-        - kafka-config
-        - oracle-config
-      secrets:
-        - oracle-secret
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: template-app
 
-    resources:
-      requests:
-        memory: "20Gi"
-        cpu: "2000m"
-      limits:
-        memory: "24Gi"
-        cpu: "4000m"
+      containers:
+      - name: template-config-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/template-config-service:PR-06
+        imagePullPolicy: Always
 
-    probes:
-      startup:
-        port: 9005
-        failureThreshold: 60
-        periodSeconds: 10
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod" 
+        - name: SPRING_DATA_REDIS_HOST
+          value: "redis-service"
+        - name: SPRING_DATA_REDIS_PORT
+          value: "6379"
+        - name: SPRING_DATA_REDIS_CLIENT_TYPE
+          value: "lettuce"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:oracle:thin:@10.190.224.79:1523/fincorepdb1"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "fincore"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "Password#1234"
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          value: "oracle.jdbc.OracleDriver"
 
-      liveness:
-        port: 9005
-        initialDelaySeconds: 90
-        periodSeconds: 15
-        timeoutSeconds: 5
-        failureThreshold: 5
+        ports:
+        - containerPort: 8090
 
-      readiness:
-        port: 9005
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 5
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 
-    lifecycle:
-      preStopSleep: 10
+        startupProbe:
+          tcpSocket:
+            port: 8090
+          failureThreshold: 30
+          periodSeconds: 10
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
+        livenessProbe:
+          tcpSocket:
+            port: 8090
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-  hostAliases:
-    - ip: "10.190.224.102"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.103"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.104"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.105"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.106"
-      hostnames:
-        - "fincore"
+        readinessProbe:
+          tcpSocket:
+            port: 8090
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-  topologySpreadConstraints:
-    maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+---
+# --------------------------------------------
+# Service (internal cluster communication)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: template-config-service
+  namespace: backend
 
-service:
-  name: report-service
+spec:
+  selector:
+    app: template-app
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8090
+
   type: ClusterIP
-  port: 80
-  targetPort: 9005
 
-hpa:
-  name: report-hpa
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: template-config-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: template-config-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
-  behavior:
-    scaleUpStabilization: 60
-    scaleDownStabilization: 300
 
-pdb:
-  name: report-pdb
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: template-config-pdb
+  namespace: backend
+
+spec:
   minAvailable: 1
+  selector:
+    matchLabels:
+      app: template-app
