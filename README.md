@@ -1,237 +1,117 @@
-# =====================================================
-# Service Account
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+name: login
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: a2p05vksharbor.corp.ad.sbi/cbops/login-service
+  tag: PR-03
+  pullPolicy: Always
+
+serviceAccount:
   name: login-sa
-  namespace: backend
-automountServiceAccountToken: false
+  automount: false
 
----
-# =====================================================
-# Pod Disruption Budget
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
+service:
+  name: login-service
+  port: 80
+  targetPort: 8085
+
+pdb:
   name: login-pdb
-  namespace: backend
-spec:
   minAvailable: 1
-  selector:
-    matchLabels:
-      app: login-backend
 
----
-# =====================================================
-# Deployment
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: login-deployment
-  namespace: backend
-
-spec:
-  replicas: 1
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-  selector:
-    matchLabels:
-      app: login-backend
-
-  template:
-    metadata:
-      labels:
-        app: login-backend
-
-    spec:
-      serviceAccountName: login-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 10001
-        fsGroup: 10001
-
-      hostAliases:
-        - ip: "10.176.53.145"
-          hostnames:
-            - "corp.ad.sbi"
-            - "corpdcmdgbl01.corp.ad.sbi"
-        - ip: "10.176.54.30"
-          hostnames:
-            - "corpdcmdgbl02.corp.ad.sbi"
-        - ip: "10.176.54.31"
-          hostnames:
-            - "corpdcmdgbl03.corp.ad.sbi"
-        - ip: "10.176.54.32"
-          hostnames:
-            - "corpdcmdgbl04.corp.ad.sbi"
-        - ip: "10.189.37.135"
-          hostnames:
-            - "corpdcmdrbl01.corp.ad.sbi"
-        - ip: "10.189.37.136"
-          hostnames:
-            - "corpdcmdrbl02.corp.ad.sbi"
-        - ip: "10.189.37.137"
-          hostnames:
-            - "corpdcmdrbl03.corp.ad.sbi"
-        - ip: "10.189.37.138"
-          hostnames:
-            - "corpdcmdrbl04.corp.ad.sbi"
-
-      # =================================================
-      # Volumes
-      # =================================================
-      volumes:
-        - name: truststore-volume
-          secret:
-            secretName: ldap-truststore-file
-            items:
-              - key: ad-truststore.jks
-                path: ad-truststore.jks
-
-        - name: logs-volume
-          emptyDir: {}
-
-      containers:
-        - name: login-backend-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/login-service:PR-03
-          imagePullPolicy: Always
-
-          ports:
-            - containerPort: 8085
-
-          # =================================================
-          # Volume Mounts
-          # =================================================
-          volumeMounts:
-            - name: truststore-volume
-              mountPath: /etc/fincore/secrets
-              readOnly: true
-            - name: logs-volume
-              mountPath: /logs
-
-          envFrom:
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
-            - configMapRef:
-                name: ldap-config
-            - secretRef:
-                name: ldap-secret
-
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "prod"
-            - name: JAVA_TOOL_OPTIONS
-              value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
-
-          # =================================================
-          # Resources
-          # =================================================
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
-
-          # =================================================
-          # Probes
-          # =================================================
-          readinessProbe:
-            tcpSocket:
-              port: 8085
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          livenessProbe:
-            tcpSocket:
-              port: 8085
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          startupProbe:
-            tcpSocket:
-              port: 8085
-            failureThreshold: 60
-            periodSeconds: 10
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# =====================================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
+autoscaling:
   name: login-hpa
-  namespace: backend
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: login-deployment
-
+  enabled: true
   minReplicas: 1
   maxReplicas: 3
+  cpuUtilization: 70
 
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
 
----
-# =====================================================
-# Service
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: login-service
-  namespace: backend
+envFrom:
+  configMaps:
+    - redis-config
+    - oracle-config
+    - ldap-config
+  secrets:
+    - oracle-secret
+    - ldap-secret
 
-spec:
-  selector:
-    app: login-backend
+extraEnv:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "prod"
+  - name: JAVA_TOOL_OPTIONS
+    value: "-Djava.net.preferIPv4Stack=true -Djavax.net.debug=ssl:handshake"
 
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 8085
+secretEnv: []
 
-  type: ClusterIP
+hostAliases:
+  - ip: "10.176.53.145"
+    hostnames:
+      - "corp.ad.sbi"
+      - "corpdcmdgbl01.corp.ad.sbi"
+  - ip: "10.176.54.30"
+    hostnames:
+      - "corpdcmdgbl02.corp.ad.sbi"
+  - ip: "10.176.54.31"
+    hostnames:
+      - "corpdcmdgbl03.corp.ad.sbi"
+  - ip: "10.176.54.32"
+    hostnames:
+      - "corpdcmdgbl04.corp.ad.sbi"
+  - ip: "10.189.37.135"
+    hostnames:
+      - "corpdcmdrbl01.corp.ad.sbi"
+  - ip: "10.189.37.136"
+    hostnames:
+      - "corpdcmdrbl02.corp.ad.sbi"
+  - ip: "10.189.37.137"
+    hostnames:
+      - "corpdcmdrbl03.corp.ad.sbi"
+  - ip: "10.189.37.138"
+    hostnames:
+      - "corpdcmdrbl04.corp.ad.sbi"
+
+volumes:
+  - name: truststore-volume
+    secret:
+      secretName: ldap-truststore-file
+      items:
+        - key: ad-truststore.jks
+          path: ad-truststore.jks
+
+  - name: logs-volume
+    emptyDir: {}
+
+volumeMounts:
+  - name: truststore-volume
+    mountPath: /etc/fincore/secrets
+    readOnly: true
+
+  - name: logs-volume
+    mountPath: /logs
+
+probes:
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+  liveness:
+    initialDelaySeconds: 90
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+  startup:
+    failureThreshold: 60
+    periodSeconds: 10
