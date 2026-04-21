@@ -1,83 +1,183 @@
-name: process-status
-namespace: backend
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: react-app-sa
+  namespace: prod-cbops
 
-replicaCount: 1
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-app-deployment
+  namespace: prod-cbops
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/process-status-service
-  tag: PR-05
-  pullPolicy: Always
+spec:
+  replicas: 1
 
-serviceAccount:
-  name: process-status-sa
+  # Keeps old ReplicaSets for rollback safety
+  revisionHistoryLimit: 5
 
-service:
-  name: process-status-service
-  port: 80
-  targetPort: 3000
+  # Zero-downtime rolling updates
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-pdb:
-  name: process-status-pdb
-  minAvailable: 1
+  selector:
+    matchLabels:
+      app: reactive-app
 
-autoscaling:
-  name: process-status-hpa
-  enabled: true
+  template:
+    metadata:
+      labels:
+        app: reactive-app
+
+    spec:
+      # Use dedicated service account
+      serviceAccountName: react-app-sa
+
+      # Graceful shutdown time before force kill
+      terminationGracePeriodSeconds: 30
+
+      # Prevent automatic service env injection
+      enableServiceLinks: false
+
+      # Spread pods across nodes for HA readiness
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: reactive-app
+
+      containers:
+      - name: reactive-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/react-service:PR-13
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 80
+
+        # Resource requests/limits for stable scheduling
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+
+        # Startup probe prevents premature restarts
+        startupProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 30
+          periodSeconds: 10
+
+        # Checks if container is alive
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Controls traffic routing to healthy pods
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+        # Graceful shutdown for active connections
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service (internal access)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-service
+  namespace: prod-cbops
+
+spec:
+  selector:
+    app: reactive-app
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# Auto-scales based on CPU usage
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: react-app-hpa
+  namespace: prod-cbops
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: react-app-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
 
-resources:
-  requests:
-    cpu: "200m"
-    memory: "256Mi"
-  limits:
-    cpu: "500m"
-    memory: "512Mi"
+  # Stabilization avoids rapid scale up/down
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-volumes:
-  - name: tmp-dir
-    emptyDir:
-      medium: Memory
-      sizeLimit: 64Mi
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-volumeMounts:
-  - name: tmp-dir
-    mountPath: /tmp
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# Prevents downtime during node upgrades
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: react-app-pdb
+  namespace: prod-cbops
 
-envFrom:
-  configMaps:
-    - redis-config
-    - oracle-config
-    - kafka-config
-  secrets:
-    - oracle-secret
-    - airflow-env-credentials
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: reactive-app
 
-extraEnv:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-
-secretEnv: []
-
-hostAliases: []
-
-topologySpreadConstraints:
-  enabled: true
-
-probes:
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
-
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
-
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
+---
