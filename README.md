@@ -1,26 +1,24 @@
-# ------------------------------------------------
+# --------------------------------------------
 # Service Account
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: notification-sa
+  name: process-status-sa
   namespace: backend
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Deployment
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification-deployment
+  name: process-status-deployment
   namespace: backend
-  labels:
-    app: notification-backend
 
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
@@ -31,191 +29,175 @@ spec:
 
   selector:
     matchLabels:
-      app: notification-backend
+      app: process-status-backend
 
   template:
     metadata:
       labels:
-        app: notification-backend
+        app: process-status-backend
 
     spec:
-      serviceAccountName: notification-sa
-      enableServiceLinks: false
+      serviceAccountName: process-status-sa
       terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
       volumes:
-      - name: tmp-dir
-        emptyDir:
-          medium: Memory
-          sizeLimit: 64Mi
+        - name: tmp-dir
+          emptyDir:
+            medium: Memory
+            sizeLimit: 64Mi
 
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-        fsGroup: 2000  
+        fsGroup: 2000
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: process-status-backend
 
       containers:
-      - name: notification-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/notification-service:PR-01
-        imagePullPolicy: Always
+        - name: process-status-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/process-status-service:PR-05
+          imagePullPolicy: Always
 
-        volumeMounts:
-        - name: tmp-dir
-          mountPath: /tmp        
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
 
-        ports:
-        - containerPort: 9010
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
 
-        env:
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - secretRef:
+                name: airflow-env-credentials				
 
-        # ---------------------------
-        # PostgreSQL
-        # ---------------------------
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:postgresql://10.190.224.113:5432/notification_db"
+          ports:
+            - containerPort: 3000
 
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "fincore"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "Password#1234"
+          startupProbe:
+            tcpSocket:
+              port: 3000
+            failureThreshold: 60
+            periodSeconds: 10
 
-        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-          value: "org.postgresql.Driver"
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        - name: SPRING_JPA_DATABASE_PLATFORM
-          value: "org.hibernate.dialect.PostgreSQLDialect"
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-          value: "none"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-        # ---------------------------
-        # Kafka
-        # ---------------------------
-        - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
-          value: "kafka.backend.svc.cluster.local:9092"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
 
-        - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
-          value: "kafka.backend.svc.cluster.local:9092"
-
-        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-          value: "notification-service-group"
-
-        - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-          value: "earliest"
-
-        # ---------------------------
-        # Redis
-        # ---------------------------
-        - name: SPRING_DATA_REDIS_HOST
-          value: "redis-service"
-
-        - name: SPRING_DATA_REDIS_PORT
-          value: "6379"
-
-        - name: SPRING_DATA_REDIS_CLIENT_TYPE
-          value: "lettuce"
-
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
-
-        startupProbe:
-          tcpSocket:
-            port: 9010
-          failureThreshold: 30
-          periodSeconds: 10
-
-        livenessProbe:
-          tcpSocket:
-            port: 9010
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-
-        readinessProbe:
-          tcpSocket:
-            port: 9010
-          initialDelaySeconds: 15
-          periodSeconds: 5
-
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh","-c","sleep 10"]
-
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Service
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: notification-service
+  name: process-status-service
   namespace: backend
 
 spec:
-  type: ClusterIP
-
   selector:
-    app: notification-backend
+    app: process-status-backend
 
   ports:
-  - port: 80
-    targetPort: 9010
-    protocol: TCP
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+
+  type: ClusterIP
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Horizontal Pod Autoscaler
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: notification-hpa
+  name: process-status-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: notification-deployment
+    name: process-status-deployment
 
   minReplicas: 1
   maxReplicas: 5
 
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
 ---
-# ------------------------------------------------
+# --------------------------------------------
 # Pod Disruption Budget
-# ------------------------------------------------
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: notification-pdb
+  name: process-status-pdb
   namespace: backend
 
 spec:
   minAvailable: 1
-
   selector:
     matchLabels:
-      app: notification-backend
+      app: process-status-backend
