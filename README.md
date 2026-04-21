@@ -1,1 +1,178 @@
-Now I have setup the helm for all 3 environments and now I want to do for prod my ask is I dont want wonts to mix production with other 3 environment and want to keep it separate you have any suggestion please guide me through. So right now I m thinking to make helm deployment only for production separate then all three environmnets
+will do one thing now I will share one manifest file per microservices wise you make the prod-values.yaml file for me 
+common-master-deployment.yaml 
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: common-master-sa
+  namespace: backend
+
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-master-deployment
+  namespace: backend
+
+spec:
+  replicas: 1
+
+  revisionHistoryLimit: 5
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: common-master-backend
+
+  template:
+    metadata:
+      labels:
+        app: common-master-backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2000"
+
+    spec:
+      serviceAccountName: common-master-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: common-master-backend
+
+      containers:
+        - name: common-master-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service:PR-02
+          imagePullPolicy: Always
+
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+
+          ports:
+            - containerPort: 2000
+
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          startupProbe:
+            tcpSocket:
+              port: 2000
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 2000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 2000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service (internal cluster access)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-master-service
+  namespace: backend
+
+spec:
+  selector:
+    app: common-master-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 2000
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (auto scaling)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: common-master-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: common-master-deployment
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: common-master-pdb
+  namespace: backend
+
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: common-master-backend
