@@ -1,139 +1,220 @@
-namespace: backend
+this one of the micro-service is new in production envrionmnet and I dont have helm chart for this can you please guide me setting up helm chart and directory structure of the same and all 4 environmnets:
+below I am pasting the manifest file : nwsa-variance-deployment
 
-serviceAccount:
-  name: user-sa
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nwsa-sa
+  namespace: backend
 
-deployment:
-  name: user-deployment
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nwsa-variance-deployment
+  namespace: backend
 
-  replicas: 1
+spec:
+  replicas: 2
+
   revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-  labels:
-    app: user-backend
+  selector:
+    matchLabels:
+      app: nwsa-variance-backend
 
-  container:
-    name: user-container
-    image: a2p05vksharbor.corp.ad.sbi/cbops/user-service:PR-04
-    imagePullPolicy: Always
+  template:
+    metadata:
+      labels:
+        app: nwsa-variance-backend
 
-    port: 8087
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8093"
 
-    env:
-      - name: SPRING_PROFILES_ACTIVE
-        value: "prod"
-      - name: JAVA_TOOL_OPTIONS
-        value: "-Djava.net.preferIPv4Stack=true"
-      - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-        value: "rbac-cache-group"
+    spec:
+      serviceAccountName: nwsa-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-    envFrom:
-      configMaps:
-        - oracle-config
-        - kafka-config
-        - redis-config
-        - ldap-config
-      secrets:
-        - oracle-secret
-        - ldap-secret
+      hostAliases:
+      - ip: "10.190.224.102"
+        hostnames:
+        - "fincore"
+      - ip: "10.190.224.103"
+        hostnames:
+        - "fincore"
+      - ip: "10.190.224.104"
+        hostnames:
+        - "fincore"
+      - ip: "10.190.224.105"
+        hostnames:
+        - "fincore"
+      - ip: "10.190.224.106"
+        hostnames:
+        - "fincore"
 
-    volumeMounts:
-      - name: truststore-volume
-        mountPath: /etc/fincore/secrets
-        readOnly: true
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: nwsa-variance-backend
 
-    resources:
-      requests:
-        cpu: "200m"
-        memory: "256Mi"
-      limits:
-        cpu: "500m"
-        memory: "512Mi"
+      containers:
+      - name: nwsa-variance-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/nwsa-variance-service:PR-03
+        imagePullPolicy: Always
 
-    probes:
-      startup:
-        port: 8087
-        failureThreshold: 60
-        periodSeconds: 10
+        envFrom:
+          - configMapRef:
+              name: redis-config
+          - configMapRef:
+              name: kafka-config
+          - configMapRef:
+              name: oracle-config
+          - secretRef:
+              name: oracle-secret
 
-      liveness:
-        port: 8087
-        initialDelaySeconds: 90
-        periodSeconds: 15
-        timeoutSeconds: 5
-        failureThreshold: 5
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"        
+          - name: HADOOP_FS_HA_NN1
+            value: "hdfs://10.190.224.102:8022"
+          - name: HADOOP_FS_HA_NN2
+            value: "hdfs://10.190.224.103:8022"
+          - name: HADOOP_FS_HA_NN3
+            value: "hdfs://10.190.224.104:8022"
+          - name: HADOOP_FS_HA_NN4
+            value: "hdfs://10.190.224.105:8022"
+          - name: HADOOP_FS_HA_NN5
+            value: "hdfs://10.190.224.106:8022"
+          - name: NWSA_GENERATED_REPORT_ROOT
+            value: "/reports"
+          - name: NWSA_REPORT_ROOT
+            value: "/reports"            
+          - name: HADOOP_FS_URI
+            value: "hdfs://fincore:8022"
+          - name: HADOOP_FS_USER
+            value: "root"
 
-      readiness:
-        port: 8087
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 5
+        ports:
+        - containerPort: 8093
 
-    lifecycle:
-      preStopSleep: 10
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 
-  volumes:
-    - name: truststore-volume
-      secret:
-        secretName: ldap-truststore-file
-        items:
-          - key: ad-truststore.jks
-            path: ad-truststore.jks
+        startupProbe:
+          tcpSocket:
+            port: 8093
+          failureThreshold: 30
+          periodSeconds: 10
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
+        livenessProbe:
+          tcpSocket:
+            port: 8093
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-  hostAliases:
-    - ip: "10.176.53.145"
-      hostnames:
-        - "corp.ad.sbi"
-        - "corpdcmdgbl01.corp.ad.sbi"
-    - ip: "10.176.54.30"
-      hostnames:
-        - "corpdcmdgbl02.corp.ad.sbi"
-    - ip: "10.176.54.31"
-      hostnames:
-        - "corpdcmdgbl03.corp.ad.sbi"
-    - ip: "10.176.54.32"
-      hostnames:
-        - "corpdcmdgbl04.corp.ad.sbi"
-    - ip: "10.189.37.135"
-      hostnames:
-        - "corpdcmdrbl01.corp.ad.sbi"
-    - ip: "10.189.37.136"
-      hostnames:
-        - "corpdcmdrbl02.corp.ad.sbi"
-    - ip: "10.189.37.137"
-      hostnames:
-        - "corpdcmdrbl03.corp.ad.sbi"
-    - ip: "10.189.37.138"
-      hostnames:
-        - "corpdcmdrbl04.corp.ad.sbi"
+        readinessProbe:
+          tcpSocket:
+            port: 8093
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-service:
-  name: user-service
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+---
+# --------------------------------------------
+# Service (internal cluster access)
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: nwsa-variance-service
+  namespace: backend
+
+spec:
+  selector:
+    app: nwsa-variance-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8093
+
   type: ClusterIP
-  port: 80
-  targetPort: 8087
 
-hpa:
-  name: user-hpa
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (auto scaling)
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nwsa-variance-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nwsa-variance-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
-  behavior:
-    scaleUpStabilization: 60
-    scaleDownStabilization: 300
 
-pdb:
-  name: user-pdb
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nwsa-variance-pdb
+  namespace: backend
+
+spec:
   minAvailable: 1
+  selector:
+    matchLabels:
+      app: nwsa-variance-backend
