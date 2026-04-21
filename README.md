@@ -1,98 +1,208 @@
-name: report-builder
-namespace: backend
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: report-sa
+  namespace: backend
 
-replicaCount: 1
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-deployment
+  namespace: backend
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: PR-01
-  pullPolicy: Always
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
 
-serviceAccount:
-  name: report-builder-sa
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-service:
-  name: report-builder-service
-  port: 80
-  targetPort: 8091
+  selector:
+    matchLabels:
+      app: report-backend
 
-pdb:
-  name: report-builder-pdb
-  minAvailable: 1
+  template:
+    metadata:
+      labels:
+        app: report-backend
 
-autoscaling:
-  name: report-builder-hpa
-  enabled: true
+    spec:
+      serviceAccountName: report-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      hostAliases:
+        - ip: "10.190.224.102"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.103"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.104"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.105"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.106"
+          hostnames:
+            - "fincore"
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: report-backend
+
+      containers:
+        - name: report-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-09
+          imagePullPolicy: Always
+          
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: HADOOP_FS_URI
+              value: "hdfs://10.190.224.102:8022"
+            - name: HADOOP_FS_USER
+              value: "root"
+            - name: JAVA_OPTS
+              value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"              
+              
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+
+
+          resources:
+            requests:
+              memory: "20Gi"
+              cpu: "2000m"
+            limits:
+              memory: "24Gi"
+              cpu: "4000m"
+
+          ports:
+            - containerPort: 9005
+
+          startupProbe:
+            tcpSocket:
+              port: 9005
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 9005
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 9005
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: report-service
+  namespace: backend
+
+spec:
+  selector:
+    app: report-backend
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9005
+
+  type: ClusterIP
+
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: report-hpa
+  namespace: backend
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: report-deployment
+
   minReplicas: 1
   maxReplicas: 5
-  cpuUtilization: 70
 
-resources:
-  requests:
-    cpu: "3000m"
-    memory: "4Gi"
-  limits:
-    cpu: "5000m"
-    memory: "8Gi"
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-envFrom:
-  configMaps:
-    - redis-config
-    - kafka-config
-    - oracle-config
-  secrets:
-    - oracle-secret
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-extraEnv:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-  - name: REPORT_BATCH_HDFS_BASE_PATH
-    value: "/reports"
-  - name: HADOOP_FS_URI
-    value: "hdfs://10.190.224.102:8022"
-  - name: HADOOP_FS_USER
-    value: "root"
-  - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-    value: "kafka.backend.svc.cluster.local:9092"
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: report-pdb
+  namespace: backend
 
-secretEnv: []
-
-hostAliases:
-  - ip: "10.190.224.102"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.103"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.104"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.105"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.106"
-    hostnames:
-      - "fincore"
-
-volumes: []
-volumeMounts: []
-
-topologySpreadConstraints:
-  enabled: true
-
-probes:
-  readiness:
-    initialDelaySeconds: 15
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
-
-  liveness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 3
-    failureThreshold: 3
-
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: report-backend
