@@ -1,208 +1,120 @@
-# --------------------------------------------
-# Service Account (security baseline)
-# --------------------------------------------
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+namespace: backend
+
+serviceAccount:
   name: report-sa
-  namespace: backend
 
----
-# --------------------------------------------
-# Deployment
-# --------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
+deployment:
   name: report-deployment
-  namespace: backend
 
-spec:
   replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+    maxUnavailable: 0
+    maxSurge: 1
 
-  selector:
-    matchLabels:
-      app: report-backend
-
-  template:
-    metadata:
-      labels:
-        app: report-backend
-
-    spec:
-      serviceAccountName: report-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
-
-      hostAliases:
-        - ip: "10.190.224.102"
-          hostnames:
-            - "fincore"
-        - ip: "10.190.224.103"
-          hostnames:
-            - "fincore"
-        - ip: "10.190.224.104"
-          hostnames:
-            - "fincore"
-        - ip: "10.190.224.105"
-          hostnames:
-            - "fincore"
-        - ip: "10.190.224.106"
-          hostnames:
-            - "fincore"
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: report-backend
-
-      containers:
-        - name: report-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-09
-          imagePullPolicy: Always
-          
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "prod"
-            - name: HADOOP_FS_URI
-              value: "hdfs://10.190.224.102:8022"
-            - name: HADOOP_FS_USER
-              value: "root"
-            - name: JAVA_OPTS
-              value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"              
-              
-          envFrom:
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: kafka-config
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
-
-
-          resources:
-            requests:
-              memory: "20Gi"
-              cpu: "2000m"
-            limits:
-              memory: "24Gi"
-              cpu: "4000m"
-
-          ports:
-            - containerPort: 9005
-
-          startupProbe:
-            tcpSocket:
-              port: 9005
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 9005
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: 9005
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
----
-# --------------------------------------------
-# Service
-# --------------------------------------------
-apiVersion: v1
-kind: Service
-metadata:
-  name: report-service
-  namespace: backend
-
-spec:
-  selector:
+  labels:
     app: report-backend
 
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 9005
+  container:
+    name: report-container
+    image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-09
+    imagePullPolicy: Always
 
+    port: 9005
+
+    env:
+      - name: SPRING_PROFILES_ACTIVE
+        value: "prod"
+      - name: HADOOP_FS_URI
+        value: "hdfs://10.190.224.102:8022"
+      - name: HADOOP_FS_USER
+        value: "root"
+      - name: JAVA_OPTS
+        value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"
+
+    envFrom:
+      configMaps:
+        - redis-config
+        - kafka-config
+        - oracle-config
+      secrets:
+        - oracle-secret
+
+    resources:
+      requests:
+        memory: "20Gi"
+        cpu: "2000m"
+      limits:
+        memory: "24Gi"
+        cpu: "4000m"
+
+    probes:
+      startup:
+        port: 9005
+        failureThreshold: 60
+        periodSeconds: 10
+
+      liveness:
+        port: 9005
+        initialDelaySeconds: 90
+        periodSeconds: 15
+        timeoutSeconds: 5
+        failureThreshold: 5
+
+      readiness:
+        port: 9005
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 5
+
+    lifecycle:
+      preStopSleep: 10
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 2000
+
+  hostAliases:
+    - ip: "10.190.224.102"
+      hostnames:
+        - "fincore"
+    - ip: "10.190.224.103"
+      hostnames:
+        - "fincore"
+    - ip: "10.190.224.104"
+      hostnames:
+        - "fincore"
+    - ip: "10.190.224.105"
+      hostnames:
+        - "fincore"
+    - ip: "10.190.224.106"
+      hostnames:
+        - "fincore"
+
+  topologySpreadConstraints:
+    maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+
+service:
+  name: report-service
   type: ClusterIP
+  port: 80
+  targetPort: 9005
 
----
-# --------------------------------------------
-# Horizontal Pod Autoscaler
-# --------------------------------------------
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
+hpa:
   name: report-hpa
-  namespace: backend
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: report-deployment
-
   minReplicas: 1
   maxReplicas: 5
-
+  cpuUtilization: 70
   behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
+    scaleUpStabilization: 60
+    scaleDownStabilization: 300
 
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
----
-# --------------------------------------------
-# Pod Disruption Budget
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
+pdb:
   name: report-pdb
-  namespace: backend
-
-spec:
   minAvailable: 1
-  selector:
-    matchLabels:
-      app: report-backend
