@@ -1,5 +1,4 @@
-this one of the micro-service is new in production envrionmnet and I dont have helm chart for this can you please guide me setting up helm chart and directory structure of the same and all 4 environmnets:
-below I am pasting the manifest file : nwsa-variance-deployment
+Can you please make templates folder for me I mean all files : serviceaccount.yaml, deployment.yaml, service.yaml, hpa.yaml, pdb.yaml ans send them back below i m pasting the main manifest 
 
 # --------------------------------------------
 # Service Account (security best practice)
