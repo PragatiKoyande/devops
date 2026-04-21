@@ -1,10 +1,10 @@
 # --------------------------------------------
-# Service Account (security best practice)
+# Service Account
 # --------------------------------------------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: template-config-sa
+  name: user-sa
   namespace: backend
 
 ---
@@ -14,12 +14,11 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: template-config-deployment
+  name: user-deployment
   namespace: backend
 
 spec:
-  replicas: 2
-
+  replicas: 1
   revisionHistoryLimit: 5
 
   strategy:
@@ -30,15 +29,15 @@ spec:
 
   selector:
     matchLabels:
-      app: template-app
+      app: user-backend
 
   template:
     metadata:
       labels:
-        app: template-app
+        app: user-backend
 
     spec:
-      serviceAccountName: template-config-sa
+      serviceAccountName: user-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
@@ -48,111 +47,148 @@ spec:
         runAsGroup: 1000
         fsGroup: 2000
 
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: template-app
+      hostAliases:
+        - ip: "10.176.53.145"
+          hostnames:
+            - "corp.ad.sbi"
+            - "corpdcmdgbl01.corp.ad.sbi"
+        - ip: "10.176.54.30"
+          hostnames:
+            - "corpdcmdgbl02.corp.ad.sbi"
+        - ip: "10.176.54.31"
+          hostnames:
+            - "corpdcmdgbl03.corp.ad.sbi"
+        - ip: "10.176.54.32"
+          hostnames:
+            - "corpdcmdgbl04.corp.ad.sbi"
+        - ip: "10.189.37.135"
+          hostnames:
+            - "corpdcmdrbl01.corp.ad.sbi"
+        - ip: "10.189.37.136"
+          hostnames:
+            - "corpdcmdrbl02.corp.ad.sbi"
+        - ip: "10.189.37.137"
+          hostnames:
+            - "corpdcmdrbl03.corp.ad.sbi"
+        - ip: "10.189.37.138"
+          hostnames:
+            - "corpdcmdrbl04.corp.ad.sbi"
+
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
 
       containers:
-      - name: template-config-container
-        image: a2p05vksharbor.corp.ad.sbi/cbops/template-config-service:PR-06
-        imagePullPolicy: Always
+        - name: user-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/user-service:PR-04
+          imagePullPolicy: Always
 
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "prod" 
-        - name: SPRING_DATA_REDIS_HOST
-          value: "redis-service"
-        - name: SPRING_DATA_REDIS_PORT
-          value: "6379"
-        - name: SPRING_DATA_REDIS_CLIENT_TYPE
-          value: "lettuce"
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:oracle:thin:@10.190.224.79:1523/fincorepdb1"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "fincore"
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "Password#1234"
-        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-          value: "oracle.jdbc.OracleDriver"
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
 
-        ports:
-        - containerPort: 8090
+          envFrom:
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: ldap-config
+            - secretRef:
+                name: ldap-secret
 
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
 
-        startupProbe:
-          tcpSocket:
-            port: 8090
-          failureThreshold: 30
-          periodSeconds: 10
+          ports:
+            - containerPort: 8087
 
-        livenessProbe:
-          tcpSocket:
-            port: 8090
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
 
-        readinessProbe:
-          tcpSocket:
-            port: 8090
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 8087
+            failureThreshold: 60
+            periodSeconds: 10
 
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "sleep 10"]
+          livenessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          readinessProbe:
+            tcpSocket:
+              port: 8087
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
+
 ---
 # --------------------------------------------
-# Service (internal cluster communication)
+# Service
 # --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: template-config-service
+  name: user-service
   namespace: backend
 
 spec:
   selector:
-    app: template-app
+    app: user-backend
 
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 8090
+      targetPort: 8087
 
   type: ClusterIP
 
 ---
 # --------------------------------------------
-# Horizontal Pod Autoscaler (CPU-based)
+# Horizontal Pod Autoscaler
 # --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: template-config-hpa
+  name: user-hpa
   namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: template-config-deployment
+    name: user-deployment
 
   minReplicas: 1
   maxReplicas: 5
@@ -178,11 +214,11 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: template-config-pdb
+  name: user-pdb
   namespace: backend
 
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: template-app
+      app: user-backend
