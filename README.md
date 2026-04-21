@@ -1,178 +1,61 @@
-will do one thing now I will share one manifest file per microservices wise you make the prod-values.yaml file for me 
-common-master-deployment.yaml 
-# --------------------------------------------
-# Service Account (security best practice)
-# --------------------------------------------
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+name: common-master
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
+  tag: PR-02
+  pullPolicy: Always
+
+serviceAccount:
   name: common-master-sa
-  namespace: backend
 
----
-# --------------------------------------------
-# Deployment
-# --------------------------------------------
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: common-master-deployment
-  namespace: backend
-
-spec:
-  replicas: 1
-
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-  selector:
-    matchLabels:
-      app: common-master-backend
-
-  template:
-    metadata:
-      labels:
-        app: common-master-backend
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "2000"
-
-    spec:
-      serviceAccountName: common-master-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: common-master-backend
-
-      containers:
-        - name: common-master-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service:PR-02
-          imagePullPolicy: Always
-
-          envFrom:
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
-
-          ports:
-            - containerPort: 2000
-
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-
-          startupProbe:
-            tcpSocket:
-              port: 2000
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 2000
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: 2000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
----
-# --------------------------------------------
-# Service (internal cluster access)
-# --------------------------------------------
-apiVersion: v1
-kind: Service
-metadata:
+service:
   name: common-master-service
-  namespace: backend
+  port: 80
+  targetPort: 2000
 
-spec:
-  selector:
-    app: common-master-backend
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 2000
-
-  type: ClusterIP
-
----
-# --------------------------------------------
-# Horizontal Pod Autoscaler (auto scaling)
-# --------------------------------------------
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: common-master-hpa
-  namespace: backend
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: common-master-deployment
-
+autoscaling:
+  enabled: true
   minReplicas: 1
   maxReplicas: 5
+  cpuUtilization: 70
 
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
----
-# --------------------------------------------
-# Pod Disruption Budget
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: common-master-pdb
-  namespace: backend
-
-spec:
+pdb:
+  enabled: true
   minAvailable: 1
-  selector:
-    matchLabels:
-      app: common-master-backend
+
+resources:
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+envFrom:
+  configMaps:
+    - redis-config
+    - oracle-config
+  secrets:
+    - oracle-secret
+
+extraEnv: []
+secretEnv: []
+
+volumes: []
+volumeMounts: []
+hostAliases: []
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "2000"
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app: common-master-backend
