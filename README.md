@@ -87,15 +87,20 @@ deployment:
 
   hostAliases:
     - ip: "10.190.224.102"
-      hostnames: ["fincore"]
+      hostnames:
+        - "fincore"
     - ip: "10.190.224.103"
-      hostnames: ["fincore"]
+      hostnames:
+        - "fincore"
     - ip: "10.190.224.104"
-      hostnames: ["fincore"]
+      hostnames:
+        - "fincore"
     - ip: "10.190.224.105"
-      hostnames: ["fincore"]
+      hostnames:
+        - "fincore"
     - ip: "10.190.224.106"
-      hostnames: ["fincore"]
+      hostnames:
+        - "fincore"
 
   topologySpreadConstraints:
     maxSkew: 1
@@ -111,20 +116,13 @@ hpa:
   minReplicas: 1
   maxReplicas: 5
   cpuUtilization: 70
+
   behavior:
-    scaleUp: 60
-	  stabilizationWindowSeconds:60
-    scaleDown: 300
-	  stabilizationWindowSeconds:60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
 pdb:
   name: nwsa-variance-pdb
   minAvailable: 1
-
-
-
-  D:\Pragati\HELM-Latest-0904\Deployment\nwsa-variance>helm install nwsa . -f values.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: INSTALLATION FAILED: failed to parse values.yaml: cannot unmarshal yaml document: error converting YAML to JSON: yaml: line 116: found a tab character that violates indentation
-
-
-getting this issue please correct the file and send me back the entire file with proper indentation error
