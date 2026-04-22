@@ -1,78 +1,120 @@
-D:\Pragati\HELM-Latest-0904\Deployment>cd nwsa-variance
+namespace: backend
 
-D:\Pragati\HELM-Latest-0904\Deployment\nwsa-variance>helm template nwsa-variance-dev . -f values.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: nwsa-variance-service/templates/deployment.yaml:42:26
-  executing "nwsa-variance-service/templates/deployment.yaml" at <.Values.container.name>:
-    nil pointer evaluating interface {}.name
+serviceAccount:
+  name: nwsa-sa
 
-
-This issue I m getting and below is my deploymnet file:
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  replicas: {{ .Values.deployment.replicas }}
-
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+deployment:
+  name: nwsa-variance-deployment
+  replicas: 2
+  revisionHistoryLimit: 5
 
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+    maxUnavailable: 0
+    maxSurge: 1
 
-  selector:
-    matchLabels:
-      app: {{ .Values.deployment.app }}
+  labels:
+    app: nwsa-variance-backend
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.deployment.app }}
-      annotations:
-        prometheus.io/scrape: "{{ .Values.deployment.annotations.scrape }}"
-        prometheus.io/port: "{{ .Values.deployment.annotations.port }}"
+  annotations:
+    prometheus:
+      scrape: "true"
+      port: "8093"
 
-    spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
+  container:
+    name: nwsa-variance-container
+    image: a2p05vksharbor.corp.ad.sbi/cbops/nwsa-variance-service:PR-03
+    imagePullPolicy: Always
+    port: 8093
 
-      hostAliases:
-{{ toYaml .Values.deployment.hostAliases | indent 6 }}
+    env:
+      - name: SPRING_PROFILES_ACTIVE
+        value: "prod"
+      - name: HADOOP_FS_HA_NN1
+        value: "hdfs://10.190.224.102:8022"
+      - name: HADOOP_FS_HA_NN2
+        value: "hdfs://10.190.224.103:8022"
+      - name: HADOOP_FS_HA_NN3
+        value: "hdfs://10.190.224.104:8022"
+      - name: HADOOP_FS_HA_NN4
+        value: "hdfs://10.190.224.105:8022"
+      - name: HADOOP_FS_HA_NN5
+        value: "hdfs://10.190.224.106:8022"
+      - name: NWSA_GENERATED_REPORT_ROOT
+        value: "/reports"
+      - name: NWSA_REPORT_ROOT
+        value: "/reports"
+      - name: HADOOP_FS_URI
+        value: "hdfs://fincore:8022"
+      - name: HADOOP_FS_USER
+        value: "root"
 
-      topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 6 }}
+    envFrom:
+      configMaps:
+        - redis-config
+        - kafka-config
+        - oracle-config
+      secrets:
+        - oracle-secret
 
-      containers:
-        - name: {{ .Values.container.name }}
-          image: {{ .Values.container.image }}
-          imagePullPolicy: {{ .Values.container.imagePullPolicy }}
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
 
-          envFrom:
-{{ toYaml .Values.container.envFrom | indent 12 }}
+    probes:
+      startup:
+        port: 8093
+        failureThreshold: 30
+        periodSeconds: 10
+      liveness:
+        port: 8093
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        timeoutSeconds: 3
+        failureThreshold: 3
+      readiness:
+        port: 8093
+        initialDelaySeconds: 15
+        periodSeconds: 5
+        timeoutSeconds: 3
+        failureThreshold: 3
 
-          env:
-{{ toYaml .Values.container.env | indent 12 }}
+    lifecycle:
+      preStopSleep: 10
 
-          ports:
-            - containerPort: {{ .Values.container.port }}
+  hostAliases:
+    - ip: "10.190.224.102"
+      hostnames: ["fincore"]
+    - ip: "10.190.224.103"
+      hostnames: ["fincore"]
+    - ip: "10.190.224.104"
+      hostnames: ["fincore"]
+    - ip: "10.190.224.105"
+      hostnames: ["fincore"]
+    - ip: "10.190.224.106"
+      hostnames: ["fincore"]
 
-          resources:
-{{ toYaml .Values.container.resources | indent 12 }}
+  topologySpreadConstraints:
+    maxSkew: 1
+    topologyKey: kubernetes.io/hostname
 
-          startupProbe:
-{{ toYaml .Values.container.startupProbe | indent 12 }}
+service:
+  name: nwsa-variance-service
+  port: 80
+  targetPort: 8093
 
-          livenessProbe:
-{{ toYaml .Values.container.livenessProbe | indent 12 }}
+hpa:
+  name: nwsa-variance-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 70
+  behavior:
+    scaleUp: 60
+    scaleDown: 300
 
-          readinessProbe:
-{{ toYaml .Values.container.readinessProbe | indent 12 }}
-
-          lifecycle:
-{{ toYaml .Values.container.lifecycle | indent 12 }}
+pdb:
+  name: nwsa-variance-pdb
+  minAvailable: 1
