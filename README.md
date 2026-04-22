@@ -1,120 +1,110 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-serviceAccount:
-  name: nwsa-sa
+spec:
+  replicas: {{ .Values.deployment.replicas }}
 
-deployment:
-  name: nwsa-variance-deployment
-  replicas: 2
-  revisionHistoryLimit: 5
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    maxUnavailable: 0
-    maxSurge: 1
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: nwsa-variance-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  annotations:
-    prometheus:
-      scrape: "true"
-      port: "8093"
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
+      annotations:
+        prometheus.io/scrape: "{{ .Values.deployment.annotations.prometheus.scrape }}"
+        prometheus.io/port: "{{ .Values.deployment.annotations.prometheus.port }}"
 
-  container:
-    name: nwsa-variance-container
-    image: a2p05vksharbor.corp.ad.sbi/cbops/nwsa-variance-service:PR-03
-    imagePullPolicy: Always
-    port: 8093
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-    env:
-      - name: SPRING_PROFILES_ACTIVE
-        value: "prod"
-      - name: HADOOP_FS_HA_NN1
-        value: "hdfs://10.190.224.102:8022"
-      - name: HADOOP_FS_HA_NN2
-        value: "hdfs://10.190.224.103:8022"
-      - name: HADOOP_FS_HA_NN3
-        value: "hdfs://10.190.224.104:8022"
-      - name: HADOOP_FS_HA_NN4
-        value: "hdfs://10.190.224.105:8022"
-      - name: HADOOP_FS_HA_NN5
-        value: "hdfs://10.190.224.106:8022"
-      - name: NWSA_GENERATED_REPORT_ROOT
-        value: "/reports"
-      - name: NWSA_REPORT_ROOT
-        value: "/reports"
-      - name: HADOOP_FS_URI
-        value: "hdfs://fincore:8022"
-      - name: HADOOP_FS_USER
-        value: "root"
+      hostAliases:
+{{ toYaml .Values.deployment.hostAliases | indent 6 }}
 
-    envFrom:
-      configMaps:
-        - redis-config
-        - kafka-config
-        - oracle-config
-      secrets:
-        - oracle-secret
+      topologySpreadConstraints:
+        - maxSkew: {{ .Values.deployment.topologySpreadConstraints.maxSkew }}
+          topologyKey: {{ .Values.deployment.topologySpreadConstraints.topologyKey }}
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{ .Values.deployment.labels.app }}
 
-    resources:
-      requests:
-        cpu: "200m"
-        memory: "256Mi"
-      limits:
-        cpu: "500m"
-        memory: "512Mi"
+      containers:
+        - name: {{ .Values.deployment.container.name }}
+          image: {{ .Values.deployment.container.image }}
+          imagePullPolicy: {{ .Values.deployment.container.imagePullPolicy }}
 
-    probes:
-      startup:
-        port: 8093
-        failureThreshold: 30
-        periodSeconds: 10
-      liveness:
-        port: 8093
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        timeoutSeconds: 3
-        failureThreshold: 3
-      readiness:
-        port: 8093
-        initialDelaySeconds: 15
-        periodSeconds: 5
-        timeoutSeconds: 3
-        failureThreshold: 3
+          ports:
+            - containerPort: {{ .Values.deployment.container.port }}
 
-    lifecycle:
-      preStopSleep: 10
+          # =========================
+          # ENV FROM
+          # =========================
+          envFrom:
+{{- range .Values.deployment.container.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+{{- end }}
+{{- range .Values.deployment.container.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+{{- end }}
 
-  hostAliases:
-    - ip: "10.190.224.102"
-      hostnames: ["fincore"]
-    - ip: "10.190.224.103"
-      hostnames: ["fincore"]
-    - ip: "10.190.224.104"
-      hostnames: ["fincore"]
-    - ip: "10.190.224.105"
-      hostnames: ["fincore"]
-    - ip: "10.190.224.106"
-      hostnames: ["fincore"]
+          # =========================
+          # ENV
+          # =========================
+          env:
+{{ toYaml .Values.deployment.container.env | indent 12 }}
 
-  topologySpreadConstraints:
-    maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+          # =========================
+          # RESOURCES
+          # =========================
+          resources:
+{{ toYaml .Values.deployment.container.resources | indent 12 }}
 
-service:
-  name: nwsa-variance-service
-  port: 80
-  targetPort: 8093
+          # =========================
+          # PROBES
+          # =========================
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.deployment.container.probes.startup.port }}
+            failureThreshold: {{ .Values.deployment.container.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.deployment.container.probes.startup.periodSeconds }}
 
-hpa:
-  name: nwsa-variance-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
-  behavior:
-    scaleUp: 60
-    scaleDown: 300
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.deployment.container.probes.liveness.port }}
+            initialDelaySeconds: {{ .Values.deployment.container.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.container.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.container.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.container.probes.liveness.failureThreshold }}
 
-pdb:
-  name: nwsa-variance-pdb
-  minAvailable: 1
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.deployment.container.probes.readiness.port }}
+            initialDelaySeconds: {{ .Values.deployment.container.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.container.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.container.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.container.probes.readiness.failureThreshold }}
+
+          # =========================
+          # LIFECYCLE
+          # =========================
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep {{ .Values.deployment.container.lifecycle.preStopSleep }}"]
