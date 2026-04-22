@@ -1,169 +1,109 @@
-apiVersion: v1
-kind: Service
+
+D:\Pragati\HELM-Latest-0904\Deployment\user-service>helm template common-master-dev . -f values-dev.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
+Error: user-service/templates/deployment.yaml:4:18
+  executing "user-service/templates/deployment.yaml" at <.Values.deployment.name>:
+    nil pointer evaluating interface {}.name
+
+
+
+    below is my deployment file 
+
+    apiVersion: apps/v1
+kind: Deployment
 metadata:
-name: {{ .Values.service.name }}
-namespace: {{ .Values.namespace }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+
 spec:
-type: ClusterIP
-selector:
-app: {{ .Values.name }}-backend
-ports:
-- port: {{ .Values.service.port }}
-targetPort: {{ .Values.service.targetPort }}
-protocol: TCP
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
-{{- if .Values.pdb.enabled }}
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-name: {{ .Values.name }}-pdb
-namespace: {{ .Values.namespace }}
-spec:
-minAvailable: {{ .Values.pdb.minAvailable }}
-selector:
-matchLabels:
-app: {{ .Values.name }}-backend
-{{- end }}
+  strategy:
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-below is values files:
-namespace: backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-serviceAccount:
-name: user-sa
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.deployment.container.port }}"
 
-deployment:
-name: user-deployment
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-replicas: 1
-revisionHistoryLimit: 5
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-strategy:
-type: RollingUpdate
-maxUnavailable: 0
-maxSurge: 1
+      hostAliases:
+{{ toYaml .Values.deployment.hostAliases | indent 8 }}
 
-labels:
-app: user-backend
+      volumes:
+{{ toYaml .Values.deployment.volumes | indent 8 }}
 
-container:
-name: user-container
-image: a2p05vksharbor.corp.ad.sbi/cbops/user-service:PR-04
-imagePullPolicy: Always
+      containers:
+        - name: {{ .Values.deployment.container.name }}
+          image: {{ .Values.deployment.container.image }}
+          imagePullPolicy: {{ .Values.deployment.container.imagePullPolicy }}
 
-port: 8087  
+          ports:
+            - containerPort: {{ .Values.deployment.container.port }}
 
-env:  
-  - name: SPRING_PROFILES_ACTIVE  
-    value: "prod"  
-  - name: JAVA_TOOL_OPTIONS  
-    value: "-Djava.net.preferIPv4Stack=true"  
-  - name: SPRING_KAFKA_CONSUMER_GROUP_ID  
-    value: "rbac-cache-group"  
+          volumeMounts:
+{{ toYaml .Values.deployment.container.volumeMounts | indent 12 }}
 
-envFrom:  
-  configMaps:  
-    - oracle-config  
-    - kafka-config  
-    - redis-config  
-    - ldap-config  
-  secrets:  
-    - oracle-secret  
-    - ldap-secret  
+          env:
+{{ toYaml .Values.deployment.container.env | indent 12 }}
 
-volumeMounts:  
-  - name: truststore-volume  
-    mountPath: /etc/fincore/secrets  
-    readOnly: true  
+          envFrom:
+            {{- range .Values.deployment.container.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.deployment.container.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
 
-resources:  
-  requests:  
-    cpu: "200m"  
-    memory: "256Mi"  
-  limits:  
-    cpu: "500m"  
-    memory: "512Mi"  
+          resources:
+{{ toYaml .Values.deployment.container.resources | indent 12 }}
 
-probes:  
-  startup:  
-    port: 8087  
-    failureThreshold: 60  
-    periodSeconds: 10  
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.deployment.container.probes.startup.port }}
+            failureThreshold: {{ .Values.deployment.container.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.deployment.container.probes.startup.periodSeconds }}
 
-  liveness:  
-    port: 8087  
-    initialDelaySeconds: 90  
-    periodSeconds: 15  
-    timeoutSeconds: 5  
-    failureThreshold: 5  
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.deployment.container.probes.liveness.port }}
+            initialDelaySeconds: {{ .Values.deployment.container.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.container.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.container.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.container.probes.liveness.failureThreshold }}
 
-  readiness:  
-    port: 8087  
-    initialDelaySeconds: 30  
-    periodSeconds: 10  
-    timeoutSeconds: 5  
-    failureThreshold: 5  
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.deployment.container.probes.readiness.port }}
+            initialDelaySeconds: {{ .Values.deployment.container.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.container.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.container.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.container.probes.readiness.failureThreshold }}
 
-lifecycle:  
-  preStopSleep: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep {{ .Values.deployment.container.lifecycle.preStopSleep }}"]
 
-volumes:
-- name: truststore-volume
-secret:
-secretName: ldap-truststore-file
-items:
-- key: ad-truststore.jks
-path: ad-truststore.jks
 
-securityContext:
-runAsNonRoot: true
-runAsUser: 1000
-runAsGroup: 1000
-fsGroup: 2000
 
-hostAliases:
-- ip: "10.176.53.145"
-hostnames:
-- "corp.ad.sbi"
-- "corpdcmdgbl01.corp.ad.sbi"
-- ip: "10.176.54.30"
-hostnames:
-- "corpdcmdgbl02.corp.ad.sbi"
-- ip: "10.176.54.31"
-hostnames:
-- "corpdcmdgbl03.corp.ad.sbi"
-- ip: "10.176.54.32"
-hostnames:
-- "corpdcmdgbl04.corp.ad.sbi"
-- ip: "10.189.37.135"
-hostnames:
-- "corpdcmdrbl01.corp.ad.sbi"
-- ip: "10.189.37.136"
-hostnames:
-- "corpdcmdrbl02.corp.ad.sbi"
-- ip: "10.189.37.137"
-hostnames:
-- "corpdcmdrbl03.corp.ad.sbi"
-- ip: "10.189.37.138"
-hostnames:
-- "corpdcmdrbl04.corp.ad.sbi"
-
-service:
-name: user-service
-type: ClusterIP
-port: 80
-targetPort: 8087
-
-hpa:
-name: user-hpa
-minReplicas: 1
-maxReplicas: 5
-cpuUtilization: 70
-behavior:
-scaleUpStabilization: 60
-scaleDownStabilization: 300
-
-pdb:
-name: user-pdb
-minAvailable: 1
-
-please send me thew correct files
+                please tell me the issue if there are chnages please make the chnage sin file and send me back
