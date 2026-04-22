@@ -1,6 +1,28 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
 
-D:\Pragati\HELM-Latest-0904\Deployment\nwsa-variance>helm install nwsa . -f values.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: INSTALLATION FAILED: failed to create typed patch object (backend/nwsa-variance-hpa; autoscaling/v2, Kind=HorizontalPodAutoscaler): .spec.scaleUp: field not declared in schema
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
 
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
-now i m getting this issue
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleUp.stabilizationWindowSeconds }}
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleDown.stabilizationWindowSeconds }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
