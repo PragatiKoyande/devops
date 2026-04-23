@@ -1,153 +1,27 @@
-namespace: backend
-
-serviceAccount:
-  name: report-sa
-
-deployment:
-  name: report-deployment
-
-  replicas: 1
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
-
-  labels:
-    app: report-backend
-
-  container:
-    name: report-container
-    image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-09
-    imagePullPolicy: Always
-
-    port: 9005
-
-    env:
-      - name: SPRING_PROFILES_ACTIVE
-        value: "prod"
-      - name: HADOOP_FS_URI
-        value: "hdfs://10.190.224.102:8022"
-      - name: HADOOP_FS_USER
-        value: "root"
-      - name: JAVA_OPTS
-        value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"
-
-    envFrom:
-      configMaps:
-        - redis-config
-        - kafka-config
-        - oracle-config
-      secrets:
-        - oracle-secret
-
-    resources:
-      requests:
-        memory: "20Gi"
-        cpu: "2000m"
-      limits:
-        memory: "24Gi"
-        cpu: "4000m"
-
-    probes:
-      startup:
-        port: 9005
-        failureThreshold: 60
-        periodSeconds: 10
-
-      liveness:
-        port: 9005
-        initialDelaySeconds: 90
-        periodSeconds: 15
-        timeoutSeconds: 5
-        failureThreshold: 5
-
-      readiness:
-        port: 9005
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 5
-
-    lifecycle:
-      preStopSleep: 10
-
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
-
-  hostAliases:
-    - ip: "10.190.224.102"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.103"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.104"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.105"
-      hostnames:
-        - "fincore"
-    - ip: "10.190.224.106"
-      hostnames:
-        - "fincore"
-
-  topologySpreadConstraints:
-    maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-
-service:
-  name: report-service
-  type: ClusterIP
-  port: 80
-  targetPort: 9005
-
-hpa:
-  name: report-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
-  behavior:
-    scaleUpStabilization: 60
-    scaleDownStabilization: 300
-
-pdb:
-  name: report-pdb
-  minAvailable: 1
-
-
-
-
-  This is my values-prod.yaml file and my deployment file is slightly different i guess below i m pastiong that also: please correct the deployment file and send me back entite file
-
-  apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-deployment
+  name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: {{ .Values.replicaCount }}
-  revisionHistoryLimit: 5
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
+    type: {{ .Values.deployment.strategy.type }}
     rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
   selector:
     matchLabels:
-      app: {{ .Values.name }}-backend
+      app: {{ .Values.deployment.labels.app }}
 
   template:
     metadata:
       labels:
-        app: {{ .Values.name }}-backend
+        app: {{ .Values.deployment.labels.app }}
 
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
@@ -155,84 +29,74 @@ spec:
       enableServiceLinks: false
 
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-      {{- if .Values.hostAliases }}
+      {{- if .Values.deployment.hostAliases }}
       hostAliases:
-{{ toYaml .Values.hostAliases | indent 8 }}
+{{ toYaml .Values.deployment.hostAliases | indent 8 }}
       {{- end }}
 
-      {{- if .Values.volumes }}
+      {{- if .Values.deployment.volumes }}
       volumes:
-{{ toYaml .Values.volumes | indent 8 }}
+{{ toYaml .Values.deployment.volumes | indent 8 }}
       {{- end }}
 
       containers:
-        - name: {{ .Values.name }}-container
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Values.deployment.container.name }}
+          image: {{ .Values.deployment.container.image }}
+          imagePullPolicy: {{ .Values.deployment.container.imagePullPolicy }}
 
           ports:
-            - containerPort: {{ .Values.service.targetPort }}
+            - containerPort: {{ .Values.deployment.container.port }}
 
-          {{- if .Values.volumeMounts }}
+          {{- if .Values.deployment.container.volumeMounts }}
           volumeMounts:
-{{ toYaml .Values.volumeMounts | indent 12 }}
+{{ toYaml .Values.deployment.container.volumeMounts | indent 12 }}
           {{- end }}
 
+          {{- if .Values.deployment.container.env }}
+          env:
+{{ toYaml .Values.deployment.container.env | indent 12 }}
+          {{- end }}
+
+          {{- if .Values.deployment.container.envFrom }}
           envFrom:
-          {{- range .Values.envFrom.configMaps }}
+            {{- range .Values.deployment.container.envFrom.configMaps }}
             - configMapRef:
                 name: {{ . }}
-          {{- end }}
-          {{- range .Values.envFrom.secrets }}
+            {{- end }}
+            {{- range .Values.deployment.container.envFrom.secrets }}
             - secretRef:
                 name: {{ . }}
-          {{- end }}
-
-          {{- if or .Values.extraEnv .Values.secretEnv }}
-          env:
-          {{- if .Values.extraEnv }}
-{{ toYaml .Values.extraEnv | indent 12 }}
-          {{- end }}
-          {{- range .Values.secretEnv }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .key }}
-          {{- end }}
+            {{- end }}
           {{- end }}
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.deployment.container.resources | indent 12 }}
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            failureThreshold: 60
-            periodSeconds: 10
+              port: {{ .Values.deployment.container.probes.startup.port }}
+            failureThreshold: {{ .Values.deployment.container.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.deployment.container.probes.startup.periodSeconds }}
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: {{ .Values.deployment.container.probes.liveness.port }}
+            initialDelaySeconds: {{ .Values.deployment.container.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.container.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.container.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.container.probes.liveness.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: {{ .Values.deployment.container.probes.readiness.port }}
+            initialDelaySeconds: {{ .Values.deployment.container.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.deployment.container.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.deployment.container.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.deployment.container.probes.readiness.failureThreshold }}
 
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+                command: ["/bin/sh", "-c", "sleep {{ .Values.deployment.container.lifecycle.preStopSleep }}"]
