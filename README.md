@@ -100,3 +100,62 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep {{ .Values.deployment.container.lifecycle.preStopSleep }}"]
+
+This is my deployment.yaml file and below is my values.yaml file: is not aligned with my deployment file and hence it is throwing issue so can you please make necessary chnages in values.yaml file and sen dme back entie
+
+name: report
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/report-service
+  tag: DEV16
+  pullPolicy: Always
+
+serviceAccount:
+  name: report-sa
+
+service:
+  name: report-service
+  port: 80
+  targetPort: 9005
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 70
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+envFrom:
+  configMaps:
+    - redis-config
+    - oracle-config
+    - kafka-config
+  secrets:
+    - oracle-secret
+
+extraEnv:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "dev"
+
+secretEnv: []
+
+hostAliases: []
+volumes: []
+volumeMounts: []
+
+
+                
