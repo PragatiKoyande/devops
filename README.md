@@ -1,14 +1,6 @@
+this is my deployment.yaml file:
 
-D:\Pragati\HELM-Latest-0904\Deployment\user-service>helm template common-master-dev . -f values-dev.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: user-service/templates/deployment.yaml:4:18
-  executing "user-service/templates/deployment.yaml" at <.Values.deployment.name>:
-    nil pointer evaluating interface {}.name
-
-
-
-    below is my deployment file 
-
-    apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.deployment.name }}
@@ -105,5 +97,85 @@ spec:
                 command: ["/bin/sh", "-c", "sleep {{ .Values.deployment.container.lifecycle.preStopSleep }}"]
 
 
+-------------------------
+my values-deafult.yaml file is diffenet and rherefore its not running fine so i m pasting my values.yaml file can you please make my values-dfault fine correct aligning with above deployment.yaml:
+------------------------------------------------
 
-                please tell me the issue if there are chnages please make the chnage sin file and send me back
+name: user
+namespace: backend
+
+replicaCount: 1
+
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/user-service
+  tag: DEV06
+  pullPolicy: Always
+
+serviceAccount:
+  name: user-sa
+
+service:
+  name: user-service
+  port: 80
+  targetPort: 8087
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 70
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+envFrom:
+  configMaps:
+    - oracle-config
+    - kafka-config
+    - redis-config
+    - ldap-config
+  secrets:
+    - oracle-secret
+
+extraEnv:
+  - name: SPRING_PROFILES_ACTIVE
+    value: dev
+  - name: JAVA_TOOL_OPTIONS
+    value: "-Djava.net.preferIPv4Stack=true"
+  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+    value: "rbac-cache-group"
+
+secretEnv:
+  - name: LDAP_TRUSTSTORE_PASSWORD
+    secretName: ldap-creds
+    key: truststore-password
+
+hostAliases:
+  - ip: "10.189.42.83"
+    hostnames:
+      - "uatrootdc1.uatad.sbi"
+
+volumes:
+  - name: truststore-volume
+    secret:
+      secretName: ldap-truststore-file
+      items:
+        - key: ad-truststore.jks
+          path: ad-truststore.jks
+
+volumeMounts:
+  - name: truststore-volume
+    mountPath: /etc/fincore/secrets
+    readOnly: true
+
+
+    
