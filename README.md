@@ -59,7 +59,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: react-app-sa
-  namespace: prod-cbops
+  namespace: backend
 
 ---
 # --------------------------------------------
@@ -69,7 +69,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: react-app-deployment
-  namespace: prod-cbops
+  namespace: backend
 
 spec:
   replicas: 1
@@ -168,7 +168,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: react-service
-  namespace: prod-cbops
+  namespace: backend
 
 spec:
   selector:
@@ -191,7 +191,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: react-app-hpa
-  namespace: prod-cbops
+  namespace: backend
 
 spec:
   scaleTargetRef:
@@ -226,7 +226,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: react-app-pdb
-  namespace: prod-cbops
+  namespace: backend
 
 spec:
   minAvailable: 1
