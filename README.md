@@ -44,7 +44,14 @@ STRICT RULES:
 
 10. use the namespace: backend   
 11. I am having 4 different envrionmnets and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
-12. Now here my requirment is I wnat to keep hostAliases: parameter in values.yaml as I have different values for dev,sit,uat and prod 
+12. Now here my requirment is I want to keep hostAliases: parameter in values.yaml as I have different values for dev,sit,uat and prod.  
+
+Please maintain consistency You send me the format of how you kept earlier for common-master and common-request in which you mentioned 
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/common-request-service
+  tag: DEV14
+
+why you giving all the time differnt format ????
 
 Here is the YAML:
 
