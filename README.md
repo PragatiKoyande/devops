@@ -58,6 +58,8 @@ hostAliases:
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: "prod"
+
+only this much from env section.
          
 Here is the YAML:
 
