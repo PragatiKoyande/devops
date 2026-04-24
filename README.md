@@ -32,12 +32,6 @@ STRICT RULES:
        env
        resources
 
-4. If YAML contains:
-   - Secrets ? map to secret.enabled block
-   - ConfigMaps ? map to configMap.enabled block
-   - DB credentials ? map to database.enabled block
-   - Enterprise features ? preserve them exactly
-
 5. Do NOT redesign the YAML.
 6. Do NOT simplify it.
 7. Do NOT restructure logic.
@@ -49,6 +43,7 @@ STRICT RULES:
    - exact helm upgrade command
 
 10. use the namespace: backend   
+11. make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
 
 Here is the YAML:
 
