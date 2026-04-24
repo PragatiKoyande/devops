@@ -1,146 +1,165 @@
-namespace: backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
 
-serviceAccount:
-  name: notification-sa
 
-deployment:
-  name: notification-deployment
-  replicas: 2
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
-
-  labels:
-    app: notification-backend
-
-  serviceAccountName: notification-sa
-  enableServiceLinks: false
-  terminationGracePeriodSeconds: 30
-
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
-
-  volumes:
-    - name: tmp-dir
-      emptyDir:
-        medium: Memory
-        sizeLimit: 64Mi
-
-container:
-  name: notification-container
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/notification-service
-  tag: PR-01
-  pullPolicy: Always
-
-service:
-  name: notification-service
-  type: ClusterIP
-  port: 80
-  targetPort: 9010
-
-probes:
-  port: 9010
-
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
-
-  liveness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 3
-
-  readiness:
-    initialDelaySeconds: 15
-    periodSeconds: 5
-
-resources:
-  requests:
-    cpu: "200m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
-
-volumeMounts:
-  - name: tmp-dir
-    mountPath: /tmp
-
-envFrom:
-  configMaps:
-    - postgres-config
-    - redis-config
-    - kafka-config
-  secrets:
-    - postgres-secret
-
-env:
-  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: "notification-service-group"
-  - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-    value: "earliest"
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-
-lifecycle:
-  preStop:
-    command: ["/bin/sh","-c","sleep 10"]
-
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
-  capabilities:
-    drop:
-      - ALL
-
-hpa:
-  name: notification-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
-
-pdb:
-  name: notification-pdb
-  minAvailable: 1
-
-labels:
-  app: notification-backend
 
 -------
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/notification-service
-  tag: DEV01
 
-env:
-  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: "notification-service-group"
-  - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-    value: "earliest"
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 
---------
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/notification-service
-  tag: SIT01
---------
+  strategy:
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/notification-service
-  tag: UAT01
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-_---_------
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/notification-service
-  tag: PR-01
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+
+      securityContext:
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
+
+      volumes:
+        {{- toYaml .Values.deployment.volumes | nindent 8 }}
+
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: {{ .Values.probes.port }}
+
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            {{- toYaml .Values.probes.startup | nindent 12 }}
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            {{- toYaml .Values.probes.liveness | nindent 12 }}
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            {{- toYaml .Values.probes.readiness | nindent 12 }}
+
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
+
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+
+
+
+
+-------
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  type: {{ .Values.service.type }}
+
+  selector:
+    app: {{ .Values.labels.app }}
+
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+
+
+
+------
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpu }}
+
+
+
+------
+
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
