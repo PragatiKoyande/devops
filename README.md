@@ -54,12 +54,6 @@ hostAliases:
   - ip: "10.189.42.83"
      hostnames:
        - "uatrootdc1.uatad.sbi"
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-
-only this much from env section.
          
 Here is the YAML:
 
