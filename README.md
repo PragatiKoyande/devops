@@ -1,136 +1,170 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 
-serviceAccount:
-  enabled: true
-  name: common-master-sa
-
-deployment:
-  name: common-master-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: common-master-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "2000"
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+      annotations:
+        {{- toYaml .Values.deployment.annotations | nindent 8 }}
 
-  serviceAccountName: common-master-sa
-  terminationGracePeriodSeconds: 30
-  enableServiceLinks: false
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: common-master-backend
+      topologySpreadConstraints:
+        {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
 
-container:
-  name: common-master-container
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
-  tag: PR-02
-  pullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.probes.port }}
 
-service:
-  name: common-master-service
-  type: ClusterIP
-  port: 80
-  targetPort: 2000
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
 
-probes:
-  port: 2000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
 
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-resources:
-  requests:
-    cpu: "200m"
-    memory: "256Mi"
-  limits:
-    cpu: "500m"
-    memory: "512Mi"
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
 
-envFrom:
-  configMaps:
-    - redis-config
-    - oracle-config
-  secrets:
-    - oracle-secret
 
-lifecycle:
-  preStop:
-    command: ["/bin/sh", "-c", "sleep 10"]
-
-hpa:
-  enabled: true
-  name: common-master-hpa
-
-  minReplicas: 1
-  maxReplicas: 5
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-  metrics:
-    cpu:
-      targetAverageUtilization: 70
-
-pdb:
-  enabled: true
-  name: common-master-pdb
-  minAvailable: 1
-
-labels:
-  app: common-master-backend
 
 
 
 _---------
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
-  tag: PR-02-dev
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  selector:
+    app: {{ .Values.labels.app }}
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: {{ .Values.service.type }}
 
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
-  tag: PR-02-sit
+------
+
+
+{{- if .Values.serviceAccount.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+
+
+------
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  behavior:
+    {{- toYaml .Values.hpa.behavior | nindent 4 }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.metrics.cpu.targetAverageUtilization }}
+{{- end }}
 
 
 
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
-  tag: PR-02-uat
+------
 
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
-  tag: PR-02
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+{{- end }}
