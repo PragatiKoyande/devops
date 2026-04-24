@@ -1,138 +1,170 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 
-serviceAccount:
-  enabled: true
-  name: common-request-sa
-  automountServiceAccountToken: false
-
-deployment:
-  name: common-request-deployment
-  replicas: 1
+spec:
+  replicas: {{ .Values.deployment.replicas }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: common-request-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-  serviceAccountName: common-request-sa
-  terminationGracePeriodSeconds: 30
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: common-request-backend
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 10001
-    fsGroup: 10001
+      securityContext:
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
 
-container:
-  name: common-request-container
+      topologySpreadConstraints:
+        {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service
-  tag: PR-02
-  pullPolicy: Always
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-service:
-  name: common-request-service
-  type: ClusterIP
-  port: 80
-  targetPort: 9000
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
 
-probes:
-  port: 9000
+          ports:
+            - containerPort: {{ .Values.probes.port }}
 
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
 
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
 
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-resources:
-  requests:
-    cpu: "200m"
-    memory: "256Mi"
-  limits:
-    cpu: "500m"
-    memory: "512Mi"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-envFrom:
-  configMaps:
-    - redis-config
-    - kafka-config
-    - oracle-config
-  secrets:
-    - oracle-secret
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-lifecycle:
-  preStop:
-    command: ["/bin/sh", "-c", "sleep 10"]
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
 
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
 
-hpa:
-  enabled: true
-  name: common-request-hpa
-  minReplicas: 1
-  maxReplicas: 3
+
+-------
+
+
+{{- if .Values.serviceAccount.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+{{- end }}
+
+
+
+-------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  selector:
+    app: {{ .Values.labels.app }}
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: {{ .Values.service.type }}
+
+
+
+------
+
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
   metrics:
-    cpu:
-      targetAverageUtilization: 70
-
-pdb:
-  enabled: true
-  name: common-request-pdb
-  minAvailable: 1
-
-labels:
-  app: common-request-backend
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.metrics.cpu.targetAverageUtilization }}
+{{- end }}
 
 
 
---------
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service
-  tag: PR-02-dev
+-----
 
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service
-  tag: PR-02-sit
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service
-  tag: PR-02-uat
-
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service
-  tag: PR-02
-
-
-
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+{{- end }}
