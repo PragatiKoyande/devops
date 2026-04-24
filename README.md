@@ -1,113 +1,154 @@
-namespace: backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
 
-labels:
-  app: redis-server
 
-serviceAccount:
-  name: redis-sa
 
-deployment:
-  name: redis-deployment
-  replicas: 2
-  revisionHistoryLimit: 5
+-----
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  terminationGracePeriodSeconds: 30
-  enableServiceLinks: false
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: redis-server
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
 
-container:
-  name: redis-container
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/redis/redis-stack-server
-  tag: latest
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
-env:
-  - name: ALLOW_EMPTY_PASSWORD
-    value: "yes"
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
 
-service:
-  name: redis-service
-  type: ClusterIP
-  port: 6379
-  targetPort: 6379
+          ports:
+            - containerPort: {{ .Values.probes.port }}
 
-hpa:
-  name: redis-hpa
-  minReplicas: 1
-  maxReplicas: 3
-  cpuUtilization: 70
+          env:
+{{ toYaml .Values.env | indent 12 }}
+
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
+
+
+----
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  type: {{ .Values.service.type }}
+
+  selector:
+    app: {{ .Values.labels.app }}
+
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+
+----
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
   behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
+{{ toYaml .Values.hpa.behavior | indent 4 }}
 
-pdb:
-  name: redis-pdb
-  minAvailable: 1
-
-resources:
-  requests:
-    cpu: "100m"
-    memory: "128Mi"
-  limits:
-    cpu: "300m"
-    memory: "512Mi"
-
-probes:
-  port: 6379
-
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
-
-  liveness:
-    initialDelaySeconds: 20
-    periodSeconds: 10
-    timeoutSeconds: 3
-    failureThreshold: 3
-
-  readiness:
-    initialDelaySeconds: 10
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
-
-lifecycle:
-  preStop:
-    command: ["/bin/sh", "-c", "sleep 10"]
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
 
 
 
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/redis/redis-stack-server
-  tag: DEV
+----
 
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/redis/redis-stack-server
-  tag: SIT
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/redis/redis-stack-server
-  tag: UAT
-
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/redis/redis-stack-server
-  tag: latest
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
