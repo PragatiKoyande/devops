@@ -1,210 +1,179 @@
-namespace: backend
-
-serviceAccount:
-  name: login-sa
-  automountServiceAccountToken: false
-
-deployment:
-  name: login-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
-
-  labels:
-    app: login-backend
-
-  pod:
-    serviceAccountName: login-sa
-    terminationGracePeriodSeconds: 30
-    enableServiceLinks: false
-
-    securityContext:
-      runAsNonRoot: true
-      runAsUser: 10001
-      fsGroup: 10001
-
-    hostAliases: []   # overridden per env
-
-    volumes:
-      - name: truststore-volume
-        secret:
-          secretName: ldap-truststore-file
-          items:
-            - key: ad-truststore.jks
-              path: ad-truststore.jks
-
-      - name: logs-volume
-        emptyDir: {}
-
-container:
-  name: login-backend-container
-
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/login-service
-  tag: PR-03
-
-ports:
-  containerPort: 8085
-
-volumeMounts:
-  - name: truststore-volume
-    mountPath: /etc/fincore/secrets
-    readOnly: true
-  - name: logs-volume
-    mountPath: /logs
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-
-envFrom:
-  configMaps:
-    - redis-config
-    - oracle-config
-    - ldap-config
-  secrets:
-    - oracle-secret
-    - ldap-secret
-
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
-
-probes:
-  port: 8085
-
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
-
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
-
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
-
-lifecycle:
-  preStop:
-    command: ["/bin/sh", "-c", "sleep 10"]
-
-securityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
-
-service:
-  name: login-service
-  port: 80
-  targetPort: 8085
-
-hpa:
-  name: login-hpa
-  minReplicas: 1
-  maxReplicas: 3
-  cpuUtilization: 70
-
-pdb:
-  name: login-pdb
-  minAvailable: 1
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
 
 
--------
+-----
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/login-service
-  tag: DEV13
-
-hostAliases:
-  - ip: "10.189.42.83"
-    hostnames:
-      - "uatrootdc1.uatad.sbi"
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
 
--------
+-----
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/login-service
-  tag: SIT01
 
-hostAliases:
-  - ip: "10.189.42.90"
-    hostnames:
-      - "sitdc1.sitad.sbi"
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "sit"
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
 
 
 ------
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/login-service
-  tag: UAT01
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Values.deployment.labels.app }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
 
-hostAliases:
-  - ip: "10.189.42.83"
-    hostnames:
-      - "uatrootdc1.uatad.sbi"
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "uat"
 
 -----
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/login-service
-  tag: PR-03
 
-hostAliases:
-  - ip: "10.176.53.145"
-    hostnames:
-      - "corp.ad.sbi"
-      - "corpdcmdgbl01.corp.ad.sbi"
-  - ip: "10.176.54.30"
-    hostnames:
-      - "corpdcmdgbl02.corp.ad.sbi"
-  - ip: "10.176.54.31"
-    hostnames:
-      - "corpdcmdgbl03.corp.ad.sbi"
-  - ip: "10.176.54.32"
-    hostnames:
-      - "corpdcmdgbl04.corp.ad.sbi"
-  - ip: "10.189.37.135"
-    hostnames:
-      - "corpdcmdrbl01.corp.ad.sbi"
-  - ip: "10.189.37.136"
-    hostnames:
-      - "corpdcmdrbl02.corp.ad.sbi"
-  - ip: "10.189.37.137"
-    hostnames:
-      - "corpdcmdrbl03.corp.ad.sbi"
-  - ip: "10.189.37.138"
-    hostnames:
-      - "corpdcmdrbl04.corp.ad.sbi"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+
+  strategy:
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
+
+    spec:
+      serviceAccountName: {{ .Values.deployment.pod.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.pod.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.pod.enableServiceLinks }}
+
+      securityContext:
+        runAsNonRoot: {{ .Values.deployment.pod.securityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.deployment.pod.securityContext.runAsUser }}
+        fsGroup: {{ .Values.deployment.pod.securityContext.fsGroup }}
+
+      {{- if .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.hostAliases | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.deployment.pod.volumes }}
+      volumes:
+        {{- toYaml .Values.deployment.pod.volumes | nindent 8 }}
+      {{- end }}
+
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: {{ .Values.ports.containerPort }}
+
+          {{- if .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
+          {{- end }}
+
+          {{- if .Values.envFrom }}
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+          {{- end }}
+
+          {{- if .Values.env }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+          {{- end }}
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toYaml .Values.lifecycle.preStop.command | nindent 18 }}
+
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+            readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
+            capabilities:
+              drop:
+                {{- toYaml .Values.securityContext.capabilities.drop | nindent 16 }}
