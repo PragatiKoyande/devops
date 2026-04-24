@@ -47,29 +47,40 @@ STRICT RULES:
 
 Here is the YAML:
 
-# --------------------------------------------
-# Service Account (security best practice)
-# --------------------------------------------
+# =====================================================
+# Service Account (Dedicated Identity for Pod Security)
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: common-master-sa
+  name: common-request-sa
   namespace: backend
-
+automountServiceAccountToken: false
 ---
-# --------------------------------------------
-# Deployment
-# --------------------------------------------
+# =====================================================
+# Pod Disruption Budget
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: common-request-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: common-request-backend
+---
+# =====================================================
+# Deployment (Enterprise Hardened)
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: common-master-deployment
+  name: common-request-deployment
   namespace: backend
-
 spec:
   replicas: 1
-
-  revisionHistoryLimit: 5
 
   strategy:
     type: RollingUpdate
@@ -79,20 +90,16 @@ spec:
 
   selector:
     matchLabels:
-      app: common-master-backend
+      app: common-request-backend
 
   template:
     metadata:
       labels:
-        app: common-master-backend
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "2000"
-
+        app: common-request-backend
     spec:
-      serviceAccountName: common-master-sa
+
+      serviceAccountName: common-request-sa
       terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
 
       topologySpreadConstraints:
         - maxSkew: 1
@@ -100,23 +107,30 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: common-master-backend
+              app: common-request-backend
+
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
 
       containers:
-        - name: common-master-container
-          image: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service:PR-02
+        - name: common-request-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service:PR-02
           imagePullPolicy: Always
 
           envFrom:
             - configMapRef:
                 name: redis-config
             - configMapRef:
+                name: kafka-config
+            - configMapRef:
                 name: oracle-config
             - secretRef:
                 name: oracle-secret
 
           ports:
-            - containerPort: 2000
+            - containerPort: 9000
 
           resources:
             requests:
@@ -128,13 +142,13 @@ spec:
 
           startupProbe:
             tcpSocket:
-              port: 2000
+              port: 9000
             failureThreshold: 60
             periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: 2000
+              port: 9000
             initialDelaySeconds: 90
             periodSeconds: 15
             timeoutSeconds: 5
@@ -142,7 +156,7 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: 2000
+              port: 9000
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -153,53 +167,28 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "sleep 10"]
 
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
 ---
-# --------------------------------------------
-# Service (internal cluster access)
-# --------------------------------------------
-apiVersion: v1
-kind: Service
-metadata:
-  name: common-master-service
-  namespace: backend
-
-spec:
-  selector:
-    app: common-master-backend
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 2000
-
-  type: ClusterIP
-
----
-# --------------------------------------------
-# Horizontal Pod Autoscaler (auto scaling)
-# --------------------------------------------
+# =====================================================
+# Horizontal Pod Autoscaler
+# =====================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: common-master-hpa
+  name: common-request-hpa
   namespace: backend
-
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: common-master-deployment
-
+    name: common-request-deployment
   minReplicas: 1
-  maxReplicas: 5
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
+  maxReplicas: 3
   metrics:
     - type: Resource
       resource:
@@ -207,19 +196,21 @@ spec:
         target:
           type: Utilization
           averageUtilization: 70
-
 ---
-# --------------------------------------------
-# Pod Disruption Budget
-# --------------------------------------------
-apiVersion: policy/v1
-kind: PodDisruptionBudget
+# =====================================================
+# Service
+# =====================================================
+apiVersion: v1
+kind: Service
 metadata:
-  name: common-master-pdb
+  name: common-request-service
   namespace: backend
-
 spec:
-  minAvailable: 1
   selector:
-    matchLabels:
-      app: common-master-backend
+    app: common-request-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9000
+  type: ClusterIP
