@@ -43,7 +43,7 @@ STRICT RULES:
    - exact helm upgrade command
 
 10. use the namespace: backend   
-11. make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+11. I am having 4 different envrionmnets and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
 
 Here is the YAML:
 
