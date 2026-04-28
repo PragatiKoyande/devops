@@ -1,152 +1,166 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-serviceAccount:
-  name: report-sa
-
-deployment:
-  name: report-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: report-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: report-backend
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
-container:
-  name: report-container
-  port: 9005
+      {{- if .Values.hostAliases }}
+      hostAliases:
+{{ toYaml .Values.hostAliases | indent 8 }}
+      {{- end }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-service
-  tag: PR-11
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-envFrom:
-  configMaps:
-    - redis-config
-    - kafka-config
-    - oracle-config
-  secrets:
-    - oracle-secret
+      {{- if .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+      {{- end }}
 
-resources:
-  requests:
-    memory: "20Gi"
-    cpu: "2000m"
-  limits:
-    memory: "24Gi"
-    cpu: "4000m"
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
 
-probes:
-  port: 9005
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
+          ports:
+            - containerPort: {{ .Values.container.port }}
 
-lifecycle:
-  preStop: ["sleep 10"]
+          {{- if .Values.env }}
+          env:
+{{ toYaml .Values.env | indent 12 }}
+          {{- end }}
 
-service:
-  name: report-service
-  type: ClusterIP
-  port: 80
-  targetPort: 9005
+          {{- if .Values.envFrom }}
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+          {{- end }}
 
-hpa:
-  name: report-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
-  behavior:
-    scaleUp: 60
-    scaleDown: 300
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
 
-pdb:
-  name: report-pdb
-  minAvailable: 1
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+{{ toYaml .Values.probes.startup | indent 12 }}
 
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+{{ toYaml .Values.probes.liveness | indent 12 }}
 
--------
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+{{ toYaml .Values.probes.readiness | indent 12 }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-service
-  tag: DEV14
-
-hostAliases:
-  - ip: "10.190.224.102"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.103"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.104"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.105"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.106"
-    hostnames: ["fincore"]
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
-  - name: HADOOP_FS_URI
-    value: "hdfs://10.190.224.102:8022"
-  - name: HADOOP_FS_USER
-    value: "root"
-  - name: JAVA_OPTS
-    value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ .Values.lifecycle.preStop }}
 
 -----
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-service
-  tag: PR-11
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
 
-hostAliases:
-  - ip: "10.190.224.102"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.103"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.104"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.105"
-    hostnames: ["fincore"]
-  - ip: "10.190.224.106"
-    hostnames: ["fincore"]
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ .Values.deployment.labels.app }}
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-  - name: HADOOP_FS_URI
-    value: "hdfs://10.190.224.102:8022"
-  - name: HADOOP_FS_USER
-    value: "root"
-  - name: JAVA_OPTS
-    value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
 
 
+-----
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleUp }}
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleDown }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpu }}
+
+
+----
+
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
+
+
+----
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
