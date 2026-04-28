@@ -1,128 +1,268 @@
+I am providing a Kubernetes YAML file for one microservice.
+
+STRICT RULES:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
+
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
+
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+10. use the namespace: backend   
+11. I am having 4 different envrionmnets and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
+image:
+  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-11
+  tag: DEV14
+------------------------------------------------------------------
+hostAliases:
+  - ip: "10.190.224.102"
+    hostnames:
+      - "fincore"
+  - ip: "10.190.224.103"
+    hostnames:
+      - "fincore"
+  - ip: "10.190.224.104"
+    hostnames:
+      - "fincore"
+  - ip: "10.190.224.105"
+    hostnames:
+      - "fincore"
+  - ip: "10.190.224.106"
+    hostnames:
+      - "fincore"
+-------------------------------------------------------------------  
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "prod"
+  - name: HADOOP_FS_URI
+    value: "hdfs://10.190.224.102:8022"
+  - name: HADOOP_FS_USER
+    value: "root"
+  - name: JAVA_OPTS
+    value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g" 
+
+
+Here is the YAML:
+
+# --------------------------------------------
+# Service Account (security baseline)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: report-sa
+  namespace: backend
+
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
+  name: report-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  replicas: 1
+  revisionHistoryLimit: 5
 
   strategy:
-    type: {{ .Values.deployment.strategy.type }}
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+      maxUnavailable: 0
+      maxSurge: 1
 
   selector:
     matchLabels:
-      app: {{ .Values.labels.app }}
+      app: report-backend
 
   template:
     metadata:
       labels:
-        app: {{ .Values.labels.app }}
+        app: report-backend
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
-
-      {{- if .Values.hostAliases }}
-      hostAliases:
-{{ toYaml .Values.hostAliases | indent 8 }}
-      {{- end }}
+      serviceAccountName: report-sa
+      terminationGracePeriodSeconds: 30
+      enableServiceLinks: false
 
       securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      hostAliases:
+        - ip: "10.190.224.102"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.103"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.104"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.105"
+          hostnames:
+            - "fincore"
+        - ip: "10.190.224.106"
+          hostnames:
+            - "fincore"
 
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: report-backend
 
       containers:
-        - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.container.imagePullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.container.port }}
-
-          envFrom:
-            {{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-
+        - name: report-container
+          image: a2p05vksharbor.corp.ad.sbi/cbops/report-service:PR-11
+          imagePullPolicy: Always
+          
           env:
-{{ toYaml .Values.env | indent 12 }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: HADOOP_FS_URI
+              value: "hdfs://10.190.224.102:8022"
+            - name: HADOOP_FS_USER
+              value: "root"
+            - name: JAVA_OPTS
+              value: "-Xms16g -Xmx16g -XX:+UseG1GC -XX:MaxDirectMemorySize=6g"              
+              
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            requests:
+              memory: "20Gi"
+              cpu: "2000m"
+            limits:
+              memory: "24Gi"
+              cpu: "4000m"
+
+          ports:
+            - containerPort: 9005
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | indent 12 }}
+              port: 9005
+            failureThreshold: 60
+            periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | indent 12 }}
+              port: 9005
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | indent 12 }}
+              port: 9005
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           lifecycle:
             preStop:
               exec:
-                command: {{ toJson .Values.lifecycle.preStop.command }}
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-
-_-------------
-
-
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: report-service
+  namespace: backend
 
 spec:
   selector:
-    app: {{ .Values.labels.app }}
+    app: report-backend
 
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9005
 
   type: ClusterIP
 
-
------------------
-
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.hpa.name }}
-  namespace: {{ .Values.namespace }}
+  name: report-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.deployment.name }}
+    name: report-deployment
 
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
 
   behavior:
-{{ toYaml .Values.hpa.behavior | indent 4 }}
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -130,29 +270,26 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
+          averageUtilization: 70
 
-
----------
-
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.pdb.name }}
-  namespace: {{ .Values.namespace }}
+  name: report-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-
+  minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Values.labels.app }}
+      app: report-backend
 
 
---------
 
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
+also make the templates folder ready which includes deployment, service,hpa, pdb
+
+and keep consistency in code like similar format how you kept for earlier microservice, i wnat same syntax format for all microservices
