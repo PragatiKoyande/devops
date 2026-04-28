@@ -1,168 +1,158 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-labels:
-  app: report-builder-app
-
-serviceAccount:
-  name: report-builder-sa
-
-deployment:
-  name: report-builder-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  terminationGracePeriodSeconds: 30
-  enableServiceLinks: false
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: report-builder-app
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-container:
-  name: report-builder-container
-  port: 8091
-  imagePullPolicy: Always
+      {{- if .Values.hostAliases }}
+      hostAliases:
+{{ toYaml .Values.hostAliases | indent 8 }}
+      {{- end }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: PR-01
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-envFrom:
-  configMaps:
-    - redis-config
-    - kafka-config
-    - oracle-config
-  secrets:
-    - oracle-secret
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
-# keep empty here → env will come from env-specific files
-env: []
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.container.imagePullPolicy }}
 
-# keep empty here → hostAliases will come from env-specific files
-hostAliases: []
+          ports:
+            - containerPort: {{ .Values.container.port }}
 
-resources:
-  requests:
-    cpu: "3000m"
-    memory: "4Gi"
-  limits:
-    cpu: "5000m"
-    memory: "8Gi"
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
 
-probes:
-  port: 8091
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
-  liveness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 3
-    failureThreshold: 3
-  readiness:
-    initialDelaySeconds: 15
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
+          env:
+{{ toYaml .Values.env | indent 12 }}
 
-lifecycle:
-  preStop:
-    command: ["/bin/sh", "-c", "sleep 10"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
 
-service:
-  name: report-builder-service
-  port: 80
-  targetPort: 8091
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+{{ toYaml .Values.probes.startup | indent 12 }}
 
-hpa:
-  name: report-builder-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+{{ toYaml .Values.probes.liveness | indent 12 }}
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+{{ toYaml .Values.probes.readiness | indent 12 }}
+
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
+
+
+_-------------
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  selector:
+    app: {{ .Values.labels.app }}
+
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: ClusterIP
+
+
+-----------------
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
   behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
+{{ toYaml .Values.hpa.behavior | indent 4 }}
 
-pdb:
-  name: report-builder-pdb
-  minAvailable: 1
-
-
-
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpu }}
 
 
+---------
 
-_----------------
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: PR-01
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
-hostAliases:
-- ip: "10.190.224.102"
-  hostnames: ["fincore"]
-- ip: "10.190.224.103"
-  hostnames: ["fincore"]
-- ip: "10.190.224.104"
-  hostnames: ["fincore"]
-- ip: "10.190.224.105"
-  hostnames: ["fincore"]
-- ip: "10.190.224.106"
-  hostnames: ["fincore"]
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-  - name: REPORT_BATCH_HDFS_BASE_PATH
-    value: "/reports"
-  - name: HADOOP_FS_URI
-    value: "hdfs://10.190.224.102:8022"
-  - name: HADOOP_FS_USER
-    value: "root"
-  - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-    value: "kafka.backend.svc.cluster.local:9092"
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-----------
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
-  tag: UAT14
 
-hostAliases:
-- ip: "10.190.224.102"
-  hostnames: ["fincore"]
-- ip: "10.190.224.103"
-  hostnames: ["fincore"]
-- ip: "10.190.224.104"
-  hostnames: ["fincore"]
-- ip: "10.190.224.105"
-  hostnames: ["fincore"]
-- ip: "10.190.224.106"
-  hostnames: ["fincore"]
+--------
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "uat"
-  - name: REPORT_BATCH_HDFS_BASE_PATH
-    value: "/reports"
-  - name: HADOOP_FS_URI
-    value: "hdfs://10.190.224.102:8022"
-  - name: HADOOP_FS_USER
-    value: "root"
-  - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-    value: "kafka.backend.svc.cluster.local:9092"
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
