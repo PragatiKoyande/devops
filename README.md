@@ -103,3 +103,66 @@ hpa:
 pdb:
   name: report-builder-pdb
   minAvailable: 1
+
+
+
+
+
+
+_----------------
+image:
+  repository: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service
+  tag: PR-01
+
+hostAliases:
+- ip: "10.190.224.102"
+  hostnames: ["fincore"]
+- ip: "10.190.224.103"
+  hostnames: ["fincore"]
+- ip: "10.190.224.104"
+  hostnames: ["fincore"]
+- ip: "10.190.224.105"
+  hostnames: ["fincore"]
+- ip: "10.190.224.106"
+  hostnames: ["fincore"]
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "prod"
+  - name: REPORT_BATCH_HDFS_BASE_PATH
+    value: "/reports"
+  - name: HADOOP_FS_URI
+    value: "hdfs://10.190.224.102:8022"
+  - name: HADOOP_FS_USER
+    value: "root"
+  - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+    value: "kafka.backend.svc.cluster.local:9092"
+
+----------
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
+  tag: UAT14
+
+hostAliases:
+- ip: "10.190.224.102"
+  hostnames: ["fincore"]
+- ip: "10.190.224.103"
+  hostnames: ["fincore"]
+- ip: "10.190.224.104"
+  hostnames: ["fincore"]
+- ip: "10.190.224.105"
+  hostnames: ["fincore"]
+- ip: "10.190.224.106"
+  hostnames: ["fincore"]
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "uat"
+  - name: REPORT_BATCH_HDFS_BASE_PATH
+    value: "/reports"
+  - name: HADOOP_FS_URI
+    value: "hdfs://10.190.224.102:8022"
+  - name: HADOOP_FS_USER
+    value: "root"
+  - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+    value: "kafka.backend.svc.cluster.local:9092"
