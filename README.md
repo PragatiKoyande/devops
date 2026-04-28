@@ -44,13 +44,39 @@ STRICT RULES:
 
 10. use the namespace: backend   
 11. I am having 4 different envrionmnets and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
-12.  Please maintain consistency and keep these values separate for 4 different environments as you kept earlier for common-master and common-request in which you mentioned 
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
 image:
   repository: h06vksharbor.corp.ad.sbi/cbops/common-request-service
   tag: DEV14
+------------------------------------------------------------------
 hostAliases:
-    - ip: "10.190.224.102"
-      hostnames:
+- ip: "10.190.224.102"
+  hostnames:
+  - "fincore"
+- ip: "10.190.224.103"
+  hostnames:
+  - "fincore"
+- ip: "10.190.224.104"
+  hostnames:
+  - "fincore"
+- ip: "10.190.224.105"
+  hostnames:
+  - "fincore"
+- ip: "10.190.224.106"
+  hostnames:
+  - "fincore"
+-------------------------------------------------------------------  
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "prod"        
+  - name: REPORT_BATCH_HDFS_BASE_PATH
+    value: "/reports"
+  - name: HADOOP_FS_URI
+    value: "hdfs://10.190.224.102:8022"
+  - name: HADOOP_FS_USER
+    value: "root"
+  - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+    value: "kafka.backend.svc.cluster.local:9092"
 
 
 Here is the YAML:
