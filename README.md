@@ -1,131 +1,279 @@
+I am providing a Kubernetes YAML file for one microservice.
+
+STRICT RULES:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
+
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
+
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+10. use the namespace: backend   
+11. I am having 4 different envrionmnets and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06
+  tag: DEV14
+------------------------------------------------------------------
+env:
+- name: SPRING_PROFILES_ACTIVE
+  value: "dev"
+
+- name: JAVA_TOOL_OPTIONS
+  value: "-Djava.net.preferIPv4Stack=true"
+
+- name: SPRING_KAFKA_CONSUMER_GROUP_ID
+  value: "rbac-cache-group"
+-----------------------------------------------------------------
+hostAliases:
+  - ip: "10.176.53.145"
+    hostnames:
+      - "corp.ad.sbi"
+      - "corpdcmdgbl01.corp.ad.sbi"
+  - ip: "10.176.54.30"
+    hostnames:
+      - "corpdcmdgbl02.corp.ad.sbi"
+  - ip: "10.176.54.31"
+    hostnames:
+      - "corpdcmdgbl03.corp.ad.sbi"
+  - ip: "10.176.54.32"
+    hostnames:
+      - "corpdcmdgbl04.corp.ad.sbi"
+  - ip: "10.189.37.135"
+    hostnames:
+      - "corpdcmdrbl01.corp.ad.sbi"
+  - ip: "10.189.37.136"
+    hostnames:
+      - "corpdcmdrbl02.corp.ad.sbi"
+  - ip: "10.189.37.137"
+    hostnames:
+      - "corpdcmdrbl03.corp.ad.sbi"
+  - ip: "10.189.37.138"
+    hostnames:
+      - "corpdcmdrbl04.corp.ad.sbi"
+----------------------------------------------------------------
+
+Here is the YAML:
+
+# --------------------------------------------
+# Service Account
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: user-sa
+  namespace: backend
+
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
+  name: user-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  replicas: 1
+  revisionHistoryLimit: 5
 
   strategy:
-    type: {{ .Values.deployment.strategy.type }}
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+      maxUnavailable: 0
+      maxSurge: 1
 
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: user-backend
 
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
+        app: user-backend
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: user-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
       securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-      {{- if .Values.deployment.topologySpreadConstraints }}
-      topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
-      {{- end }}
+      hostAliases:
+        - ip: "10.189.42.83"
+          hostnames:
+            - "uatrootdc1.uatad.sbi"
+
+      volumes:
+        - name: truststore-volume
+          secret:
+            secretName: ldap-truststore-file
+            items:
+              - key: ad-truststore.jks
+                path: ad-truststore.jks
 
       containers:
-        - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        - name: user-container
+          image: h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06
           imagePullPolicy: Always
 
-          ports:
-            - containerPort: {{ .Values.container.port }}
+          volumeMounts:
+            - name: truststore-volume
+              mountPath: /etc/fincore/secrets
+              readOnly: true
 
-          {{- if .Values.env }}
-          env:
-{{ toYaml .Values.env | indent 12 }}
-          {{- end }}
-
-          {{- if .Values.envFrom }}
           envFrom:
-            {{- range .Values.envFrom.configMaps }}
             - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
+                name: oracle-config
             - secretRef:
-                name: {{ . }}
-            {{- end }}
-          {{- end }}
+                name: oracle-secret
+            - configMapRef:
+                name: kafka-config
+            - configMapRef:
+                name: redis-config
+            - configMapRef:
+                name: ldap-config
+
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Djava.net.preferIPv4Stack=true"
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "rbac-cache-group"
+
+            - name: LDAP_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-creds
+                  key: truststore-password
+
+          ports:
+            - containerPort: 8087
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | indent 12 }}
+              port: 8087
+            failureThreshold: 60
+            periodSeconds: 10
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | indent 12 }}
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | indent 12 }}
+              port: 8087
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
 
           lifecycle:
             preStop:
               exec:
-                command: {{ .Values.lifecycle.preStop }}
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-
-
-
+---
+# --------------------------------------------
+# Service
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: user-service
+  namespace: backend
 
 spec:
-  type: {{ .Values.service.type }}
   selector:
-    app: {{ .Values.deployment.labels.app }}
+    app: user-backend
 
   ports:
-    - protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8087
 
+  type: ClusterIP
 
-
-
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.hpa.name }}
-  namespace: {{ .Values.namespace }}
+  name: user-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.deployment.name }}
+    name: user-deployment
 
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
 
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleUp }}
+      stabilizationWindowSeconds: 60
     scaleDown:
-      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleDown }}
+      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -133,28 +281,25 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
+          averageUtilization: 70
 
-
-
-
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.pdb.name }}
-  namespace: {{ .Values.namespace }}
+  name: user-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: user-backend
 
 
+also make the templates folder ready which includes deployment, service,hpa, pdb
 
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
+and keep consistency in code like similar format how you kept for earlier microservice, i wnat same syntax format for all microservices
