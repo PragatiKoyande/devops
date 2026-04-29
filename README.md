@@ -1,162 +1,170 @@
-namespace: backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
 
-serviceAccount:
-  name: user-sa
 
-deployment:
-  name: user-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: user-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
 
-  serviceAccountName: user-sa
-  terminationGracePeriodSeconds: 30
-  enableServiceLinks: false
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-  volumes:
-    - name: truststore-volume
-      secret:
-        secretName: ldap-truststore-file
-        items:
-          - key: ad-truststore.jks
-            path: ad-truststore.jks
+      securityContext:
+        runAsNonRoot: {{ .Values.deployment.securityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.deployment.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.deployment.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.deployment.securityContext.fsGroup }}
 
-  volumeMounts:
-    - name: truststore-volume
-      mountPath: /etc/fincore/secrets
-      readOnly: true
+      hostAliases:
+{{ toYaml .Values.hostAliases | indent 8 }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: user-backend
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/user-service
-  tag: DEV06
+      volumes:
+{{ toYaml .Values.deployment.volumes | indent 8 }}
 
-container:
-  name: user-container
-  port: 8087
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+          volumeMounts:
+{{ toYaml .Values.deployment.volumeMounts | indent 12 }}
 
-probes:
-  port: 8087
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
 
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
+          env:
+{{ toYaml .Values.env | indent 12 }}
+{{ toYaml .Values.envCommon | indent 12 }}
 
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
+          ports:
+            - containerPort: {{ .Values.container.port }}
 
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
 
-envCommon:
-  - name: LDAP_TRUSTSTORE_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: ldap-creds
-        key: truststore-password
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-envFrom:
-  - configMapRef:
-      name: oracle-config
-  - secretRef:
-      name: oracle-secret
-  - configMapRef:
-      name: kafka-config
-  - configMapRef:
-      name: redis-config
-  - configMapRef:
-      name: ldap-config
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-service:
-  name: user-service
-  port: 80
-  targetPort: 8087
-  type: ClusterIP
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-hpa:
-  name: user-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
-
-pdb:
-  name: user-pdb
-  minAvailable: 1
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
 
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/user-service
-  tag: DEV14
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
+spec:
+  selector:
+    app: {{ .Values.deployment.labels.app }}
 
-  - name: JAVA_TOOL_OPTIONS
-    value: "-Djava.net.preferIPv4Stack=true"
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
 
-  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: "rbac-cache-group"
+  type: {{ .Values.service.type }}
 
-hostAliases:
-  - ip: "10.176.53.145"
-    hostnames:
-      - "corp.ad.sbi"
-      - "corpdcmdgbl01.corp.ad.sbi"
-  - ip: "10.176.54.30"
-    hostnames:
-      - "corpdcmdgbl02.corp.ad.sbi"
-  - ip: "10.176.54.31"
-    hostnames:
-      - "corpdcmdgbl03.corp.ad.sbi"
-  - ip: "10.176.54.32"
-    hostnames:
-      - "corpdcmdgbl04.corp.ad.sbi"
-  - ip: "10.189.37.135"
-    hostnames:
-      - "corpdcmdrbl01.corp.ad.sbi"
-  - ip: "10.189.37.136"
-    hostnames:
-      - "corpdcmdrbl02.corp.ad.sbi"
-  - ip: "10.189.37.137"
-    hostnames:
-      - "corpdcmdrbl03.corp.ad.sbi"
-  - ip: "10.189.37.138"
-    hostnames:
-      - "corpdcmdrbl04.corp.ad.sbi"
+
+
+
+
+
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
