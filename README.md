@@ -1,135 +1,218 @@
+I am providing a Kubernetes YAML file for one microservice.
+
+STRICT RULES:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
+
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
+
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+10. use the namespace: backend   
+11. I am having 4 different envrionmnets and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
+image:
+  repository: a2p05vksharbor.corp.ad.sbi/cbops/template-config-service:PR-06
+  tag: DEV14
+------------------------------------------------------------------
+env:
+- name: SPRING_PROFILES_ACTIVE
+  value: "prod"
+
+Here is the YAML:
+
+# --------------------------------------------
+# Service Account (security best practice)
+# --------------------------------------------
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: template-config-sa
+  namespace: backend
+
+---
+# --------------------------------------------
+# Deployment
+# --------------------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
+  name: template-config-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  replicas: 2
+
+  revisionHistoryLimit: 5
 
   strategy:
-    type: {{ .Values.deployment.strategy.type }}
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+      maxUnavailable: 0
+      maxSurge: 1
 
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: template-app
 
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
+        app: template-app
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: template-config-sa
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
-      {{- if .Values.hostAliases }}
-      hostAliases:
-{{ toYaml .Values.hostAliases | indent 8 }}
-      {{- end }}
-
       securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
 
-      {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
-      {{- end }}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: template-app
 
       containers:
-        - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: Always
+      - name: template-config-container
+        image: a2p05vksharbor.corp.ad.sbi/cbops/template-config-service:PR-06
+        imagePullPolicy: Always
 
-          ports:
-            - containerPort: {{ .Values.container.port }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
 
-          {{- if .Values.env }}
-          env:
-{{ toYaml .Values.env | indent 12 }}
-          {{- end }}
+        envFrom:
+          - configMapRef:
+              name: redis-config
+          - configMapRef:
+              name: oracle-config
+          - secretRef:
+              name: oracle-secret
 
-          {{- if .Values.envFrom }}
-          envFrom:
-            {{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-          {{- end }}
+        ports:
+        - containerPort: 8090
 
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
 
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | indent 12 }}
+        startupProbe:
+          tcpSocket:
+            port: 8090
+          failureThreshold: 30
+          periodSeconds: 10
 
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | indent 12 }}
+        livenessProbe:
+          tcpSocket:
+            port: 8090
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | indent 12 }}
+        readinessProbe:
+          tcpSocket:
+            port: 8090
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
 
-          lifecycle:
-            preStop:
-              exec:
-                command: {{ .Values.lifecycle.preStop }}
-
------
-
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 10"]
+---
+# --------------------------------------------
+# Service (internal cluster communication)
+# --------------------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: template-config-service
+  namespace: backend
 
 spec:
-  type: {{ .Values.service.type }}
   selector:
-    app: {{ .Values.deployment.labels.app }}
+    app: template-app
 
   ports:
-    - protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8090
 
+  type: ClusterIP
 
------
-
+---
+# --------------------------------------------
+# Horizontal Pod Autoscaler (CPU-based)
+# --------------------------------------------
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.hpa.name }}
-  namespace: {{ .Values.namespace }}
+  name: template-config-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.deployment.name }}
+    name: template-config-deployment
 
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: 1
+  maxReplicas: 5
 
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleUp }}
+      stabilizationWindowSeconds: 60
     scaleDown:
-      stabilizationWindowSeconds: {{ .Values.hpa.behavior.scaleDown }}
+      stabilizationWindowSeconds: 300
 
   metrics:
     - type: Resource
@@ -137,30 +220,27 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
+          averageUtilization: 70
 
-
-----
-
-
+---
+# --------------------------------------------
+# Pod Disruption Budget
+# --------------------------------------------
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ .Values.pdb.name }}
-  namespace: {{ .Values.namespace }}
+  name: template-config-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  minAvailable: 1
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: template-app
 
 
-----
 
 
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
+also make the templates folder ready which includes deployment, service,hpa, pdb
+
+and keep consistency in code like similar format how you kept for earlier microservice, i wnat same syntax format for all microservices
