@@ -1,140 +1,157 @@
-namespace: backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
 
-serviceAccount:
-  name: nwsa-sa
 
-deployment:
-  name: nwsa-variance-deployment
-  replicas: 2
-  revisionHistoryLimit: 5
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: nwsa-variance-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  serviceAccountName: nwsa-sa
-  terminationGracePeriodSeconds: 30
-  enableServiceLinks: false
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
+      annotations:
+{{ toYaml .Values.deployment.annotations | indent 8 }}
 
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "8093"
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: nwsa-variance-backend
+      hostAliases:
+{{ toYaml .Values.hostAliases | indent 8 }}
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
-  tag: PR-03
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
-container:
-  name: nwsa-variance-container
-  port: 8093
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
 
-resources:
-  requests:
-    cpu: "200m"
-    memory: "256Mi"
-  limits:
-    cpu: "500m"
-    memory: "512Mi"
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
 
-probes:
-  port: 8093
+          env:
+{{ toYaml .Values.env | indent 12 }}
 
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
+          ports:
+            - containerPort: {{ .Values.container.port }}
 
-  liveness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 3
-    failureThreshold: 3
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
 
-  readiness:
-    initialDelaySeconds: 15
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-envFrom:
-  - configMapRef:
-      name: redis-config
-  - configMapRef:
-      name: kafka-config
-  - configMapRef:
-      name: oracle-config
-  - secretRef:
-      name: oracle-secret
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-service:
-  name: nwsa-variance-service
-  port: 80
-  targetPort: 8093
-  type: ClusterIP
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-hpa:
-  name: nwsa-variance-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpuUtilization: 70
-
-pdb:
-  name: nwsa-variance-pdb
-  minAvailable: 1
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
 
 
 
-image:
-  repository: a2p05vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
-  tag: PR-03
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
 
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "prod"
-  - name: HADOOP_FS_HA_NN1
-    value: "hdfs://10.190.224.102:8022"
-  - name: HADOOP_FS_HA_NN2
-    value: "hdfs://10.190.224.103:8022"
-  - name: HADOOP_FS_HA_NN3
-    value: "hdfs://10.190.224.104:8022"
-  - name: HADOOP_FS_HA_NN4
-    value: "hdfs://10.190.224.105:8022"
-  - name: HADOOP_FS_HA_NN5
-    value: "hdfs://10.190.224.106:8022"
-  - name: NWSA_GENERATED_REPORT_ROOT
-    value: "/reports"
-  - name: NWSA_REPORT_ROOT
-    value: "/reports"
-  - name: HADOOP_FS_URI
-    value: "hdfs://fincore:8022"
-  - name: HADOOP_FS_USER
-    value: "root"
+spec:
+  selector:
+    app: {{ .Values.deployment.labels.app }}
 
-hostAliases:
-  - ip: "10.190.224.102"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.103"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.104"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.105"
-    hostnames:
-      - "fincore"
-  - ip: "10.190.224.106"
-    hostnames:
-      - "fincore"
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: {{ .Values.service.type }}
+
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
+
+
+
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
