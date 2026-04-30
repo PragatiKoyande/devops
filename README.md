@@ -1,120 +1,144 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-serviceAccount:
-  name: transactions-sa
-  automountServiceAccountToken: false
-
-deployment:
-  name: transactions-deployment
-  replicas: 1
+spec:
+  replicas: {{ .Values.deployment.replicas }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: transactions-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  terminationGracePeriodSeconds: 30
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: transactions-backend
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 10001
-    fsGroup: 10001
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
-container:
-  name: transactions-container
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-  tag: DEV01
-  imagePullPolicy: Always
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
-envFrom:
-  - configMapRef:
-      name: redis-config
-  - configMapRef:
-      name: oracle-config
-  - secretRef:
-      name: oracle-secret
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
 
-service:
-  name: transactions-service
-  port: 80
-  targetPort: 4000
+          ports:
+            - containerPort: {{ .Values.probes.port }}
 
-probes:
-  port: 4000
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
 
-  startup:
-    port: 4000
-    failureThreshold: 60
-    periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.startup.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-  liveness:
-    port: 4000
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.liveness.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-  readiness:
-    port: 4000
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.readiness.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-hpa:
-  name: transactions-hpa
-  minReplicas: 1
-  maxReplicas: 3
-  cpu: 70
-
-pdb:
-  name: transactions-pdb
-  minAvailable: 1
-
-
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-  tag: DEV01
-
-
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-  tag: SIT01
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
 
 
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-  tag: UAT01
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  selector:
+    app: {{ .Values.deployment.labels.app }}
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: ClusterIP
 
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-  tag: PROD01
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpu }}
 
 
+
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
