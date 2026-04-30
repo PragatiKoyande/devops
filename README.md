@@ -18,7 +18,8 @@ IMPORTANT RULES — FOLLOW STRICTLY:
    - security context
    - service account
    - HPA (CPU based)
-   - PodDisruptionBudget
+   - 
+
    - lifecycle preStop hook
    - topology spread constraints
    - graceful shutdown settings
