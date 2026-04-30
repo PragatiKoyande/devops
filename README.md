@@ -1,119 +1,154 @@
-namespace: backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
 
-serviceAccount:
-  name: journal-sa
-  automountServiceAccountToken: false
 
-deployment:
-  name: journal-deployment
-  replicas: 1
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: journal-app
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  terminationGracePeriodSeconds: 30
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 10001
-    fsGroup: 10001
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
-  topologySpreadConstraints:
-    maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: {{ .Values.deployment.securityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.deployment.securityContext.runAsUser }}
+        fsGroup: {{ .Values.deployment.securityContext.fsGroup }}
 
-container:
-  name: journal-app-container
+      topologySpreadConstraints:
+        - maxSkew: {{ .Values.deployment.topologySpreadConstraints.maxSkew }}
+          topologyKey: {{ .Values.deployment.topologySpreadConstraints.topologyKey }}
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{ .Values.deployment.labels.app }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
-  tag: DEV04
-  pullPolicy: Always
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-envFrom:
-  - configMapRef:
-      name: redis-config
-  - configMapRef:
-      name: oracle-config
-  - secretRef:
-      name: oracle-secret
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
 
-ports:
-  containerPort: 9999
+          ports:
+            - containerPort: {{ .Values.ports.containerPort }}
 
-probes:
-  port: 9999
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-service:
-  name: journal-service
-  port: 80
-  targetPort: 9999
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-hpa:
-  name: journal-hpa
-  minReplicas: 1
-  maxReplicas: 3
-  cpuUtilization: 70
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
 
-pdb:
-  name: journal-pdb
-  minAvailable: 1
+          securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 12 }}
 
 
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  selector:
+    app: {{ .Values.deployment.labels.app }}
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: ClusterIP
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
-  tag: DEV04
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpuUtilization }}
 
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
-  tag: SIT01
 
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
-  tag: UAT01
-
-
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
-  tag: PROD01
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
