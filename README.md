@@ -142,3 +142,12 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.deployment.labels.app }}
+
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
