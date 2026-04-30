@@ -1,197 +1,99 @@
-# =====================================================
-# Service Account (Dedicated identity for pod security)
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: report-builder-sa
-  namespace: cbops
-automountServiceAccountToken: false
+I am providing a Kubernetes YAML file.
 
----
-# =====================================================
-# Deployment (Enhanced with enterprise best practices)
-# =====================================================
+IMPORTANT RULES — FOLLOW STRICTLY:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT change image, ports, env, replicas
+   - Do NOT rename uresorces
+   - Do NOT alter existing logic
+
+2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+
+3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
+   Add things like:
+   - resources requests & limits
+   - liveness/readiness/startup probes (safe defaults)
+   - rolling update strategy
+   - security context
+   - service account
+   - HPA (CPU based)
+   - PodDisruptionBudget
+   - lifecycle preStop hook
+   - topology spread constraints
+   - graceful shutdown settings
+   - any other MUST-HAVE enterprise features
+
+4. Do NOT add Prometheus annotations or monitoring-related configs.
+
+5. Keep YAML structure clean and production-ready.
+
+6. Do not ask for permission before adding missing enterprise features — just add them.
+
+7. After YAML, explain briefly what new things were added and why.
+8. add also comments in yaml file for better understanding 
+
+Here is the YAML:
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: report-builder-deployment
+  name: report-deployment
   namespace: cbops
 spec:
   replicas: 1
-
-  # -----------------------------------------------
-  # Rolling update strategy (zero downtime)
-  # -----------------------------------------------
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
   selector:
     matchLabels:
-      app: report-builder-app
-
+      app: report-backend
   template:
     metadata:
       labels:
-        app: report-builder-app
-
+        app: report-backend
     spec:
-      # -----------------------------------------------
-      # Attach service account
-      # -----------------------------------------------
-      serviceAccountName: report-builder-sa
-
-      # -----------------------------------------------
-      # Graceful shutdown
-      # -----------------------------------------------
-      terminationGracePeriodSeconds: 30
-
-      # -----------------------------------------------
-      # Pod-level security context
-      # -----------------------------------------------
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
-
-      # -----------------------------------------------
-      # High availability - spread pods across nodes
-      # -----------------------------------------------
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: report-builder-app
-
       containers:
-      - name: report-builder-container
-        image: h06vksharbor.corp.ad.sbi/cbops/report-builder-service:A5
-
-        # -----------------------------------------------
-        # Resource management (mandatory)
-        # -----------------------------------------------
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
-
-        # -----------------------------------------------
-        # Container security hardening
-        # -----------------------------------------------
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-              - ALL
-
+      - name: report-container
+        image: h06vksharbor.corp.ad.sbi/cbops/report-service:SIT09
         env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce"
+          - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
+            value: "kafka.cbops.svc.cluster.local:9092"
+          - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
+            value: "kafka.cbops.svc.cluster.local:9092"
           - name: SPRING_DATASOURCE_URL
             value: "jdbc:oracle:thin:@10.177.179.46:1523/fincorepdb1"
           - name: SPRING_DATASOURCE_USERNAME
             value: "fincore"
           - name: SPRING_DATASOURCE_PASSWORD
             value: "Password#1234"
-
+          - name: HADOOP_FS_URI
+            value: "hdfs://10.177.179.61:8022"
+          - name: HADOOP_FS_USER
+            value: "root"
+          - name: GLIF_REPORTS_BASE_PATH
+            value: "/reports"
         ports:
-        - containerPort: 8091
-
+        - containerPort: 9005
         imagePullPolicy: Always
-
-        # -----------------------------------------------
-        # Health probes (Spring Boot safe defaults)
-        # -----------------------------------------------
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8091
-          initialDelaySeconds: 20
-          periodSeconds: 10
-
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8091
-          initialDelaySeconds: 40
-          periodSeconds: 20
-
-        startupProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8091
-          failureThreshold: 30
-          periodSeconds: 10
-
-        # -----------------------------------------------
-        # Graceful shutdown hook
-        # -----------------------------------------------
-        lifecycle:
-          preStop:
-            exec:
-              command: ["sh", "-c", "sleep 10"]
-
 ---
-# =====================================================
-# Service (unchanged)
-# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: report-builder-service
+  name: report-service
   namespace: cbops
 spec:
   selector:
-    app: report-builder-app
+    app: report-backend
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 8091
-  type: ClusterIP
-
----
-# =====================================================
-# Horizontal Pod Autoscaler (CPU-based scaling)
-# =====================================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: report-builder-hpa
-  namespace: cbops
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: report-builder-deployment
-  minReplicas: 1
-  maxReplicas: 5
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
----
-# =====================================================
-# Pod Disruption Budget (ensure availability)
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: report-builder-pdb
-  namespace: cbops
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: report-builder-app
+      targetPort: 9005
+  type: ClusterIP   
+_________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________
