@@ -1,153 +1,90 @@
+I am providing a Kubernetes YAML file.
+
+IMPORTANT RULES — FOLLOW STRICTLY:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT change image, ports, env, replicas
+   - Do NOT rename uresorces
+   - Do NOT alter existing logic
+
+2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+
+3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
+   Add things like:
+   - resources requests & limits
+   - liveness/readiness/startup probes (safe defaults)
+   - rolling update strategy
+   - security context
+   - service account
+   - HPA (CPU based)
+   - PodDisruptionBudget
+   - lifecycle preStop hook
+   - topology spread constraints
+   - graceful shutdown settings
+   - any other MUST-HAVE enterprise features
+
+4. Do NOT add Prometheus annotations or monitoring-related configs.
+
+5. Keep YAML structure clean and production-ready.
+
+6. Do not ask for permission before adding missing enterprise features — just add them.
+
+7. After YAML, explain briefly what new things were added and why.
+8. add also comments in yaml file for better understanding 
+
+Here is the YAML:
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-
+  name: common-master-deployment
+  namespace: cbops
 spec:
-  replicas: {{ .Values.deployment.replicas }}
-
-  strategy:
-    type: {{ .Values.deployment.strategy.type }}
-    rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
-
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
-
+      app: common-master-backend
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
-
+        app: common-master-backend
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-
-      topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
-
-      securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
-
       containers:
-        - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
-
-          envFrom:
-{{ toYaml .Values.envFrom | indent 12 }}
-
-          ports:
-            - containerPort: {{ .Values.probes.port }}
-
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.startup.port }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.liveness.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.readiness.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-
-
-
-
-
+      - name: common-master-container
+        image: h06vksharbor.corp.ad.sbi/cbops/common-master-service:SIT04       
+        env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"        
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"       
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce" 
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:oracle:thin:@10.177.179.46:1523/fincorepdb1"
+          - name: SPRING_DATASOURCE_USERNAME			
+            value: "fincore"		  
+          - name: SPRING_DATASOURCE_PASSWORD			
+            value: "Password#1234"            
+        ports:
+        - containerPort: 2000
+        imagePullPolicy: Always
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
-
+  name: common-master-service
+  namespace: cbops
 spec:
   selector:
-    app: {{ .Values.deployment.labels.app }}
-
+    app: common-master-backend
   ports:
     - name: http
       protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-
+      port: 80
+      targetPort: 2000
   type: ClusterIP
 
-
-
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.hpa.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.deployment.name }}
-
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
-
-
-
-
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ .Values.pdb.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-  selector:
-    matchLabels:
-      app: {{ .Values.deployment.labels.app }}
-
-
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+____________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________
