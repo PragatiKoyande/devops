@@ -1,40 +1,17 @@
-I am providing a Kubernetes YAML file.
+# =====================================================
+# Service Account (Dedicated identity for pod security)
+# =====================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: redis-sa
+  namespace: be-test
+automountServiceAccountToken: false
 
-IMPORTANT RULES — FOLLOW STRICTLY:
-
-1. DO NOT change any existing values.
-   - Do NOT modify names
-   - Do NOT change image, ports, env, replicas
-   - Do NOT rename uresorces
-   - Do NOT alter existing logic
-
-2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
-
-3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
-   Add things like:
-   - resources requests & limits
-   - liveness/readiness/startup probes (safe defaults)
-   - rolling update strategy
-   - security context
-   - service account
-   - HPA (CPU based)
-   - PodDisruptionBudget
-   - lifecycle preStop hook
-   - topology spread constraints
-   - graceful shutdown settings
-   - any other MUST-HAVE enterprise features
-
-4. Do NOT add Prometheus annotations or monitoring-related configs.
-
-5. Keep YAML structure clean and production-ready.
-
-6. Do not ask for permission before adding missing enterprise features — just add them.
-
-7. After YAML, explain briefly what new things were added and why.
-8. add also comments in yaml file for better understanding 
-
-Here is the YAML:
-
+---
+# =====================================================
+# Deployment (Enhanced with enterprise best practices)
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -42,25 +19,122 @@ metadata:
   namespace: be-test
 spec:
   replicas: 1
+
+  # -----------------------------------------------
+  # Rolling update strategy (safe deployment)
+  # -----------------------------------------------
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
   selector:
     matchLabels:
       app: redis-server
+
   template:
     metadata:
       labels:
         app: redis-server
+
     spec:
+      # -----------------------------------------------
+      # Attach service account
+      # -----------------------------------------------
+      serviceAccountName: redis-sa
+
+      # -----------------------------------------------
+      # Graceful shutdown configuration
+      # -----------------------------------------------
+      terminationGracePeriodSeconds: 30
+
+      # -----------------------------------------------
+      # Pod-level security context
+      # -----------------------------------------------
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+
+      # -----------------------------------------------
+      # High availability (spread pods across nodes)
+      # -----------------------------------------------
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: redis-server
+
       containers:
       - name: redis-container
-        # Use a standard Redis image
         image: h06vksharbor.corp.ad.sbi/cbops/redis-server:latest
+
+        # -----------------------------------------------
+        # Resource management (mandatory)
+        # -----------------------------------------------
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "300m"
+            memory: "512Mi"
+
+        # -----------------------------------------------
+        # Container security hardening
+        # -----------------------------------------------
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false  # Redis requires write access
+          capabilities:
+            drop:
+              - ALL
+
         env:
           - name: ALLOW_EMPTY_PASSWORD
-            value: "yes"          
+            value: "yes"
+
         ports:
         - containerPort: 6379
+
         imagePullPolicy: Always
+
+        # -----------------------------------------------
+        # Health probes (TCP-based for Redis)
+        # -----------------------------------------------
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 20
+          periodSeconds: 20
+
+        startupProbe:
+          tcpSocket:
+            port: 6379
+          failureThreshold: 30
+          periodSeconds: 5
+
+        # -----------------------------------------------
+        # Graceful shutdown hook
+        # -----------------------------------------------
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 5"]
+
 ---
+# =====================================================
+# Service (unchanged)
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
@@ -75,7 +149,41 @@ spec:
       targetPort: 6379
   type: ClusterIP
 
+---
+# =====================================================
+# Horizontal Pod Autoscaler (CPU-based scaling)
+# =====================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: redis-hpa
+  namespace: be-test
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: redis-deployment
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
-____________________________________________________________________________________________________________________________________________
-____________________________________________________________________________________________________________________________________________
-____________________________________________________________________________________________________________________________________________
+---
+# =====================================================
+# Pod Disruption Budget (ensure availability)
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: redis-pdb
+  namespace: be-test
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: redis-server
