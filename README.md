@@ -10,7 +10,61 @@ automountServiceAccountToken: false
 
 ---
 # =====================================================
-# Deployment (Enhanced with enterprise best practices)
+D:\Pragati\HELM-2404\Deployment\report-service>kubectl describe pod report-deployment-69447cdd4f-hn2tf -n backend  --kubeconfig h06vksuatcbopscls.conf
+Name:             report-deployment-69447cdd4f-hn2tf
+Namespace:        backend
+Priority:         0
+Service Account:  report-sa
+Node:             <none>
+Labels:           app=report-backend
+                  pod-template-hash=69447cdd4f
+Annotations:      <none>
+Status:           Pending
+IP:
+IPs:              <none>
+Controlled By:    ReplicaSet/report-deployment-69447cdd4f
+Containers:
+  report-container:
+    Image:      h06vksharbor.corp.ad.sbi/cbops/report-service:DEV14
+    Port:       9005/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:     1Gi
+      memory:  500m
+    Requests:
+      cpu:      512Mi
+      memory:   250m
+    Liveness:   tcp-socket :9005 delay=90s timeout=5s period=15s #success=1 #failure=5
+    Readiness:  tcp-socket :9005 delay=30s timeout=5s period=10s #success=1 #failure=5
+    Startup:    tcp-socket :9005 delay=0s timeout=1s period=10s #success=1 #failure=60
+    Environment Variables from:
+      redis-config   ConfigMap  Optional: false
+      kafka-config   ConfigMap  Optional: false
+      oracle-config  ConfigMap  Optional: false
+      oracle-secret  Secret     Optional: false
+    Environment:
+      SPRING_PROFILES_ACTIVE:  dev
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h28p6 (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False
+Volumes:
+  kube-api-access-h28p6:
+    Type:                     Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:   3607
+    ConfigMapName:            kube-root-ca.crt
+    ConfigMapOptional:        <nil>
+    DownwardAPI:              true
+QoS Class:                    Burstable
+Node-Selectors:               <none>
+Tolerations:                  node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Topology Spread Constraints:  kubernetes.io/hostname:ScheduleAnyway when max skew 1 is exceeded for selector app=report-backend
+Events:
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  45s   default-scheduler  0/6 nodes are available: 3 Insufficient cpu, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/6 nodes are available: 3 No preemption victims found for incoming pod, 3 Preemption is not helpful for scheduling.# Deployment (Enhanced with enterprise best practices)
 # =====================================================
 apiVersion: apps/v1
 kind: Deployment
