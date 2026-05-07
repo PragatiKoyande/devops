@@ -1,237 +1,155 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-  labels:
-    app: {{ .Values.labels.app }}
+D:\Pragati\HELM-2404\Deployment\notification>kubectl logs login-deployment-76c766497-qqr4r -n backend  --kubeconfig h06vksuatcbopscls.conf
 
-spec:
-  replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
 
-  strategy:
-    type: {{ .Values.deployment.strategy.type }}
-    rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+ :: Spring Boot ::                (v3.5.4)
 
-  selector:
-    matchLabels:
-      app: {{ .Values.labels.app }}
+2026-05-07 08:11:07.399 INFO  [main] o.s.b.StartupInfoLogger: Starting LoginService v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)
+{"@timestamp":"2026-05-07T13:41:07.399744592+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.fincore.gateway.LoginService","message":"Starting LoginService v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by ? in /)","stack_trace":""}
+2026-05-07 08:11:07.407 INFO  [main] o.s.b.SpringApplication: The following 1 profile is active: "dev"
+{"@timestamp":"2026-05-07T13:41:07.407043085+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.fincore.gateway.LoginService","message":"The following 1 profile is active: \"dev\"","stack_trace":""}
+2026-05-07 08:11:12.408 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+{"@timestamp":"2026-05-07T13:41:12.408212949+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
+2026-05-07 08:11:12.409 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+{"@timestamp":"2026-05-07T13:41:12.409965997+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","stack_trace":""}
+2026-05-07 08:11:13.008 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 508 ms. Found 7 JPA repository interfaces.
+{"@timestamp":"2026-05-07T13:41:13.008312603+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 508 ms. Found 7 JPA repository interfaces.","stack_trace":""}
+2026-05-07 08:11:13.017 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+{"@timestamp":"2026-05-07T13:41:13.01793558+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
+2026-05-07 08:11:13.018 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data LDAP repositories in DEFAULT mode.
+{"@timestamp":"2026-05-07T13:41:13.018777769+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data LDAP repositories in DEFAULT mode.","stack_trace":""}
+2026-05-07 08:11:13.099 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.099012797+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.099 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.09968689+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.100 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.100074104+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.100 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.100499944+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.100 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.100785186+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.101 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.101102785+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.101 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+{"@timestamp":"2026-05-07T13:41:13.101441636+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository","stack_trace":""}
+2026-05-07 08:11:13.101 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 5 ms. Found 0 LDAP repository interfaces.
+{"@timestamp":"2026-05-07T13:41:13.101675296+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 5 ms. Found 0 LDAP repository interfaces.","stack_trace":""}
+2026-05-07 08:11:13.200 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Multiple Spring Data modules found, entering strict repository configuration mode
+{"@timestamp":"2026-05-07T13:41:13.200320118+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Multiple Spring Data modules found, entering strict repository configuration mode","stack_trace":""}
+2026-05-07 08:11:13.201 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+{"@timestamp":"2026-05-07T13:41:13.201689156+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Bootstrapping Spring Data Redis repositories in DEFAULT mode.","stack_trace":""}
+2026-05-07 08:11:13.214 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.214162019+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.214 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.214690675+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.214 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.214988231+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.215 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.215155528+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.216 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.216719786+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.217 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.217141366+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.293 INFO  [main] o.s.d.r.c.RepositoryConfigurationExtensionSupport: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+{"@timestamp":"2026-05-07T13:41:13.293949036+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationExtensionSupport","message":"Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository","stack_trace":""}
+2026-05-07 08:11:13.294 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate: Finished Spring Data repository scanning in 82 ms. Found 0 Redis repository interfaces.
+{"@timestamp":"2026-05-07T13:41:13.29426227+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.d.r.c.RepositoryConfigurationDelegate","message":"Finished Spring Data repository scanning in 82 ms. Found 0 Redis repository interfaces.","stack_trace":""}
+2026-05-07 08:11:17.503 INFO  [main] o.s.b.w.e.t.TomcatWebServer: Tomcat initialized with port 8085 (http)
+{"@timestamp":"2026-05-07T13:41:17.50319517+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.embedded.tomcat.TomcatWebServer","message":"Tomcat initialized with port 8085 (http)","stack_trace":""}
+2026-05-07 08:11:17.515 INFO  [main] o.a.j.l.DirectJDKLog: Initializing ProtocolHandler ["http-nio-8085"]
+{"@timestamp":"2026-05-07T13:41:17.515240845+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.coyote.http11.Http11NioProtocol","message":"Initializing ProtocolHandler [\"http-nio-8085\"]","stack_trace":""}
+2026-05-07 08:11:17.517 INFO  [main] o.a.j.l.DirectJDKLog: Starting service [Tomcat]
+{"@timestamp":"2026-05-07T13:41:17.517411071+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.catalina.core.StandardService","message":"Starting service [Tomcat]","stack_trace":""}
+2026-05-07 08:11:17.517 INFO  [main] o.a.j.l.DirectJDKLog: Starting Servlet engine: [Apache Tomcat/10.1.43]
+{"@timestamp":"2026-05-07T13:41:17.517758173+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.catalina.core.StandardEngine","message":"Starting Servlet engine: [Apache Tomcat/10.1.43]","stack_trace":""}
+2026-05-07 08:11:19.112 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Starting...
+{"@timestamp":"2026-05-07T13:41:19.112763193+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Starting...","stack_trace":""}
+2026-05-07 08:11:21.393 INFO  [main] c.z.h.p.HikariPool: HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@29dfc68f
+{"@timestamp":"2026-05-07T13:41:21.39395102+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.pool.HikariPool","message":"HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@29dfc68f","stack_trace":""}
+2026-05-07 08:11:21.395 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Start completed.
+{"@timestamp":"2026-05-07T13:41:21.395924785+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Start completed.","stack_trace":""}
+2026-05-07 08:11:21.504 INFO  [main] o.h.j.i.u.LogHelper: HHH000204: Processing PersistenceUnitInfo [name: default]
+{"@timestamp":"2026-05-07T13:41:21.504754477+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.hibernate.jpa.internal.util.LogHelper","message":"HHH000204: Processing PersistenceUnitInfo [name: default]","stack_trace":""}
+2026-05-07 08:11:21.799 INFO  [main] o.h.Version: HHH000412: Hibernate ORM core version 6.6.22.Final
+{"@timestamp":"2026-05-07T13:41:21.799844878+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.hibernate.Version","message":"HHH000412: Hibernate ORM core version 6.6.22.Final","stack_trace":""}
+2026-05-07 08:11:21.916 INFO  [main] o.h.c.i.RegionFactoryInitiator: HHH000026: Second-level cache disabled
+{"@timestamp":"2026-05-07T13:41:21.916631415+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.c.internal.RegionFactoryInitiator","message":"HHH000026: Second-level cache disabled","stack_trace":""}
+2026-05-07 08:11:23.514 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo: No LoadTimeWeaver setup: ignoring JPA class transformer
+{"@timestamp":"2026-05-07T13:41:23.514855351+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.p.SpringPersistenceUnitInfo","message":"No LoadTimeWeaver setup: ignoring JPA class transformer","stack_trace":""}
+2026-05-07 08:11:24.998 INFO  [main] o.h.e.j.e.i.JdbcEnvironmentInitiator: HHH10001005: Database info:
+        Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+        Database driver: undefined/unknown
+        Database version: 19.30
+        Autocommit mode: undefined/unknown
+        Isolation level: undefined/unknown
+        Minimum pool size: undefined/unknown
+        Maximum pool size: undefined/unknown
+{"@timestamp":"2026-05-07T13:41:24.998678888+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.hibernate.orm.connections.pooling","message":"HHH10001005: Database info:\n\tDatabase JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']\n\tDatabase driver: undefined/unknown\n\tDatabase version: 19.30\n\tAutocommit mode: undefined/unknown\n\tIsolation level: undefined/unknown\n\tMinimum pool size: undefined/unknown\n\tMaximum pool size: undefined/unknown","stack_trace":""}
+2026-05-07 08:11:29.299 INFO  [main] o.h.e.t.j.p.i.JtaPlatformInitiator: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+{"@timestamp":"2026-05-07T13:41:29.299027377+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.h.e.t.j.p.i.JtaPlatformInitiator","message":"HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)","stack_trace":""}
+2026-05-07 08:11:29.302 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Initialized JPA EntityManagerFactory for persistence unit 'default'
+{"@timestamp":"2026-05-07T13:41:29.302075151+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.LocalContainerEntityManagerFactoryBean","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","stack_trace":""}
+2026-05-07 08:11:29.412 WARN  [main] o.s.c.s.AbstractApplicationContext: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'ldapConfig': Injection of autowired dependencies failed
+{"@timestamp":"2026-05-07T13:41:29.412447042+05:30","level":"WARN","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.r.c.AnnotationConfigReactiveWebServerApplicationContext","message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'ldapConfig': Injection of autowired dependencies failed","stack_trace":""}
+2026-05-07 08:11:29.412 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Closing JPA EntityManagerFactory for persistence unit 'default'
+{"@timestamp":"2026-05-07T13:41:29.412891331+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'","stack_trace":""}
+2026-05-07 08:11:29.495 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown initiated...
+{"@timestamp":"2026-05-07T13:41:29.495747149+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated...","stack_trace":""}
+2026-05-07 08:11:29.548 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown completed.
+{"@timestamp":"2026-05-07T13:41:29.54847143+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed.","stack_trace":""}
+2026-05-07 08:11:29.550 INFO  [main] o.a.j.l.DirectJDKLog: Stopping service [Tomcat]
+{"@timestamp":"2026-05-07T13:41:29.550532061+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.catalina.core.StandardService","message":"Stopping service [Tomcat]","stack_trace":""}
+2026-05-07 08:11:29.595 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLogger:
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.labels.app }}
-
-    spec:
-      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
-      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-
-      securityContext:
-        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
-
-      # ==========================================
-      # Volumes
-      # ==========================================
-      volumes:
-        {{- toYaml .Values.deployment.volumes | nindent 8 }}
-
-      containers:
-        - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          ports:
-            - containerPort: {{ .Values.probes.port }}
-
-          # ==========================================
-          # Volume Mounts
-          # ==========================================
-          volumeMounts:
-            {{- toYaml .Values.volumeMounts | nindent 12 }}
-
-          envFrom:
-            {{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-
-            {{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-
-          env:
-            {{- toYaml .Values.env | nindent 12 }}
-
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            {{- toYaml .Values.probes.startup | nindent 12 }}
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            {{- toYaml .Values.probes.liveness | nindent 12 }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            {{- toYaml .Values.probes.readiness | nindent 12 }}
-
-          lifecycle:
-            preStop:
-              exec:
-                command: {{ toJson .Values.lifecycle.preStop.command }}
-
-          securityContext:
-            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
-
-
-
-
-
-namespace: backend
-
-serviceAccount:
-  name: notification-sa
-
-deployment:
-  name: notification-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
-
-  labels:
-    app: notification-backend
-
-  serviceAccountName: notification-sa
-  enableServiceLinks: false
-  terminationGracePeriodSeconds: 30
-
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
-
-  # ==========================================
-  # Volumes
-  # ==========================================
-  volumes:
-    - name: tmp-dir
-      emptyDir:
-        medium: Memory
-        sizeLimit: 64Mi
-
-    # Writable logs directory for Logback
-    - name: logs-volume
-      emptyDir:
-        sizeLimit: 1Gi
-
-container:
-  name: notification-container
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/notification-service
-  tag: TEST-1
-  pullPolicy: Always
-
-service:
-  name: notification-service
-  type: ClusterIP
-  port: 80
-  targetPort: 9010
-
-probes:
-  port: 9010
-
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
-
-  liveness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 3
-
-  readiness:
-    initialDelaySeconds: 15
-    periodSeconds: 5
-
-resources:
-  requests:
-    cpu: "200m"
-    memory: "512Mi"
-
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
-
-# ==========================================
-# Volume Mounts
-# ==========================================
-volumeMounts:
-  - name: tmp-dir
-    mountPath: /tmp
-
-  # Writable logs mount for Logback
-  - name: logs-volume
-    mountPath: /logs
-
-envFrom:
-  configMaps:
-    - postgres-config
-    - redis-config
-    - kafka-config
-
-  secrets:
-    - postgres-secret
-
-env:
-  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: "notification-service-group"
-
-  - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
-    value: "earliest"
-
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
-
-lifecycle:
-  preStop:
-    command:
-      - "/bin/sh"
-      - "-c"
-      - "sleep 10"
-
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
-
-  capabilities:
-    drop:
-      - ALL
-
-hpa:
-  name: notification-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
-
-pdb:
-  name: notification-pdb
-  minAvailable: 1
-
-labels:
-  app: notification-backend
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+{"@timestamp":"2026-05-07T13:41:29.595573712+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
+2026-05-07 08:11:29.609 ERROR [main] o.s.b.SpringApplication: Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'ldapConfig': Injection of autowired dependencies failed
+        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123)
+        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987)
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+        at org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext.refresh(ReactiveWebServerApplicationContext.java:66)
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+        at com.fincore.gateway.LoginService.main(LoginService.java:12)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'LDAP_TRUSTSTORE_PASSWORD' in value "${LDAP_TRUSTSTORE_PASSWORD}" <-- "${security.ldap.truststore-password:changeit}"
+        at org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81)
+        at org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:423)
+        at org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:128)
+        at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:118)
+        at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:114)
+        at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:293)
+        at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:264)
+        at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:186)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:971)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1650)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1628)
+        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785)
+        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768)
+        at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+        ... 24 common frames omitted
+{"@timestamp":"2026-05-07T13:41:29.609852535+05:30","level":"ERROR","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'ldapConfig': Injection of autowired dependencies failed\n\tat org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188)\nCaused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'LDAP_TRUSTSTORE_PASSWORD' in value \"${LDAP_TRUSTSTORE_PASSWORD}\" <-- \"${security.ldap.truststore-password:changeit}\"\n\tat org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81)\n\tat org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:423)\n\tat org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:128)\n\tat org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:118)\n\tat org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:114)\n\tat org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:293)\n\tat org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:264)\n\tat org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:186)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:971)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1650)\n"}
