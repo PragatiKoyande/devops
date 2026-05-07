@@ -41,6 +41,14 @@ spec:
 {{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
       {{- end }}
 
+      # ==========================================
+      # Volumes
+      # ==========================================
+      {{- if .Values.volumes }}
+      volumes:
+{{ toYaml .Values.volumes | indent 8 }}
+      {{- end }}
+
       containers:
         - name: {{ .Values.container.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -69,6 +77,14 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
 
+          # ==========================================
+          # Volume Mounts
+          # ==========================================
+          {{- if .Values.volumeMounts }}
+          volumeMounts:
+{{ toYaml .Values.volumeMounts | indent 12 }}
+          {{- end }}
+
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
@@ -87,12 +103,11 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: {{ .Values.lifecycle.preStop }}
+                command:
+{{ toYaml .Values.lifecycle.preStop | indent 18 }}
 
 
 
-
-------------------------------------------------
 
 namespace: backend
 
@@ -139,6 +154,7 @@ envFrom:
     - redis-config
     - kafka-config
     - oracle-config
+
   secrets:
     - oracle-secret
 
@@ -146,20 +162,36 @@ resources:
   requests:
     memory: "256Mi"
     cpu: "500m"
+
   limits:
     memory: "512Mi"
     cpu: "1"
 
+# ==========================================
+# Writable logs directory for Logback
+# ==========================================
+volumes:
+  - name: logs-volume
+    emptyDir:
+      sizeLimit: 1Gi
+
+volumeMounts:
+  - name: logs-volume
+    mountPath: /logs
+
 probes:
   port: 9005
+
   startup:
     failureThreshold: 60
     periodSeconds: 10
+
   liveness:
     initialDelaySeconds: 90
     periodSeconds: 15
     timeoutSeconds: 5
     failureThreshold: 5
+
   readiness:
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -167,7 +199,10 @@ probes:
     failureThreshold: 5
 
 lifecycle:
-  preStop: ["sleep 10"]
+  preStop:
+    - "sh"
+    - "-c"
+    - "sleep 10"
 
 service:
   name: report-service
@@ -180,6 +215,7 @@ hpa:
   minReplicas: 1
   maxReplicas: 5
   cpu: 70
+
   behavior:
     scaleUp: 60
     scaleDown: 300
