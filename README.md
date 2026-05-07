@@ -33,6 +33,9 @@ spec:
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
 
+      # ==========================================
+      # Volumes
+      # ==========================================
       volumes:
         {{- toYaml .Values.deployment.volumes | nindent 8 }}
 
@@ -44,6 +47,9 @@ spec:
           ports:
             - containerPort: {{ .Values.probes.port }}
 
+          # ==========================================
+          # Volume Mounts
+          # ==========================================
           volumeMounts:
             {{- toYaml .Values.volumeMounts | nindent 12 }}
 
@@ -52,6 +58,7 @@ spec:
             - configMapRef:
                 name: {{ . }}
             {{- end }}
+
             {{- range .Values.envFrom.secrets }}
             - secretRef:
                 name: {{ . }}
@@ -89,6 +96,7 @@ spec:
 
 
 
+
 namespace: backend
 
 serviceAccount:
@@ -117,11 +125,19 @@ deployment:
     runAsGroup: 1000
     fsGroup: 2000
 
+  # ==========================================
+  # Volumes
+  # ==========================================
   volumes:
     - name: tmp-dir
       emptyDir:
         medium: Memory
         sizeLimit: 64Mi
+
+    # Writable logs directory for Logback
+    - name: logs-volume
+      emptyDir:
+        sizeLimit: 1Gi
 
 container:
   name: notification-container
@@ -157,37 +173,52 @@ resources:
   requests:
     cpu: "200m"
     memory: "512Mi"
+
   limits:
     cpu: "500m"
     memory: "1Gi"
 
+# ==========================================
+# Volume Mounts
+# ==========================================
 volumeMounts:
   - name: tmp-dir
     mountPath: /tmp
+
+  # Writable logs mount for Logback
+  - name: logs-volume
+    mountPath: /logs
 
 envFrom:
   configMaps:
     - postgres-config
     - redis-config
     - kafka-config
+
   secrets:
     - postgres-secret
 
 env:
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
     value: "notification-service-group"
+
   - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
     value: "earliest"
+
   - name: SPRING_PROFILES_ACTIVE
     value: "dev"
 
 lifecycle:
   preStop:
-    command: ["/bin/sh","-c","sleep 10"]
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "sleep 10"
 
 containerSecurityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true
+
   capabilities:
     drop:
       - ALL
