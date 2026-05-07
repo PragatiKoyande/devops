@@ -1,16 +1,3 @@
-I want to add like this in my configuration:
-
-secretEnv:
-  - name: LDAP_TRUSTSTORE_PASSWORD
-    secretName: ldap-creds
-    key: truststore-password
-
-
-
-I am sending the entire values and deployment file sso you can add above configs and send me back
-
-deployment.yaml:
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -81,10 +68,20 @@ spec:
             {{- end }}
           {{- end }}
 
-          {{- if .Values.env }}
           env:
+            {{- if .Values.env }}
             {{- toYaml .Values.env | nindent 12 }}
-          {{- end }}
+            {{- end }}
+
+            {{- if .Values.secretEnv }}
+            {{- range .Values.secretEnv }}
+            - name: {{ .name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .key }}
+            {{- end }}
+            {{- end }}
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -125,9 +122,8 @@ spec:
 
 
 
-  values.yaml:
 
-  namespace: backend
+namespace: backend
 
 serviceAccount:
   name: login-sa
@@ -156,7 +152,7 @@ deployment:
       runAsUser: 10001
       fsGroup: 10001
 
-    hostAliases: []   # overridden per env
+    hostAliases: []
 
     volumes:
       - name: truststore-volume
@@ -183,6 +179,7 @@ volumeMounts:
   - name: truststore-volume
     mountPath: /etc/fincore/secrets
     readOnly: true
+
   - name: logs-volume
     mountPath: /logs
 
@@ -190,11 +187,17 @@ env:
   - name: SPRING_PROFILES_ACTIVE
     value: "dev"
 
+secretEnv:
+  - name: LDAP_TRUSTSTORE_PASSWORD
+    secretName: ldap-creds
+    key: truststore-password
+
 envFrom:
   configMaps:
     - redis-config
     - oracle-config
     - ldap-config
+
   secrets:
     - oracle-secret
 
@@ -202,6 +205,7 @@ resources:
   requests:
     cpu: "250m"
     memory: "512Mi"
+
   limits:
     cpu: "500m"
     memory: "1Gi"
@@ -227,11 +231,15 @@ probes:
 
 lifecycle:
   preStop:
-    command: ["/bin/sh", "-c", "sleep 10"]
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "sleep 10"
 
 securityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false
+
   capabilities:
     drop:
       - ALL
