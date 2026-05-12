@@ -1,139 +1,158 @@
-namespace: backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.name }}
+  namespace: {{ .Values.namespace }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
 
-serviceAccount:
-  name: enquiry-service-sa
-  automountServiceAccountToken: false
 
-deployment:
-  name: enquiry-service-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
 
-  strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
 
-  labels:
-    app: enquiry-service-backend
 
-  terminationGracePeriodSeconds: 60
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-    seccompProfile:
-      type: RuntimeDefault
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: enquiry-service-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-container:
-  name: enquiry-service-container
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
-  tag: DEV03
-  imagePullPolicy: Always
 
-envFrom:
-  - secretRef:
-      name: oracle-secret
 
-service:
-  name: enquiry-service
-  port: 80
-  targetPort: 4001
 
-probes:
-  port: 4001
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
 
-  startup:
-    port: 4001
-    initialDelaySeconds: 20
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 30
+spec:
+  selector:
+    app: {{ .Values.deployment.labels.app }}
 
-  liveness:
-    port: 4001
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 5
-    failureThreshold: 5
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
 
-  readiness:
-    port: 4001
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
+  type: ClusterIP
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
 
-  limits:
-    cpu: "1000m"
-    memory: "1Gi"
 
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
 
-lifecycle:
-  preStop:
-    exec:
-      command:
-        - /bin/sh
-        - -c
-        - sleep 20
 
-hpa:
-  name: enquiry-service-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpu }}
 
   behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-      policies:
-        - type: Percent
-          value: 100
-          periodSeconds: 60
-
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-        - type: Percent
-          value: 50
-          periodSeconds: 60
-
-pdb:
-  name: enquiry-service-pdb
-  minAvailable: 1
+{{ toYaml .Values.hpa.behavior | indent 4 }}
 
 
 
 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
-  tag: DEV03
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
+  strategy:
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
-  tag: PROD03
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
+
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
+
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+
+      containers:
+        - name: {{ .Values.container.name }}
+
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
+
+          ports:
+            - containerPort: {{ .Values.probes.port }}
+
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+
+          securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 12 }}
+
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.liveness.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.readiness.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.startup.port }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+
+          lifecycle:
+{{ toYaml .Values.lifecycle | indent 12 }}
