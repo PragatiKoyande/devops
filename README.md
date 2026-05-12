@@ -1,3 +1,58 @@
+I am providing a Kubernetes YAML file for one microservice.
+
+STRICT RULES:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
+
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
+
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+10. use the namespace: backend   
+11. I am having 4 different environments and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
+  tag: DEV01
+  imagePullPolicy: Always
+  
+------------------------------------------------------------------
+Here is the YAML:
+
 # =====================================================
 # Service Account
 # Dedicated identity for secure pod execution
@@ -6,7 +61,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: enquiry-service-sa
-  namespace: be-test
+  namespace: backend
 automountServiceAccountToken: false
 
 ---
@@ -18,7 +73,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: enquiry-service-pdb
-  namespace: be-test
+  namespace: backend
 spec:
   minAvailable: 1
   selector:
@@ -34,18 +89,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: enquiry-service-deployment
-  namespace: be-test
+  namespace: backend
 spec:
   replicas: 1
-
-  # -------------------------------------------------
-  # Retain rollout history for rollback safety
-  # -------------------------------------------------
   revisionHistoryLimit: 5
 
-  # -------------------------------------------------
-  # Rolling update strategy for zero downtime
-  # -------------------------------------------------
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -60,21 +108,9 @@ spec:
     metadata:
       labels:
         app: enquiry-service-backend
-
-    spec:
-      # -------------------------------------------------
-      # Dedicated Service Account
-      # -------------------------------------------------
       serviceAccountName: enquiry-service-sa
-
-      # -------------------------------------------------
-      # Graceful shutdown handling
-      # -------------------------------------------------
       terminationGracePeriodSeconds: 60
 
-      # -------------------------------------------------
-      # Pod-level security context
-      # -------------------------------------------------
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -83,9 +119,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
-      # -------------------------------------------------
-      # Spread pods across nodes for HA
-      # -------------------------------------------------
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -97,29 +130,15 @@ spec:
       containers:
       - name: enquiry-service-container
         image: h06vksharbor.corp.ad.sbi/cbops/enquiry-service:DEV03
-
-        # -------------------------------------------------
-        # Environment Variables
-        # -------------------------------------------------
-        env:
-          - name: SPRING_DATASOURCE_URL
-            value: "jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1"
-
-          - name: SPRING_DATASOURCE_USERNAME
-            value: "fincore"
-
-          - name: SPRING_DATASOURCE_PASSWORD
-            value: "Password#1234"
+        imagePullPolicy: Always
+		
+        envFrom:
+          - secretRef:
+              name: oracle-secret
 
         ports:
         - containerPort: 4001
-
-        imagePullPolicy: Always
-
-        # -------------------------------------------------
-        # Resource Management
-        # Prevents noisy-neighbor issues
-        # -------------------------------------------------
+		
         resources:
           requests:
             cpu: "250m"
@@ -128,9 +147,6 @@ spec:
             cpu: "1000m"
             memory: "1Gi"
 
-        # -------------------------------------------------
-        # Container Security Context
-        # -------------------------------------------------
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
@@ -138,10 +154,6 @@ spec:
             drop:
               - ALL
 
-        # -------------------------------------------------
-        # Liveness Probe
-        # Restarts unhealthy containers
-        # -------------------------------------------------
         livenessProbe:
           tcpSocket:
             port: 4001
@@ -150,10 +162,6 @@ spec:
           timeoutSeconds: 5
           failureThreshold: 5
 
-        # -------------------------------------------------
-        # Readiness Probe
-        # Ensures traffic only reaches ready pods
-        # -------------------------------------------------
         readinessProbe:
           tcpSocket:
             port: 4001
@@ -162,10 +170,6 @@ spec:
           timeoutSeconds: 5
           failureThreshold: 3
 
-        # -------------------------------------------------
-        # Startup Probe
-        # Protects slow-starting applications
-        # -------------------------------------------------
         startupProbe:
           tcpSocket:
             port: 4001
@@ -174,10 +178,6 @@ spec:
           timeoutSeconds: 5
           failureThreshold: 30
 
-        # -------------------------------------------------
-        # Graceful Shutdown Hook
-        # Allows in-flight requests to complete
-        # -------------------------------------------------
         lifecycle:
           preStop:
             exec:
@@ -195,7 +195,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: enquiry-service
-  namespace: be-test
+  namespace: backend
 spec:
   selector:
     app: enquiry-service-backend
@@ -217,7 +217,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: enquiry-service-hpa
-  namespace: be-test
+  namespace: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -249,3 +249,7 @@ spec:
         - type: Percent
           value: 50
           periodSeconds: 60
+
+also make the templates folder ready which includes deployment, service,hpa, pdb
+
+and keep consistency in code like similar format how you kept for earlier microservice, i wnat same syntax format for all microservices
