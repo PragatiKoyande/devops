@@ -1,33 +1,4 @@
-D:\Pragati\HELM-2404\Deployment\enqiry-service>helm install enquiry-service-dev . -f values-dev.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: INSTALLATION FAILED: enquiry-service/templates/pdb.yaml:4:18
-  executing "enquiry-service/templates/pdb.yaml" at <.Values.pdb.name>:
-    nil pointer evaluating interface {}.name
-
-
-    I m getting this issue as you have not mentioned details of pdb configuartion in values.yaml I m sending you the both files pdb and values .yaml please  take information from pdb file and add values in values . yaml and send me back entire values.yaml correct one 
-
-
-
-    pdb.yaml:
-
-    apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ .Values.pdb.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
-
-  selector:
-    matchLabels:
-      app: {{ .Values.deployment.labels.app }}
-
-
-
-      values.yaml:
-
-      namespace: backend
+namespace: backend
 
 serviceAccount:
   name: enquiry-service-sa
@@ -149,3 +120,7 @@ hpa:
         - type: Percent
           value: 50
           periodSeconds: 60
+
+pdb:
+  name: enquiry-service-pdb
+  minAvailable: 1
