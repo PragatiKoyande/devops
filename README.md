@@ -1,260 +1,82 @@
+I am providing a Kubernetes YAML file.
+
+IMPORTANT RULES — FOLLOW STRICTLY:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT change image, ports, env, replicas
+   - Do NOT rename uresorces
+   - Do NOT alter existing logic
+
+2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+
+3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
+   Add things like:
+   - resources requests & limits
+   - liveness/readiness/startup probes (safe defaults)
+   - rolling update strategy
+   - security context
+   - service account
+   - HPA (CPU based)
+   - PodDisruptionBudget
+   - lifecycle preStop hook
+   - topology spread constraints
+   - graceful shutdown settings
+   - any other MUST-HAVE enterprise features
+
+4. Do NOT add Prometheus annotations or monitoring-related configs.
+
+5. Keep YAML structure clean and production-ready.
+
+6. Do not ask for permission before adding missing enterprise features — just add them.
+
+7. After YAML, explain briefly what new things were added and why.
+8. add also comments in yaml file for better understanding 
+
+Here is the YAML:
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-
+  name: enquiry-service-deployment
+  namespace: be-test
 spec:
-  replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
-
-  strategy:
-    type: {{ .Values.deployment.strategy.type }}
-    rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
-
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
-
+      app: enquiry-service-backend
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
-
+        app: enquiry-service-backend
     spec:
-      serviceAccountName: {{ .Values.deployment.pod.serviceAccountName }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.pod.terminationGracePeriodSeconds }}
-      enableServiceLinks: {{ .Values.deployment.pod.enableServiceLinks }}
-
-      securityContext:
-        runAsNonRoot: {{ .Values.deployment.pod.securityContext.runAsNonRoot }}
-        runAsUser: {{ .Values.deployment.pod.securityContext.runAsUser }}
-        fsGroup: {{ .Values.deployment.pod.securityContext.fsGroup }}
-
-      {{- if .Values.hostAliases }}
-      hostAliases:
-        {{- toYaml .Values.hostAliases | nindent 8 }}
-      {{- end }}
-
-      {{- if .Values.deployment.pod.volumes }}
-      volumes:
-        {{- toYaml .Values.deployment.pod.volumes | nindent 8 }}
-      {{- end }}
-
       containers:
-        - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: Always
-
-          ports:
-            - containerPort: {{ .Values.ports.containerPort }}
-
-          {{- if .Values.volumeMounts }}
-          volumeMounts:
-            {{- toYaml .Values.volumeMounts | nindent 12 }}
-          {{- end }}
-
-          {{- if .Values.envFrom }}
-          envFrom:
-            {{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-          {{- end }}
-
-          env:
-            {{- if .Values.env }}
-            {{- toYaml .Values.env | nindent 12 }}
-            {{- end }}
-
-            {{- if .Values.secretEnv }}
-            {{- range .Values.secretEnv }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .key }}
-            {{- end }}
-            {{- end }}
-
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-
-          lifecycle:
-            preStop:
-              exec:
-                command: {{ toYaml .Values.lifecycle.preStop.command | nindent 18 }}
-
-          securityContext:
-            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
-            readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
-            capabilities:
-              drop:
-                {{- toYaml .Values.securityContext.capabilities.drop | nindent 16 }}
-
-
-
-
-namespace: backend
-
-serviceAccount:
-  name: login-sa
-  automountServiceAccountToken: false
-
-deployment:
-  name: login-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
-
-  strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
-
-  labels:
-    app: login-backend
-
-  pod:
-    serviceAccountName: login-sa
-    terminationGracePeriodSeconds: 30
-    enableServiceLinks: false
-
-    securityContext:
-      runAsNonRoot: true
-      runAsUser: 10001
-      fsGroup: 10001
-
-    hostAliases: []
-
-    volumes:
-      - name: truststore-volume
-        secret:
-          secretName: ldap-truststore-file
-          items:
-            - key: ad-truststore.jks
-              path: ad-truststore.jks
-
-      - name: logs-volume
-        emptyDir: {}
-
-container:
-  name: login-backend-container
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/login-service
-  tag: DEV13
-
-ports:
-  containerPort: 8085
-
-volumeMounts:
-  - name: truststore-volume
-    mountPath: /etc/fincore/secrets
-    readOnly: true
-
-  - name: logs-volume
-    mountPath: /logs
-
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: "dev"
-
-secretEnv:
-  - name: LDAP_TRUSTSTORE_PASSWORD
-    secretName: ldap-creds
-    key: truststore-password
-
-envFrom:
-  configMaps:
-    - redis-config
-    - oracle-config
-    - ldap-config
-
-  secrets:
-    - oracle-secret
-
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-
-  limits:
-    cpu: "500m"
-    memory: "1Gi"
-
-probes:
-  port: 8085
-
-  readiness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 5
-
-  liveness:
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 5
-    failureThreshold: 5
-
-  startup:
-    failureThreshold: 60
-    periodSeconds: 10
-
-lifecycle:
-  preStop:
-    command:
-      - "/bin/sh"
-      - "-c"
-      - "sleep 10"
-
-securityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-
-  capabilities:
-    drop:
-      - ALL
-
-service:
-  name: login-service
-  port: 80
-  targetPort: 8085
-
-hpa:
-  name: login-hpa
-  minReplicas: 1
-  maxReplicas: 3
-  cpuUtilization: 70
-
-pdb:
-  name: login-pdb
-  minAvailable: 1
+      - name: enquiry-service-container
+        image: h06vksharbor.corp.ad.sbi/cbops/enquiry-service:DEV03
+        env:
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1"
+          - name: SPRING_DATASOURCE_USERNAME
+            value: "fincore"
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: "Password#1234"
+        ports:
+        - containerPort: 4001
+        imagePullPolicy: Always
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: enquiry-service
+  namespace: be-test
+spec:
+  selector:
+    app: enquiry-service-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 4001
+  type: ClusterIP
+ 
