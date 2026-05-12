@@ -1,15 +1,16 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Values.serviceAccount.name }}
-  namespace: {{ .Values.namespace }}
-automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+D:\Pragati\HELM-2404\Deployment\enqiry-service>helm install enquiry-service-dev . -f values-dev.yaml -n backend --kubeconfig h06vksuatcbopscls.conf
+Error: INSTALLATION FAILED: enquiry-service/templates/pdb.yaml:4:18
+  executing "enquiry-service/templates/pdb.yaml" at <.Values.pdb.name>:
+    nil pointer evaluating interface {}.name
+
+
+    I m getting this issue as you have not mentioned details of pdb configuartion in values.yaml I m sending you the both files pdb and values .yaml please  take information from pdb file and add values in values . yaml and send me back entire values.yaml correct one 
 
 
 
+    pdb.yaml:
 
-
-apiVersion: policy/v1
+    apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ .Values.pdb.name }}
@@ -24,135 +25,127 @@ spec:
 
 
 
+      values.yaml:
 
+      namespace: backend
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+serviceAccount:
+  name: enquiry-service-sa
+  automountServiceAccountToken: false
 
-spec:
-  selector:
-    app: {{ .Values.deployment.labels.app }}
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-
-  type: ClusterIP
-
-
-
-
-
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: {{ .Values.hpa.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ .Values.deployment.name }}
-
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
-
-  behavior:
-{{ toYaml .Values.hpa.behavior | indent 4 }}
-
-
-
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-
-spec:
-  replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+deployment:
+  name: enquiry-service-deployment
+  replicas: 1
+  revisionHistoryLimit: 5
 
   strategy:
-    type: {{ .Values.deployment.strategy.type }}
-    rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+    type: RollingUpdate
+    maxUnavailable: 0
+    maxSurge: 1
 
-  selector:
-    matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+  labels:
+    app: enquiry-service-backend
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.deployment.labels.app }}
+  terminationGracePeriodSeconds: 60
 
-    spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    seccompProfile:
+      type: RuntimeDefault
 
-      securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app: enquiry-service-backend
 
-      topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+container:
+  name: enquiry-service-container
 
-      containers:
-        - name: {{ .Values.container.name }}
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
+  tag: DEV03
+  imagePullPolicy: Always
 
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+envFrom:
+  - secretRef:
+      name: oracle-secret
 
-          envFrom:
-{{ toYaml .Values.envFrom | indent 12 }}
+service:
+  name: enquiry-service
+  port: 80
+  targetPort: 4001
 
-          ports:
-            - containerPort: {{ .Values.probes.port }}
+probes:
+  port: 4001
 
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
+  startup:
+    port: 4001
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30
 
-          securityContext:
-{{ toYaml .Values.containerSecurityContext | indent 12 }}
+  liveness:
+    port: 4001
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 5
 
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.liveness.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+  readiness:
+    port: 4001
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
 
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.readiness.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
 
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.startup.port }}
-            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
 
-          lifecycle:
-{{ toYaml .Values.lifecycle | indent 12 }}
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - sleep 20
+
+hpa:
+  name: enquiry-service-hpa
+  minReplicas: 1
+  maxReplicas: 5
+  cpu: 70
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60
