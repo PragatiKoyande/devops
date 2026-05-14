@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -36,7 +37,7 @@ spec:
 
       containers:
         - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           securityContext:
@@ -54,7 +55,7 @@ spec:
             - secretRef:
                 name: {{ . }}
             {{- end }}
-	
+
           env:
             {{- toYaml .Values.env | nindent 12 }}
 
@@ -87,6 +88,3 @@ spec:
             preStop:
               exec:
                 command: {{ toJson .Values.lifecycle.preStop.command }}
-
-
-      I am getting this issue for indeantation kindly check and send me back.
