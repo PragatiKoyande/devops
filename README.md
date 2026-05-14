@@ -1,126 +1,95 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 
-serviceAccount:
-  name: enquiry-service-sa
-  automountServiceAccountToken: false
-
-deployment:
-  name: enquiry-service-deployment
-  replicas: 1
-  revisionHistoryLimit: 5
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  labels:
-    app: enquiry-service-backend
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
 
-  terminationGracePeriodSeconds: 60
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+      annotations:
+        {{- toYaml .Values.deployment.annotations | nindent 8 }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
-    seccompProfile:
-      type: RuntimeDefault
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: enquiry-service-backend
+      topologySpreadConstraints:
+        {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
 
-container:
-  name: enquiry-service-container
+      containers:
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
-  tag: DEV03
-  imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.probes.port }}
 
-envFrom:
-  - secretRef:
-      name: oracle-secret
+          envFrom:
+            {{- range .Values.envFrom.configMaps }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
+			
+          env:
+{{ toYaml .Values.env | indent 12 }}
 
-service:
-  name: enquiry-service
-  port: 80
-  targetPort: 4001
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
 
-probes:
-  port: 4001
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-  startup:
-    port: 4001
-    initialDelaySeconds: 20
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 30
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-  liveness:
-    port: 4001
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 5
-    failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-  readiness:
-    port: 4001
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
 
-  limits:
-    cpu: "1000m"
-    memory: "1Gi"
 
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
+                this file is having indenattion issue kindly reolve and send me back entire file:
 
-lifecycle:
-  preStop:
-    exec:
-      command:
-        - /bin/sh
-        - -c
-        - sleep 20
+                Error: YAML parse error on common-master/templates/deployment.yaml: error converting YAML to JSON: yaml: line 61: found a tab character that violates indentation
 
-hpa:
-  name: enquiry-service-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-      policies:
-        - type: Percent
-          value: 100
-          periodSeconds: 60
-
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-        - type: Percent
-          value: 50
-          periodSeconds: 60
-
-pdb:
-  name: enquiry-service-pdb
-  minAvailable: 1
+Use --debug flag to render out invalid YAML
