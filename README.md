@@ -1,90 +1,61 @@
-apiVersion: apps/v1
-kind: Deployment
+D:\Pragati\HELM-2404>tree
+Folder PATH listing for volume ACER
+Volume serial number is 641A-82D3
+D:.
+├───Deployment
+│   ├───common-master
+│   │   ├───charts
+│   │   └───templates
+│   ├───common-request
+│   │   ├───charts
+│   │   └───templates
+│   ├───dashboard
+│   │   ├───charts
+│   │   └───templates
+│   ├───enqiry-service
+│   │   ├───charts
+│   │   └───templates
+│   ├───journal
+│   │   ├───charts
+│   │   └───templates
+│   ├───login
+│   │   ├───charts
+│   │   └───templates
+│   ├───notification
+│   │   ├───charts
+│   │   └───templates
+│   ├───nwsa-service
+│   │   ├───charts
+│   │   └───templates
+│   ├───process-status
+│   │   ├───charts
+│   │   └───templates
+│   ├───react-service
+│   │   ├───charts
+│   │   └───templates
+│   ├───redis-service
+│   │   ├───charts
+│   │   └───templates
+│   ├───report-builder
+│   │   ├───charts
+│   │   └───templates
+│   ├───report-service
+│   │   ├───charts
+│   │   └───templates
+│   ├───template-config
+│   │   ├───charts
+│   │   └───templates
+│   ├───transactions
+│   │   ├───charts
+│   │   └───templates
+│   └───user-service
+│       ├───charts
+│       └───templates
+└───LDAP
 
-metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
-  labels:
-    app: {{ .Values.labels.app }}
 
-spec:
-  replicas: {{ .Values.deployment.replicas }}
 
-  strategy:
-    type: {{ .Values.deployment.strategy.type }}
-    rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  selector:
-    matchLabels:
-      app: {{ .Values.labels.app }}
+this my directory structure please help me deploying all the microservices at one go per environment like example:
 
-  template:
-    metadata:
-      labels:
-        app: {{ .Values.labels.app }}
-
-    spec:
-      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-
-      securityContext:
-        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
-
-      topologySpreadConstraints:
-        {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-
-      containers:
-        - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
-          securityContext:
-            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
-
-          ports:
-            - containerPort: {{ .Values.probes.port }}
-
-          envFrom:
-            {{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-
-          env:
-            {{- toYaml .Values.env | nindent 12 }}
-
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
-
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-
-          lifecycle:
-            preStop:
-              exec:
-                command: {{ toJson .Values.lifecycle.preStop.command }}
+i want to deploy all the microservices for uat env
