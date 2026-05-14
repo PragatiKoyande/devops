@@ -52,9 +52,9 @@ spec:
             - secretRef:
                 name: {{ . }}
             {{- end }}
-			
+
           env:
-{{ toYaml .Values.env | indent 12 }}
+            {{- toYaml .Values.env | nindent 12 }}
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -85,11 +85,3 @@ spec:
             preStop:
               exec:
                 command: {{ toJson .Values.lifecycle.preStop.command }}
-
-
-
-                this file is having indenattion issue kindly reolve and send me back entire file:
-
-                Error: YAML parse error on common-master/templates/deployment.yaml: error converting YAML to JSON: yaml: line 61: found a tab character that violates indentation
-
-Use --debug flag to render out invalid YAML
