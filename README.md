@@ -8,7 +8,6 @@ metadata:
 
 spec:
   replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
     type: {{ .Values.deployment.strategy.type }}
@@ -24,13 +23,13 @@ spec:
     metadata:
       labels:
         app: {{ .Values.labels.app }}
-      annotations:
-        {{- toYaml .Values.deployment.annotations | nindent 8 }}
 
     spec:
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
+
+      securityContext:
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
 
       topologySpreadConstraints:
         {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
@@ -39,6 +38,9 @@ spec:
         - name: {{ .Values.container.name }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
 
           ports:
             - containerPort: {{ .Values.probes.port }}
@@ -52,7 +54,7 @@ spec:
             - secretRef:
                 name: {{ . }}
             {{- end }}
-
+	
           env:
             {{- toYaml .Values.env | nindent 12 }}
 
@@ -85,3 +87,6 @@ spec:
             preStop:
               exec:
                 command: {{ toJson .Values.lifecycle.preStop.command }}
+
+
+      I am getting this issue for indeantation kindly check and send me back.
