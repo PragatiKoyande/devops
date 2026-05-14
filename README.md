@@ -1,113 +1,81 @@
-apiVersion: v2
-name: platform
-description: Enterprise Platform Deployment
-type: application
-version: 1.0.0
+@echo off
 
-dependencies:
+set ENV=%1
 
-  - name: common-master
-    version: 0.1.0
-    repository: "file://../common-master"
+if "%ENV%"=="" (
+    echo Please provide environment
+    echo Example:
+    echo deploy-all.bat uat
+    exit /b 1
+)
 
-  - name: common-request
-    version: 0.1.0
-    repository: "file://../common-request"
+set NAMESPACE=backend-%ENV%
 
-  - name: dashboard
-    version: 0.1.0
-    repository: "file://../dashboard"
+echo Deploying all microservices to %ENV% environment...
 
-  - name: enqiry-service
-    version: 0.1.0
-    repository: "file://../enqiry-service"
+cd common-master
+helm upgrade --install common-master . -f values-%ENV%.yaml -n %NAMESPACE% --create-namespace
+cd ..
 
-  - name: journal
-    version: 0.1.0
-    repository: "file://../journal"
+cd common-request
+helm upgrade --install common-request . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: login
-    version: 0.1.0
-    repository: "file://../login"
+cd dashboard
+helm upgrade --install dashboard . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: notification
-    version: 0.1.0
-    repository: "file://../notification"
+cd enqiry-service
+helm upgrade --install enqiry-service . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: nwsa-service
-    version: 0.1.0
-    repository: "file://../nwsa-service"
+cd journal
+helm upgrade --install journal . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: process-status
-    version: 0.1.0
-    repository: "file://../process-status"
+cd login
+helm upgrade --install login . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: react-service
-    version: 0.1.0
-    repository: "file://../react-service"
+cd notification
+helm upgrade --install notification . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: redis-service
-    version: 0.1.0
-    repository: "file://../redis-service"
+cd nwsa-service
+helm upgrade --install nwsa-service . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: report-builder
-    version: 0.1.0
-    repository: "file://../report-builder"
+cd process-status
+helm upgrade --install process-status . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: report-service
-    version: 0.1.0
-    repository: "file://../report-service"
+cd react-service
+helm upgrade --install react-service . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: template-config
-    version: 0.1.0
-    repository: "file://../template-config"
+cd redis-service
+helm upgrade --install redis-service . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: transactions
-    version: 0.1.0
-    repository: "file://../transactions"
+cd report-builder
+helm upgrade --install report-builder . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-  - name: user-service
-    version: 0.1.0
-    repository: "file://../user-service"
+cd report-service
+helm upgrade --install report-service . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
+cd template-config
+helm upgrade --install template-config . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
+cd transactions
+helm upgrade --install transactions . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
+cd user-service
+helm upgrade --install user-service . -f values-%ENV%.yaml -n %NAMESPACE%
+cd ..
 
-global:
-  environment: dev
-
-common-master:
-  image:
-    tag: dev
-
-dashboard:
-  image:
-    tag: dev
-
-
-
-
-global:
-  environment: uat
-
-common-master:
-  image:
-    tag: uat
-
-dashboard:
-  image:
-    tag: uat
-
-
-
-
-global:
-  environment: prod
-
-common-master:
-  image:
-    tag: prod
-
-dashboard:
-  image:
-    tag: prod
+echo.
+echo All microservices deployed successfully to %ENV%
