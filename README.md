@@ -1,71 +1,47 @@
-apiVersion: v2
-name: umbrella-chart
-description: Enterprise Umbrella Chart for CBOPS Platform
-type: application
-version: 0.1.0
-appVersion: "1.0"
+dashboard:
+  enabled: true
 
-dependencies:
-  - name: dashboard
-    version: 0.1.0
-    repository: "file://../dashboard"
+journal:
+  enabled: true
 
-  - name: journal
-    version: 0.1.0
-    repository: "file://../journal"
+transactions:
+  enabled: true
 
-  - name: transactions
-    version: 0.1.0
-    repository: "file://../transactions"
+user-service:
+  enabled: true
 
-  - name: user-service
-    version: 0.1.0
-    repository: "file://../user-service"
+process-status:
+  enabled: true
 
-  - name: process-status
-    version: 0.1.0
-    repository: "file://../process-status"
+enqiry-service:
+  enabled: true
 
-  - name: enqiry-service
-    version: 0.1.0
-    repository: "file://../enqiry-service"
+notification:
+  enabled: true
 
-  - name: notification
-    version: 0.1.0
-    repository: "file://../notification"
+nwsa-service:
+  enabled: true
 
-  - name: nwsa-service
-    version: 0.1.0
-    repository: "file://../nwsa-service"
+react-service:
+  enabled: true
 
-  - name: react-service
-    version: 0.1.0
-    repository: "file://../react-service"
+redis-service:
+  enabled: true
 
-  - name: redis-service
-    version: 0.1.0
-    repository: "file://../redis-service"
+report-builder:
+  enabled: true
 
-  - name: report-builder
-    version: 0.1.0
-    repository: "file://../report-builder"
+report-service:
+  enabled: true
 
-  - name: report-service
-    version: 0.1.0
-    repository: "file://../report-service"
+template-config:
+  enabled: true
 
-  - name: template-config
-    version: 0.1.0
-    repository: "file://../template-config"
+common-master:
+  enabled: true
 
-  - name: common-master
-    version: 0.1.0
-    repository: "file://../common-master"
+common-request:
+  enabled: true
 
-  - name: common-request
-    version: 0.1.0
-    repository: "file://../common-request"
-
-  - name: login
-    version: 0.1.0
-    repository: "file://../login"
+login:
+  enabled: true
