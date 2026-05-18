@@ -1,11 +1,6 @@
-D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm install micro-services-at-one-go . -n backend --kubeconfig h06vksuatcbopscls.conf
-Error: INSTALLATION FAILED: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 80: mapping values are not allowed in this context
-
-
-I m getting this issue and below is the file:
-
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -51,8 +46,8 @@ spec:
 
       containers:
         - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: Always
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
           volumeMounts:
 {{ toYaml .Values.deployment.volumeMounts | indent 12 }}
@@ -95,8 +90,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
-
-
-
-                can you please correct it and send me back the entire file
+                command:
+                  - "/bin/sh"
+                  - "-c"
+                  - "sleep 10"
