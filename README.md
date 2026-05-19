@@ -70,17 +70,26 @@ spec:
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | nindent 12 }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
 
           livenessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | nindent 12 }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | nindent 12 }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
 {{- if .Values.lifecycle }}
           lifecycle:
