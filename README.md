@@ -1,10 +1,3 @@
-
-D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm template micro-services-at-one-go .
-Error: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 81: mapping values are not allowed in this context
-
-
-
-
 apiVersion: apps/v1
 kind: Deployment
 
@@ -37,31 +30,47 @@ spec:
       enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
       securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
 
+{{- if .Values.hostAliases }}
       hostAliases:
 {{ toYaml .Values.hostAliases | nindent 8 }}
+{{- end }}
 
+{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
 
+{{- if .Values.deployment.volumes }}
       volumes:
 {{ toYaml .Values.deployment.volumes | nindent 8 }}
+{{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
+{{- if .Values.deployment.volumeMounts }}
           volumeMounts:
 {{ toYaml .Values.deployment.volumeMounts | nindent 12 }}
+{{- end }}
 
+{{- if .Values.envFrom }}
           envFrom:
 {{ toYaml .Values.envFrom | nindent 12 }}
+{{- end }}
 
+{{- if or .Values.env .Values.envCommon }}
           env:
-{{ toYaml .Values.env | nindent 12 }}
-{{ toYaml .Values.envCommon | nindent 12 }}
+{{- with .Values.env }}
+{{ toYaml . | nindent 12 }}
+{{- end }}
+{{- with .Values.envCommon }}
+{{ toYaml . | nindent 12 }}
+{{- end }}
+{{- end }}
 
           ports:
             - containerPort: {{ .Values.container.port }}
@@ -74,6 +83,12 @@ spec:
               port: {{ .Values.probes.port }}
             failureThreshold: {{ .Values.probes.startup.failureThreshold }}
             periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+{{- if .Values.probes.startup.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+{{- end }}
+{{- if .Values.probes.startup.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+{{- end }}
 
           livenessProbe:
             tcpSocket:
@@ -91,10 +106,12 @@ spec:
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
 {{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
 
+{{- if .Values.containerSecurityContext }}
           securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 12 }}
-
-this is the file
+{{- end }}
