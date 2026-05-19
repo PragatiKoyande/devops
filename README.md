@@ -1,9 +1,12 @@
+notification-service
+
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labels.app }}
 
 spec:
   replicas: {{ .Values.deployment.replicas }}
@@ -17,110 +20,71 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: {{ .Values.labels.app }}
 
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
+        app: {{ .Values.labels.app }}
 
     spec:
-      serviceAccountName: {{ .Values.deployment.pod.serviceAccountName }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.pod.terminationGracePeriodSeconds }}
-      enableServiceLinks: {{ .Values.deployment.pod.enableServiceLinks }}
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
-{{- if .Values.deployment.pod.securityContext }}
       securityContext:
-{{ toYaml .Values.deployment.pod.securityContext | nindent 8 }}
-{{- end }}
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
 
-{{- if .Values.hostAliases }}
-      hostAliases:
-{{ toYaml .Values.hostAliases | nindent 8 }}
-{{- end }}
-
-{{- if .Values.deployment.pod.volumes }}
       volumes:
-{{ toYaml .Values.deployment.pod.volumes | nindent 8 }}
-{{- end }}
+        {{- toYaml .Values.deployment.volumes | nindent 8 }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: Always
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           ports:
-            - containerPort: {{ .Values.ports.containerPort }}
+            - containerPort: {{ .Values.probes.port }}
 
-{{- if .Values.volumeMounts }}
           volumeMounts:
-{{ toYaml .Values.volumeMounts | nindent 12 }}
-{{- end }}
+            {{- toYaml .Values.volumeMounts | nindent 12 }}
 
-{{- if .Values.envFrom }}
           envFrom:
-{{- range .Values.envFrom.configMaps }}
+            {{- range .Values.envFrom.configMaps }}
             - configMapRef:
                 name: {{ . }}
-{{- end }}
-{{- range .Values.envFrom.secrets }}
+            {{- end }}
+
+            {{- range .Values.envFrom.secrets }}
             - secretRef:
                 name: {{ . }}
-{{- end }}
-{{- end }}
+            {{- end }}
 
-{{- if or .Values.env .Values.secretEnv }}
           env:
-{{- if .Values.env }}
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
-
-{{- if .Values.secretEnv }}
-{{- range .Values.secretEnv }}
-            - name: {{ .name }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .secretName }}
-                  key: {{ .key }}
-{{- end }}
-{{- end }}
-{{- end }}
+            {{- toYaml .Values.env | nindent 12 }}
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            {{- toYaml .Values.probes.startup | nindent 12 }}
 
           livenessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+            {{- toYaml .Values.probes.liveness | nindent 12 }}
 
           readinessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+            {{- toYaml .Values.probes.readiness | nindent 12 }}
 
-{{- if .Values.lifecycle }}
           lifecycle:
-{{ toYaml .Values.lifecycle | nindent 12 }}
-{{- end }}
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
 
-{{- if .Values.securityContext }}
           securityContext:
-            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
-            readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
-            capabilities:
-              drop:
-{{ toYaml .Values.securityContext.capabilities.drop | nindent 16 }}
-{{- end }}
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
