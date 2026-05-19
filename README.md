@@ -1,11 +1,10 @@
+nwsa-service
+
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
-  labels:
-    app: {{ .Values.labels.app }}
 
 spec:
   replicas: {{ .Values.deployment.replicas }}
@@ -19,83 +18,66 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.labels.app }}
+      app: {{ .Values.deployment.labels.app }}
 
   template:
     metadata:
       labels:
-        app: {{ .Values.labels.app }}
+        app: {{ .Values.deployment.labels.app }}
+      annotations:
+{{ toYaml .Values.deployment.annotations | indent 8 }}
 
     spec:
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
-      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-{{- if .Values.deployment.securityContext }}
-      securityContext:
-{{ toYaml .Values.deployment.securityContext | nindent 8 }}
-{{- end }}
+      hostAliases:
+{{ toYaml .Values.hostAliases | indent 8 }}
 
-{{- if .Values.deployment.volumes }}
-      volumes:
-{{ toYaml .Values.deployment.volumes | nindent 8 }}
-{{- end }}
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: Always
+
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
+
+          env:
+{{ toYaml .Values.env | indent 12 }}
 
           ports:
-            - containerPort: {{ .Values.probes.port }}
-
-{{- if .Values.volumeMounts }}
-          volumeMounts:
-{{ toYaml .Values.volumeMounts | nindent 12 }}
-{{- end }}
-
-{{- if .Values.envFrom }}
-          envFrom:
-{{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-{{- end }}
-
-{{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-{{- end }}
-{{- end }}
-
-{{- if .Values.env }}
-          env:
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
+            - containerPort: {{ .Values.container.port }}
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
+{{ toYaml .Values.resources | indent 12 }}
 
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | nindent 12 }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
           livenessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | nindent 12 }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | nindent 12 }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-{{- if .Values.lifecycle }}
           lifecycle:
-{{ toYaml .Values.lifecycle | nindent 12 }}
-{{- end }}
-
-{{- if .Values.containerSecurityContext }}
-          securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 12 }}
-{{- end }}
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 10"]
