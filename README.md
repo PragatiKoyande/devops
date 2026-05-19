@@ -1,3 +1,5 @@
+transactions-service
+
 apiVersion: apps/v1
 kind: Deployment
 
@@ -7,7 +9,6 @@ metadata:
 
 spec:
   replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
     type: {{ .Values.deployment.strategy.type }}
@@ -26,65 +27,94 @@ spec:
 
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-{{- if .Values.deployment.securityContext }}
-      securityContext:
-{{ toYaml .Values.deployment.securityContext | nindent 8 }}
-{{- end }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
 {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
 {{- end }}
 
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+
       containers:
         - name: {{ .Values.container.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
-          ports:
-            - containerPort: {{ .Values.container.port }}
-
-{{- if .Values.env }}
-          env:
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
-
 {{- if .Values.envFrom }}
           envFrom:
-{{- range .Values.envFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
+{{ toYaml .Values.envFrom | nindent 12 }}
 {{- end }}
-{{- range .Values.envFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
+
+{{- if or .Values.env .Values.envCommon }}
+          env:
+{{- range .Values.env }}
+            - name: {{ .name }}
+{{- if hasKey . "value" }}
+              value: {{ .value | quote }}
+{{- end }}
+{{- if hasKey . "valueFrom" }}
+              valueFrom:
+{{ toYaml .valueFrom | nindent 16 }}
 {{- end }}
 {{- end }}
+
+{{- range .Values.envCommon }}
+            - name: {{ .name }}
+{{- if hasKey . "value" }}
+              value: {{ .value | quote }}
+{{- end }}
+{{- if hasKey . "valueFrom" }}
+              valueFrom:
+{{ toYaml .valueFrom | nindent 16 }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+          ports:
+            - containerPort: {{ .Values.probes.port }}
 
           resources:
 {{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | nindent 12 }}
+              port: {{ .Values.probes.startup.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+{{- if .Values.probes.startup.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+{{- end }}
+{{- if .Values.probes.startup.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+{{- end }}
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | nindent 12 }}
+              port: {{ .Values.probes.liveness.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | nindent 12 }}
+              port: {{ .Values.probes.readiness.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-{{- if .Values.lifecycle }}
           lifecycle:
             preStop:
               exec:
-                command: {{ toJson .Values.lifecycle.preStop.command }}
-{{- end }}
+                command: ["/bin/sh", "-c", "sleep 10"]
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
