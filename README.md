@@ -1,3 +1,5 @@
+common-request service
+
 apiVersion: apps/v1
 kind: Deployment
 
@@ -9,7 +11,6 @@ metadata:
 
 spec:
   replicas: {{ .Values.deployment.replicas }}
-  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
     type: {{ .Values.deployment.strategy.type }}
@@ -26,48 +27,42 @@ spec:
       labels:
         app: {{ .Values.labels.app }}
 
-{{- if .Values.deployment.annotations }}
-      annotations:
-{{ toYaml .Values.deployment.annotations | nindent 8 }}
-{{- end }}
-
     spec:
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
-      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-{{- if .Values.deployment.topologySpreadConstraints }}
+      securityContext:
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
+
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-{{- end }}
+        {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
 
           ports:
             - containerPort: {{ .Values.probes.port }}
 
-{{- if .Values.envFrom }}
           envFrom:
-{{- range .Values.envFrom.configMaps }}
+            {{- range .Values.envFrom.configMaps }}
             - configMapRef:
                 name: {{ . }}
-{{- end }}
-{{- range .Values.envFrom.secrets }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
             - secretRef:
                 name: {{ . }}
-{{- end }}
-{{- end }}
+            {{- end }}
 
-{{- if .Values.env }}
           env:
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
+            {{- toYaml .Values.env | nindent 12 }}
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
@@ -91,7 +86,7 @@ spec:
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-{{- if .Values.lifecycle }}
           lifecycle:
-{{ toYaml .Values.lifecycle | nindent 12 }}
-{{- end }}
+            preStop:
+              exec:
+                command: {{ toJson .Values.lifecycle.preStop.command }}
