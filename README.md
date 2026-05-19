@@ -1,6 +1,7 @@
+react-service
+
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -17,63 +18,31 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: {{ .Values.labels.app }}
 
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
+        app: {{ .Values.labels.app }}
 
     spec:
-      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-{{- if .Values.deployment.securityContext }}
-      securityContext:
-{{ toYaml .Values.deployment.securityContext | nindent 8 }}
-{{- end }}
-
-{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-{{- end }}
-
-{{- if .Values.deployment.volumes }}
-      volumes:
-{{ toYaml .Values.deployment.volumes | nindent 8 }}
-{{- end }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
-
-{{- if .Values.containerSecurityContext }}
-          securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 12 }}
-{{- end }}
-
-{{- if .Values.deployment.volumeMounts }}
-          volumeMounts:
-{{ toYaml .Values.deployment.volumeMounts | nindent 12 }}
-{{- end }}
-
-{{- if .Values.envFrom }}
-          envFrom:
-{{ toYaml .Values.envFrom | nindent 12 }}
-{{- end }}
-
-{{- if .Values.env }}
-          env:
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: Always
 
           ports:
-            - containerPort: {{ .Values.container.port }}
+            - containerPort: {{ .Values.probes.port }}
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
+{{ toYaml .Values.resources | indent 12 }}
 
           startupProbe:
             tcpSocket:
@@ -100,4 +69,4 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+                command: {{ toJson .Values.lifecycle.preStop.command }}
