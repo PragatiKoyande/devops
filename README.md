@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -26,35 +27,36 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
+{{- if .Values.deployment.securityContext }}
       securityContext:
-        runAsNonRoot: {{ .Values.deployment.securityContext.runAsNonRoot }}
-        runAsUser: {{ .Values.deployment.securityContext.runAsUser }}
-        fsGroup: {{ .Values.deployment.securityContext.fsGroup }}
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+{{- end }}
 
+{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-        - maxSkew: {{ .Values.deployment.topologySpreadConstraints.maxSkew }}
-          topologyKey: {{ .Values.deployment.topologySpreadConstraints.topologyKey }}
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: {{ .Values.deployment.labels.app }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
+{{- if .Values.envFrom }}
           envFrom:
-{{ toYaml .Values.envFrom | indent 12 }}
+{{ toYaml .Values.envFrom | nindent 12 }}
+{{- end }}
 
+{{- if .Values.env }}
           env:
-{{ toYaml .Values.env | indent 12 }}
+{{ toYaml .Values.env | nindent 12 }}
+{{- end }}
 
           ports:
             - containerPort: {{ .Values.ports.containerPort }}
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
@@ -78,10 +80,12 @@ spec:
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
 
+{{- if .Values.containerSecurityContext }}
           securityContext:
-{{ toYaml .Values.containerSecurityContext | indent 12 }}
+{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+{{- end }}
