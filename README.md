@@ -1,9 +1,6 @@
-
-login-service
-
-
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -32,63 +29,65 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.deployment.pod.terminationGracePeriodSeconds }}
       enableServiceLinks: {{ .Values.deployment.pod.enableServiceLinks }}
 
+{{- if .Values.deployment.pod.securityContext }}
       securityContext:
-        runAsNonRoot: {{ .Values.deployment.pod.securityContext.runAsNonRoot }}
-        runAsUser: {{ .Values.deployment.pod.securityContext.runAsUser }}
-        fsGroup: {{ .Values.deployment.pod.securityContext.fsGroup }}
+{{ toYaml .Values.deployment.pod.securityContext | nindent 8 }}
+{{- end }}
 
-      {{- if .Values.hostAliases }}
+{{- if .Values.hostAliases }}
       hostAliases:
-        {{- toYaml .Values.hostAliases | nindent 8 }}
-      {{- end }}
+{{ toYaml .Values.hostAliases | nindent 8 }}
+{{- end }}
 
-      {{- if .Values.deployment.pod.volumes }}
+{{- if .Values.deployment.pod.volumes }}
       volumes:
-        {{- toYaml .Values.deployment.pod.volumes | nindent 8 }}
-      {{- end }}
+{{ toYaml .Values.deployment.pod.volumes | nindent 8 }}
+{{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: Always
 
           ports:
             - containerPort: {{ .Values.ports.containerPort }}
 
-          {{- if .Values.volumeMounts }}
+{{- if .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml .Values.volumeMounts | nindent 12 }}
-          {{- end }}
+{{ toYaml .Values.volumeMounts | nindent 12 }}
+{{- end }}
 
-          {{- if .Values.envFrom }}
+{{- if .Values.envFrom }}
           envFrom:
-            {{- range .Values.envFrom.configMaps }}
+{{- range .Values.envFrom.configMaps }}
             - configMapRef:
                 name: {{ . }}
-            {{- end }}
-            {{- range .Values.envFrom.secrets }}
+{{- end }}
+{{- range .Values.envFrom.secrets }}
             - secretRef:
                 name: {{ . }}
-            {{- end }}
-          {{- end }}
+{{- end }}
+{{- end }}
 
+{{- if or .Values.env .Values.secretEnv }}
           env:
-            {{- if .Values.env }}
-            {{- toYaml .Values.env | nindent 12 }}
-            {{- end }}
+{{- if .Values.env }}
+{{ toYaml .Values.env | nindent 12 }}
+{{- end }}
 
-            {{- if .Values.secretEnv }}
-            {{- range .Values.secretEnv }}
+{{- if .Values.secretEnv }}
+{{- range .Values.secretEnv }}
             - name: {{ .name }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .secretName }}
                   key: {{ .key }}
-            {{- end }}
-            {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
 
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+{{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
@@ -112,14 +111,16 @@ spec:
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
-            preStop:
-              exec:
-                command: {{ toYaml .Values.lifecycle.preStop.command | nindent 18 }}
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
 
+{{- if .Values.securityContext }}
           securityContext:
             allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
             readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
             capabilities:
               drop:
-                {{- toYaml .Values.securityContext.capabilities.drop | nindent 16 }}
+{{ toYaml .Values.securityContext.capabilities.drop | nindent 16 }}
+{{- end }}
