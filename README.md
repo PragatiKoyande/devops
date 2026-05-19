@@ -1,3 +1,5 @@
+user-service
+
 apiVersion: apps/v1
 kind: Deployment
 
@@ -7,6 +9,7 @@ metadata:
 
 spec:
   replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
     type: {{ .Values.deployment.strategy.type }}
@@ -24,22 +27,37 @@ spec:
         app: {{ .Values.deployment.labels.app }}
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
+
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+
+{{- if .Values.hostAliases }}
+      hostAliases:
+{{ toYaml .Values.hostAliases | nindent 8 }}
+{{- end }}
 
 {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
 {{- end }}
 
-      securityContext:
-{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+{{- if .Values.deployment.volumes }}
+      volumes:
+{{ toYaml .Values.deployment.volumes | nindent 8 }}
+{{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+
+{{- if .Values.deployment.volumeMounts }}
+          volumeMounts:
+{{ toYaml .Values.deployment.volumeMounts | nindent 12 }}
+{{- end }}
 
 {{- if .Values.envFrom }}
           envFrom:
@@ -72,26 +90,26 @@ spec:
 {{- end }}
 
           ports:
-            - containerPort: {{ .Values.probes.port }}
+            - containerPort: {{ .Values.container.port }}
 
           resources:
 {{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
-              port: {{ .Values.probes.startup.port }}
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 {{- if .Values.probes.startup.initialDelaySeconds }}
             initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
 {{- end }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 {{- if .Values.probes.startup.timeoutSeconds }}
             timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
 {{- end }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
 
           livenessProbe:
             tcpSocket:
-              port: {{ .Values.probes.liveness.port }}
+              port: {{ .Values.probes.port }}
             initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
             timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
@@ -99,23 +117,18 @@ spec:
 
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.probes.readiness.port }}
+              port: {{ .Values.probes.port }}
             initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
-            preStop:
-              exec:
-                command:
-                  - "/bin/sh"
-                  - "-c"
-                  - "sleep 10"
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
 
+{{- if .Values.containerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
+{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+{{- end }}
