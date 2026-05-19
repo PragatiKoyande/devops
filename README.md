@@ -50,6 +50,7 @@ deployment:
 image:
   repository: h06vksharbor.corp.ad.sbi/cbops/user-service
   tag: DEV06
+  imagePullPolicy: Always        # ← ADDED (was missing, rendered as empty)
 
 container:
   name: user-container
@@ -101,6 +102,14 @@ envFrom:
   - configMapRef:
       name: ldap-config
 
+env: []                          # ← ADDED (was missing entirely)
+
+hostAliases: []                  # ← ADDED (was missing entirely)
+
+lifecycle: {}                    # ← ADDED (was missing entirely)
+
+containerSecurityContext: {}     # ← ADDED (was missing entirely)
+
 service:
   name: user-service
   port: 80
@@ -116,8 +125,3 @@ hpa:
 pdb:
   name: user-pdb
   minAvailable: 1
-
-
-
-
-  this ismy deafult values.yaml
