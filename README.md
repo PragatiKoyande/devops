@@ -1,6 +1,7 @@
+template-config-service
+
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -29,78 +30,58 @@ spec:
       terminationGracePeriodSeconds: 30
       enableServiceLinks: false
 
-{{- if .Values.hostAliases }}
-      hostAliases:
-{{ toYaml .Values.hostAliases | nindent 8 }}
-{{- end }}
-
-{{- if .Values.deployment.securityContext }}
       securityContext:
-{{ toYaml .Values.deployment.securityContext | nindent 8 }}
-{{- end }}
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-{{- if .Values.deployment.topologySpreadConstraints }}
+      {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-{{- end }}
-
-{{- if .Values.volumes }}
-      volumes:
-{{ toYaml .Values.volumes | nindent 8 }}
-{{- end }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+      {{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: Always
 
           ports:
             - containerPort: {{ .Values.container.port }}
 
-{{- if .Values.env }}
+          {{- if .Values.env }}
           env:
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
+{{ toYaml .Values.env | indent 12 }}
+          {{- end }}
 
-{{- if .Values.envFrom }}
+          {{- if .Values.envFrom }}
           envFrom:
-{{- range .Values.envFrom.configMaps }}
+            {{- range .Values.envFrom.configMaps }}
             - configMapRef:
                 name: {{ . }}
-{{- end }}
-{{- range .Values.envFrom.secrets }}
+            {{- end }}
+            {{- range .Values.envFrom.secrets }}
             - secretRef:
                 name: {{ . }}
-{{- end }}
-{{- end }}
+            {{- end }}
+          {{- end }}
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
-
-{{- if .Values.volumeMounts }}
-          volumeMounts:
-{{ toYaml .Values.volumeMounts | nindent 12 }}
-{{- end }}
+{{ toYaml .Values.resources | indent 12 }}
 
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.startup | nindent 12 }}
+{{ toYaml .Values.probes.startup | indent 12 }}
 
           livenessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.liveness | nindent 12 }}
+{{ toYaml .Values.probes.liveness | indent 12 }}
 
           readinessProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
-{{ toYaml .Values.probes.readiness | nindent 12 }}
+{{ toYaml .Values.probes.readiness | indent 12 }}
 
-{{- if .Values.lifecycle }}
           lifecycle:
             preStop:
               exec:
-                command:
-{{ toYaml .Values.lifecycle.preStop | nindent 18 }}
-{{- end }}
+                command: {{ .Values.lifecycle.preStop }}
