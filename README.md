@@ -1,6 +1,7 @@
+process-status-service
+
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -24,46 +25,42 @@ spec:
       labels:
         app: {{ .Values.deployment.labels.app }}
 
-{{- if .Values.deployment.annotations }}
-      annotations:
-{{ toYaml .Values.deployment.annotations | nindent 8 }}
-{{- end }}
-
     spec:
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-{{- if .Values.hostAliases }}
-      hostAliases:
-{{ toYaml .Values.hostAliases | nindent 8 }}
-{{- end }}
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | indent 8 }}
 
-{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-{{- end }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+
+      volumes:
+{{ toYaml .Values.deployment.volumes | indent 8 }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
-{{- if .Values.envFrom }}
-          envFrom:
-{{ toYaml .Values.envFrom | nindent 12 }}
-{{- end }}
+          securityContext:
+{{ toYaml .Values.containerSecurityContext | indent 12 }}
 
-{{- if .Values.env }}
+          volumeMounts:
+{{ toYaml .Values.deployment.volumeMounts | indent 12 }}
+
+          envFrom:
+{{ toYaml .Values.envFrom | indent 12 }}
+
           env:
-{{ toYaml .Values.env | nindent 12 }}
-{{- end }}
+{{ toYaml .Values.env | indent 12 }}
 
           ports:
             - containerPort: {{ .Values.container.port }}
 
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
+{{ toYaml .Values.resources | indent 12 }}
 
           startupProbe:
             tcpSocket:
