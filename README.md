@@ -66,10 +66,10 @@ spec:
           env:
 {{- range .Values.env }}
             - name: {{ .name }}
-{{- if .value }}
+{{- if hasKey . "value" }}
               value: {{ .value | quote }}
 {{- end }}
-{{- if .valueFrom }}
+{{- if hasKey . "valueFrom" }}
               valueFrom:
 {{ toYaml .valueFrom | nindent 16 }}
 {{- end }}
@@ -77,10 +77,10 @@ spec:
 
 {{- range .Values.envCommon }}
             - name: {{ .name }}
-{{- if .value }}
+{{- if hasKey . "value" }}
               value: {{ .value | quote }}
 {{- end }}
-{{- if .valueFrom }}
+{{- if hasKey . "valueFrom" }}
               valueFrom:
 {{ toYaml .valueFrom | nindent 16 }}
 {{- end }}
@@ -98,6 +98,12 @@ spec:
               port: {{ .Values.probes.port }}
             failureThreshold: {{ .Values.probes.startup.failureThreshold }}
             periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+{{- if .Values.probes.startup.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+{{- end }}
+{{- if .Values.probes.startup.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+{{- end }}
 
           livenessProbe:
             tcpSocket:
