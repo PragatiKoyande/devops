@@ -86,5 +86,6 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: {{ toJson .Values.lifecycle.preStop.command }}
+                command:
+{{ toYaml .Values.lifecycle.preStop | nindent 18 }}
 {{- end }}
