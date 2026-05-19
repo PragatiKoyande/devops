@@ -1,7 +1,6 @@
-redis-service
-
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -30,22 +29,26 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
+{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: Always
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
           ports:
             - containerPort: {{ .Values.probes.port }}
 
+{{- if .Values.env }}
           env:
-{{ toYaml .Values.env | indent 12 }}
+{{ toYaml .Values.env | nindent 12 }}
+{{- end }}
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
@@ -69,7 +72,7 @@ spec:
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
-            preStop:
-              exec:
-                command: {{ toJson .Values.lifecycle.preStop.command }}
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
