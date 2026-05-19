@@ -1,6 +1,3 @@
-apiVersion: v2
-appVersion: "1.0"
-description: User Service Helm Chart
-name: user-service
-type: application
-version: 0.1.0
+
+D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm template micro-services-at-one-go .
+Error: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 81: mapping values are not allowed in this context
