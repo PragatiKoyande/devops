@@ -1,135 +1,126 @@
-            tcpSocket:
-              port: 4001
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-
-          startupProbe:
-            tcpSocket:
-              port: 4001
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 30
-
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                - /bin/sh
-                - -c
-                - sleep 20
----
-# Source: umbrella-chart/charts/common-master/templates/serviceaccount.yaml
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: common-master-sa
-  namespace: backend
----
-# Source: umbrella-chart/charts/transactions/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
-  name: transactions-deployment
-  namespace: backend
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
   strategy:
-    type: RollingUpdate
+    type: {{ .Values.deployment.strategy.type }}
     rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
   selector:
     matchLabels:
-      app: transactions-backend
+      app: {{ .Values.deployment.labels.app }}
 
   template:
     metadata:
       labels:
-        app: transactions-backend
+        app: {{ .Values.deployment.labels.app }}
 
     spec:
-      serviceAccountName: transactions-sa
-      automountServiceAccountToken: false
-      terminationGracePeriodSeconds: 30
-
-      topologySpreadConstraints:
-        - labelSelector:
-            matchLabels:
-              app: transactions-backend
-          maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
       securityContext:
-        fsGroup: 10001
-        runAsNonRoot: true
-        runAsUser: 10001
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+
+{{- if .Values.hostAliases }}
+      hostAliases:
+{{ toYaml .Values.hostAliases | nindent 8 }}
+{{- end }}
+
+{{- if .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
+
+{{- if .Values.deployment.volumes }}
+      volumes:
+{{ toYaml .Values.deployment.volumes | nindent 8 }}
+{{- end }}
 
       containers:
-        - name: transactions-container
-          image: h06vksharbor.corp.ad.sbi/cbops/transactions-service:DEV01
-          imagePullPolicy: Always
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
+{{- if .Values.deployment.volumeMounts }}
+          volumeMounts:
+{{ toYaml .Values.deployment.volumeMounts | nindent 12 }}
+{{- end }}
+
+{{- if .Values.envFrom }}
           envFrom:
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
+{{ toYaml .Values.envFrom | nindent 12 }}
+{{- end }}
 
+{{- if or .Values.env .Values.envCommon }}
           env:
-            null
+{{- range .Values.env }}
+            - name: {{ .name }}
+{{- if .value }}
+              value: {{ .value | quote }}
+{{- end }}
+{{- if .valueFrom }}
+              valueFrom:
+{{ toYaml .valueFrom | nindent 16 }}
+{{- end }}
+{{- end }}
+
+{{- range .Values.envCommon }}
+            - name: {{ .name }}
+{{- if .value }}
+              value: {{ .value | quote }}
+{{- end }}
+{{- if .valueFrom }}
+              valueFrom:
+{{ toYaml .valueFrom | nindent 16 }}
+{{- end }}
+{{- end }}
+{{- end }}
 
           ports:
-            - containerPort: 4000
+            - containerPort: {{ .Values.container.port }}
 
           resources:
-            limits:
-              cpu: 500m
-              memory: 1Gi
-            requests:
-              cpu: 250m
-              memory: 512Mi
+{{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
-              port: 4000
-            failureThreshold: 60
-            periodSeconds: 10
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
           livenessProbe:
             tcpSocket:
-              port: 4000
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
           readinessProbe:
             tcpSocket:
-              port: 4000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
 
+{{- if .Values.containerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-Error: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 81: mapping values are not allowed in this context
+{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+{{- end }}
