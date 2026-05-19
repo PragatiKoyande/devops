@@ -1,149 +1,62 @@
-D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm template micro-services-at-one-go . --show-only charts/user-service/templates/deployment.yaml --debug 2>&1
-level=DEBUG msg="Original chart version" version=""
-level=DEBUG msg="Chart path" path=D:\Pragati\HELM-2404\Deployment\umbrella-chart
-level=DEBUG msg="number of dependencies in the chart" dependencies=16
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
-level=DEBUG msg="number of dependencies in the chart" dependencies=0
----
-# Source: umbrella-chart/charts/user-service/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/user-service
+  tag: DEV06
+  imagePullPolicy: Always
 
-metadata:
-  name: user-deployment
-  namespace: backend
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "dev"
+  - name: JAVA_TOOL_OPTIONS
+    value: "-Djava.net.preferIPv4Stack=true"
+  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+    value: "rbac-cache-group"
 
-spec:
-  replicas: 1
-  revisionHistoryLimit: 5
+hostAliases:
+  - ip: "10.189.42.83"
+    hostnames:
+      - "uatrootdc1.uatad.sbi"
+  ------------------------------------------------------
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  image:
+  repository: a2p05vksharbor.corp.ad.sbi/cbops/user-service
+  tag: PR-05
+  imagePullPolicy: Always
 
-  selector:
-    matchLabels:
-      app: user-backend
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "prod"
+  - name: JAVA_TOOL_OPTIONS
+    value: "-Djava.net.preferIPv4Stack=true"
+  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+    value: "rbac-cache-group"
 
-  template:
-    metadata:
-      labels:
-        app: user-backend
+hostAliases:
+  - ip: "10.176.53.145"
+    hostnames:
+      - "corp.ad.sbi"
+      - "corpdcmdgbl01.corp.ad.sbi"
+  - ip: "10.176.54.30"
+    hostnames:
+      - "corpdcmdgbl02.corp.ad.sbi"
+  - ip: "10.176.54.31"
+    hostnames:
+      - "corpdcmdgbl03.corp.ad.sbi"
+  - ip: "10.176.54.32"
+    hostnames:
+      - "corpdcmdgbl04.corp.ad.sbi"
+  - ip: "10.189.37.135"
+    hostnames:
+      - "corpdcmdrbl01.corp.ad.sbi"
+  - ip: "10.189.37.136"
+    hostnames:
+      - "corpdcmdrbl02.corp.ad.sbi"
+  - ip: "10.189.37.137"
+    hostnames:
+      - "corpdcmdrbl03.corp.ad.sbi"
+  - ip: "10.189.37.138"
+    hostnames:
+      - "corpdcmdrbl04.corp.ad.sbi"
+   
+    --------------------------------------
 
-    spec:
-      serviceAccountName: user-sa
-      terminationGracePeriodSeconds: 30
-      enableServiceLinks: false
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 2000
-
-      hostAliases:
-        null
-
-      topologySpreadConstraints:
-        - labelSelector:
-            matchLabels:
-              app: user-backend
-          maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-
-      volumes:
-        - name: truststore-volume
-          secret:
-            items:
-            - key: ad-truststore.jks
-              path: ad-truststore.jks
-            secretName: ldap-truststore-file
-
-      containers:
-        - name: user-container
-          image: "h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06"
-          imagePullPolicy:
-
-          volumeMounts:
-            - mountPath: /etc/fincore/secrets
-              name: truststore-volume
-              readOnly: true
-
-          envFrom:
-            - configMapRef:
-                name: oracle-config
-            - secretRef:
-                name: oracle-secret
-            - configMapRef:
-                name: kafka-config
-            - configMapRef:
-                name: redis-config
-            - configMapRef:
-                name: ldap-config
-
-          env:
-            null
-            - name: LDAP_TRUSTSTORE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: truststore-password
-                  name: ldap-creds
-
-          ports:
-            - containerPort: 8087
-
-          resources:
-            limits:
-              cpu: 500m
-              memory: 1Gi
-            requests:
-              cpu: 250m
-              memory: 512Mi
-
-          startupProbe:
-            tcpSocket:
-              port: 8087
-            failureThreshold: 60
-            periodSeconds: 10
-
-          livenessProbe:
-            tcpSocket:
-              port: 8087
-            initialDelaySeconds: 90
-            periodSeconds: 15
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: 8087
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                  - "/bin/sh"
-                  - "-c"
-                  - "sleep 10"
-Error: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 81: mapping values are not allowed in this context
+    for all env i m aving separate values.yaml
