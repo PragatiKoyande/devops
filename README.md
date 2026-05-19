@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -27,34 +28,66 @@ spec:
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
+{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
 
       securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
 
       containers:
         - name: {{ .Values.container.name }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
+{{- if .Values.envFrom }}
           envFrom:
-{{ toYaml .Values.envFrom | indent 12 }}
+{{ toYaml .Values.envFrom | nindent 12 }}
+{{- end }}
 
+{{- if or .Values.env .Values.envCommon }}
           env:
-{{ toYaml .Values.env | indent 12 }}
+{{- range .Values.env }}
+            - name: {{ .name }}
+{{- if hasKey . "value" }}
+              value: {{ .value | quote }}
+{{- end }}
+{{- if hasKey . "valueFrom" }}
+              valueFrom:
+{{ toYaml .valueFrom | nindent 16 }}
+{{- end }}
+{{- end }}
+
+{{- range .Values.envCommon }}
+            - name: {{ .name }}
+{{- if hasKey . "value" }}
+              value: {{ .value | quote }}
+{{- end }}
+{{- if hasKey . "valueFrom" }}
+              valueFrom:
+{{ toYaml .valueFrom | nindent 16 }}
+{{- end }}
+{{- end }}
+{{- end }}
 
           ports:
             - containerPort: {{ .Values.probes.port }}
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.resources | nindent 12 }}
 
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.startup.port }}
             failureThreshold: {{ .Values.probes.startup.failureThreshold }}
             periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+{{- if .Values.probes.startup.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+{{- end }}
+{{- if .Values.probes.startup.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+{{- end }}
 
           livenessProbe:
             tcpSocket:
