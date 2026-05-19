@@ -1,5 +1,3 @@
-transactions-service
-
 apiVersion: apps/v1
 kind: Deployment
 
@@ -82,14 +80,14 @@ spec:
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.startup.port }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 {{- if .Values.probes.startup.initialDelaySeconds }}
             initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
 {{- end }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 {{- if .Values.probes.startup.timeoutSeconds }}
             timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
 {{- end }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
 
           livenessProbe:
             tcpSocket:
@@ -110,7 +108,10 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "sleep 10"]
+                command:
+                  - "/bin/sh"
+                  - "-c"
+                  - "sleep 10"
 
           securityContext:
             allowPrivilegeEscalation: false
