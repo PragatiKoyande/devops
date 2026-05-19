@@ -1,7 +1,6 @@
-journal-service
-
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
@@ -29,32 +28,42 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
+{{- if .Values.deployment.securityContext }}
       securityContext:
-{{ toYaml .Values.deployment.securityContext | indent 8 }}
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+{{- end }}
 
+{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
 
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
+{{- if .Values.envFrom }}
           envFrom:
-{{ toYaml .Values.envFrom | indent 12 }}
+{{ toYaml .Values.envFrom | nindent 12 }}
+{{- end }}
 
+{{- if .Values.env }}
           env:
-{{ toYaml .Values.env | indent 12 }}
+{{ toYaml .Values.env | nindent 12 }}
+{{- end }}
 
           ports:
             - containerPort: {{ .Values.probes.port }}
 
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.resources | nindent 12 }}
 
+{{- if .Values.containerSecurityContext }}
           securityContext:
-{{ toYaml .Values.containerSecurityContext | indent 12 }}
+{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+{{- end }}
 
           livenessProbe:
             tcpSocket:
@@ -80,5 +89,7 @@ spec:
             timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.startup.failureThreshold }}
 
+{{- if .Values.lifecycle }}
           lifecycle:
-{{ toYaml .Values.lifecycle | indent 12 }}
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
