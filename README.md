@@ -1,182 +1,125 @@
-1) umbrella-chart/values.yaml
+apiVersion: apps/v1
+kind: Deployment
 
-dashboard:
-  enabled: true
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-journal:
-  enabled: true
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
 
-transactions:
-  enabled: true
+  strategy:
+    type: {{ .Values.deployment.strategy.type }}
+    {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+    {{- end }}
 
-user-service:
-  enabled: true
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-process-status:
-  enabled: true
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
 
-enqiry-service:
-  enabled: true
+    spec:
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
-notification:
-  enabled: true
+      {{- if .Values.deployment.securityContext }}
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+      {{- end }}
 
-nwsa-service:
-  enabled: true
+      {{- if and .Values.hostAliases (kindIs "slice" .Values.hostAliases) }}
+      hostAliases:
+{{ toYaml .Values.hostAliases | nindent 8 }}
+      {{- end }}
 
-react-service:
-  enabled: true
+      {{- if .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+      {{- end }}
 
-redis-service:
-  enabled: true
+      {{- if .Values.deployment.volumes }}
+      volumes:
+{{ toYaml .Values.deployment.volumes | nindent 8 }}
+      {{- end }}
 
-report-builder:
-  enabled: true
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          {{- if .Values.image.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+          {{- end }}
 
-report-service:
-  enabled: true
+          {{- if .Values.deployment.volumeMounts }}
+          volumeMounts:
+{{ toYaml .Values.deployment.volumeMounts | nindent 12 }}
+          {{- end }}
 
-template-config:
-  enabled: true
+          {{- if .Values.envFrom }}
+          envFrom:
+{{ toYaml .Values.envFrom | nindent 12 }}
+          {{- end }}
 
-common-master:
-  enabled: true
+          {{- if or .Values.env .Values.envCommon }}
+          env:
+          {{- if and .Values.env (kindIs "slice" .Values.env) }}
+{{ toYaml .Values.env | nindent 12 }}
+          {{- end }}
+          {{- if and .Values.envCommon (kindIs "slice" .Values.envCommon) }}
+{{ toYaml .Values.envCommon | nindent 12 }}
+          {{- end }}
+          {{- end }}
 
-common-request:
-  enabled: true
+          ports:
+            - containerPort: {{ .Values.container.port }}
 
-login:
-  enabled: true
+          {{- if .Values.resources }}
+          resources:
+{{ toYaml .Values.resources | nindent 12 }}
+          {{- end }}
 
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            {{- if .Values.probes.startup.initialDelaySeconds }}
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
+            {{- end }}
+            {{- if .Values.probes.startup.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+            {{- end }}
 
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-2) the output
-D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm template micro-services-at-one-go . --show-only charts/user-service/templates/deployment.yaml --debug 2>&1 | findstr /n "."
-1:level=DEBUG msg="Original chart version" version=""
-2:level=DEBUG msg="Chart path" path=D:\Pragati\HELM-2404\Deployment\umbrella-chart
-3:level=DEBUG msg="number of dependencies in the chart" dependencies=16
-4:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-5:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-6:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-7:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-8:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-9:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-10:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-11:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-12:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-13:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-14:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-15:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-16:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-17:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-18:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-19:level=DEBUG msg="number of dependencies in the chart" dependencies=0
-20:---
-21:# Source: umbrella-chart/charts/user-service/templates/deployment.yaml
-22:apiVersion: apps/v1
-23:kind: Deployment
-25:metadata:
-26:  name: user-deployment
-27:  namespace: backend
-29:spec:
-30:  replicas: 1
-31:  revisionHistoryLimit: 5
-33:  strategy:
-34:    type: RollingUpdate
-35:    rollingUpdate:
-36:      maxUnavailable: 0
-37:      maxSurge: 1
-39:  selector:
-40:    matchLabels:
-41:      app: user-backend
-43:  template:
-44:    metadata:
-45:      labels:
-46:        app: user-backend
-48:    spec:
-49:      serviceAccountName: user-sa
-50:      terminationGracePeriodSeconds: 30
-51:      enableServiceLinks: false
-53:      securityContext:
-54:        runAsNonRoot: true
-55:        runAsUser: 1000
-56:        runAsGroup: 1000
-57:        fsGroup: 2000
-59:      hostAliases:
-60:        null
-62:      topologySpreadConstraints:
-63:        - labelSelector:
-64:            matchLabels:
-65:              app: user-backend
-66:          maxSkew: 1
-67:          topologyKey: kubernetes.io/hostname
-68:          whenUnsatisfiable: ScheduleAnyway
-70:      volumes:
-71:        - name: truststore-volume
-72:          secret:
-73:            items:
-74:            - key: ad-truststore.jks
-75:              path: ad-truststore.jks
-76:            secretName: ldap-truststore-file
-78:      containers:
-79:        - name: user-container
-80:          image: "h06vksharbor.corp.ad.sbi/cbops/user-service:DEV06"
-81:          imagePullPolicy:
-83:          volumeMounts:
-84:            - mountPath: /etc/fincore/secrets
-85:              name: truststore-volume
-86:              readOnly: true
-88:          envFrom:
-89:            - configMapRef:
-90:                name: oracle-config
-91:            - secretRef:
-92:                name: oracle-secret
-93:            - configMapRef:
-94:                name: kafka-config
-95:            - configMapRef:
-96:                name: redis-config
-97:            - configMapRef:
-98:                name: ldap-config
-100:          env:
-101:            null
-102:            - name: LDAP_TRUSTSTORE_PASSWORD
-103:              valueFrom:
-104:                secretKeyRef:
-105:                  key: truststore-password
-106:                  name: ldap-creds
-108:          ports:
-109:            - containerPort: 8087
-111:          resources:
-112:            limits:
-113:              cpu: 500m
-114:              memory: 1Gi
-115:            requests:
-116:              cpu: 250m
-117:              memory: 512Mi
-119:          startupProbe:
-120:            tcpSocket:
-121:              port: 8087
-122:            failureThreshold: 60
-123:            periodSeconds: 10
-125:          livenessProbe:
-126:            tcpSocket:
-127:              port: 8087
-128:            initialDelaySeconds: 90
-129:            periodSeconds: 15
-130:            timeoutSeconds: 5
-131:            failureThreshold: 5
-133:          readinessProbe:
-134:            tcpSocket:
-135:              port: 8087
-136:            initialDelaySeconds: 30
-137:            periodSeconds: 10
-138:            timeoutSeconds: 5
-139:            failureThreshold: 5
-141:          lifecycle:
-142:            preStop:
-143:              exec:
-144:                command:
-145:                  - "/bin/sh"
-146:                  - "-c"
-147:                  - "sleep 10"
-148:Error: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 81: mapping values are not allowed in this context
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+
+          {{- if .Values.lifecycle }}
+          lifecycle:
+{{ toYaml .Values.lifecycle | nindent 12 }}
+          {{- end }}
+
+          {{- if .Values.containerSecurityContext }}
+          securityContext:
+{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+          {{- end }}
