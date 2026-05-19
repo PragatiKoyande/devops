@@ -1,12 +1,3 @@
-
-D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm template micro-services-at-one-go .
-Error: YAML parse error on umbrella-chart/charts/user-service/templates/deployment.yaml: error converting YAML to JSON: yaml: line 81: mapping values are not allowed in this context
-
-Use --debug flag to render out invalid YAML
-
-above is the error and below is the file present
-
-
 apiVersion: apps/v1
 kind: Deployment
 
@@ -20,9 +11,11 @@ spec:
 
   strategy:
     type: {{ .Values.deployment.strategy.type }}
+    {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}
     rollingUpdate:
       maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
       maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+    {{- end }}
 
   selector:
     matchLabels:
@@ -38,66 +31,70 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       enableServiceLinks: {{ .Values.deployment.enableServiceLinks }}
 
+      {{- if .Values.deployment.securityContext }}
       securityContext:
 {{ toYaml .Values.deployment.securityContext | nindent 8 }}
+      {{- end }}
 
-{{- if .Values.hostAliases }}
+      {{- if .Values.hostAliases }}
       hostAliases:
 {{ toYaml .Values.hostAliases | nindent 8 }}
-{{- end }}
+      {{- end }}
 
-{{- if .Values.deployment.topologySpreadConstraints }}
+      {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-{{- end }}
+      {{- end }}
 
-{{- if .Values.deployment.volumes }}
+      {{- if .Values.deployment.volumes }}
       volumes:
 {{ toYaml .Values.deployment.volumes | nindent 8 }}
-{{- end }}
+      {{- end }}
 
       containers:
         - name: {{ .Values.container.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
-{{- if .Values.deployment.volumeMounts }}
+          {{- if .Values.deployment.volumeMounts }}
           volumeMounts:
 {{ toYaml .Values.deployment.volumeMounts | nindent 12 }}
-{{- end }}
+          {{- end }}
 
-{{- if .Values.envFrom }}
+          {{- if .Values.envFrom }}
           envFrom:
 {{ toYaml .Values.envFrom | nindent 12 }}
-{{- end }}
+          {{- end }}
 
-{{- if or .Values.env .Values.envCommon }}
+          {{- if or .Values.env .Values.envCommon }}
           env:
-{{- with .Values.env }}
+            {{- with .Values.env }}
 {{ toYaml . | nindent 12 }}
-{{- end }}
-{{- with .Values.envCommon }}
+            {{- end }}
+            {{- with .Values.envCommon }}
 {{ toYaml . | nindent 12 }}
-{{- end }}
-{{- end }}
+            {{- end }}
+          {{- end }}
 
           ports:
             - containerPort: {{ .Values.container.port }}
 
+          {{- if .Values.resources }}
           resources:
 {{ toYaml .Values.resources | nindent 12 }}
+          {{- end }}
 
           startupProbe:
             tcpSocket:
               port: {{ .Values.probes.port }}
             failureThreshold: {{ .Values.probes.startup.failureThreshold }}
             periodSeconds: {{ .Values.probes.startup.periodSeconds }}
-{{- if .Values.probes.startup.initialDelaySeconds }}
+            {{- if .Values.probes.startup.initialDelaySeconds }}
             initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
-{{- end }}
-{{- if .Values.probes.startup.timeoutSeconds }}
+            {{- end }}
+            {{- if .Values.probes.startup.timeoutSeconds }}
             timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
-{{- end }}
+            {{- end }}
 
           livenessProbe:
             tcpSocket:
@@ -115,12 +112,12 @@ spec:
             timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-{{- if .Values.lifecycle }}
+          {{- if .Values.lifecycle }}
           lifecycle:
 {{ toYaml .Values.lifecycle | nindent 12 }}
-{{- end }}
+          {{- end }}
 
-{{- if .Values.containerSecurityContext }}
+          {{- if .Values.containerSecurityContext }}
           securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 12 }}
-{{- end }}
+          {{- end }}
