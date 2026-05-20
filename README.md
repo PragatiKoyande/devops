@@ -3,7 +3,7 @@ dashboard:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/dashboard-service
     tag: PROD01
-	imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -13,7 +13,7 @@ journal:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/journal-service
     tag: PROD01
-	imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -23,8 +23,7 @@ transactions:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/transactions-service
     tag: PR-01
-	imagePullPolicy: Always
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -34,7 +33,7 @@ user-service:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/user-servic
     tag: PR-05
-	imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -74,8 +73,7 @@ process-status:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/process-status-service
     tag: PR-07
-	imagePullPolicy: Always
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -85,8 +83,7 @@ enqiry-service:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/enquiry-service
     tag: PR-01
-	imagePullPolicy: Always
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -96,8 +93,7 @@ notification:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/notification-service
     tag: PR-01
-	imagePullPolicy: Always
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_KAFKA_CONSUMER_GROUP_ID
       value: "notification-service-group"
@@ -111,7 +107,7 @@ nwsa-service:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
     tag: PR-03
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -155,21 +151,21 @@ react-service:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/react-service
     tag: PR-16
-  imagePullPolicy: Always
+    imagePullPolicy: Always
 
 redis-service:
   enabled: true
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/redis/redis-stack-server
     tag: latest
-  imagePullPolicy: Always
+    imagePullPolicy: Always
 
 report-builder:
   enabled: true
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/report-builder-service
     tag: PR-01
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   hostAliases:
     - ip: "10.190.224.102"
       hostnames:
@@ -203,8 +199,7 @@ report-service:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/report-service
     tag: PR-11
-  imagePullPolicy: Always
-
+    imagePullPolicy: Always
   hostAliases:
     - ip: "10.190.224.102"
       hostnames:
@@ -236,7 +231,7 @@ template-config:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/template-config-service
     tag: PR-06
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -246,7 +241,7 @@ common-master:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/common-master-service
     tag: PR-02
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -256,7 +251,7 @@ common-request:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/common-request-service
     tag: PR-02
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
@@ -266,7 +261,7 @@ login:
   image:
     repository: a2p05vksharbor.corp.ad.sbi/cbops/login-service
     tag: PR-03
-  imagePullPolicy: Always
+    imagePullPolicy: Always
   hostAliases:
     - ip: "10.176.53.145"
       hostnames:
@@ -296,6 +291,3 @@ login:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "prod"
-
-
-      there is an indentation issue in above file please resolve the issue and send me back the entire file
