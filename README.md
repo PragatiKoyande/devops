@@ -1,85 +1,95 @@
+I am providing a Kubernetes YAML file.
+
+IMPORTANT RULES — FOLLOW STRICTLY:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT change image, ports, env, replicas
+   - Do NOT rename uresorces
+   - Do NOT alter existing logic
+
+2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
+
+3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
+   Add things like:
+   - resources requests & limits
+   - liveness/readiness/startup probes (safe defaults)
+   - rolling update strategy
+   - security context
+   - service account
+   - HPA (CPU based)
+   - PodDisruptionBudget
+   - lifecycle preStop hook
+   - topology spread constraints
+   - graceful shutdown settings
+   - any other MUST-HAVE enterprise features
+
+4. Do NOT add Prometheus annotations or monitoring-related configs.
+
+5. Keep YAML structure clean and production-ready.
+
+6. Do not ask for permission before adding missing enterprise features — just add them.
+
+7. After YAML, explain briefly what new things were added and why.
+8. add also comments in yaml file for better understanding 
+
+Here is the YAML:
 
 
-
-Building Service: fincore_help_service
-Tag: PRE-PROD-01
-------------------------------------------------------------
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] Using the MultiThreadedBuilder implementation with a thread count of 12
-[INFO] 
-[INFO] ----------------------< com.fincore:HelpService >-----------------------
-[INFO] Building HelpService 0.0.1-SNAPSHOT
-[INFO]   from pom.xml
-[INFO] --------------------------------[ jar ]---------------------------------
-Downloading from central: https://repo.maven.apache.org/maven2/dev/langchain4j/langchain4j/1.0.0-alpha1/langchain4j-1.0.0-alpha1.jar
-Downloading from central: https://repo.maven.apache.org/maven2/dev/langchain4j/langchain4j-core/1.0.0-alpha1/langchain4j-core-1.0.0-alpha1.jar
-Downloading from central: https://repo.maven.apache.org/maven2/org/jspecify/jspecify/0.3.0/jspecify-0.3.0.jar
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/opennlp/opennlp-tools/1.9.4/opennlp-tools-1.9.4.jar
-Downloading from central: https://repo.maven.apache.org/maven2/dev/langchain4j/langchain4j-ollama/1.0.0-alpha1/langchain4j-ollama-1.0.0-alpha1.jar
-Downloading from central: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.jar
-Downloading from central: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-jackson/2.9.0/converter-jackson-2.9.0.jar
-Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.24/kotlin-stdlib-common-1.9.24.jar
-Downloading from central: https://repo.maven.apache.org/maven2/dev/langchain4j/langchain4j-redis/1.0.0-alpha1/langchain4j-redis-1.0.0-alpha1.jar
-Downloading from central: https://repo.maven.apache.org/maven2/redis/clients/jedis/5.0.2/jedis-5.0.2.jar
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-pool2/2.12.0/commons-pool2-2.12.0.jar
-Downloading from central: https://repo.maven.apache.org/maven2/org/json/json/20231013/json-20231013.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/dev/langchain4j/langchain4j-core/1.0.0-alpha1/langchain4j-core-1.0.0-alpha1.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/org/jspecify/jspecify/0.3.0/jspecify-0.3.0.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/org/apache/opennlp/opennlp-tools/1.9.4/opennlp-tools-1.9.4.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/com/squareup/retrofit2/converter-jackson/2.9.0/converter-jackson-2.9.0.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.24/kotlin-stdlib-common-1.9.24.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/redis/clients/jedis/5.0.2/jedis-5.0.2.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/org/apache/commons/commons-pool2/2.12.0/commons-pool2-2.12.0.jar
-Downloading from snapshot-repo: https://s01.oss.sonatype.org/content/repositories/snapshots/org/json/json/20231013/json-20231013.jar
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  4.842 s (Wall Clock)
-[INFO] Finished at: 2026-06-05T18:45:14+05:30
-[INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal on project HelpService: Could not resolve dependencies for project com.fincore:HelpService:jar:0.0.1-SNAPSHOT
-[ERROR] dependency: dev.langchain4j:langchain4j:jar:1.0.0-alpha1 (compile)
-[ERROR]         Could not transfer artifact dev.langchain4j:langchain4j:jar:1.0.0-alpha1 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                     
-[ERROR] dependency: dev.langchain4j:langchain4j-core:jar:1.0.0-alpha1 (compile)
-[ERROR]         Could not transfer artifact dev.langchain4j:langchain4j-core:jar:1.0.0-alpha1 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                
-[ERROR]         Could not transfer artifact dev.langchain4j:langchain4j-core:jar:1.0.0-alpha1 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                                 
-[ERROR] dependency: org.jspecify:jspecify:jar:0.3.0 (compile)
-[ERROR]         Could not transfer artifact org.jspecify:jspecify:jar:0.3.0 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                                  
-[ERROR]         Could not transfer artifact org.jspecify:jspecify:jar:0.3.0 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                                                   
-[ERROR] dependency: org.apache.opennlp:opennlp-tools:jar:1.9.4 (compile)
-[ERROR]         Could not transfer artifact org.apache.opennlp:opennlp-tools:jar:1.9.4 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                       
-[ERROR]         Could not transfer artifact org.apache.opennlp:opennlp-tools:jar:1.9.4 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                                        
-[ERROR] dependency: dev.langchain4j:langchain4j-ollama:jar:1.0.0-alpha1 (compile)
-[ERROR]         Could not transfer artifact dev.langchain4j:langchain4j-ollama:jar:1.0.0-alpha1 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                              
-[ERROR] dependency: com.squareup.retrofit2:retrofit:jar:2.9.0 (compile)
-[ERROR]         Could not transfer artifact com.squareup.retrofit2:retrofit:jar:2.9.0 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                        
-[ERROR]         Could not transfer artifact com.squareup.retrofit2:retrofit:jar:2.9.0 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                                         
-[ERROR] dependency: com.squareup.retrofit2:converter-jackson:jar:2.9.0 (compile)
-[ERROR]         Could not transfer artifact com.squareup.retrofit2:converter-jackson:jar:2.9.0 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                               
-[ERROR]         Could not transfer artifact com.squareup.retrofit2:converter-jackson:jar:2.9.0 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                                
-[ERROR] dependency: org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.9.24 (compile)
-[ERROR]         Could not transfer artifact org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.9.24 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                             
-[ERROR]         Could not transfer artifact org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.9.24 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                              
-[ERROR] dependency: dev.langchain4j:langchain4j-redis:jar:1.0.0-alpha1 (compile)
-[ERROR]         Could not transfer artifact dev.langchain4j:langchain4j-redis:jar:1.0.0-alpha1 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                               
-[ERROR] dependency: redis.clients:jedis:jar:5.0.2 (compile)
-[ERROR]         Could not transfer artifact redis.clients:jedis:jar:5.0.2 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                                    
-[ERROR]         Could not transfer artifact redis.clients:jedis:jar:5.0.2 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)
-[ERROR] dependency: org.apache.commons:commons-pool2:jar:2.12.0 (compile)
-[ERROR]         Could not transfer artifact org.apache.commons:commons-pool2:jar:2.12.0 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                      
-[ERROR]         Could not transfer artifact org.apache.commons:commons-pool2:jar:2.12.0 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)                                                                                                                                                                                                                       
-[ERROR] dependency: org.json:json:jar:20231013 (compile)
-[ERROR]         Could not transfer artifact org.json:json:jar:20231013 from/to central (https://repo.maven.apache.org/maven2): PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target                                                                                                                                                                                       
-[ERROR]         Could not transfer artifact org.json:json:jar:20231013 from/to snapshot-repo (https://s01.oss.sonatype.org/content/repositories/snapshots): status code: 407, reason phrase: Proxy Authentication Required (407)
-[ERROR] 
-[ERROR] -> [Help 1]
-[ERROR] 
-[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
-[ERROR] Re-run Maven using the -X switch to enable full debug logging.
-[ERROR] 
-[ERROR] For more information about the errors and possible solutions, please read the following articles:
-[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException
-[ERROR] Command failed: mvn -T 1C clean install -U -DskipTests
-============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ascii-generation-deployment
+  namespace: be-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ascii-generation-backend
+  template:
+    metadata:
+      labels:
+        app: ascii-generation-backend
+    spec:
+      containers:
+      - name: ascii-generation-container
+        image: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service:DEV01
+        env:
+          - name: SPRING_DATA_REDIS_HOST
+            value: "redis-service"        
+          - name: SPRING_DATA_REDIS_PORT
+            value: "6379"       
+          - name: SPRING_DATA_REDIS_CLIENT_TYPE
+            value: "lettuce" 
+          - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+            value: "kafka-0.kafka.be-test.svc.cluster.local:9092"
+          - name: HADOOP_FS_URI
+            value: "hdfs://10.177.103.199:8022"
+          - name: HADOOP_FS_USER
+            value: "root"
+          - name: APP_INPUT_BASE_PATH
+            value: "/reports"
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1"        
+          - name: SPRING_DATASOURCE_USERNAME
+            value: "fincore"
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: "Password#1234"            
+        ports:
+        - containerPort: 8084
+        imagePullPolicy: Always
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: ascii-generation-service
+  namespace: be-test
+spec:
+  selector:
+    app: ascii-generation-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8084
+  type: ClusterIP
