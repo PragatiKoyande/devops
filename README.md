@@ -1,27 +1,47 @@
-# =========================================================
-# SERVICE ACCOUNT
-# Dedicated ServiceAccount for workload identity and RBAC
-# =========================================================
+I am getting indentation issue kindly reso;ve the issue and send me back entire file as is dont alter any other values:
+
+
+# =====================================================
+# Service Account
+# Dedicated identity for secure pod execution
+# =====================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: voucher-enquiry-sa
-  namespace: be-test
+  name: enquiry-service-sa
+  namespace: backend
+automountServiceAccountToken: false
 
 ---
-# =========================================================
-# DEPLOYMENT
-# =========================================================
+# =====================================================
+# Pod Disruption Budget
+# Ensures minimum pod availability during maintenance
+# =====================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: enquiry-service-pdb
+  namespace: backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: enquiry-service-backend
+
+---
+# =====================================================
+# Deployment
+# Enterprise-grade production deployment configuration
+# =====================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: voucher-enquiry-deployment
-  namespace: be-test
-
+  name: enquiry-service-deployment
+  namespace: backend
 spec:
   replicas: 1
+  revisionHistoryLimit: 5
 
-  # Rolling update strategy for zero/minimal downtime deployments
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -30,71 +50,43 @@ spec:
 
   selector:
     matchLabels:
-      app: voucher-enquiry-backend
+      app: enquiry-service-backend
 
   template:
     metadata:
       labels:
-        app: voucher-enquiry-backend
-
-    spec:
-
-      # Dedicated Service Account
-      serviceAccountName: voucher-enquiry-sa
-
-      # Allows application to shutdown gracefully
+        app: enquiry-service-backend
+      serviceAccountName: enquiry-service-sa
       terminationGracePeriodSeconds: 60
 
-      # Pod Security Context
       securityContext:
         runAsNonRoot: true
-        fsGroup: 2000
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
 
-      # Spread pods across nodes when replicas increase
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: voucher-enquiry-backend
+              app: enquiry-service-backend
 
       containers:
-      - name: voucher-enquiry-container
-        image: h06vksharbor.corp.ad.sbi/cbops/voucher-enquiry-service:DEV-01
-
-        env:
-          - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"
-          - name: SPRING_DATA_REDIS_PORT
-            value: "6379"
-          - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"
-          - name: SPRING_PROFILES_ACTIVE
-            value: "dev"
-          - name: SPRING_DATASOURCE_URL
-            value: "jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1"
-          - name: SPRING_DATASOURCE_USERNAME
-            value: "fincore"
-          - name: SPRING_DATASOURCE_PASSWORD
-            value: "Password#1234"
+      - name: enquiry-service-container
+        image: h06vksharbor.corp.ad.sbi/cbops/enquiry-service:DEV-01
+        imagePullPolicy: Always
+		
+        envFrom:
+          - secretRef:
+              name: oracle-secret
 
         ports:
-        - containerPort: 9025
-
-        imagePullPolicy: Always
-
-        # Container Security Context
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-              - ALL
-
-        # Resource Requests and Limits
+        - containerPort: 4001
+		
         resources:
           requests:
             cpu: "250m"
@@ -103,7 +95,37 @@ spec:
             cpu: "1000m"
             memory: "1Gi"
 
-        # Graceful termination before pod shutdown
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+
+        livenessProbe:
+          tcpSocket:
+            port: 4001
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 5
+
+        readinessProbe:
+          tcpSocket:
+            port: 4001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        startupProbe:
+          tcpSocket:
+            port: 4001
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+
         lifecycle:
           preStop:
             exec:
@@ -112,69 +134,43 @@ spec:
                 - -c
                 - sleep 20
 
-        # Startup Probe
-        startupProbe:
-          tcpSocket:
-            port: 9025
-          periodSeconds: 10
-          failureThreshold: 30
-
-        # Readiness Probe
-        readinessProbe:
-          tcpSocket:
-            port: 9025
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-
-        # Liveness Probe
-        livenessProbe:
-          tcpSocket:
-            port: 9025
-          initialDelaySeconds: 60
-          periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 3
-
 ---
-# =========================================================
-# SERVICE
-# =========================================================
+# =====================================================
+# Service
+# Internal ClusterIP service exposure
+# =====================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: voucher-enquiry-service
-  namespace: be-test
-
+  name: enquiry-service
+  namespace: backend
 spec:
   selector:
-    app: voucher-enquiry-backend
+    app: enquiry-service-backend
 
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 9025
+      targetPort: 4001
 
   type: ClusterIP
 
 ---
-# =========================================================
-# HORIZONTAL POD AUTOSCALER
-# CPU Based Autoscaling
-# =========================================================
+# =====================================================
+# Horizontal Pod Autoscaler
+# CPU based autoscaling configuration
+# =====================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: voucher-enquiry-hpa
-  namespace: be-test
-
+  name: enquiry-service-hpa
+  namespace: backend
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: voucher-enquiry-deployment
+    name: enquiry-service-deployment
 
   minReplicas: 1
   maxReplicas: 5
@@ -190,23 +186,14 @@ spec:
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 60
+
     scaleDown:
       stabilizationWindowSeconds: 300
-
----
-# =========================================================
-# POD DISRUPTION BUDGET
-# Prevents voluntary disruptions during maintenance
-# =========================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: voucher-enquiry-pdb
-  namespace: be-test
-
-spec:
-  minAvailable: 1
-
-  selector:
-    matchLabels:
-      app: voucher-enquiry-backend
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60
