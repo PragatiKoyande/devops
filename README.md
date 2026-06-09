@@ -1,198 +1,80 @@
-# =====================================================
-# Service Account
-# Dedicated identity for secure pod execution
-# =====================================================
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: enquiry-service-sa
-  namespace: backend
-automountServiceAccountToken: false
 
----
-# =====================================================
-# Pod Disruption Budget
-# Ensures minimum pod availability during maintenance
-# =====================================================
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: enquiry-service-pdb
-  namespace: backend
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: enquiry-service-backend
+2026-06-09 10:07:53.051 ERROR [boundedElastic-1] c.f.g.e.GlobalExceptionHandler: System Error
+org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)
+        Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException:
+Error has been observed at the following site(s):
+        *__checkpoint ⇢ Handler com.fincore.gateway.Controller.AuthController#login(ServerHttpRequest, ServerHttpResponse, UserDto) [DispatcherHandler]
+Original Stack Trace:
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1797)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)
+                at org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)
+                at reactor.core.publisher.MonoSupplier.call(MonoSupplier.java:67)
+                at reactor.core.publisher.FluxUsingWhen.subscribe(FluxUsingWhen.java:80)
+                at reactor.core.publisher.Mono.subscribe(Mono.java:4576)
+                at reactor.core.publisher.MonoIgnoreThen$ThenIgnoreMain.subscribeNext(MonoIgnoreThen.java:265)
+                at reactor.core.publisher.MonoIgnoreThen.subscribe(MonoIgnoreThen.java:51)
+                at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
+                at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:165)
+                at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:252)
+                at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+                at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+                at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+                at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+                at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+                at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+                at java.base/java.lang.Thread.run(Thread.java:1570)
+Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
+        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:354)
+        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:112)
+        at java.base/java.util.Optional.orElseGet(Optional.java:364)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:112)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1795)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)
+        at org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)
+        at reactor.core.publisher.MonoSupplier.call(MonoSupplier.java:67)
+        at reactor.core.publisher.FluxUsingWhen.subscribe(FluxUsingWhen.java:80)
+        at reactor.core.publisher.Mono.subscribe(Mono.java:4576)
+        at reactor.core.publisher.MonoIgnoreThen$ThenIgnoreMain.subscribeNext(MonoIgnoreThen.java:265)
+        at reactor.core.publisher.MonoIgnoreThen.subscribe(MonoIgnoreThen.java:51)
+        at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
+        at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:165)
+        at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:252)
+        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base/java.lang.Thread.run(Thread.java:1570)
+Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.uat-cbops1.svc.cluster.local/10.98.173.199:6379
+        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$2.run(AbstractEpollChannel.java:615)
+        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
+        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:156)
+        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)
+        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)
+        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)
+        at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:408)
+        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        ... 1 common frames omitted
 
----
-# =====================================================
-# Deployment
-# Enterprise-grade production deployment configuration
-# =====================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: enquiry-service-deployment
-  namespace: backend
-spec:
-  replicas: 1
-  revisionHistoryLimit: 5
 
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-  selector:
-    matchLabels:
-      app: enquiry-service-backend
-
-  template:
-    metadata:
-      labels:
-        app: enquiry-service-backend
-
-    spec:
-      serviceAccountName: enquiry-service-sa
-      terminationGracePeriodSeconds: 60
-
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
-          labelSelector:
-            matchLabels:
-              app: enquiry-service-backend
-
-      containers:
-        - name: enquiry-service-container
-          image: h06vksharbor.corp.ad.sbi/cbops/enquiry-service:DEV-01
-          imagePullPolicy: Always
-
-          envFrom:
-            - secretRef:
-                name: oracle-secret
-
-          ports:
-            - containerPort: 4001
-
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "1000m"
-              memory: "1Gi"
-
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
-            capabilities:
-              drop:
-                - ALL
-
-          livenessProbe:
-            tcpSocket:
-              port: 4001
-            initialDelaySeconds: 60
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 5
-
-          readinessProbe:
-            tcpSocket:
-              port: 4001
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-
-          startupProbe:
-            tcpSocket:
-              port: 4001
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 30
-
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - sleep 20
-
----
-# =====================================================
-# Service
-# Internal ClusterIP service exposure
-# =====================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: enquiry-service
-  namespace: backend
-spec:
-  selector:
-    app: enquiry-service-backend
-
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 4001
-
-  type: ClusterIP
-
----
-# =====================================================
-# Horizontal Pod Autoscaler
-# CPU based autoscaling configuration
-# =====================================================
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: enquiry-service-hpa
-  namespace: backend
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: enquiry-service-deployment
-
-  minReplicas: 1
-  maxReplicas: 5
-
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-      policies:
-        - type: Percent
-          value: 100
-          periodSeconds: 60
-
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-        - type: Percent
-          value: 50
-          periodSeconds: 60
+explain me the issue
