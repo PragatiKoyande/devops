@@ -1,80 +1,41 @@
-
-2026-06-09 10:07:53.051 ERROR [boundedElastic-1] c.f.g.e.GlobalExceptionHandler: System Error
-org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)
-        Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException:
-Error has been observed at the following site(s):
-        *__checkpoint ⇢ Handler com.fincore.gateway.Controller.AuthController#login(ServerHttpRequest, ServerHttpResponse, UserDto) [DispatcherHandler]
-Original Stack Trace:
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1797)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)
-                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)
-                at org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)
-                at reactor.core.publisher.MonoSupplier.call(MonoSupplier.java:67)
-                at reactor.core.publisher.FluxUsingWhen.subscribe(FluxUsingWhen.java:80)
-                at reactor.core.publisher.Mono.subscribe(Mono.java:4576)
-                at reactor.core.publisher.MonoIgnoreThen$ThenIgnoreMain.subscribeNext(MonoIgnoreThen.java:265)
-                at reactor.core.publisher.MonoIgnoreThen.subscribe(MonoIgnoreThen.java:51)
-                at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
-                at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:165)
-                at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:252)
-                at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
-                at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-                at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
-                at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
-                at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-                at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-                at java.base/java.lang.Thread.run(Thread.java:1570)
-Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
-        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:354)
-        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:112)
-        at java.base/java.util.Optional.orElseGet(Optional.java:364)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:112)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1795)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)
-        at org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)
-        at reactor.core.publisher.MonoSupplier.call(MonoSupplier.java:67)
-        at reactor.core.publisher.FluxUsingWhen.subscribe(FluxUsingWhen.java:80)
-        at reactor.core.publisher.Mono.subscribe(Mono.java:4576)
-        at reactor.core.publisher.MonoIgnoreThen$ThenIgnoreMain.subscribeNext(MonoIgnoreThen.java:265)
-        at reactor.core.publisher.MonoIgnoreThen.subscribe(MonoIgnoreThen.java:51)
-        at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
-        at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:165)
-        at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:252)
-        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
-        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
-        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-        at java.base/java.lang.Thread.run(Thread.java:1570)
-Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.uat-cbops1.svc.cluster.local/10.98.173.199:6379
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$2.run(AbstractEpollChannel.java:615)
-        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
-        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:156)
-        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)
-        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)
-        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)
-        at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:408)
-        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
-        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-        ... 1 common frames omitted
-
-
-explain me the issue
+[root@fcuatgateway Network]# kc get svc redis-service -n uat-cbops1
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+redis-service   ClusterIP   10.98.173.199   <none>        6379/TCP   157d
+[root@fcuatgateway Network]# kc get endpoints redis-service -n uat-cbops1
+NAME            ENDPOINTS          AGE
+redis-service   192.168.3.6:6379   157d
+[root@fcuatgateway Network]# kgp -n uat-cbops1
+NAME                                          READY   STATUS             RESTARTS           AGE
+airflow-api-server-bdff76796-tvbb8            1/1     Running            0                  24d
+airflow-dag-processor-6fc5d5968-dftcx         2/2     Running            1204 (106s ago)    24d
+airflow-redis-0                               1/1     Running            0                  24d
+airflow-scheduler-789759f886-f2kl4            1/2     Running            1313 (6m36s ago)   24d
+airflow-statsd-848cff7966-nfztl               1/1     Running            0                  24d
+airflow-triggerer-0                           2/2     Running            1209 (4m23s ago)   24d
+airflow-worker-0                              2/2     Running            1139               24d
+airflow-worker-1                              2/2     Running            1136 (42s ago)     24d
+airflow-worker-2                              2/2     Running            1145 (42s ago)     24d
+akhq-64c59669df-9gnn4                         1/1     Running            0                  24d
+common-master-deployment-5c5dfb47fb-cq2k2     1/1     Running            0                  7d1h
+common-request-deployment-54549b9c9c-jxpr9    1/1     Running            0                  24d
+dashboard-deployment-84c599f54-jtn8h          1/1     Running            0                  7d21h
+debezium-server-5cf9f6bb84-4tqzm              0/1     CrashLoopBackOff   830 (3m30s ago)    7d20h
+finny-deployment-7755b5dcbb-g7kws             1/1     Running            0                  14d
+grafana-5b4f7d6789-ndjwq                      1/1     Running            0                  24d
+help-service-deployment-5cf79bccb4-7r5d8      1/1     Running            0                  4d3h
+journal-deployment-644dd4cc85-gdxns           1/1     Running            0                  24d
+kafka-0                                       1/1     Running            0                  24d
+login-deployment-655df65bfd-f4mzb             1/1     Running            0                  20m
+notification-deployment-58c7d9fd4f-l6lxz      1/1     Running            0                  24d
+postgres-db-5b694b94f6-9wx6r                  1/1     Running            0                  24d
+process-status-deployment-67c4ccf5bd-gtphz    1/1     Running            0                  24d
+react-app-deployment-6c77b7bb67-kbdqx         1/1     Running            0                  5d23h
+redis-deployment-7948b65c64-hgbhr             1/1     Running            0                  24d
+redis-vector-deployment-984d5cddd-mckcf       1/1     Running            0                  14d
+report-builder-deployment-85d748f48b-95nt7    1/1     Running            0                  24d
+report-deployment-59678b7bdc-wsm9g            1/1     Running            0                  24d
+spark-operator-controller-84567b7b4-g8m2p     1/1     Running            8 (16d ago)        24d
+spark-operator-webhook-c9d8d7676-t2v48        1/1     Running            7 (16d ago)        24d
+template-config-deployment-5d69bff69f-9jkv2   1/1     Running            0                  24d
+transactions-deployment-778695c7cb-l4kp5      1/1     Running            0                  14d
+user-deployment-596fc775dc-b9z7t              1/1     Running            0                  7d
