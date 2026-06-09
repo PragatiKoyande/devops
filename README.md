@@ -1,6 +1,3 @@
-I am getting indentation issue kindly reso;ve the issue and send me back entire file as is dont alter any other values:
-
-
 # =====================================================
 # Service Account
 # Dedicated identity for secure pod execution
@@ -56,6 +53,8 @@ spec:
     metadata:
       labels:
         app: enquiry-service-backend
+
+    spec:
       serviceAccountName: enquiry-service-sa
       terminationGracePeriodSeconds: 60
 
@@ -76,63 +75,63 @@ spec:
               app: enquiry-service-backend
 
       containers:
-      - name: enquiry-service-container
-        image: h06vksharbor.corp.ad.sbi/cbops/enquiry-service:DEV-01
-        imagePullPolicy: Always
-		
-        envFrom:
-          - secretRef:
-              name: oracle-secret
+        - name: enquiry-service-container
+          image: h06vksharbor.corp.ad.sbi/cbops/enquiry-service:DEV-01
+          imagePullPolicy: Always
 
-        ports:
-        - containerPort: 4001
-		
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "1000m"
-            memory: "1Gi"
+          envFrom:
+            - secretRef:
+                name: oracle-secret
 
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-              - ALL
+          ports:
+            - containerPort: 4001
 
-        livenessProbe:
-          tcpSocket:
-            port: 4001
-          initialDelaySeconds: 60
-          periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 5
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
 
-        readinessProbe:
-          tcpSocket:
-            port: 4001
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
 
-        startupProbe:
-          tcpSocket:
-            port: 4001
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 30
+          livenessProbe:
+            tcpSocket:
+              port: 4001
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
 
-        lifecycle:
-          preStop:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - sleep 20
+          readinessProbe:
+            tcpSocket:
+              port: 4001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          startupProbe:
+            tcpSocket:
+              port: 4001
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - sleep 20
 
 ---
 # =====================================================
