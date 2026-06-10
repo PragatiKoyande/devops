@@ -1,41 +1,17 @@
-I am providing a Kubernetes YAML file.
+# ============================================================
+# SERVICE ACCOUNT
+# Dedicated service account for workload identity and RBAC
+# ============================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: help-service-sa
+  namespace: be-test
 
-IMPORTANT RULES — FOLLOW STRICTLY:
-
-1. DO NOT change any existing values.
-   - Do NOT modify names
-   - Do NOT change image, ports, env, replicas
-   - Do NOT rename uresorces
-   - Do NOT alter existing logic
-
-2. ONLY add enterprise-grade / production-grade Kubernetes features on top of the existing YAML.
-
-3. Add all REQUIRED production and enterprise best practices EXCEPT Prometheus or monitoring annotations.
-   Add things like:
-   - resources requests & limits
-   - liveness/readiness/startup probes (safe defaults)
-   - rolling update strategy
-   - security context
-   - service account
-   - HPA (CPU based)
-   - PodDisruptionBudget
-   - lifecycle preStop hook
-   - topology spread constraints
-   - graceful shutdown settings
-   - any other MUST-HAVE enterprise features
-
-4. Do NOT add Prometheus annotations or monitoring-related configs.
-
-5. Keep YAML structure clean and production-ready.
-
-6. Do not ask for permission before adding missing enterprise features — just add them.
-
-7. After YAML, explain briefly what new things were added and why.
-8. add also comments in yaml file for better understanding 
-
-Here is the YAML:
-
-
+---
+# ============================================================
+# DEPLOYMENT
+# ============================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,28 +19,121 @@ metadata:
   namespace: be-test
 spec:
   replicas: 1
+
+  # Rolling update strategy for zero/low downtime deployments
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
   selector:
     matchLabels:
       app: help-service-backend
+
   template:
     metadata:
       labels:
         app: help-service-backend
+
     spec:
+
+      # Dedicated service account
+      serviceAccountName: help-service-sa
+
+      # Graceful shutdown period
+      terminationGracePeriodSeconds: 30
+
+      # Spread pods across nodes whenever replicas increase
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: help-service-backend
+
+      # Pod-level security settings
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 2000
+
       containers:
       - name: help-service-container
         image: h06vksharbor.corp.ad.sbi/cbops/help-service:DEV01
+
         env:
           - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"        
+            value: "redis-service"
           - name: SPRING_DATA_REDIS_PORT
-            value: "6379"       
+            value: "6379"
           - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"                   
+            value: "lettuce"
+
         ports:
         - containerPort: 9099
+
         imagePullPolicy: Always
---- 
+
+        # Container security hardening
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+
+        # Enterprise resource governance
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+
+        # Graceful shutdown hook
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - sleep 15
+
+        # Startup probe
+        # Prevents liveness checks until application is fully started
+        startupProbe:
+          tcpSocket:
+            port: 9099
+          failureThreshold: 30
+          periodSeconds: 10
+
+        # Readiness probe
+        # Pod receives traffic only when ready
+        readinessProbe:
+          tcpSocket:
+            port: 9099
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+          successThreshold: 1
+
+        # Liveness probe
+        # Restarts unhealthy containers
+        livenessProbe:
+          tcpSocket:
+            port: 9099
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 2
+          failureThreshold: 3
+
+---
+# ============================================================
+# SERVICE
+# ============================================================
 apiVersion: v1
 kind: Service
 metadata:
@@ -79,4 +148,52 @@ spec:
       port: 80
       targetPort: 9099
   type: ClusterIP
- 
+
+---
+# ============================================================
+# HORIZONTAL POD AUTOSCALER
+# Auto-scales pods based on CPU utilization
+# ============================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: help-service-hpa
+  namespace: be-test
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: help-service-deployment
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+
+---
+# ============================================================
+# POD DISRUPTION BUDGET
+# Prevents voluntary disruptions from taking down all pods
+# ============================================================
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: help-service-pdb
+  namespace: be-test
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: help-service-backend
