@@ -37,7 +37,6 @@ spec:
         app: help-service-backend
 
     spec:
-
       # Dedicated service account
       serviceAccountName: help-service-sa
 
@@ -46,12 +45,12 @@ spec:
 
       # Spread pods across nodes whenever replicas increase
       topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: ScheduleAnyway
-        labelSelector:
-          matchLabels:
-            app: help-service-backend
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: help-service-backend
 
       # Pod-level security settings
       securityContext:
@@ -63,76 +62,73 @@ spec:
           type: RuntimeDefault
 
       containers:
-      - name: help-service-container
-        image: h06vksharbor.corp.ad.sbi/cbops/helpservice:DEV-01
-			
-        envFrom:
-          - configMapRef:
-              name: oracle-config
-          - secretRef:
-              name: oracle-secret
-          - configMapRef:
-              name: redis-config
+        - name: help-service-container
+          image: h06vksharbor.corp.ad.sbi/cbops/helpservice:DEV-01
 
-        ports:
-        - containerPort: 9099
+          envFrom:
+            - configMapRef:
+                name: oracle-config
+            - secretRef:
+                name: oracle-secret
+            - configMapRef:
+                name: redis-config
 
-        imagePullPolicy: Always
+          ports:
+            - containerPort: 9099
 
-        # Container security hardening
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-              - ALL
+          imagePullPolicy: Always
 
-        # Enterprise resource governance
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "512Mi"
-          limits:
-            cpu: "1000m"
-            memory: "1024Mi"
+          # Container security hardening
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
 
-        # Graceful shutdown hook
-        lifecycle:
-          preStop:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - sleep 15
+          # Enterprise resource governance
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
 
-        # Startup probe
-        # Prevents liveness checks until application is fully started
-        startupProbe:
-          tcpSocket:
-            port: 9099
-          failureThreshold: 30
-          periodSeconds: 10
+          # Graceful shutdown hook
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - sleep 15
 
-        # Readiness probe
-        # Pod receives traffic only when ready
-        readinessProbe:
-          tcpSocket:
-            port: 9099
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 2
-          failureThreshold: 3
-          successThreshold: 1
+          # Startup probe
+          startupProbe:
+            tcpSocket:
+              port: 9099
+            failureThreshold: 30
+            periodSeconds: 10
 
-        # Liveness probe
-        # Restarts unhealthy containers
-        livenessProbe:
-          tcpSocket:
-            port: 9099
-          initialDelaySeconds: 60
-          periodSeconds: 20
-          timeoutSeconds: 2
-          failureThreshold: 3
+          # Readiness probe
+          readinessProbe:
+            tcpSocket:
+              port: 9099
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1
+
+          # Liveness probe
+          livenessProbe:
+            tcpSocket:
+              port: 9099
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
 
 ---
 # ============================================================
@@ -173,12 +169,12 @@ spec:
   maxReplicas: 5
 
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 
   behavior:
     scaleUp:
