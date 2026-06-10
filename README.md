@@ -1,23 +1,78 @@
-# ==========================================================
+I am providing a Kubernetes YAML file for one microservice.
+
+STRICT RULES:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
+
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
+
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+10. use the namespace: backend   
+11. I am having 4 different environments and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
+  tag: DEV-01
+  imagePullPolicy: Always
+  
+------------------------------------------------------------------
+Here is the YAML:
+
+# =========================================================
 # SERVICE ACCOUNT
-# Dedicated service account for workload isolation
-# ==========================================================
+# Dedicated service account for workload identity and RBAC
+# =========================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: nwsa-variance-sa
-  namespace: be-test
+  name: ascii-generation-sa
+  namespace: backend
 
 ---
-# ==========================================================
+# =========================================================
 # DEPLOYMENT
-# Enterprise-grade production deployment
-# ==========================================================
+# =========================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nwsa-variance-deployment
-  namespace: be-test
+  name: ascii-generation-deployment
+  namespace: backend
+
 spec:
   replicas: 1
 
@@ -30,73 +85,67 @@ spec:
 
   selector:
     matchLabels:
-      app: nwsa-variance-backend
+      app: ascii-generation-backend
 
   template:
     metadata:
       labels:
-        app: nwsa-variance-backend
+        app: ascii-generation-backend
 
     spec:
-      # Dedicated ServiceAccount
-      serviceAccountName: nwsa-variance-sa
 
       # Graceful shutdown period
       terminationGracePeriodSeconds: 60
 
-      # Spread pods across nodes when replicas increase
-      topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: ScheduleAnyway
-        labelSelector:
-          matchLabels:
-            app: nwsa-variance-backend
+      # Dedicated Service Account
+      serviceAccountName: ascii-generation-sa
 
-      # Pod-level security context
+      # Pod level security context
       securityContext:
         runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 2000
-        seccompProfile:
-          type: RuntimeDefault
+
+      # Spread pods across nodes when replicas increase
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ascii-generation-backend
 
       containers:
-      - name: nwsa-variance-container
-        image: h06vksharbor.corp.ad.sbi/cbops/nwsa-variance-service:DEV01
+      - name: ascii-generation-container
+        image: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service:DEV-01
 
-        env:
-          - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"
-          - name: SPRING_DATA_REDIS_PORT
-            value: "6379"
-          - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"
-          - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-            value: "kafka-0.kafka.be-test.svc.cluster.local:9092"
-          - name: HADOOP_FS_URI
-            value: "hdfs://10.177.103.199:8022"
-          - name: HADOOP_FS_USER
-            value: "root"
-          - name: NWSA_GENERATED_REPORT_ROOT
-            value: "/reports"
-          - name: SPRING_DATASOURCE_URL
-            value: "jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1"
-          - name: SPRING_DATASOURCE_USERNAME
-            value: "fincore"
-          - name: SPRING_DATASOURCE_PASSWORD
-            value: "Password#1234"
-          - name: NWSA_REPORT_ROOT
-            value: "/reports"
+        envFrom:
+          - configMapRef:
+              name: kafka-config
+          - configMapRef:
+              name: redis-config
+          - configMapRef:
+              name: oracle-config
+          - secretRef:
+              name: oracle-secret
+          - configMapRef:
+              name: hadoop-config
 
         ports:
-        - containerPort: 8093
+        - containerPort: 8084
 
         imagePullPolicy: Always
 
-        # --------------------------------------------------
-        # Resource Management
-        # Prevent noisy-neighbor issues and enable HPA
-        # --------------------------------------------------
+        # Container level security hardening
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+
+        # Resource management
         resources:
           requests:
             cpu: "250m"
@@ -105,57 +154,7 @@ spec:
             cpu: "1000m"
             memory: "1Gi"
 
-        # --------------------------------------------------
-        # Container Security
-        # --------------------------------------------------
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-            - ALL
-
-        # --------------------------------------------------
-        # Startup Probe
-        # Gives Spring Boot enough startup time
-        # --------------------------------------------------
-        startupProbe:
-          tcpSocket:
-            port: 8093
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 30
-
-        # --------------------------------------------------
-        # Readiness Probe
-        # Traffic sent only when application is ready
-        # --------------------------------------------------
-        readinessProbe:
-          tcpSocket:
-            port: 8093
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-          successThreshold: 1
-
-        # --------------------------------------------------
-        # Liveness Probe
-        # Restarts unhealthy containers automatically
-        # --------------------------------------------------
-        livenessProbe:
-          tcpSocket:
-            port: 8093
-          initialDelaySeconds: 60
-          periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 3
-
-        # --------------------------------------------------
-        # Graceful Shutdown Hook
-        # Allows ongoing requests to complete
-        # --------------------------------------------------
+        # Graceful shutdown hook
         lifecycle:
           preStop:
             exec:
@@ -164,63 +163,105 @@ spec:
                 - -c
                 - sleep 20
 
+        # Startup probe
+        startupProbe:
+          tcpSocket:
+            port: 8084
+          failureThreshold: 30
+          periodSeconds: 10
+
+        # Readiness probe
+        readinessProbe:
+          tcpSocket:
+            port: 8084
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        # Liveness probe
+        livenessProbe:
+          tcpSocket:
+            port: 8084
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 3
+
 ---
-# ==========================================================
+# =========================================================
 # SERVICE
-# Existing Service retained unchanged
-# ==========================================================
+# =========================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: nwsa-variance-service
-  namespace: be-test
+  name: ascii-generation-service
+  namespace: backend
+
 spec:
   selector:
-    app: nwsa-variance-backend
+    app: ascii-generation-backend
+
   ports:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 8093
+      targetPort: 8084
+
   type: ClusterIP
 
 ---
-# ==========================================================
+# =========================================================
 # HORIZONTAL POD AUTOSCALER
-# CPU-based scaling
-# ==========================================================
+# CPU Based Autoscaling
+# =========================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: nwsa-variance-hpa
-  namespace: be-test
+  name: ascii-generation-hpa
+  namespace: backend
+
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: nwsa-variance-deployment
+    name: ascii-generation-deployment
+
   minReplicas: 1
   maxReplicas: 5
+
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
 ---
-# ==========================================================
+# =========================================================
 # POD DISRUPTION BUDGET
-# Prevents voluntary disruptions from causing downtime
-# ==========================================================
+# Prevents voluntary disruptions
+# =========================================================
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: nwsa-variance-pdb
-  namespace: be-test
+  name: ascii-generation-pdb
+  namespace: backend
+
 spec:
   minAvailable: 1
+
   selector:
     matchLabels:
-      app: nwsa-variance-backend
+      app: ascii-generation-backend
+
+also make the templates folder ready which includes deployment, service,hpa, pdb
+
+and keep consistency in code like similar format how you kept for earlier microservice, i wnat same syntax format for all microservices
