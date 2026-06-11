@@ -1,130 +1,234 @@
+I am providing a Kubernetes YAML file for one microservice.
+
+STRICT RULES:
+
+1. DO NOT change any existing values.
+   - Do NOT modify names
+   - Do NOT rename resources
+   - Do NOT change image
+   - Do NOT change ports
+   - Do NOT change env variables
+   - Do NOT change replicas
+   - Do NOT change logic
+   - Do NOT remove any production or enterprise features
+
+2. Convert this plain YAML into Helm chart compatible structure
+   based on my existing reusable Helm chart:
+   charts/springboot-service/
+
+3. The output must:
+   - Generate environments/base/<service-name>.yaml
+   - Generate environments/dev/<service-name>.yaml if needed
+   - Map values correctly into:
+       namespace
+       deployment.name
+       service.name
+       hpa.name
+       pdb.name
+       labels.app
+       image.repository
+       image.tag
+       probes.port
+       env
+       resources
+
+5. Do NOT redesign the YAML.
+6. Do NOT simplify it.
+7. Do NOT restructure logic.
+8. Only parameterize safely to fit springboot-service chart.
+
+9. Provide:
+   - values file for base
+   - dev override file if needed
+   - exact helm upgrade command
+
+10. use the namespace: backend   
+11. I am having 4 different environments and I want to parameterize the code according to image and imagetag values make proper directory structure of charts values file and templates as I am having 3 different environments which are dev,sit,uat and prod so accordingly you make values. yaml  and send me back all the code snippets
+12.  Please maintain consistency and keep these below values separate for 4 different environments.
+image:
+  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
+  tag: DEV-01
+  imagePullPolicy: Always
+  
+------------------------------------------------------------------
+Here is the YAML:
+
+# =========================================================
+# SERVICE ACCOUNT
+# Dedicated service account for workload identity and RBAC
+# =========================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ascii-generation-sa
+  namespace: backend
+
+---
+# =========================================================
+# DEPLOYMENT
+# =========================================================
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
-  name: {{ .Values.deployment.name }}
-  namespace: {{ .Values.namespace }}
+  name: ascii-generation-deployment
+  namespace: backend
 
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: 1
 
+  # Rolling update strategy for zero/minimal downtime deployments
   strategy:
-    type: {{ .Values.deployment.strategy.type }}
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
-      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
+      maxUnavailable: 0
+      maxSurge: 1
 
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: ascii-generation-backend
 
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.labels.app }}
+        app: ascii-generation-backend
 
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
-{{- if .Values.deployment.topologySpreadConstraints }}
-      topologySpreadConstraints:
-{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
-{{- end }}
+      # Graceful shutdown period
+      terminationGracePeriodSeconds: 60
 
+      # Dedicated Service Account
+      serviceAccountName: ascii-generation-sa
+
+      # Pod level security context
       securityContext:
-{{ toYaml .Values.deployment.securityContext | nindent 8 }}
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 2000
+
+      # Spread pods across nodes when replicas increase
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: ascii-generation-backend
 
       containers:
-        - name: {{ .Values.container.name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+      - name: ascii-generation-container
+        image: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service:DEV-01
 
-{{- if .Values.envFrom }}
-          envFrom:
-{{ toYaml .Values.envFrom | nindent 12 }}
-{{- end }}
+        envFrom:
+          - configMapRef:
+              name: kafka-config
+          - configMapRef:
+              name: redis-config
+          - configMapRef:
+              name: oracle-config
+          - secretRef:
+              name: oracle-secret
+          - configMapRef:
+              name: hadoop-config
 
-          ports:
-            - containerPort: {{ .Values.container.port }}
+        ports:
+        - containerPort: 8084
 
-          resources:
-{{ toYaml .Values.resources | nindent 12 }}
+        imagePullPolicy: Always
 
-          startupProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
-            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+        # Container level security hardening
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
 
-          livenessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+        # Resource management
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
 
-          readinessProbe:
-            tcpSocket:
-              port: {{ .Values.probes.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+        # Graceful shutdown hook
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - sleep 20
 
-{{- if .Values.lifecycle }}
-          lifecycle:
-{{ toYaml .Values.lifecycle | nindent 12 }}
-{{- end }}
+        # Startup probe
+        startupProbe:
+          tcpSocket:
+            port: 8084
+          failureThreshold: 30
+          periodSeconds: 10
 
-          securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+        # Readiness probe
+        readinessProbe:
+          tcpSocket:
+            port: 8084
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
 
+        # Liveness probe
+        livenessProbe:
+          tcpSocket:
+            port: 8084
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 3
 
-
-
+---
+# =========================================================
+# SERVICE
+# =========================================================
 apiVersion: v1
 kind: Service
-
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
+  name: ascii-generation-service
+  namespace: backend
 
 spec:
   selector:
-    app: {{ .Values.deployment.labels.app }}
+    app: ascii-generation-backend
 
   ports:
     - name: http
       protocol: TCP
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+      port: 80
+      targetPort: 8084
 
-  type: {{ .Values.service.type }}
+  type: ClusterIP
 
-
-
-
+---
+# =========================================================
+# HORIZONTAL POD AUTOSCALER
+# CPU Based Autoscaling
+# =========================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
-
 metadata:
-  name: {{ .Values.hpa.name }}
-  namespace: {{ .Values.namespace }}
+  name: ascii-generation-hpa
+  namespace: backend
 
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.deployment.name }}
+    name: ascii-generation-deployment
 
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-
-  behavior:
-{{ toYaml .Values.hpa.behavior | indent 4 }}
+  minReplicas: 1
+  maxReplicas: 5
 
   metrics:
     - type: Resource
@@ -132,21 +236,32 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
+          averageUtilization: 70
 
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
 
-
-
+---
+# =========================================================
+# POD DISRUPTION BUDGET
+# Prevents voluntary disruptions
+# =========================================================
 apiVersion: policy/v1
 kind: PodDisruptionBudget
-
 metadata:
-  name: {{ .Values.pdb.name }}
-  namespace: {{ .Values.namespace }}
+  name: ascii-generation-pdb
+  namespace: backend
 
 spec:
-  minAvailable: {{ .Values.pdb.minAvailable }}
+  minAvailable: 1
 
   selector:
     matchLabels:
-      app: {{ .Values.deployment.labels.app }}
+      app: ascii-generation-backend
+
+also make the templates folder ready which includes deployment, service,hpa, pdb, serviceaccount
+
+and keep consistency in code like similar format how you kept for earlier microservice, i wnat same syntax format for all microservices
