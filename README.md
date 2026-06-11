@@ -1,151 +1,152 @@
-namespace: backend
+apiVersion: apps/v1
+kind: Deployment
 
-serviceAccount:
-  name: ascii-generation-sa
-  automountServiceAccountToken: false
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 
-deployment:
-  name: ascii-generation-deployment
-  replicas: 1
-  revisionHistoryLimit: 10
-  terminationGracePeriodSeconds: 60
-
-  labels:
-    app: ascii-generation-backend
+spec:
+  replicas: {{ .Values.deployment.replicas }}
 
   strategy:
-    type: RollingUpdate
-    maxUnavailable: 0
-    maxSurge: 1
+    type: {{ .Values.deployment.strategy.type }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.deployment.strategy.maxUnavailable }}
+      maxSurge: {{ .Values.deployment.strategy.maxSurge }}
 
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 2000
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
 
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app: ascii-generation-backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels.app }}
 
-container:
-  name: ascii-generation-container
-  port: 8084
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
-  tag: DEV-01
-  imagePullPolicy: Always
+{{- if .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
+{{- end }}
 
-envFrom:
-  - configMapRef:
-      name: kafka-config
-  - configMapRef:
-      name: redis-config
-  - configMapRef:
-      name: oracle-config
-  - secretRef:
-      name: oracle-secret
-  - configMapRef:
-      name: hadoop-config
+      securityContext:
+{{ toYaml .Values.deployment.securityContext | nindent 8 }}
 
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "1000m"
-    memory: "1Gi"
+      containers:
+        - name: {{ .Values.container.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
 
-probes:
-  port: 8084
+{{- if .Values.envFrom }}
+          envFrom:
+{{ toYaml .Values.envFrom | nindent 12 }}
+{{- end }}
 
-  startup:
-    failureThreshold: 30
-    periodSeconds: 10
+          ports:
+            - containerPort: {{ .Values.container.port }}
 
-  readiness:
-    initialDelaySeconds: 20
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
+          resources:
+{{ toYaml .Values.resources | nindent 12 }}
 
-  liveness:
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 5
-    failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
 
-lifecycle:
-  preStop:
-    exec:
-      command:
-        - /bin/sh
-        - -c
-        - sleep 20
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
 
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.probes.port }}
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 
-service:
-  name: ascii-generation-service
-  type: ClusterIP
-  port: 80
-  targetPort: 8084
+{{- if .Values.lifecycle }}
+          lifecycle:
+{{ toYaml .Values.lifecycle | nindent 12 }}
+{{- end }}
 
-hpa:
-  name: ascii-generation-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
+          securityContext:
+{{ toYaml .Values.containerSecurityContext | nindent 12 }}
+
+
+
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  selector:
+    app: {{ .Values.deployment.labels.app }}
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+
+  type: {{ .Values.service.type }}
+
+
+
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: {{ .Values.hpa.name }}
+  namespace: {{ .Values.namespace }}
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
 
   behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
+{{ toYaml .Values.hpa.behavior | indent 4 }}
 
-pdb:
-  name: ascii-generation-pdb
-  minAvailable: 1
-
-
-
-
-
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
-  tag: DEV-01
-  imagePullPolicy: Always
-
-
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
-  tag: SIT-01
-  imagePullPolicy: Always
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.cpu }}
 
 
 
 
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
-  tag: UAT-01
-  imagePullPolicy: Always
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 
+metadata:
+  name: {{ .Values.pdb.name }}
+  namespace: {{ .Values.namespace }}
 
+spec:
+  minAvailable: {{ .Values.pdb.minAvailable }}
 
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
-  tag: PROD-01
-  imagePullPolicy: Always
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels.app }}
