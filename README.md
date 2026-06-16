@@ -1,139 +1,22 @@
-enabled: true
+ kubectl top nodes
 
-namespace: backend
-
-labels:
-  app: help-service-backend
-
-serviceAccount:
-  create: true
-  name: help-service-sa
-
-deployment:
-  name: help-service-deployment
-  replicas: 1
-
-service:
-  name: help-service
-  type: ClusterIP
-  port: 80
-  targetPort: 9099
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/helpservice
-  tag: DEV-01
-  imagePullPolicy: Always
-
-container:
-  name: help-service-container
-
-terminationGracePeriodSeconds: 30
-
-strategy:
-  type: RollingUpdate
-  rollingUpdate:
-    maxUnavailable: 0
-    maxSurge: 1
-
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
-  fsGroup: 1000
-  seccompProfile:
-    type: RuntimeDefault
-
-containerSecurityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
-  capabilities:
-    drop:
-      - ALL
-
-topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app: help-service-backend
-
-envFrom:
-  - configMapRef:
-      name: oracle-config
-  - secretRef:
-      name: oracle-secret
-  - configMapRef:
-      name: redis-config
-
-ports:
-  - containerPort: 9099
-
-resources:
-  requests:
-    cpu: "250m"
-    memory: "512Mi"
-  limits:
-    cpu: "1000m"
-    memory: "1024Mi"
-
-lifecycle:
-  preStop:
-    exec:
-      command:
-        - /bin/sh
-        - -c
-        - sleep 15
-
-probes:
-  port: 9099
-
-startupProbe:
-  tcpSocket:
-    port: 9099
-  failureThreshold: 30
-  periodSeconds: 10
-
-readinessProbe:
-  tcpSocket:
-    port: 9099
-  initialDelaySeconds: 20
-  periodSeconds: 10
-  timeoutSeconds: 2
-  failureThreshold: 3
-  successThreshold: 1
-
-livenessProbe:
-  tcpSocket:
-    port: 9099
-  initialDelaySeconds: 60
-  periodSeconds: 20
-  timeoutSeconds: 2
-  failureThreshold: 3
-
-hpa:
-  name: help-service-hpa
-  minReplicas: 1
-  maxReplicas: 5
-  cpu: 70
-
-  behavior:
-    scaleUp:
-      stabilizationWindowSeconds: 60
-    scaleDown:
-      stabilizationWindowSeconds: 300
-
-pdb:
-  name: help-service-pdb
-  minAvailable: 1
-
-
-
-
-
-
-image:
-  repository: h06vksharbor.corp.ad.sbi/cbops/helpservice
-  tag: DEV-01
-
-
+NAME                                             CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-4822w   73m          0%       4097Mi          14%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-4crls   59m          0%       3548Mi          12%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-5frcp   53m          0%       2613Mi          9%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-7n45g   292m         1%       3848Mi          13%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-9j7ff   58m          0%       2750Mi          9%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-9l9lv   79m          0%       3693Mi          12%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-c5wq5   96m          0%       10332Mi         36%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-c7c5w   177m         1%       4837Mi          17%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-g4ljf   56m          0%       3101Mi          10%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-gj5jj   83m          0%       4600Mi          16%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-h4cdl   46m          0%       3281Mi          11%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-nlzz2   54m          0%       3041Mi          10%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-pz6lh   83m          0%       4296Mi          15%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-tv8ql   59m          0%       4851Mi          17%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-wcvnn   61m          0%       3085Mi          10%
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-xzvvj   337m         2%       5422Mi          19%
+a2p05vkscbopscls-ql4d8-6jkrl                     109m         1%       2985Mi          22%
+a2p05vkscbopscls-ql4d8-gms9p                     119m         1%       3313Mi          24%
+a2p05vkscbopscls-ql4d8-tq8pq                     188m         2%       3597Mi          27%
