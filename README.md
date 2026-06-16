@@ -1,76 +1,20 @@
-[root@fcprodkubjump ~]# kubectl describe nodes | grep -A2 "Capacity:"
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                16
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                8
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                8
-  ephemeral-storage:  81986948Ki
---
-Capacity:
-  cpu:                8
-  ephemeral-storage:  81986948Ki
+NAME                                             MEMORY
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-4822w   32908496Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-4crls   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-5frcp   32908500Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-7n45g   32908500Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-9j7ff   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-9l9lv   32908500Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-c5wq5   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-c7c5w   32908508Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-g4ljf   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-gj5jj   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-h4cdl   32908500Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-nlzz2   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-pz6lh   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-tv8ql   32908508Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-wcvnn   32908504Ki
+a2p05vkscbopscls-node-pool-0-48lq6-p4sgq-xzvvj   32908488Ki
+a2p05vkscbopscls-ql4d8-6jkrl                     16371224Ki
+a2p05vkscbopscls-ql4d8-gms9p                     16371232Ki
+a2p05vkscbopscls-ql4d8-tq8pq                     16371232Ki
