@@ -1,17 +1,3 @@
-[root@fcuatgateway ~]# kubectl top nodes
-NAME                                               CPU(cores)   CPU(%)      MEMORY(bytes)   MEMORY(%)
-h06vksuat1cbopscls-9mgb5-mlhwp                     257m         3%          3205Mi          24%
-h06vksuat1cbopscls-9mgb5-slt8c                     294m         3%          2592Mi          19%
-h06vksuat1cbopscls-9mgb5-v97gx                     223m         2%          3635Mi          27%
-h06vksuat1cbopscls-node-pool-1-8qvhf-mjgbk-2fjvd   1033m        6%          16018Mi         56%
-h06vksuat1cbopscls-node-pool-1-8qvhf-mjgbk-nf5tk   97m          0%          4851Mi          17%
-h06vksuat1cbopscls-node-pool-1-8qvhf-mjgbk-vshc5   362m         2%          15921Mi         56%
-h06vksuat1cbopscls-node-pool-1-8qvhf-tvgr4-djgd9   <unknown>    <unknown>   <unknown>       <unknown>
-[root@fcuatgateway ~]# kubectl decribe nodes | grep -A5 "Allocated resources"
-error: unknown command "decribe" for "kubectl"
-
-Did you mean this?
-        describe
 [root@fcuatgateway ~]# kubectl describe nodes | grep -A5 "Allocated resources"
 Allocated resources:
   (Total limits may be over 100 percent, i.e., overcommitted.)
@@ -61,3 +47,39 @@ Allocated resources:
   --------           --------     ------
   cpu                5400m (33%)  8 (50%)
   memory             2Gi (7%)     4Gi (14%)
+[root@fcuatgateway ~]# kubectl describe nodes | egrep "Name:|cpu:|memory:"
+Name:               h06vksuat1cbopscls-9mgb5-mlhwp
+  cpu:                8
+  memory:             16371240Ki
+  cpu:                7910m
+  memory:             13581864Ki
+Name:               h06vksuat1cbopscls-9mgb5-slt8c
+  cpu:                8
+  memory:             16371236Ki
+  cpu:                7910m
+  memory:             13581860Ki
+Name:               h06vksuat1cbopscls-9mgb5-v97gx
+  cpu:                8
+  memory:             16371240Ki
+  cpu:                7910m
+  memory:             13581864Ki
+Name:               h06vksuat1cbopscls-node-pool-1-8qvhf-mjgbk-2fjvd
+  cpu:                16
+  memory:             32908684Ki
+  cpu:                15890m
+  memory:             29109644Ki
+Name:               h06vksuat1cbopscls-node-pool-1-8qvhf-mjgbk-nf5tk
+  cpu:                16
+  memory:             32908680Ki
+  cpu:                15890m
+  memory:             29109640Ki
+Name:               h06vksuat1cbopscls-node-pool-1-8qvhf-mjgbk-vshc5
+  cpu:                16
+  memory:             32908680Ki
+  cpu:                15890m
+  memory:             29109640Ki
+Name:               h06vksuat1cbopscls-node-pool-1-8qvhf-tvgr4-djgd9
+  cpu:                16
+  memory:             32908680Ki
+  cpu:                15890m
+  memory:             29109640Ki
