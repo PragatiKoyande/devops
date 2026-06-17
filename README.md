@@ -1,5 +1,4 @@
-See 'kubectl logs --help' for usage.
-[root@fcppjump Kafka]# kc logs debezium-server-86c8fbbbcb-77llr -n backend --kubeconfig h06vkspreprodcbopscls-kubeconfig.yaml
+[root@fcppjump PRE-PROD_DEPLOYMENT]# k logs debezium-server-86c8fbbbcb-77llr -n backend
        __       __                 _
   ____/ /___   / /_   ___  ____   (_)__  __ ____ ___
  / __  // _ \ / __ \ / _ \/_  /  / // / / // __ `__ \
@@ -9,8 +8,8 @@ See 'kubectl logs --help' for usage.
 
 
                       Powered by Quarkus 3.2.10.Final
-2026-06-17 06:53:41 INFO  [io.debezium.server.BaseChangeConsumer] (main) Using 'io.debezium.server.BaseChangeConsumer$$Lambda$232/0x000000084030bc40@35eb4a3b' stream name mapper
-2026-06-17 06:53:41 INFO  [org.apache.kafka.clients.producer.ProducerConfig] (main) ProducerConfig values:
+2026-06-17 06:58:55 INFO  [io.debezium.server.BaseChangeConsumer] (main) Using 'io.debezium.server.BaseChangeConsumer$$Lambda$232/0x000000084030bc40@35eb4a3b' stream name mapper
+2026-06-17 06:58:55 INFO  [org.apache.kafka.clients.producer.ProducerConfig] (main) ProducerConfig values:
         acks = -1
         auto.include.jmx.reporter = true
         batch.size = 16384
@@ -100,27 +99,27 @@ See 'kubectl logs --help' for usage.
         transactional.id = null
         value.serializer = class org.apache.kafka.common.serialization.StringSerializer
 
-2026-06-17 06:53:41 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Instantiated an idempotent producer.
-2026-06-17 06:53:41 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) Kafka version: 3.6.1
-2026-06-17 06:53:41 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) Kafka commitId: 5e3c2b738d253ff5
-2026-06-17 06:53:41 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) Kafka startTimeMs: 1781679221750
-2026-06-17 06:53:41 INFO  [io.debezium.server.kafka.KafkaChangeConsumer] (main) consumer started...
-2026-06-17 06:53:41 INFO  [io.debezium.server.DebeziumServer] (main) Consumer 'io.debezium.server.kafka.KafkaChangeConsumer' instantiated
-2026-06-17 06:53:41 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
+2026-06-17 06:58:55 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Instantiated an idempotent producer.
+2026-06-17 06:58:55 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) Kafka version: 3.6.1
+2026-06-17 06:58:55 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) Kafka commitId: 5e3c2b738d253ff5
+2026-06-17 06:58:55 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) Kafka startTimeMs: 1781679535852
+2026-06-17 06:58:55 INFO  [io.debezium.server.kafka.KafkaChangeConsumer] (main) consumer started...
+2026-06-17 06:58:55 INFO  [io.debezium.server.DebeziumServer] (main) Consumer 'io.debezium.server.kafka.KafkaChangeConsumer' instantiated
+2026-06-17 06:58:55 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
         converter.type = key
         decimal.format = BASE64
         replace.null.with.default = true
         schemas.cache.size = 1000
         schemas.enable = false
 
-2026-06-17 06:53:41 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
+2026-06-17 06:58:55 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
         converter.type = value
         decimal.format = BASE64
         replace.null.with.default = true
         schemas.cache.size = 1000
         schemas.enable = false
 
-2026-06-17 06:53:41 INFO  [io.debezium.embedded.EmbeddedEngine$EmbeddedConfig] (main) EmbeddedConfig values:
+2026-06-17 06:58:55 INFO  [io.debezium.embedded.EmbeddedEngine$EmbeddedConfig] (main) EmbeddedConfig values:
         access.control.allow.methods =
         access.control.allow.origin =
         admin.listeners = null
@@ -175,35 +174,35 @@ See 'kubectl logs --help' for usage.
         topic.tracking.enable = true
         value.converter = class org.apache.kafka.connect.json.JsonConverter
 
-2026-06-17 06:53:41 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
+2026-06-17 06:58:55 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
         converter.type = key
         decimal.format = BASE64
         replace.null.with.default = true
         schemas.cache.size = 1000
         schemas.enable = true
 
-2026-06-17 06:53:41 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
+2026-06-17 06:58:55 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
         converter.type = value
         decimal.format = BASE64
         replace.null.with.default = true
         schemas.cache.size = 1000
         schemas.enable = true
 
-2026-06-17 06:53:41 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
+2026-06-17 06:58:55 INFO  [org.apache.kafka.connect.json.JsonConverterConfig] (main) JsonConverterConfig values:
         converter.type = header
         decimal.format = BASE64
         replace.null.with.default = true
         schemas.cache.size = 1000
         schemas.enable = true
 
-2026-06-17 06:53:41 INFO  [io.debezium.server.DebeziumServer] (main) Engine executor started
-2026-06-17 06:53:42 INFO  [io.debezium.config.CommonConnectorConfig] (pool-7-thread-1) Loading the custom source info struct maker plugin: io.debezium.connector.oracle.OracleSourceInfoStructMaker
-2026-06-17 06:53:42 INFO  [io.quarkus] (main) debezium-server-dist 2.5.4.Final on JVM (powered by Quarkus 3.2.10.Final) started in 2.378s. Listening on: http://0.0.0.0:8080
-2026-06-17 06:53:42 INFO  [io.quarkus] (main) Profile prod activated.
-2026-06-17 06:53:42 INFO  [io.quarkus] (main) Installed features: [cdi, kubernetes-client, resteasy-jackson, smallrye-context-propagation, smallrye-health, vertx]
-2026-06-17 06:53:42 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Cluster ID: jgQjUybBSACbAFjwpKFQiA
-2026-06-17 06:53:42 INFO  [org.apache.kafka.clients.producer.internals.TransactionManager] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] ProducerId set to 0 with epoch 0
-2026-06-17 06:53:42 ERROR [io.debezium.connector.oracle.OracleConnector] (pool-7-thread-1) Failed testing connection for {connector.class=io.debezium.connector.oracle.OracleConnector, schema.history.internal.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer, heartbeat.topics.prefix=heartbeat, errors.retry.delay.initial.ms=300, key.converter=org.apache.kafka.connect.json.JsonConverter, database.dbname=fincorepdb1, database.user=c##debezium, offset.storage=org.apache.kafka.connect.storage.FileOffsetBackingStore, header.converter.key=json, schema.history.internal.kafka.bootstrap.servers=kafka.backend.svc.cluster.local:9092, heartbeat.interval.ms=2000, schema.history.internal.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer , errors.max.retries=-1, database.password=********, name=kafka, tasks.max=1, log.mining.strategy=online_catalog, schema.history.internal.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer, database.sid=fincorepdb1, topic.prefix=fincore, decimal.handling.mode=string, offset.storage.file.filename=/debezium/data/offsets.dat, schema.history.internal.kafka.topic=schema-changes.oracle, log.mining.continuous.mine=false, log.mining.sleep.time.max=2000, log.mining.sleep.time.default=50, value.converter=org.apache.kafka.connect.json.JsonConverter, offset.storage.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer , schema.history.internal.kafka.producer.bootstrap.servers=kafka.backend.svc.cluster.local:9092, header.converter.value=json, offset.storage.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer, log.mining.batch.size.max=100000, database.connection.adapter=logminer, database.pdb.name=fincorepdb1, key.converter.value=json, database.server.name=fincorepdb1, offset.flush.timeout.ms=5000, errors.retry.delay.max.ms=10000, offset.storage.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer, value.converter.value=json, database.port=1523, offset.flush.interval.ms=60000, offset.storage.kafka.producer.bootstrap.servers=kafka.backend.svc.cluster.local:9092, database.hostname=10.177.179.145, log.mining.batch.size.default=50000, table.include.list=fincore.NOTIFICATIONS,fincore.USER_ROLES,fincore.PROCESS_STATUS,fincore.PERMISSIONS,fincore.ROLE_PERMISSIONS, value.converter.key=json, offset.storage.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer, key.converter.key=json, schema.history.internal.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer} with user '[database.user,null,[],[],true]': java.lang.RuntimeException: Failed to resolve Oracle database version
+2026-06-17 06:58:55 INFO  [io.debezium.server.DebeziumServer] (main) Engine executor started
+2026-06-17 06:58:56 INFO  [io.debezium.config.CommonConnectorConfig] (pool-7-thread-1) Loading the custom source info struct maker plugin: io.debezium.connector.oracle.OracleSourceInfoStructMaker
+2026-06-17 06:58:56 INFO  [io.quarkus] (main) debezium-server-dist 2.5.4.Final on JVM (powered by Quarkus 3.2.10.Final) started in 2.458s. Listening on: http://0.0.0.0:8080
+2026-06-17 06:58:56 INFO  [io.quarkus] (main) Profile prod activated.
+2026-06-17 06:58:56 INFO  [io.quarkus] (main) Installed features: [cdi, kubernetes-client, resteasy-jackson, smallrye-context-propagation, smallrye-health, vertx]
+2026-06-17 06:58:56 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Cluster ID: jgQjUybBSACbAFjwpKFQiA
+2026-06-17 06:58:56 INFO  [org.apache.kafka.clients.producer.internals.TransactionManager] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] ProducerId set to 3 with epoch 0
+2026-06-17 06:58:56 ERROR [io.debezium.connector.oracle.OracleConnector] (pool-7-thread-1) Failed testing connection for {connector.class=io.debezium.connector.oracle.OracleConnector, schema.history.internal.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer, heartbeat.topics.prefix=heartbeat, errors.retry.delay.initial.ms=300, key.converter=org.apache.kafka.connect.json.JsonConverter, database.dbname=fincorepdb1, database.user=c##debezium, offset.storage=org.apache.kafka.connect.storage.FileOffsetBackingStore, header.converter.key=json, schema.history.internal.kafka.bootstrap.servers=kafka.backend.svc.cluster.local:9092, heartbeat.interval.ms=2000, schema.history.internal.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer , errors.max.retries=-1, database.password=********, name=kafka, tasks.max=1, log.mining.strategy=online_catalog, schema.history.internal.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer, database.sid=fincorepdb1, topic.prefix=fincore, decimal.handling.mode=string, offset.storage.file.filename=/debezium/data/offsets.dat, schema.history.internal.kafka.topic=schema-changes.oracle, log.mining.continuous.mine=false, log.mining.sleep.time.max=2000, log.mining.sleep.time.default=50, value.converter=org.apache.kafka.connect.json.JsonConverter, offset.storage.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer , schema.history.internal.kafka.producer.bootstrap.servers=kafka.backend.svc.cluster.local:9092, header.converter.value=json, offset.storage.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer, log.mining.batch.size.max=100000, database.connection.adapter=logminer, database.pdb.name=fincorepdb1, key.converter.value=json, database.server.name=fincorepdb1, offset.flush.timeout.ms=5000, errors.retry.delay.max.ms=10000, offset.storage.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer, value.converter.value=json, database.port=1523, offset.flush.interval.ms=60000, offset.storage.kafka.producer.bootstrap.servers=kafka.backend.svc.cluster.local:9092, database.hostname=10.177.179.145, log.mining.batch.size.default=50000, table.include.list=fincore.NOTIFICATIONS,fincore.USER_ROLES,fincore.PROCESS_STATUS,fincore.PERMISSIONS,fincore.ROLE_PERMISSIONS, value.converter.key=json, offset.storage.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer, key.converter.key=json, schema.history.internal.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer} with user '[database.user,null,[],[],true]': java.lang.RuntimeException: Failed to resolve Oracle database version
         at io.debezium.connector.oracle.OracleConnection.resolveOracleDatabaseVersion(OracleConnection.java:190)
         at io.debezium.connector.oracle.OracleConnection.<init>(OracleConnection.java:97)
         at io.debezium.connector.oracle.OracleConnection.<init>(OracleConnection.java:80)
@@ -243,13 +242,13 @@ Caused by: java.sql.SQLException: ORA-00257: Archiver error. Connect AS SYSDBA o
         at io.debezium.connector.oracle.OracleConnection.resolveOracleDatabaseVersion(OracleConnection.java:157)
         ... 11 more
 
-2026-06-17 06:53:42 ERROR [io.debezium.server.ConnectorLifecycle] (pool-7-thread-1) Connector completed: success = 'false', message = 'Connector configuration is not valid. Unable to connect: Failed to resolve Oracle database version', error = 'null'
-2026-06-17 06:53:42 INFO  [io.debezium.server.DebeziumServer] (main) Received request to stop the engine
-2026-06-17 06:53:42 INFO  [io.debezium.embedded.EmbeddedEngine] (main) Stopping the embedded engine
-2026-06-17 06:53:42 INFO  [io.debezium.server.kafka.KafkaChangeConsumer] (main) consumer destroyed...
-2026-06-17 06:53:42 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 5000 ms.
-2026-06-17 06:53:42 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics scheduler closed
-2026-06-17 06:53:42 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Closing reporter org.apache.kafka.common.metrics.JmxReporter
-2026-06-17 06:53:42 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics reporters closed
-2026-06-17 06:53:42 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) App info kafka.producer for producer-1 unregistered
-2026-06-17 06:53:42 INFO  [io.quarkus] (main) debezium-server-dist stopped in 0.039s
+2026-06-17 06:58:56 ERROR [io.debezium.server.ConnectorLifecycle] (pool-7-thread-1) Connector completed: success = 'false', message = 'Connector configuration is not valid. Unable to connect: Failed to resolve Oracle database version', error = 'null'
+2026-06-17 06:58:56 INFO  [io.debezium.server.DebeziumServer] (main) Received request to stop the engine
+2026-06-17 06:58:56 INFO  [io.debezium.embedded.EmbeddedEngine] (main) Stopping the embedded engine
+2026-06-17 06:58:56 INFO  [io.debezium.server.kafka.KafkaChangeConsumer] (main) consumer destroyed...
+2026-06-17 06:58:56 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 5000 ms.
+2026-06-17 06:58:56 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics scheduler closed
+2026-06-17 06:58:56 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-06-17 06:58:56 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics reporters closed
+2026-06-17 06:58:56 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) App info kafka.producer for producer-1 unregistered
+2026-06-17 06:58:56 INFO  [io.quarkus] (main) debezium-server-dist stopped in 0.039s
