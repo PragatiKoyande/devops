@@ -89,14 +89,14 @@ nwsa-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "uat"
-    - name: HADOOP_FS_USER			
+    - name: HADOOP_FS_USER
       value: "root"
-    - name: GLIF_REPORTS_BASE_PATH			
-      value: "/reports"    
+    - name: GLIF_REPORTS_BASE_PATH
+      value: "/reports"
   hostAliases:
-  - ip: "10.189.42.83"
-    hostnames:
-    - "uatrootdc1.uatad.sbi"
+    - ip: "10.189.42.83"
+      hostnames:
+        - "uatrootdc1.uatad.sbi"
 
 react-service:
   enabled: true
@@ -175,7 +175,7 @@ login-service:
     - ip: "10.189.42.83"
       hostnames:
         - "uatrootdc1.uatad.sbi"
-		
+
 help-service:
   enabled: true
   image:
@@ -184,7 +184,7 @@ help-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "uat"
-  
+
 ascii-generation-service:
   enabled: true
   image:
@@ -194,7 +194,7 @@ ascii-generation-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "uat"
-  
+
 voucher-enquiry-service:
   enabled: true
   image:
@@ -203,6 +203,3 @@ voucher-enquiry-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "uat"
-
-      indentation issue please dont alter any values only resolve the error and send me back entire correct file please send me entire corrceted file
- 
