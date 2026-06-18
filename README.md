@@ -100,10 +100,10 @@ nwsa-service:
     - name: GLIF_REPORTS_BASE_PATH
       value: "/reports"
   hostAliases:
-  - ip: "10.189.42.83"
-    hostnames:
-    - "uatrootdc1.uatad.sbi"
-  
+    - ip: "10.189.42.83"
+      hostnames:
+        - "uatrootdc1.uatad.sbi"
+
 react-service:
   enabled: true
   namespace: test-sit
@@ -189,7 +189,7 @@ login-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "sit"
-	  
+
 help-service:
   enabled: true
   namespace: test-sit
@@ -200,7 +200,7 @@ help-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "sit"
-  
+
 ascii-generation-service:
   enabled: true
   namespace: test-sit
@@ -211,17 +211,14 @@ ascii-generation-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "sit"
-  
+
 voucher-enquiry-service:
   enabled: true
   namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/voucher-enquiry-service
     tag: SIT01
-	imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "sit"
-
-
-indentation issue please dont alter any values only resolve the error and send me back entire correct file
