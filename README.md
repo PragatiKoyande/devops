@@ -1,46 +1,42 @@
 dashboard-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/dashboard-service
-    tag: SIT01
+    tag: UAT01
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 journal-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
-    tag: SIT01
+    tag: UAT01
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 transactions-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
-    tag: SIT01
+    tag: UAT01
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 user-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/user-service
-    tag: SIT06
+    tag: UAT06
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
     - name: JAVA_TOOL_OPTIONS
       value: "-Djava.net.preferIPv4Stack=true"
     - name: SPRING_KAFKA_CONSUMER_GROUP_ID
@@ -52,31 +48,29 @@ user-service:
 
 process-status-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/process-status-service
-    tag: SIT16
+    tag: UAT16
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 enquiry-service:
   enabled: true
-  namespace: test-sit
   image:
-    tag: SIT01
+    repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
+    tag: UAT03
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 notification-service:
   enabled: true
-  namespace: test-sit
   image:
-    repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
-    tag: SIT03
+    repository: h06vksharbor.corp.ad.sbi/cbops/notification-service
+    tag: UAT05
     imagePullPolicy: Always
   env:
     - name: SPRING_KAFKA_CONSUMER_GROUP_ID
@@ -84,37 +78,35 @@ notification-service:
     - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
       value: "earliest"
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 nwsa-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
-    tag: SIT01
+    tag: UAT01
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
-    - name: HADOOP_FS_USER
+      value: "uat"
+    - name: HADOOP_FS_USER			
       value: "root"
-    - name: GLIF_REPORTS_BASE_PATH
-      value: "/reports"
+    - name: GLIF_REPORTS_BASE_PATH			
+      value: "/reports"    
   hostAliases:
-    - ip: "10.189.42.83"
-      hostnames:
-        - "uatrootdc1.uatad.sbi"
+  - ip: "10.189.42.83"
+    hostnames:
+    - "uatrootdc1.uatad.sbi"
 
 react-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/react-service
-    tag: SIT48
+    tag: UAT33
     imagePullPolicy: Always
 
 redis-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/redis-server
     tag: latest
@@ -122,103 +114,95 @@ redis-service:
 
 report-builder-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
-    tag: SIT14
+    tag: UAT14
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 report-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/report-service
-    tag: SIT14
+    tag: UAT14
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 template-config-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/template-config-service
-    tag: SIT14
+    tag: UAT14
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 common-master-service:
   enabled: true
-  namespace: test-sit
   image:
-    repository: h06vksharbor.corp.ad.sbi/cbops/common-request-service
-    tag: SIT16
+    repository: h06vksharbor.corp.ad.sbi/cbops/common-master-service
+    tag: UAT14
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 common-request-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/common-request-service
-    tag: SIT16
+    tag: UAT14
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
 
 login-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/login-service
-    tag: SIT03
+    tag: UAT14
     imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "uat"
   hostAliases:
-    - ip: "10.189.42.90"
+    - ip: "10.189.42.83"
       hostnames:
         - "uatrootdc1.uatad.sbi"
-  env:
-    - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
-
+		
 help-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/helpservice
-    tag: SIT01
-    imagePullPolicy: Always
+    tag: UAT01
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
-
+      value: "uat"
+  
 ascii-generation-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
-    tag: SIT-01
+    tag: UAT-01
     imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
-
+      value: "uat"
+  
 voucher-enquiry-service:
   enabled: true
-  namespace: test-sit
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/voucher-enquiry-service
-    tag: SIT01
-    imagePullPolicy: Always
+    tag: UAT01
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "sit"
+      value: "uat"
+
+      indentation issue please dont alter any values only resolve the error and send me back entire correct file
+ 
