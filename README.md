@@ -93,22 +93,18 @@ nwsa-service:
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
     tag: DEV01
-	image:
-	  repository: h06vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
-      tag: DEV01
-      imagePullPolicy: Always
-    env:
-      - name: SPRING_PROFILES_ACTIVE
-        value: "dev"
-      - name: NWSA_GENERATED_REPORT_ROOT
-        value: "/reports"
-      - name: NWSA_REPORT_ROOT
-        value: "/reports"
-
-    hostAliases:
-      - ip: "10.189.42.83"
-        hostnames:
-          - "uatrootdc1.uatad.sbi"
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
+    - name: NWSA_GENERATED_REPORT_ROOT
+      value: "/reports"
+    - name: NWSA_REPORT_ROOT
+      value: "/reports"
+  hostAliases:
+    - ip: "10.189.42.83"
+      hostnames:
+        - "uatrootdc1.uatad.sbi"
 
 react-service:
   enabled: true
@@ -195,18 +191,18 @@ login-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "dev"
-	  
+
 help-service:
   enabled: true
   namespace: test-dev
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/helpservice
     tag: DEV01
-	imagePullPolicy: Always
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "dev"
-  
+
 ascii-generation-service:
   enabled: true
   namespace: test-dev
@@ -217,15 +213,14 @@ ascii-generation-service:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: "dev"
-    
+
 voucher-enquiry-service:
   enabled: true
   namespace: test-dev
   image:
     repository: h06vksharbor.corp.ad.sbi/cbops/voucher-enquiry-service
-    tag: DEV01  
+    tag: DEV01
+    imagePullPolicy: Always
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: "dev"  
-
-  resolve indentation issue please dont alter anything else and send me back entire correct file
+      value: "dev"
