@@ -1,102 +1,231 @@
-apiVersion: v2
-name: umbrella-chart
-description: Umbrella Chart
-type: application
-version: 0.1.0
-appVersion: "1.0"
+dashboard-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/dashboard-service
+    tag: DEV01
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-dependencies:
-  - name: dashboard-service
-    version: 0.1.0
-    repository: "file://../dashboard-service"
-    condition: dashboard-service.enabled
+journal-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/journal-service
+    tag: DEV04
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: journal-service
-    version: 0.1.0
-    repository: "file://../journal-service"
-    condition: journal-service.enabled
+transactions-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/transactions-service
+    tag: DEV01
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: transactions-service
-    version: 0.1.0
-    repository: "file://../transactions-service"
-    condition: transactions-service.enabled
+user-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/user-service
+    tag: DEV06
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
+    - name: JAVA_TOOL_OPTIONS
+      value: "-Djava.net.preferIPv4Stack=true"
+    - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+      value: "rbac-cache-group"
+  hostAliases:
+    - ip: "10.189.42.83"
+      hostnames:
+        - "uatrootdc1.uatad.sbi"
 
-  - name: user-service
-    version: 0.1.0
-    repository: "file://../user-service"
-    condition: user-service.enabled
+process-status-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/process-status-service
+    tag: SV16
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: process-status-service
-    version: 0.1.0
-    repository: "file://../process-status-service"
-    condition: process-status-service.enabled
+enquiry-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/enquiry-service
+    tag: DEV05
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: enquiry-service
-    version: 0.1.0
-    repository: "file://../enquiry-service"
-    condition: enquiry-service.enabled
+notification-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/notification-service
+    tag: TEST-1
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+      value: "notification-service-group"
+    - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+      value: "earliest"
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: notification-service
-    version: 0.1.0
-    repository: "file://../notification-service"
-    condition: notification-service.enabled
+nwsa-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
+    tag: DEV01
+	image:
+	  repository: h06vksharbor.corp.ad.sbi/cbops/nwsa-variance-service
+      tag: DEV01
+      imagePullPolicy: Always
+    env:
+      - name: SPRING_PROFILES_ACTIVE
+        value: "dev"
+      - name: NWSA_GENERATED_REPORT_ROOT
+        value: "/reports"
+      - name: NWSA_REPORT_ROOT
+        value: "/reports"
 
-  - name: nwsa-service
-    version: 0.1.0
-    repository: "file://../nwsa-service"
-    condition: nwsa-service.enabled
+    hostAliases:
+      - ip: "10.189.42.83"
+        hostnames:
+          - "uatrootdc1.uatad.sbi"
 
-  - name: react-service
-    version: 0.1.0
-    repository: "file://../react-service"
-    condition: react-service.enabled
+react-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/react-service
+    tag: DEV46
+    imagePullPolicy: Always
 
-  - name: redis-service
-    version: 0.1.0
-    repository: "file://../redis-service"
-    condition: redis-service.enabled
+redis-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/redis-server
+    tag: latest
+    imagePullPolicy: Always
 
-  - name: report-builder-service
-    version: 0.1.0
-    repository: "file://../report-builder-service"
-    condition: report-builder-service.enabled
+report-builder-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/report-builder-service
+    tag: DEV01
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: report-service
-    version: 0.1.0
-    repository: "file://../report-service"
-    condition: report-service.enabled
+report-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/report-service
+    tag: DEV14
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: template-config-service
-    version: 0.1.0
-    repository: "file://../template-config-service"
-    condition: template-config-service.enabled
+template-config-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/template-config-service
+    tag: DEV01
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: common-master-service
-    version: 0.1.0
-    repository: "file://../common-master-service"
-    condition: common-master-service.enabled
+common-master-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/common-master-service
+    tag: DEV05
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: common-request-service
-    version: 0.1.0
-    repository: "file://../common-request-service"
-    condition: common-request-service.enabled
+common-request-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/common-request-service
+    tag: DEV14
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
 
-  - name: login-service
-    version: 0.1.0
-    repository: "file://../login-service"
-    condition: login-service.enabled
+login-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/login-service
+    tag: DEV13
+    imagePullPolicy: Always
+  hostAliases:
+    - ip: "10.189.42.83"
+      hostnames:
+        - "uatrootdc1.uatad.sbi"
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
+	  
+help-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/helpservice
+    tag: DEV01
+	imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
+  
+ascii-generation-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/ascii-generation-service
+    tag: DEV-01
+    imagePullPolicy: Always
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"
+    
+voucher-enquiry-service:
+  enabled: true
+  namespace: test-dev
+  image:
+    repository: h06vksharbor.corp.ad.sbi/cbops/voucher-enquiry-service
+    tag: DEV01  
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "dev"  
 
-  - name: help-service
-    version: 0.1.0
-    repository: "file://../help-service"
-    condition: help-service.enabled
-
-  - name: ascii-generation-service
-    version: 0.1.0
-    repository: "file://../ascii-generation-service"
-    condition: ascii-generation-service.enabled
-
-  - name: voucher-enquiry-service
-    version: 0.1.0
-    repository: "file://../voucher-enquiry-service"
-    condition: voucher-enquiry-service.enabled
+  resolve indentation issue please dont alter anything else and send me back entire correct file
