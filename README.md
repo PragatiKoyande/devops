@@ -85,32 +85,18 @@ dependencies:
     version: 0.1.0
     repository: "file://../login-service"
     condition: login-service.enabled
-	
+
   - name: help-service
     version: 0.1.0
     repository: "file://../help-service"
     condition: help-service.enabled
-	
+
   - name: ascii-generation-service
     version: 0.1.0
     repository: "file://../ascii-generation-service"
     condition: ascii-generation-service.enabled
-	
+
   - name: voucher-enquiry-service
     version: 0.1.0
     repository: "file://../voucher-enquiry-service"
     condition: voucher-enquiry-service.enabled
-
-
-
-    this is my chart.yaml
-
-
-    and i m getting this error:
-
-    
-D:\Pragati\HELM-2404\Deployment\umbrella-chart>helm dependency update
-Error: cannot load Chart.yaml: error converting YAML to JSON: yaml: line 88: found a tab character that violates indentation
-
-
-kindly resolve the issue and send me back entire chart.yaml file
