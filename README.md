@@ -1,19 +1,77 @@
-
-2026-06-19 06:54:20.142 INFO  [parallel-4] c.f.g.u.LoginUtility: X-Forwarded-For ip : null
-{"@timestamp":"2026-06-19T12:24:20.142470205+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.fincore.gateway.utility.LoginUtility","message":"X-Forwarded-For ip : null","stack_trace":""}
-2026-06-19 06:54:20.143 INFO  [parallel-4] c.f.g.C.AuthController: Check-User info user id: v1023950 , ip : /10.0.19.45:23025
-{"@timestamp":"2026-06-19T12:24:20.143074448+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.gateway.Controller.AuthController","message":"Check-User info user id: v1023950 , ip : /10.0.19.45:23025","stack_trace":""}
-2026-06-19 06:54:28.637 INFO  [parallel-5] c.f.g.u.LoginUtility: X-Forwarded-For ip : null
-{"@timestamp":"2026-06-19T12:24:28.637789671+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.fincore.gateway.utility.LoginUtility","message":"X-Forwarded-For ip : null","stack_trace":""}
-2026-06-19 06:54:28.638 INFO  [parallel-5] c.f.g.C.AuthController: Login request for user: v1023950 from IP: /10.0.19.45:23025
-{"@timestamp":"2026-06-19T12:24:28.638350137+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.gateway.Controller.AuthController","message":"Login request for user: v1023950 from IP: /10.0.19.45:23025","stack_trace":""}
-2026-06-19 06:54:28.694 INFO  [boundedElastic-1] c.f.g.S.LoginServiceImpl: Processing LDAP Login for user: v1023950
-{"@timestamp":"2026-06-19T12:24:28.694050987+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.gateway.Service.LoginServiceImpl","message":"Processing LDAP Login for user: v1023950","stack_trace":""}
-2026-06-19 06:54:28.694 INFO  [boundedElastic-1] c.f.g.S.AdAuthenticationService: Attempting LDAP Bind for principal: v1023950@UATAD.SBI
-{"@timestamp":"2026-06-19T12:24:28.694780836+05:30","level":"INFO","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.g.Service.AdAuthenticationService","message":"Attempting LDAP Bind for principal: v1023950@UATAD.SBI","stack_trace":""}
-2026-06-19 06:54:33.704 ERROR [boundedElastic-1] c.f.g.S.AdAuthenticationService: LDAP CONNECTION ERROR: uatrootdc1.uatad.sbi:3269
-{"@timestamp":"2026-06-19T12:24:33.704218587+05:30","level":"ERROR","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.g.Service.AdAuthenticationService","message":"LDAP CONNECTION ERROR: uatrootdc1.uatad.sbi:3269","stack_trace":""}
-2026-06-19 06:54:33.704 ERROR [boundedElastic-1] c.f.g.S.LoginServiceImpl: LDAP Server Error for user v1023950: LDAP Server Down
-{"@timestamp":"2026-06-19T12:24:33.704665232+05:30","level":"ERROR","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.gateway.Service.LoginServiceImpl","message":"LDAP Server Error for user v1023950: LDAP Server Down","stack_trace":""}
-2026-06-19 06:54:33.710 WARN  [boundedElastic-1] c.f.g.C.AuthController: Login Failed for user: v1023950. Reason: System Error: Unable to connect to Authentication Server. Please try again later.
-{"@timestamp":"2026-06-19T12:24:33.71091837+05:30","level":"WARN","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.gateway.Controller.AuthController","message":"Login Failed for user: v1023950. Reason: System Error: Unable to connect to Authentication Server. Please try again later.","stack_trace":""}
+2026-06-19 07:06:30.605 ERROR [boundedElastic-38] c.f.g.e.GlobalExceptionHandler: System Error
+org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)
+        Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException:
+Error has been observed at the following site(s):
+        *__checkpoint ⇢ Handler com.fincore.gateway.Controller.AuthController#login(ServerHttpRequest, ServerHttpResponse, UserDto) [DispatcherHandler]
+Original Stack Trace:
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1797)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)
+                at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)
+                at org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)
+                at reactor.core.publisher.MonoSupplier.call(MonoSupplier.java:67)
+                at reactor.core.publisher.FluxUsingWhen.subscribe(FluxUsingWhen.java:80)
+                at reactor.core.publisher.Mono.subscribe(Mono.java:4576)
+                at reactor.core.publisher.MonoIgnoreThen$ThenIgnoreMain.subscribeNext(MonoIgnoreThen.java:265)
+                at reactor.core.publisher.MonoIgnoreThen.subscribe(MonoIgnoreThen.java:51)
+                at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
+                at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:165)
+                at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:252)
+                at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+                at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+                at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+                at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+                at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+                at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+                at java.base/java.lang.Thread.run(Thread.java:1570)
+Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
+        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:354)
+        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:112)
+        at java.base/java.util.Optional.orElseGet(Optional.java:364)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:112)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1795)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)
+        at org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)
+        at reactor.core.publisher.MonoSupplier.call(MonoSupplier.java:67)
+        at reactor.core.publisher.FluxUsingWhen.subscribe(FluxUsingWhen.java:80)
+        at reactor.core.publisher.Mono.subscribe(Mono.java:4576)
+        at reactor.core.publisher.MonoIgnoreThen$ThenIgnoreMain.subscribeNext(MonoIgnoreThen.java:265)
+        at reactor.core.publisher.MonoIgnoreThen.subscribe(MonoIgnoreThen.java:51)
+        at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
+        at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:165)
+        at reactor.core.publisher.FluxSubscribeOnCallable$CallableSubscribeOnSubscription.run(FluxSubscribeOnCallable.java:252)
+        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:68)
+        at reactor.core.scheduler.SchedulerTask.call(SchedulerTask.java:28)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base/java.lang.Thread.run(Thread.java:1570)
+Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.be-test.svc.cluster.local/10.111.179.21:6379
+        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$2.run(AbstractEpollChannel.java:615)
+        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
+        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:156)
+        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)
+        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)
+        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)
+        at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:408)
+        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)
+        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        ... 1 common frames omitted
+{"@timestamp":"2026-06-19T12:36:30.605116357+05:30","level":"ERROR","service":"LoginService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"c.f.g.exception.GlobalExceptionHandler","message":"System Error","stack_trace":"org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)\n\tSuppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: \nError has been observed at the following site(s):\n\t*__checkpoint ⇢ Handler com.fincore.gateway.Controller.AuthController#login(ServerHttpRequest, ServerHttpResponse, UserDto) [DispatcherHandler]\nOriginal Stack Trace:\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1866)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1797)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1535)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1571)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedReactiveConnection(LettuceConnectionFactory.java:1282)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:1157)\n\t\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getReactiveConnection(LettuceConnectionFactory.java:121)\n\t\tat org.springframework.data.redis.core.ReactiveRedisTemplate.lambda$getConnection$2(ReactiveRedisTemplate.java:273)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:354)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:220)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:112)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:112)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1795)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1594)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1574)\nCaused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.be-test.svc.cluster.local/10.111.179.21:6379\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$2.run(AbstractEpollChannel.java:615)\n\tat io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)\n\tat io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:156)\n\tat io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)\n\tat io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:472)\n\tat io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:408)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:998)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n"}
