@@ -1,105 +1,87 @@
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-{"@timestamp":"2026-06-22T15:53:20.067504853+05:30","level":"INFO","service":"HelpService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
-2026-06-22 10:23:20.086 ERROR [main] o.s.b.SpringApplication: Application run failed
-org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'helpController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/helpservice/controller/HelpController.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'finCoreChatAgent' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/helpservice/service/FinCoreChatAgent.class]: Unsatisfied dependency expressed through constructor parameter 2: Error creating bean with name 'embeddingStore' defined in class path resource [com/fincore/helpservice/config/AiConfiguration.class]: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-        at com.fincore.helpservice.HelpServiceApplication.main(HelpServiceApplication.java:12)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'finCoreChatAgent' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/helpservice/service/FinCoreChatAgent.class]: Unsatisfied dependency expressed through constructor parameter 2: Error creating bean with name 'embeddingStore' defined in class path resource [com/fincore/helpservice/config/AiConfiguration.class]: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 24 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'embeddingStore' defined in class path resource [com/fincore/helpservice/config/AiConfiguration.class]: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.
-        at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
-        at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1337)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1167)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 38 common frames omitted
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.
-        at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)
-        at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)
-        ... 52 common frames omitted
-Caused by: redis.clients.jedis.exceptions.JedisConnectionException: Failed to connect to any host resolved for DNS name.
-        at redis.clients.jedis.DefaultJedisSocketFactory.connectToFirstSuccessfulHost(DefaultJedisSocketFactory.java:63)
-        at redis.clients.jedis.DefaultJedisSocketFactory.createSocket(DefaultJedisSocketFactory.java:87)
-        at redis.clients.jedis.Connection.connect(Connection.java:195)
-        at redis.clients.jedis.Connection.initializeFromClientConfig(Connection.java:393)
-        at redis.clients.jedis.Connection.<init>(Connection.java:68)
-        at redis.clients.jedis.ConnectionFactory.makeObject(ConnectionFactory.java:59)
-        at org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:566)
-        at org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:306)
-        at org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:233)
-        at redis.clients.jedis.util.Pool.getResource(Pool.java:38)
-        at redis.clients.jedis.ConnectionPool.getResource(ConnectionPool.java:29)
-        at redis.clients.jedis.ConnectionPool.getResource(ConnectionPool.java:7)
-        at redis.clients.jedis.providers.PooledConnectionProvider.getConnection(PooledConnectionProvider.java:68)
-        at redis.clients.jedis.executors.DefaultCommandExecutor.executeCommand(DefaultCommandExecutor.java:23)
-        at redis.clients.jedis.UnifiedJedis.executeCommand(UnifiedJedis.java:244)
-        at redis.clients.jedis.UnifiedJedis.ftList(UnifiedJedis.java:3883)
-        at dev.langchain4j.store.embedding.redis.RedisEmbeddingStore.isIndexExist(RedisEmbeddingStore.java:151)
-        at dev.langchain4j.store.embedding.redis.RedisEmbeddingStore.<init>(RedisEmbeddingStore.java:87)
-        at dev.langchain4j.store.embedding.redis.RedisEmbeddingStore$Builder.build(RedisEmbeddingStore.java:322)
-        at com.fincore.helpservice.config.AiConfiguration.embeddingStore(AiConfiguration.java:97)
-        at com.fincore.helpservice.config.AiConfiguration$$SpringCGLIB$$0.CGLIB$embeddingStore$3(<generated>)
-        at com.fincore.helpservice.config.AiConfiguration$$SpringCGLIB$$FastClass$$1.invoke(<generated>)
-        at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258)
-        at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:339)
-        at com.fincore.helpservice.config.AiConfiguration$$SpringCGLIB$$0.embeddingStore(<generated>)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:140)
-        ... 53 common frames omitted
-        Suppressed: java.net.SocketTimeoutException: Connect timed out
-                at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:546)
-                at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
-                at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
-                at java.base/java.net.Socket.connect(Socket.java:752)
-                at redis.clients.jedis.DefaultJedisSocketFactory.connectToFirstSuccessfulHost(DefaultJedisSocketFactory.java:73)
-                ... 80 common frames omitted
-{"@timestamp":"2026-06-22T15:53:20.086030772+05:30","level":"ERROR","service":"HelpService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'helpController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/helpservice/controller/HelpController.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'finCoreChatAgent' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/helpservice/service/FinCoreChatAgent.class]: Unsatisfied dependency expressed through constructor parameter 2: Error creating bean with name 'embeddingStore' defined in class path resource [com/fincore/helpservice/config/AiConfiguration.class]: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'finCoreChatAgent' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/helpservice/service/FinCoreChatAgent.class]: Unsatisfied dependency expressed through constructor parameter 2: Error creating bean with name 'embeddingStore' defined in class path resource [com/fincore/helpservice/config/AiConfiguration.class]: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'embeddingStore' defined in class path resource [com/fincore/helpservice/config/AiConfiguration.class]: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1337)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1167)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [dev.langchain4j.store.embedding.EmbeddingStore]: Factory method 'embeddingStore' threw exception with message: Failed to connect to any host resolved for DNS name.\n\tat org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1337)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1167)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\nCaused by: redis.clients.jedis.exceptions.JedisConnectionException: Failed to connect to any host resolved for DNS name.\n\tat redis.clients.jedis.DefaultJedisSocketFactory.connectToFirstSuccessfulHost(DefaultJedisSocketFactory.java:63)\n\tat redis.clients.jedis.DefaultJedisSocketFactory.createSocket(DefaultJedisSocketFactory.java:87)\n\tat redis.clients.jedis.Connection.connect(Connection.java:195)\n\tat redis.clients.jedis.Connection.initializeFromClientConfig(Connection.java:393)\n\tat redis.clients.jedis.Connection.<init>(Connection.java:68)\n\tat redis.clients.jedis.ConnectionFactory.makeObject(ConnectionFactory.java:59)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:566)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:306)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:233)\n\tat redis.clients.jedis.util.Pool.getResource(Pool.java:38)\n\tSuppressed: java.net.SocketTimeoutException: Connect timed out\n\t\tat java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:546)\n\t\tat java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)\n\t\tat java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)\n\t\tat java.base/java.net.Socket.connect(Socket.java:752)\n\t\tat redis.clients.jedis.DefaultJedisSocketFactory.connectToFirstSuccessfulHost(DefaultJedisSocketFactory.java:73)\n\t\tat redis.clients.jedis.DefaultJedisSocketFactory.createSocket(DefaultJedisSocketFactory.java:87)\n\t\tat redis.clients.jedis.Connection.connect(Connection.java:195)\n\t\tat redis.clients.jedis.Connection.initializeFromClientConfig(Connection.java:393)\n\t\tat redis.clients.jedis.Connection.<init>(Connection.java:68)\n\t\tat redis.clients.jedis.ConnectionFactory.makeObject(ConnectionFactory.java:59)\n"}
+# ==========================================
+# 1. THE DEPLOYMENT
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finny-deployment
+  namespace: uat-cbops1
+spec:
+  replicas: 1 # The HPA will take control of this number once deployed
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      containers:
+      - name: ollama
+        # Point to your custom, baked image
+        image: h06vksharbor.corp.ad.sbi/cbops/finny:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 11434
+        env:
+        # Keep models in memory forever (no 5m timeouts)
+        - name: OLLAMA_KEEP_ALIVE
+          value: "-1"
+        # Force Ollama to keep BOTH the Chat and Embedding models loaded at the same time
+        - name: OLLAMA_MAX_LOADED_MODELS
+          value: "2"
+        - name: OLLAMA_NUM_PARALLEL
+          value: "1"
+        resources:
+          requests:
+            # Baseline required to hold the 8B LLM and Embedding Model
+            memory: "8Gi"
+            cpu: "4000m"
+          limits:
+            # Ceiling raised to prevent OOMKills during long context chats
+            memory: "12Gi"
+            cpu: "12000m"
+            # IF YOUR DEV CLUSTER HAS GPUs, UNCOMMENT THE LINE BELOW:
+            # nvidia.com/gpu: 1
+
+---
+# ==========================================
+# 2. THE SERVICE
+# ==========================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: finny-service
+  namespace: uat-cbops1
+spec:
+  selector:
+    app: ollama
+  ports:
+  - protocol: TCP
+    port: 11434
+    targetPort: 11434
+---
+# ==========================================
+# 3. HORIZONTAL POD AUTOSCALER (HPA)
+# ==========================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ollama-hpa
+  namespace: uat-cbops1
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: finny-deployment
+  minReplicas: 1
+  # CAUTION: Max Replicas = 3 means at peak traffic, this will consume up to 36GB of Cluster RAM (12Gi * 3).
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80 # Scale up if CPU goes above 80%
+
