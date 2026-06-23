@@ -1,166 +1,105 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: redis-vector-pvc
-  namespace: uat-cbops1
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi # Enough space to hold tens of thousands of embedded banking rules
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-vector-deployment
-  namespace: uat-cbops1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis-vector
-  template:
-    metadata:
-      labels:
-        app: redis-vector
-    spec:
-      containers:
-      - name: redis-vector
-        image: h06vksharbor.corp.ad.sbi/cbops/redis-vector:v1
-        ports:
-        - containerPort: 6379
-        volumeMounts:
-        - name: redis-data
-          mountPath: /data
-        resources:
-          requests:
-            memory: "2Gi" # Vectors reside in RAM, so allocate enough baseline
-            cpu: "500m"
-          limits:
-            memory: "4Gi"
-            cpu: "1000m"
-      volumes:
-      - name: redis-data
-        persistentVolumeClaim:
-          claimName: redis-vector-pvc
----
-# =========================================================================
-# REDIS SERVICE
-# =========================================================================
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-vector-service
-  namespace: uat-cbops1
-spec:
-  selector:
-    app: redis-vector
-  ports:
-    - protocol: TCP
-      port: 6380       # Port the Java App connects to (matches application.properties)
-      targetPort: 6379 # Internal port Redis listens on
 
-this above file is redis vector 
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+{"@timestamp":"2026-06-23T11:31:59.292695954+05:30","level":"INFO","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
+2026-06-23 06:01:59.388 ERROR [main] o.s.b.SpringApplication: Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/controller/ReportController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 9: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
+        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
+        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.fincore.ReportService.ReportServiceApplication.main(ReportServiceApplication.java:10)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 9: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
+        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
+        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
+        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
+        ... 24 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
+        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:222)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:422)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1780)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
+        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
+        ... 38 common frames omitted
+Caused by: org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [SELECT USERS_DATE, ETL_DATE FROM FINCORE_DATE]
+        at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)
+        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+        at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1548)
+        at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)
+        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)
+        at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)
+        at com.fincore.commonutilities.buisnessobject.ControlDateService.getControlDates(ControlDateService.java:22)
+        at com.fincore.commonutilities.buisnessobject.ControlDateService.validate(ControlDateService.java:19)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457)
+        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:401)
+        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:219)
+        ... 51 common frames omitted
+Caused by: java.sql.SQLSyntaxErrorException: ORA-00942: table or view does not exist
 
-my requiuremnet is redis and redis vector
+        at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:629)
+        at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:563)
+        at oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1230)
+        at oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:771)
+        at oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:298)
+        at oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:511)
+        at oracle.jdbc.driver.T4CStatement.doOall8(T4CStatement.java:122)
+        at oracle.jdbc.driver.T4CStatement.executeForDescribe(T4CStatement.java:968)
+        at oracle.jdbc.driver.OracleStatement.prepareDefineBufferAndExecute(OracleStatement.java:1270)
+        at oracle.jdbc.driver.OracleStatement.executeMaybeDescribe(OracleStatement.java:1148)
+        at oracle.jdbc.driver.OracleStatement.executeSQLSelect(OracleStatement.java:1660)
+        at oracle.jdbc.driver.OracleStatement.doExecuteWithTimeout(OracleStatement.java:1469)
+        at oracle.jdbc.driver.OracleStatement.executeQuery(OracleStatement.java:2054)
+        at oracle.jdbc.driver.OracleStatementWrapper.executeQuery(OracleStatementWrapper.java:393)
+        at com.zaxxer.hikari.pool.ProxyStatement.executeQuery(ProxyStatement.java:110)
+        at com.zaxxer.hikari.pool.HikariProxyStatement.executeQuery(HikariProxyStatement.java)
+        at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)
+        at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+        ... 61 common frames omitted
+Caused by: oracle.jdbc.OracleDatabaseException: ORA-00942: table or view does not exist
 
-and below is my deployment file:
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: help-service-deployment
-  namespace: uat-cbops1
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: help-service-backend
-  template:
-    metadata:
-      labels:
-        app: help-service-backend
-    spec:
-      containers:
-      - name: help-service-container
-        image: h06vksharbor.corp.ad.sbi/cbops/help-service:UAT08
-        env:
-          - name: SPRING_DATA_REDIS_CLIENT_TYPE
-            value: "lettuce"
-          - name: SPRING_DATA_REDIS_HOST
-            value: "redis-service"
-          - name: SPRING_DATA_REDIS_PORT
-            value: "6379"
-          - name: SPRING_PROFILES_ACTIVE
-            value: "uat"
-        ports:
-        - containerPort: 9099
-        imagePullPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: help-service
-  namespace: uat-cbops1
-spec:
-  selector:
-    app: help-service-backend
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 9099
-  type: ClusterIP
-
-
-alos i m attaching my application.properties file:
-
-# ===================================================================
-# SPRING DATASOURCE (ORACLE) - change this to uat
-# ===================================================================
-spring.datasource.url=jdbc:oracle:thin:@10.177.179.85:1523/fincorepdb1
-spring.datasource.username=fincore
-spring.datasource.password=Password#1234
-
-# ===================================================================
-# JPA / HIBERNATE CONFIGURATION
-# ===================================================================
-spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.format_sql=false
-logging.level.org.hibernate.SQL=OFF
-logging.level.org.hibernate.orm.jdbc.bind=OFF
-
-# --- Redis Configuration ---
-spring.data.redis.host=redis-service
-spring.data.redis.port=6379
-spring.cache.type=redis
-
-# ==============================================================
-# KUBERNETES AI CONFIGS (UAT REGION - fincore-cbops1)
-# ==============================================================
-
-# 1. Ollama Connection (Uses K8s CoreDNS to find the pod automatically)
-langchain4j.ollama.base-url=http://finny-service.uat-cbops1.svc.cluster.local:11434
-langchain4j.ollama.chat-model.name=llama-fincore
-langchain4j.ollama.chat-model.temperature=0.1
-# Note: Ensure this matches the exact name we built in the Dockerfile!
-langchain4j.ollama.embedding-model.name=mxbai-embed-large
-
-# 2. Redis Vector Store Connection
-# Point to your Redis Vector Kubernetes Service
-langchain4j.vector-store.redis.host=redis-vector-service.uat-cbops1.svc.cluster.local
-langchain4j.vector-store.redis.port=6380
-langchain4j.vector-store.redis.index-name=fincore-help-index-v2
-langchain4j.vector-store.redis.prefix=fincore:doc:v2:
-langchain4j.vector-store.redis.dimension=1024
-
-please help me dugging the issue
-
-
-
-
-
-
+        at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:636)
+        ... 78 common frames omitted
+{"@timestamp":"2026-06-23T11:31:59.388213987+05:30","level":"ERROR","service":"ReportService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportController' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/controller/ReportController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 9: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reportServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/ReportService/service/ReportServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 9: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:222)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:422)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1780)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\n\tat org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)\nCaused by: org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [SELECT USERS_DATE, ETL_DATE FROM FINCORE_DATE]\n\tat org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:103)\n\tat org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)\n\tat org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1548)\n\tat org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)\n\tat org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)\n\tat org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)\n\tat org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)\n\tat com.fincore.commonutilities.buisnessobject.ControlDateService.getControlDates(ControlDateService.java:22)\n\tat com.fincore.commonutilities.buisnessobject.ControlDateService.validate(ControlDateService.java:19)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\nCaused by: java.sql.SQLSyntaxErrorException: ORA-00942: table or view does not exist\n\n\tat oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:629)\n\tat oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:563)\n\tat oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1230)\n\tat oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:771)\n\tat oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:298)\n\tat oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:511)\n\tat oracle.jdbc.driver.T4CStatement.doOall8(T4CStatement.java:122)\n\tat oracle.jdbc.driver.T4CStatement.executeForDescribe(T4CStatement.java:968)\n\tat oracle.jdbc.driver.OracleStatement.prepareDefineBufferAndExecute(OracleStatement.java:1270)\n\tat oracle.jdbc.driver.OracleStatement.executeMaybeDescribe(OracleStatement.java:1148)\nCaused by: oracle.jdbc.OracleDatabaseException: ORA-00942: table or view does not exist\n\n\tat oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:636)\n\tat oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:563)\n\tat oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1230)\n\tat oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:771)\n\tat oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:298)\n\tat oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:511)\n\tat oracle.jdbc.driver.T4CStatement.doOall8(T4CStatement.java:122)\n\tat oracle.jdbc.driver.T4CStatement.executeForDescribe(T4CStatement.java:968)\n\tat oracle.jdbc.driver.OracleStatement.prepareDefineBufferAndExecute(OracleStatement.java:1270)\n\tat oracle.jdbc.driver.OracleStatement.executeMaybeDescribe(OracleStatement.java:1148)\n"}
