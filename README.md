@@ -1,4 +1,18 @@
-
+ngframework.web.filter.CorsFilter@d9fe131, org.springframework.security.web.authentication.logout.LogoutFilter@31f575aa, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5be0cb4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5406ce9f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@585cbbde, org.springframework.security.web.session.SessionManagementFilter@73bd7cca, org.springframework.security.web.access.ExceptionTranslationFilter@2ca9368b, org.springframework.security.web.access.intercept.AuthorizationFilter@445ec339]
+2026-06-24T07:57:21.550Z  INFO 1 --- [VoucherService] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 9999 (http) with context path '/'
+2026-06-24T07:57:21.560Z  INFO 1 --- [VoucherService] [           main] c.f.V.VoucherServiceApplication          : Started VoucherServiceApplication in 8.164 seconds (process running for 8.754)
+2026-06-24T07:57:37.377Z  INFO 1 --- [VoucherService] [nio-9999-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-24T07:57:37.377Z  INFO 1 --- [VoucherService] [nio-9999-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-24T07:57:37.379Z  INFO 1 --- [VoucherService] [nio-9999-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-06-24T07:57:37.670Z  INFO 1 --- [VoucherService] [nio-9999-exec-7] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: CURRENCIES | Count: 44 | Duration: 4ms
+2026-06-24T07:58:05.044Z  INFO 1 --- [VoucherService] [nio-9999-exec-6] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: CURRENCIES | Count: 44 | Duration: 2ms
+2026-06-24T07:58:16.099Z  INFO 1 --- [VoucherService] [nio-9999-exec-2] c.f.V.S.v.VoucherBulkValidationService   : VALIDATION_INIT | ReqID: e36b7349-168d-4e48-a0cc-04cdad420371 | Status: Temporary storage allocated
+2026-06-24T07:58:16.717Z  INFO 1 --- [VoucherService] [    BulkCoord-1] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: BRANCHES | Count: 31089 | Duration: 34ms
+2026-06-24T07:58:16.720Z  INFO 1 --- [VoucherService] [    BulkCoord-1] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: CURRENCIES | Count: 44 | Duration: 2ms
+2026-06-24T07:58:16.734Z  INFO 1 --- [VoucherService] [    BulkCoord-1] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: CGLS | Count: 8740 | Duration: 14ms
+2026-06-24T07:58:16.739Z  INFO 1 --- [VoucherService] [    BulkCoord-1] c.f.V.S.v.VoucherBulkValidationService   : VALIDATION_SUCCESS | ReqID: e36b7349-168d-4e48-a0cc-04cdad420371 | Duration: 637ms
+2026-06-24T07:58:17.023Z ERROR 1 --- [VoucherService] [nio-9999-exec-5] c.f.V.Exception.GlobalExceptionHandler   : IO_STREAM_FAILURE | Path: /api/voucher/create-batch-from-cache | Type: MismatchedInputException
+2026-06-24T07:58:22.761Z  INFO 1 --- [VoucherService] [nio-9999-exec-7] c.f.V.S.v.VoucherBulkValidationService   : VALIDATION_INIT | ReqID: be1188d8-546c-4b12-a242-df8307e9bb0f | Status: Temporary storage allocated
 2026-06-24T07:58:22.822Z  INFO 1 --- [VoucherService] [    BulkCoord-2] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: BRANCHES | Count: 31089 | Duration: 21ms
 2026-06-24T07:58:22.824Z  INFO 1 --- [VoucherService] [    BulkCoord-2] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: CURRENCIES | Count: 44 | Duration: 2ms
 2026-06-24T07:58:22.835Z  INFO 1 --- [VoucherService] [    BulkCoord-2] c.f.V.Service.ValidationMasterService    : MASTER_DATA_LOADED | Type: CGLS | Count: 8740 | Duration: 10ms
