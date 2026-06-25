@@ -187,7 +187,69 @@ spec:
   podSelector: {}
   policyTypes:
   - Egress
- 
+
+
+ and below is my manifest file:
+
+
+ apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+  namespace: cbops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-backend
+  template:
+    metadata:
+      labels:
+        app: notification-backend
+    spec:
+      containers:
+        - name: notification-container
+          image: h06vksharbor.corp.ad.sbi/cbops/notification-service:SIT02
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-db:5432/notification_db"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "notification_user"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "notification_password"
+            - name: SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS
+              value: "kafka.cbops.svc.cluster.local:9092"
+            - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
+              value: "kafka.cbops.svc.cluster.local:9092"
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: "notification-service-group"
+            - name: SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET
+              value: "earliest"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis-service"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_CLIENT_TYPE
+              value: "lettuce"
+          ports:
+            - containerPort: 9010
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: cbops
+spec:
+  selector:
+    app: notification-backend
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 9010
+  type: ClusterIP
+
  
  
 
