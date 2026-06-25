@@ -1,19 +1,76 @@
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-communicationservice-to-kafka
-  namespace: uat-cbops1
-spec:
-  podSelector:
-    matchLabels:
-      app: kafka
-  policyTypes:
-  - Ingress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: communication-service
-    ports:
-    - protocol: TCP
-      port: 9092
+2026-06-25 07:51:22.633 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:22.633953004+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:23.637 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:23.637934334+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:23.638 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:23.638244724+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:24.642 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:24.64225145+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:24.642 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:24.642692401+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:25.646 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:25.646470872+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:25.646 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:25.646829408+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:26.650 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:26.650736915+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:26.651 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:26.651093047+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:27.554 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:27.554468708+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:27.554 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:27.554798104+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:28.558 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:28.558357236+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:28.558 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:28.55871374+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:29.562 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:29.562559327+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:29.562 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:29.562973265+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:30.319 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.a.i.AdminMetadataManager: [AdminClient clientId=NotificationService-admin-0] Metadata update failed
+org.apache.kafka.common.errors.TimeoutException: Timed out waiting for a node assignment. Call: fetchMetadata
+{"@timestamp":"2026-06-25T13:21:30.319242848+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.a.k.c.a.internals.AdminMetadataManager","message":"[AdminClient clientId=NotificationService-admin-0] Metadata update failed","stack_trace":"org.apache.kafka.common.errors.TimeoutException: Timed out waiting for a node assignment. Call: fetchMetadata\n"}
+2026-06-25 07:51:30.321 ERROR [main] o.s.c.l.LogAccessor: Could not configure topics
+org.springframework.kafka.KafkaException: Timed out waiting to get existing topics
+        at org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:539)
+        at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+        at org.springframework.kafka.core.KafkaAdmin.checkPartitions(KafkaAdmin.java:518)
+        at org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:411)
+        at org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:263)
+        at org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:227)
+        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:986)
+        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.fincore.NotificationService.NotificationServiceApplication.main(NotificationServiceApplication.java:18)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+Caused by: java.util.concurrent.TimeoutException: null
+        at java.base/java.util.concurrent.CompletableFuture.timedGet(CompletableFuture.java:1960)
+        at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2095)
+        at org.apache.kafka.common.internals.KafkaFutureImpl.get(KafkaFutureImpl.java:180)
+        at org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:521)
+        ... 20 common frames omitted
+{"@timestamp":"2026-06-25T13:21:30.321884301+05:30","level":"ERROR","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.kafka.core.KafkaAdmin","message":"Could not configure topics","stack_trace":"org.springframework.kafka.KafkaException: Timed out waiting to get existing topics\n\tat org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:539)\n\tat java.base/java.util.HashMap.forEach(HashMap.java:1429)\n\tat org.springframework.kafka.core.KafkaAdmin.checkPartitions(KafkaAdmin.java:518)\n\tat org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:411)\n\tat org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:263)\n\tat org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:227)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:986)\n\tat org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)\n\tat org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)\nCaused by: java.util.concurrent.TimeoutException: null\n\tat java.base/java.util.concurrent.CompletableFuture.timedGet(CompletableFuture.java:1960)\n\tat java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2095)\n\tat org.apache.kafka.common.internals.KafkaFutureImpl.get(KafkaFutureImpl.java:180)\n\tat org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:521)\n\tat java.base/java.util.HashMap.forEach(HashMap.java:1429)\n\tat org.springframework.kafka.core.KafkaAdmin.checkPartitions(KafkaAdmin.java:518)\n\tat org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:411)\n\tat org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:263)\n\tat org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:227)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:986)\n"}
+2026-06-25 07:51:30.624 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:30.624472428+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:30.624 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:30.624840522+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:31.628 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:31.628412946+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:31.628 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:31.628737925+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-25 07:51:32.632 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
+{"@timestamp":"2026-06-25T13:21:32.632284548+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
+2026-06-25 07:51:32.632 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-25T13:21:32.632611095+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+
