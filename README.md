@@ -75,3 +75,16 @@
 2026-06-25 10:49:29 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Bootstrap broker kafka.cbops.svc.cluster.local:9092 (id: -1 rack: null) disconnected
 2026-06-25 10:49:55 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 25448 ms.
 2026-06-25 10:49:55 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Bootstrap broker kafka.cbops.svc.cluster.local:9092 (id: -1 rack: null) disconnected
+
+
+
+still getting the issue ::
+
+i m giving you the labels:
+
+[root@fcsitgateway SIT-KAFKA]# k get pod debezium-server-86c8fbbbcb-49jm9 -n cbops --show-lables
+error: unknown flag: --show-lables
+See 'kubectl get --help' for usage.
+[root@fcsitgateway SIT-KAFKA]# k get pod debezium-server-86c8fbbbcb-49jm9 -n cbops --show-labels
+NAME                               READY   STATUS    RESTARTS      AGE     LABELS
+debezium-server-86c8fbbbcb-49jm9   1/1     Running   1 (31s ago)   3m17s   app=debezium-server,pod-template-hash=86c8fbbbcb
