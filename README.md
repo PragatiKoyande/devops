@@ -1,48 +1,42 @@
-2026-06-25 08:14:28.542 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:28.542691833+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:28.543 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:28.543044303+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:29.547 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:29.547425912+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:29.547 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:29.547799806+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:30.551 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:30.551867943+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:30.552 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:30.552233189+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:31.556 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:31.556296972+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:31.556 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:31.556649394+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:32.560 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:32.560759719+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:32.561 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:32.561103511+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:33.564 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:33.564951329+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:33.565 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:33.565261088+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:34.569 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:34.569205262+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:34.569 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:34.569595073+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:35.473 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:35.473271312+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:35.473 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:35.473841774+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:36.478 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:36.478062178+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:36.478 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:36.478535598+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:37.382 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:37.382327302+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:37.382 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:37.382730759+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:38.286 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:38.286421404+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:38.286 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:38.286808596+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
-2026-06-25 08:14:39.190 INFO  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.
-{"@timestamp":"2026-06-25T13:44:39.190572071+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Node -1 disconnected.","stack_trace":""}
-2026-06-25 08:14:39.190 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
-{"@timestamp":"2026-06-25T13:44:39.190900167+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+[root@fcsitgateway Network]# k get svc -A | grep -i kafka
+backend                   kafka                               ClusterIP      None             <none>           9092/TCP,9093/TCP            80d
+cbops                     kafka                               ClusterIP      None             <none>           9092/TCP,9093/TCP            152d
+[root@fcsitgateway Network]# kgp
+NAME                                                  READY   STATUS    RESTARTS          AGE
+airflow-api-server-588b95b9fc-f5brp                   1/1     Running   0                 40d
+airflow-dag-processor-5c6f9f65fb-nb6rf                2/2     Running   101 (6d15h ago)   40d
+airflow-redis-0                                       1/1     Running   0                 40d
+airflow-scheduler-658884d69c-hxtfl                    2/2     Running   126 (6d15h ago)   40d
+airflow-statsd-848cff7966-ccmr9                       1/1     Running   0                 40d
+airflow-triggerer-0                                   2/2     Running   102 (6d15h ago)   39d
+airflow-worker-0                                      2/2     Running   15 (6d18h ago)    40d
+airflow-worker-1                                      2/2     Running   0                 6d4h
+akhq-64c59669df-rtm9f                                 1/1     Running   0                 6d4h
+common-master-deployment-7b798566cc-r7jcm             1/1     Running   0                 33d
+common-request-deployment-579cb9b47-xccnz             1/1     Running   0                 33d
+dashboard-deployment-7d97f6df78-2hj6r                 1/1     Running   0                 33d
+debezium-server-77df5c5c9b-pchfz                      1/1     Running   0                 40d
+enquiry-service-deployment-66756f499b-58d62           1/1     Running   0                 10d
+grafana-758f498965-52ddd                              1/1     Running   0                 40d
+kafka-0                                               1/1     Running   0                 6d4h
+login-deployment-5bf4f7bfc6-vplhc                     1/1     Running   0                 31d
+notification-deployment-6487d9d495-p4kth              1/1     Running   2 (30s ago)       2m32s
+postgres-db-7b865dd6fc-v94qc                          1/1     Running   0                 40d
+process-status-deployment-75cd4b5fdf-kl2c4            1/1     Running   0                 33d
+react-app-deployment-7bf8f85696-4czb2                 1/1     Running   0                 24h
+redis-deployment-54599c456d-vcxfb                     1/1     Running   0                 40d
+report-builder-deployment-78f9c7bd66-dr4q4            1/1     Running   0                 33d
+report-deployment-7f6d89db8c-l7xh5                    1/1     Running   0                 33d
+spark-operator-controller-55f6d78556-sfnmg            1/1     Running   4 (19h ago)       6d4h
+spark-operator-webhook-7677dd468d-rmxcc               1/1     Running   4 (28h ago)       6d4h
+spark-thrift-78bf5cd48-d4tlr                          1/1     Running   0                 40d
+template-config-deployment-67757d565b-pddzl           1/1     Running   0                 33d
+transactions-deployment-67d78b694d-zk47v              1/1     Running   0                 7d21h
+user-deployment-79db8b448d-67dq7                      1/1     Running   0                 44h
+voucher-enquiry-service-deployment-5cf5ff5cd7-6mfxz   1/1     Running   0                 6d21h
+voucher-service-deployment-5bb89b5f54-r7zlw           1/1     Running   0                 21h
+[root@fcsitgateway Network]# k exec -it notification-deployment-6487d9d495-p4kth -n cbops -- env | grep -i kafka
+SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka.cbops.svc.cluster.local:9092
+SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka.cbops.svc.cluster.local:9092
+SPRING_KAFKA_CONSUMER_GROUP_ID=notification-service-group
+SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET=earliest
