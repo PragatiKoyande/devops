@@ -1,21 +1,82 @@
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-postgres-notification
-  namespace: cbops
-spec:
-  podSelector:
-    matchLabels:
-      app: notification-backend
+{"@timestamp":"2026-06-25T14:51:46.993134043+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.a.kafka.common.utils.AppInfoParser","message":"App info kafka.consumer for consumer-notification-dispatch-workers-3 unregistered","stack_trace":""}
+2026-06-25 09:21:46.993 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.s.c.l.LogAccessor: notification-dispatch-workers: Consumer stopped
+{"@timestamp":"2026-06-25T14:51:46.993310277+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.k.l.KafkaMessageListenerContainer","message":"notification-dispatch-workers: Consumer stopped","stack_trace":""}
+2026-06-25 09:21:46.994 INFO  [main] o.a.j.l.DirectJDKLog: Stopping ProtocolHandler ["http-nio-9010"]
+{"@timestamp":"2026-06-25T14:51:46.994653378+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.apache.coyote.http11.Http11NioProtocol","message":"Stopping ProtocolHandler [\"http-nio-9010\"]","stack_trace":""}
+2026-06-25 09:21:47.103 WARN  [main] o.s.c.s.AbstractApplicationContext: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'redisMessageListenerContainer'
+{"@timestamp":"2026-06-25T14:51:47.103959127+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext","message":"Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'redisMessageListenerContainer'","stack_trace":""}
+2026-06-25 09:21:47.109 INFO  [main] o.s.o.j.AbstractEntityManagerFactoryBean: Closing JPA EntityManagerFactory for persistence unit 'default'
+{"@timestamp":"2026-06-25T14:51:47.109179653+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.o.j.LocalContainerEntityManagerFactoryBean","message":"Closing JPA EntityManagerFactory for persistence unit 'default'","stack_trace":""}
+2026-06-25 09:21:47.111 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown initiated...
+{"@timestamp":"2026-06-25T14:51:47.111553298+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown initiated...","stack_trace":""}
+2026-06-25 09:21:47.114 INFO  [main] c.z.h.HikariDataSource: HikariPool-1 - Shutdown completed.
+{"@timestamp":"2026-06-25T14:51:47.11445832+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.HikariDataSource","message":"HikariPool-1 - Shutdown completed.","stack_trace":""}
+2026-06-25 09:21:47.134 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLogger:
 
-  policyTypes:
-  - Egress
-
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: postgres-db
-    ports:
-    - protocol: TCP
-      port: 5432
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+{"@timestamp":"2026-06-25T14:51:47.134064454+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
+2026-06-25 09:21:47.146 ERROR [main] o.s.b.SpringApplication: Application run failed
+org.springframework.context.ApplicationContextException: Failed to start bean 'redisMessageListenerContainer'
+        at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:291)
+        at org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:471)
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+        at org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:260)
+        at org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:205)
+        at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:981)
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+        at com.fincore.NotificationService.NotificationServiceApplication.main(NotificationServiceApplication.java:18)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+Caused by: org.springframework.data.redis.listener.adapter.RedisListenerExecutionFailedException: org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer.lazyListen(RedisMessageListenerContainer.java:382)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer.start(RedisMessageListenerContainer.java:360)
+        at org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:288)
+        ... 18 common frames omitted
+Caused by: org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1847)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1778)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1580)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1560)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1521)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1557)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1243)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1049)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer$Subscriber.lambda$initialize$0(RedisMessageListenerContainer.java:1239)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer$Subscriber.doInLock(RedisMessageListenerContainer.java:1453)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer$Subscriber.initialize(RedisMessageListenerContainer.java:1233)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer.doSubscribe(RedisMessageListenerContainer.java:427)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer.lazyListen(RedisMessageListenerContainer.java:403)
+        at org.springframework.data.redis.listener.RedisMessageListenerContainer.lazyListen(RedisMessageListenerContainer.java:373)
+        ... 20 common frames omitted
+Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:78)
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:56)
+        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:350)
+        at io.lettuce.core.RedisClient.connect(RedisClient.java:215)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:112)
+        at java.base/java.util.Optional.orElseGet(Optional.java:364)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:112)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1776)
+        ... 32 common frames omitted
+Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service/10.96.167.158:6379
+        at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe$1.run(AbstractNioChannel.java:263)
+        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
+        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:153)
+        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)
+        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)
+        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:469)
+        at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:569)
+        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:994)
+        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        at java.base/java.lang.Thread.run(Thread.java:1570)
+{"@timestamp":"2026-06-25T14:51:47.146386554+05:30","level":"ERROR","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.context.ApplicationContextException: Failed to start bean 'redisMessageListenerContainer'\n\tat org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:291)\n\tat org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:471)\n\tat java.base/java.lang.Iterable.forEach(Iterable.java:75)\n\tat org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:260)\n\tat org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:205)\n\tat org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:981)\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)\n\tat org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)\n\tat org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)\n\tat org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)\nCaused by: org.springframework.data.redis.listener.adapter.RedisListenerExecutionFailedException: org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.listener.RedisMessageListenerContainer.lazyListen(RedisMessageListenerContainer.java:382)\n\tat org.springframework.data.redis.listener.RedisMessageListenerContainer.start(RedisMessageListenerContainer.java:360)\n\tat org.springframework.context.support.DefaultLifecycleProcessor.doStart(DefaultLifecycleProcessor.java:288)\n\tat org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.start(DefaultLifecycleProcessor.java:471)\n\tat java.base/java.lang.Iterable.forEach(Iterable.java:75)\n\tat org.springframework.context.support.DefaultLifecycleProcessor.startBeans(DefaultLifecycleProcessor.java:260)\n\tat org.springframework.context.support.DefaultLifecycleProcessor.onRefresh(DefaultLifecycleProcessor.java:205)\n\tat org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:981)\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)\n\tat org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)\nCaused by: org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1847)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1778)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1580)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1560)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1521)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1557)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1243)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1049)\n\tat org.springframework.data.redis.listener.RedisMessageListenerContainer$Subscriber.lambda$initialize$0(RedisMessageListenerContainer.java:1239)\n\tat org.springframework.data.redis.listener.RedisMessageListenerContainer$Subscriber.doInLock(RedisMessageListenerContainer.java:1453)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:78)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:56)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:350)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:215)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:112)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:112)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1776)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1580)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1560)\nCaused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service/10.96.167.158:6379\n\tat io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe$1.run(AbstractNioChannel.java:263)\n\tat io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)\n\tat io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:153)\n\tat io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:173)\n\tat io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:166)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:469)\n\tat io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:569)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:994)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n"}
