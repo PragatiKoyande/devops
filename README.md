@@ -1,71 +1,75 @@
-{"@timestamp":"2026-06-25T15:07:11.094607266+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000922, User=9000001, 100%","stack_trace":""}
-2026-06-25 09:37:19.154 INFO  [http-nio-9010-exec-9] c.f.N.s.SsePushService: New local SSE connection established for user: tcs0000000. Total local connections: 3
-{"@timestamp":"2026-06-25T15:07:19.154345343+05:30","level":"INFO","service":"NotificationService","traceId":"83d605c0-e322-44f8-b48e-40af604fa047","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: tcs0000000. Total local connections: 3","stack_trace":""}
-2026-06-25 09:37:19.155 INFO  [http-nio-9010-exec-9] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:07:19.155804751+05:30","level":"INFO","service":"NotificationService","traceId":"83d605c0-e322-44f8-b48e-40af604fa047","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:37:22.708 INFO  [http-nio-9010-exec-1] c.f.N.s.SsePushService: New local SSE connection established for user: tcs0000000. Total local connections: 3
-{"@timestamp":"2026-06-25T15:07:22.708352765+05:30","level":"INFO","service":"NotificationService","traceId":"aca6d649-2f33-4292-a4c9-5bf4316ad3bf","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: tcs0000000. Total local connections: 3","stack_trace":""}
-2026-06-25 09:37:22.709 INFO  [http-nio-9010-exec-1] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:07:22.709786809+05:30","level":"INFO","service":"NotificationService","traceId":"aca6d649-2f33-4292-a4c9-5bf4316ad3bf","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:37:23.939 INFO  [http-nio-9010-exec-3] c.f.N.s.SsePushService: New local SSE connection established for user: tcs0000000. Total local connections: 3
-{"@timestamp":"2026-06-25T15:07:23.939189891+05:30","level":"INFO","service":"NotificationService","traceId":"2cc1c962-3e50-424b-af2c-d89dbc4c318d","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: tcs0000000. Total local connections: 3","stack_trace":""}
-2026-06-25 09:37:23.940 INFO  [http-nio-9010-exec-3] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:07:23.940689963+05:30","level":"INFO","service":"NotificationService","traceId":"2cc1c962-3e50-424b-af2c-d89dbc4c318d","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:37:25.350 INFO  [http-nio-9010-exec-4] c.f.N.s.SsePushService: New local SSE connection established for user: tcs0000000. Total local connections: 3
-{"@timestamp":"2026-06-25T15:07:25.350793385+05:30","level":"INFO","service":"NotificationService","traceId":"76358cf1-5049-4abf-a12a-2b583e4883d1","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: tcs0000000. Total local connections: 3","stack_trace":""}
-2026-06-25 09:37:25.352 INFO  [http-nio-9010-exec-4] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:07:25.352156766+05:30","level":"INFO","service":"NotificationService","traceId":"76358cf1-5049-4abf-a12a-2b583e4883d1","userId":"tcs0000000","clientIp":"10.0.19.45","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:37:48.063 INFO  [http-nio-9010-exec-9] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:07:48.063154818+05:30","level":"INFO","service":"NotificationService","traceId":"ec6985fe-1180-46b5-b4f0-a77a93747020","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:37:48.064 INFO  [http-nio-9010-exec-9] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:07:48.064731469+05:30","level":"INFO","service":"NotificationService","traceId":"ec6985fe-1180-46b5-b4f0-a77a93747020","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:44:29.369 INFO  [http-nio-9010-exec-10] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:14:29.369896834+05:30","level":"INFO","service":"NotificationService","traceId":"17767e4e-547b-4ac6-8f64-61d297f088d6","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:44:29.371 INFO  [http-nio-9010-exec-10] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:14:29.371612925+05:30","level":"INFO","service":"NotificationService","traceId":"17767e4e-547b-4ac6-8f64-61d297f088d6","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:44:29.491 INFO  [http-nio-9010-exec-1] c.f.N.c.NotificationController: userId >>9000001
-{"@timestamp":"2026-06-25T15:14:29.491300012+05:30","level":"INFO","service":"NotificationService","traceId":"a0dcdf8d-b2e9-4b5f-9a03-946ef3ae1685","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/unread-count","class":"c.f.N.controller.NotificationController","message":"userId >>9000001","stack_trace":""}
-2026-06-25 09:44:29.493 INFO  [http-nio-9010-exec-1] c.f.N.s.NotificationService: Fetching unread count for user: 9000001
-{"@timestamp":"2026-06-25T15:14:29.493551934+05:30","level":"INFO","service":"NotificationService","traceId":"a0dcdf8d-b2e9-4b5f-9a03-946ef3ae1685","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/unread-count","class":"c.f.N.service.NotificationService","message":"Fetching unread count for user: 9000001","stack_trace":""}
-2026-06-25 09:44:29.498 INFO  [http-nio-9010-exec-1] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/unread-count | Status: 200
-{"@timestamp":"2026-06-25T15:14:29.498954831+05:30","level":"INFO","service":"NotificationService","traceId":"a0dcdf8d-b2e9-4b5f-9a03-946ef3ae1685","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/unread-count","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/unread-count | Status: 200","stack_trace":""}
-2026-06-25 09:44:29.523 INFO  [http-nio-9010-exec-2] c.f.N.s.NotificationService: Fetching notification history for user: 9000001, page: 0, size: 10
-{"@timestamp":"2026-06-25T15:14:29.523861304+05:30","level":"INFO","service":"NotificationService","traceId":"ba073530-4b1f-44c5-935e-dd40f3ba1b7e","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications","class":"c.f.N.service.NotificationService","message":"Fetching notification history for user: 9000001, page: 0, size: 10","stack_trace":""}
-2026-06-25 09:44:29.528 INFO  [http-nio-9010-exec-2] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200
-{"@timestamp":"2026-06-25T15:14:29.528855637+05:30","level":"INFO","service":"NotificationService","traceId":"ba073530-4b1f-44c5-935e-dd40f3ba1b7e","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200","stack_trace":""}
-2026-06-25 09:45:12.152 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#1-0-C-1] o.a.k.c.NetworkClient: [Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Node -1 disconnected.
-2026-06-25 09:45:12.152 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#3-0-C-1] o.a.k.c.NetworkClient: [Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Node -1 disconnected.
-{"@timestamp":"2026-06-25T15:15:12.152786727+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Node -1 disconnected.","stack_trace":""}
-{"@timestamp":"2026-06-25T15:15:12.152786353+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Node -1 disconnected.","stack_trace":""}
-2026-06-25 09:45:33.236 INFO  [http-nio-9010-exec-7] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:15:33.236105015+05:30","level":"INFO","service":"NotificationService","traceId":"728acf22-fe54-4dce-9df2-f33d4c4b7397","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:45:33.237 INFO  [http-nio-9010-exec-7] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:15:33.237727459+05:30","level":"INFO","service":"NotificationService","traceId":"728acf22-fe54-4dce-9df2-f33d4c4b7397","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:45:40.072 DEBUG [redisMessageListenerContainer-4] c.f.N.s.RedisProgressMessageListener: Received progress update from Redis: Task=0000923, User=9000001, 0%
-{"@timestamp":"2026-06-25T15:15:40.072472781+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000923, User=9000001, 0%","stack_trace":""}
-2026-06-25 09:45:40.074 DEBUG [redisMessageListenerContainer-5] c.f.N.s.RedisProgressMessageListener: Received progress update from Redis: Task=0000923, User=9000001, 5%
-{"@timestamp":"2026-06-25T15:15:40.074246214+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000923, User=9000001, 5%","stack_trace":""}
-2026-06-25 09:45:40.090 DEBUG [redisMessageListenerContainer-6] c.f.N.s.RedisProgressMessageListener: Received progress update from Redis: Task=0000923, User=9000001, 100%
-{"@timestamp":"2026-06-25T15:15:40.090616749+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000923, User=9000001, 100%","stack_trace":""}
-2026-06-25 09:46:35.000 INFO  [http-nio-9010-exec-1] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:16:35.000919181+05:30","level":"INFO","service":"NotificationService","traceId":"4c048278-ea47-4540-a751-e4b2c9619b31","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:46:35.002 INFO  [http-nio-9010-exec-1] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:16:35.002328377+05:30","level":"INFO","service":"NotificationService","traceId":"4c048278-ea47-4540-a751-e4b2c9619b31","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:50:39.030 INFO  [http-nio-9010-exec-10] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:20:39.030950849+05:30","level":"INFO","service":"NotificationService","traceId":"ca30f2aa-af4d-4650-8821-304e44a04e6b","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:50:39.032 INFO  [http-nio-9010-exec-10] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:20:39.032643646+05:30","level":"INFO","service":"NotificationService","traceId":"ca30f2aa-af4d-4650-8821-304e44a04e6b","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:51:57.739 INFO  [http-nio-9010-exec-7] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:21:57.739580614+05:30","level":"INFO","service":"NotificationService","traceId":"a98f220c-5aaa-465d-b497-306044bc5fdd","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:51:57.741 INFO  [http-nio-9010-exec-7] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:21:57.741199021+05:30","level":"INFO","service":"NotificationService","traceId":"a98f220c-5aaa-465d-b497-306044bc5fdd","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:53:18.074 INFO  [http-nio-9010-exec-4] c.f.N.s.SsePushService: New local SSE connection established for user: 9000001. Total local connections: 3
-{"@timestamp":"2026-06-25T15:23:18.074299984+05:30","level":"INFO","service":"NotificationService","traceId":"3fdeb743-e889-44a8-b785-3278fed7b522","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 9000001. Total local connections: 3","stack_trace":""}
-2026-06-25 09:53:18.075 INFO  [http-nio-9010-exec-4] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:23:18.075873788+05:30","level":"INFO","service":"NotificationService","traceId":"3fdeb743-e889-44a8-b785-3278fed7b522","userId":"9000001","clientIp":"10.0.19.32","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 09:53:31.044 DEBUG [redisMessageListenerContainer-7] c.f.N.s.RedisProgressMessageListener: Received progress update from Redis: Task=0000924, User=9000001, 0%
-{"@timestamp":"2026-06-25T15:23:31.044894103+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000924, User=9000001, 0%","stack_trace":""}
-2026-06-25 09:53:31.047 DEBUG [redisMessageListenerContainer-8] c.f.N.s.RedisProgressMessageListener: Received progress update from Redis: Task=0000924, User=9000001, 5%
-{"@timestamp":"2026-06-25T15:23:31.047219111+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000924, User=9000001, 5%","stack_trace":""}
-2026-06-25 09:53:31.055 DEBUG [redisMessageListenerContainer-9] c.f.N.s.RedisProgressMessageListener: Received progress update from Redis: Task=0000924, User=9000001, 100%
-{"@timestamp":"2026-06-25T15:23:31.055453044+05:30","level":"DEBUG","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.s.RedisProgressMessageListener","message":"Received progress update from Redis: Task=0000924, User=9000001, 100%","stack_trace":""}
+[root@fcsitgateway Network]# k exec -it notification-deployment-cbd8bbfbd-v675j -- nslookup kafka.cbops.svc.cluster.local
+Server:         10.96.0.10
+Address:        10.96.0.10:53
+
+Name:   kafka.cbops.svc.cluster.local
+Address: 192.168.7.12
+
+
+[root@fcsitgateway Network]# k get svc -A | grep kafka
+backend                   kafka                               ClusterIP      None             <none>           9092/TCP,9093/TCP            80d
+cbops                     kafka                               ClusterIP      None             <none>           9092/TCP,9093/TCP            152d
+[root@fcsitgateway Network]# kgp
+NAME                                                  READY   STATUS    RESTARTS        AGE
+airflow-api-server-588b95b9fc-f5brp                   1/1     Running   0               40d
+airflow-dag-processor-5c6f9f65fb-nb6rf                2/2     Running   104 (44m ago)   40d
+airflow-redis-0                                       1/1     Running   0               40d
+airflow-scheduler-658884d69c-hxtfl                    2/2     Running   132 (42m ago)   40d
+airflow-statsd-848cff7966-ccmr9                       1/1     Running   0               40d
+airflow-triggerer-0                                   2/2     Running   105 (44m ago)   39d
+airflow-worker-0                                      2/2     Running   18 (42m ago)    40d
+airflow-worker-1                                      2/2     Running   3 (43m ago)     6d6h
+akhq-64c59669df-rtm9f                                 1/1     Running   0               6d6h
+common-master-deployment-7b798566cc-r7jcm             1/1     Running   0               33d
+common-request-deployment-579cb9b47-xccnz             1/1     Running   0               33d
+dashboard-deployment-7d97f6df78-2hj6r                 1/1     Running   0               33d
+debezium-server-77df5c5c9b-pchfz                      1/1     Running   0               40d
+enquiry-service-deployment-66756f499b-58d62           1/1     Running   0               10d
+grafana-758f498965-52ddd                              1/1     Running   0               40d
+kafka-0                                               1/1     Running   0               6d6h
+login-deployment-5bf4f7bfc6-vplhc                     1/1     Running   0               31d
+notification-deployment-cbd8bbfbd-v675j               1/1     Running   0               36m
+postgres-db-7b865dd6fc-v94qc                          1/1     Running   0               40d
+process-status-deployment-75cd4b5fdf-kl2c4            1/1     Running   0               33d
+react-app-deployment-7bf8f85696-4czb2                 1/1     Running   0               26h
+redis-deployment-54599c456d-vcxfb                     1/1     Running   0               40d
+report-builder-deployment-78f9c7bd66-dr4q4            1/1     Running   0               33d
+report-deployment-7f6d89db8c-l7xh5                    1/1     Running   0               33d
+spark-operator-controller-55f6d78556-sfnmg            1/1     Running   4 (21h ago)     6d6h
+spark-operator-webhook-7677dd468d-rmxcc               1/1     Running   4 (30h ago)     6d6h
+spark-thrift-78bf5cd48-d4tlr                          1/1     Running   0               40d
+template-config-deployment-67757d565b-pddzl           1/1     Running   0               33d
+transactions-deployment-67d78b694d-zk47v              1/1     Running   0               7d22h
+user-deployment-79db8b448d-67dq7                      1/1     Running   0               46h
+voucher-enquiry-service-deployment-5cf5ff5cd7-6mfxz   1/1     Running   0               6d23h
+voucher-service-deployment-5bb89b5f54-r7zlw           1/1     Running   0               23h
+[root@fcsitgateway Network]# k exec -it notification-deployment-cbd8bbfbd-v675j -- nslookup kafka.cbops.svc.cluster.local
+Server:         10.96.0.10
+Address:        10.96.0.10:53
+
+Name:   kafka.cbops.svc.cluster.local
+Address: 192.168.7.12
+
+
+[root@fcsitgateway Network]# k exec -it debezium-server-77df5c5c9b-pchfz -- nc -vz 10.177.179.46 1523
+error: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "f54b537df6af6b31f39fb4ad9bd03cebba8f1b1fdafe03c147c5230ce9fe6f6c": OCI runtime exec failed: exec failed: unable to start container process: exec: "nc": executable file not found in $PATH: unknown
+[root@fcsitgateway Network]# k get svc -A | grep kafka
+backend                   kafka                               ClusterIP      None             <none>           9092/TCP,9093/TCP            80d
+cbops                     kafka                               ClusterIP      None             <none>           9092/TCP,9093/TCP            152d
+[root@fcsitgateway Network]# k get networkpolicy -A
+NAMESPACE   NAME                               POD-SELECTOR                  AGE
+cbops       allow-dns                          app=voucher-service-backend   2d
+cbops       allow-dns-notification             app=notification-backend      120m
+cbops       allow-egress-to-oracle             app=voucher-service-backend   6d20h
+cbops       allow-kafka-notification           app=notification-backend      120m
+cbops       allow-oracle                       app=voucher-service-backend   6d20h
+cbops       allow-oracle-db-egress             app=fincore-app               185d
+cbops       allow-postgres-db-egress           app=fincore-app               175d
+cbops       allow-postgres-notification        app=notification-backend      44m
+cbops       allow-redis                        app=voucher-service-backend   2d
+cbops       allow-redis-notification-service   app=notification-backend      39m
+[root@fcsitgateway Network]# k get pods -A -o wide | grep -E "kafka|notification|debezium"
+backend                        kafka-0                                                           1/1     Running             0                6d6h    192.168.7.13    h06vkssitcbopscls-node-pool-1-2nb6d-7bpww-zgvt8   <none>           <none>
+cbops                          debezium-server-77df5c5c9b-pchfz                                  1/1     Running             0                40d     192.168.8.25    h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-z995p   <none>           <none>
+cbops                          kafka-0                                                           1/1     Running             0                6d6h    192.168.7.12    h06vkssitcbopscls-node-pool-1-2nb6d-7bpww-zgvt8   <none>           <none>
+cbops                          notification-deployment-cbd8bbfbd-v675j                           1/1     Running             0                43m     192.168.7.46    h06vkssitcbopscls-node-pool-1-2nb6d-7bpww-zgvt8   <none>           <none>
