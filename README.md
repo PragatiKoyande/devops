@@ -1,32 +1,84 @@
 
-{"@timestamp":"2026-06-25T15:44:21.940479023+05:30","level":"INFO","service":"NotificationService","traceId":"301969fe-82e7-45d6-a61a-8b6a90ae9ed7","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200","stack_trace":""}
-2026-06-25 10:16:44.667 INFO  [http-nio-9010-exec-9] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 401
-{"@timestamp":"2026-06-25T15:46:44.667613699+05:30","level":"INFO","service":"NotificationService","traceId":"0bfa2a1a-fc4a-4ded-a7d7-944fab96c917","userId":"anonymous","clientIp":"10.0.19.35","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 401","stack_trace":""}
-2026-06-25 10:16:44.746 INFO  [http-nio-9010-exec-10] c.f.N.c.NotificationController: userId >>1022918
-{"@timestamp":"2026-06-25T15:46:44.746972131+05:30","level":"INFO","service":"NotificationService","traceId":"c15975d0-19fb-4eee-b24f-cc9ad7e48eb0","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/unread-count","class":"c.f.N.controller.NotificationController","message":"userId >>1022918","stack_trace":""}
-2026-06-25 10:16:44.749 INFO  [http-nio-9010-exec-10] c.f.N.s.NotificationService: Fetching unread count for user: 1022918
-{"@timestamp":"2026-06-25T15:46:44.749632961+05:30","level":"INFO","service":"NotificationService","traceId":"c15975d0-19fb-4eee-b24f-cc9ad7e48eb0","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/unread-count","class":"c.f.N.service.NotificationService","message":"Fetching unread count for user: 1022918","stack_trace":""}
-2026-06-25 10:16:44.754 INFO  [http-nio-9010-exec-10] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/unread-count | Status: 200
-{"@timestamp":"2026-06-25T15:46:44.754665515+05:30","level":"INFO","service":"NotificationService","traceId":"c15975d0-19fb-4eee-b24f-cc9ad7e48eb0","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/unread-count","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/unread-count | Status: 200","stack_trace":""}
-2026-06-25 10:16:44.779 INFO  [http-nio-9010-exec-1] c.f.N.s.NotificationService: Fetching notification history for user: 1022918, page: 0, size: 10
-{"@timestamp":"2026-06-25T15:46:44.779064386+05:30","level":"INFO","service":"NotificationService","traceId":"ae277714-b73e-4e2b-b359-ee7b3dc63c3c","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications","class":"c.f.N.service.NotificationService","message":"Fetching notification history for user: 1022918, page: 0, size: 10","stack_trace":""}
-2026-06-25 10:16:44.784 INFO  [http-nio-9010-exec-1] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200
-{"@timestamp":"2026-06-25T15:46:44.784702549+05:30","level":"INFO","service":"NotificationService","traceId":"ae277714-b73e-4e2b-b359-ee7b3dc63c3c","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200","stack_trace":""}
-2026-06-25 10:16:44.806 WARN  [http-nio-9010-exec-2] c.f.c.s.ContextRbacFilter: Concurrent Login Detected on Expired Token. User: 1022918
-{"@timestamp":"2026-06-25T15:46:44.806051013+05:30","level":"WARN","service":"NotificationService","traceId":"447b2f8c-360c-433c-a945-b484b9c1b88f","userId":"anonymous","clientIp":"10.0.19.35","apiPath":"/api/notifications/stream","class":"c.f.c.security.ContextRbacFilter","message":"Concurrent Login Detected on Expired Token. User: 1022918","stack_trace":""}
-2026-06-25 10:16:44.806 INFO  [http-nio-9010-exec-2] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 401
-{"@timestamp":"2026-06-25T15:46:44.806610055+05:30","level":"INFO","service":"NotificationService","traceId":"447b2f8c-360c-433c-a945-b484b9c1b88f","userId":"anonymous","clientIp":"10.0.19.35","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 401","stack_trace":""}
-2026-06-25 10:17:28.276 INFO  [http-nio-9010-exec-1] c.f.N.s.SsePushService: New local SSE connection established for user: 1022918. Total local connections: 4
-{"@timestamp":"2026-06-25T15:47:28.276271975+05:30","level":"INFO","service":"NotificationService","traceId":"32109523-1b81-4725-a86a-02b816154f26","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/stream","class":"c.f.N.service.SsePushService","message":"New local SSE connection established for user: 1022918. Total local connections: 4","stack_trace":""}
-2026-06-25 10:17:28.277 INFO  [http-nio-9010-exec-1] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200
-{"@timestamp":"2026-06-25T15:47:28.277769785+05:30","level":"INFO","service":"NotificationService","traceId":"32109523-1b81-4725-a86a-02b816154f26","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/stream","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/stream | Status: 200","stack_trace":""}
-2026-06-25 10:17:28.390 INFO  [http-nio-9010-exec-2] c.f.N.c.NotificationController: userId >>1022918
-{"@timestamp":"2026-06-25T15:47:28.390949314+05:30","level":"INFO","service":"NotificationService","traceId":"62f59b5d-cf6e-40de-8311-80f39902c69f","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/unread-count","class":"c.f.N.controller.NotificationController","message":"userId >>1022918","stack_trace":""}
-2026-06-25 10:17:28.393 INFO  [http-nio-9010-exec-2] c.f.N.s.NotificationService: Fetching unread count for user: 1022918
-{"@timestamp":"2026-06-25T15:47:28.393236071+05:30","level":"INFO","service":"NotificationService","traceId":"62f59b5d-cf6e-40de-8311-80f39902c69f","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/unread-count","class":"c.f.N.service.NotificationService","message":"Fetching unread count for user: 1022918","stack_trace":""}
-2026-06-25 10:17:28.396 INFO  [http-nio-9010-exec-3] c.f.N.s.NotificationService: Fetching notification history for user: 1022918, page: 0, size: 10
-{"@timestamp":"2026-06-25T15:47:28.396321375+05:30","level":"INFO","service":"NotificationService","traceId":"811e479f-c4ac-453b-89fa-a0e06f6d8bfd","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications","class":"c.f.N.service.NotificationService","message":"Fetching notification history for user: 1022918, page: 0, size: 10","stack_trace":""}
-2026-06-25 10:17:28.397 INFO  [http-nio-9010-exec-2] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/unread-count | Status: 200
-{"@timestamp":"2026-06-25T15:47:28.397361477+05:30","level":"INFO","service":"NotificationService","traceId":"62f59b5d-cf6e-40de-8311-80f39902c69f","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications/unread-count","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications/unread-count | Status: 200","stack_trace":""}
-2026-06-25 10:17:28.404 INFO  [http-nio-9010-exec-3] c.f.c.l.MdcLoggingFilter: API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200
-{"@timestamp":"2026-06-25T15:47:28.404123026+05:30","level":"INFO","service":"NotificationService","traceId":"811e479f-c4ac-453b-89fa-a0e06f6d8bfd","userId":"1022918","clientIp":"10.0.19.35","apiPath":"/api/notifications","class":"c.f.c.logging.MdcLoggingFilter","message":"API Execution Completed - Method: GET | URL: https://fincorest.sbi/api/notifications?page=0&size=10 | Status: 200","stack_trace":""}
+2026-06-19 03:51:48 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Error connecting to node kafka.cbops.svc.cluster.local:9092 (id: 1 rack: null): java.net.UnknownHostException: kafka.cbops.svc.cluster.local: Name or service not known
+        at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+        at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(InetAddress.java:930)
+        at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1543)
+        at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:848)
+        at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1533)
+        at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1386)
+        at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1307)
+        at org.apache.kafka.clients.DefaultHostResolver.resolve(DefaultHostResolver.java:27)
+        at org.apache.kafka.clients.ClientUtils.resolve(ClientUtils.java:122)
+        at org.apache.kafka.clients.ClusterConnectionStates$NodeConnectionState.currentAddress(ClusterConnectionStates.java:510)
+        at org.apache.kafka.clients.ClusterConnectionStates$NodeConnectionState.access$200(ClusterConnectionStates.java:467)
+        at org.apache.kafka.clients.ClusterConnectionStates.currentAddress(ClusterConnectionStates.java:173)
+        at org.apache.kafka.clients.NetworkClient.initiateConnect(NetworkClient.java:1030)
+        at org.apache.kafka.clients.NetworkClient.access$600(NetworkClient.java:73)
+        at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:1203)
+        at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:1091)
+        at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:569)
+        at org.apache.kafka.clients.producer.internals.Sender.runOnce(Sender.java:343)
+        at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:246)
+        at java.base/java.lang.Thread.run(Thread.java:829)
+
+2026-06-19 03:51:49 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Error connecting to node kafka.cbops.svc.cluster.local:9092 (id: 1 rack: null): java.net.UnknownHostException: kafka.cbops.svc.cluster.local: Name or service not known
+        at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+        at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(InetAddress.java:930)
+        at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1543)
+        at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:848)
+        at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1533)
+        at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1386)
+        at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1307)
+        at org.apache.kafka.clients.DefaultHostResolver.resolve(DefaultHostResolver.java:27)
+        at org.apache.kafka.clients.ClientUtils.resolve(ClientUtils.java:122)
+        at org.apache.kafka.clients.ClusterConnectionStates$NodeConnectionState.currentAddress(ClusterConnectionStates.java:510)
+        at org.apache.kafka.clients.ClusterConnectionStates$NodeConnectionState.access$200(ClusterConnectionStates.java:467)
+        at org.apache.kafka.clients.ClusterConnectionStates.currentAddress(ClusterConnectionStates.java:173)
+        at org.apache.kafka.clients.NetworkClient.initiateConnect(NetworkClient.java:1030)
+        at org.apache.kafka.clients.NetworkClient.access$600(NetworkClient.java:73)
+        at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:1203)
+        at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:1091)
+        at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:569)
+        at org.apache.kafka.clients.producer.internals.Sender.runOnce(Sender.java:343)
+        at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:246)
+        at java.base/java.lang.Thread.run(Thread.java:829)
+
+2026-06-19 03:51:50 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Error connecting to node kafka.cbops.svc.cluster.local:9092 (id: 1 rack: null): java.net.UnknownHostException: kafka.cbops.svc.cluster.local: Name or service not known
+        at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+        at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(InetAddress.java:930)
+        at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1543)
+        at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:848)
+        at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1533)
+        at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1386)
+        at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1307)
+        at org.apache.kafka.clients.DefaultHostResolver.resolve(DefaultHostResolver.java:27)
+        at org.apache.kafka.clients.ClientUtils.resolve(ClientUtils.java:122)
+        at org.apache.kafka.clients.ClusterConnectionStates$NodeConnectionState.currentAddress(ClusterConnectionStates.java:510)
+        at org.apache.kafka.clients.ClusterConnectionStates$NodeConnectionState.access$200(ClusterConnectionStates.java:467)
+        at org.apache.kafka.clients.ClusterConnectionStates.currentAddress(ClusterConnectionStates.java:173)
+        at org.apache.kafka.clients.NetworkClient.initiateConnect(NetworkClient.java:1030)
+        at org.apache.kafka.clients.NetworkClient.access$600(NetworkClient.java:73)
+        at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:1203)
+        at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:1091)
+        at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:569)
+        at org.apache.kafka.clients.producer.internals.Sender.runOnce(Sender.java:343)
+        at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:246)
+        at java.base/java.lang.Thread.run(Thread.java:829)
+
+2026-06-19 03:51:51 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Node 1 disconnected.
+2026-06-19 03:51:51 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Connection to node 1 (kafka.cbops.svc.cluster.local/192.168.7.12:9092) could not be established. Broker may not be available.
+2026-06-19 03:51:53 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Node 1 disconnected.
+2026-06-19 03:51:53 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Connection to node 1 (kafka.cbops.svc.cluster.local/192.168.7.12:9092) could not be established. Broker may not be available.
+2026-06-19 03:51:54 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Node 1 disconnected.
+2026-06-19 03:51:54 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Connection to node 1 (kafka.cbops.svc.cluster.local/192.168.7.12:9092) could not be established. Broker may not be available.
+2026-06-19 03:51:55 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Node 1 disconnected.
+2026-06-19 03:51:55 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Connection to node 1 (kafka.cbops.svc.cluster.local/192.168.7.12:9092) could not be established. Broker may not be available.
+
+
+
+i am having debezium server pod running these logs are present can you suggest me
+
+
+
+
+
