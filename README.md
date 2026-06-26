@@ -1,26 +1,23 @@
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-notification-to-kafka
-  namespace: uat-cbops1
-spec:
-  podSelector:
-    matchLabels:
-      app: notification-service   # Change to your NotificationService pod label
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: kafka          # Change if your Kafka pods use a different label
-      ports:
-        - protocol: TCP
-          port: 9092
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
+rvice-group] Successfully synced group in generation Generation{generationId=1, memberId='consumer-notification-service-group-2-5b7c77b8-3a19-4696-af60-e6836872852b', protocol='range'}
+{"@timestamp":"2026-06-26T11:28:22.976877459+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.ConsumerCoordinator","message":"[Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Successfully synced group in generation Generation{generationId=1, memberId='consumer-notification-service-group-2-5b7c77b8-3a19-4696-af60-e6836872852b', protocol='range'}","stack_trace":""}
+{"@timestamp":"2026-06-26T11:28:22.976877399+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.ConsumerCoordinator","message":"[Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Successfully synced group in generation Generation{generationId=1, memberId='consumer-notification-service-group-4-a3a51e63-394c-4636-9898-8b96147590ed', protocol='range'}","stack_trace":""}
+2026-06-26 05:58:22.977 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#3-0-C-1] o.a.k.c.c.i.ConsumerCoordinator: [Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Notifying assignor about the new Assignment(partitions=[fincore.FINCORE.NOTIFICATIONS-0])
+2026-06-26 05:58:22.977 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#1-0-C-1] o.a.k.c.c.i.ConsumerCoordinator: [Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Notifying assignor about the new Assignment(partitions=[fincore.FINCORE.USER_ROLES-0])
+{"@timestamp":"2026-06-26T11:28:22.97748+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.ConsumerCoordinator","message":"[Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Notifying assignor about the new Assignment(partitions=[fincore.FINCORE.NOTIFICATIONS-0])","stack_trace":""}
+{"@timestamp":"2026-06-26T11:28:22.977543934+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.ConsumerCoordinator","message":"[Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Notifying assignor about the new Assignment(partitions=[fincore.FINCORE.USER_ROLES-0])","stack_trace":""}
+2026-06-26 05:58:22.977 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#1-0-C-1] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker: [Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Adding newly assigned partitions: fincore.FINCORE.USER_ROLES-0
+{"@timestamp":"2026-06-26T11:28:22.977791042+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.i.ConsumerRebalanceListenerInvoker","message":"[Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Adding newly assigned partitions: fincore.FINCORE.USER_ROLES-0","stack_trace":""}
+2026-06-26 05:58:22.977 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#3-0-C-1] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker: [Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Adding newly assigned partitions: fincore.FINCORE.NOTIFICATIONS-0
+{"@timestamp":"2026-06-26T11:28:22.977783578+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.i.ConsumerRebalanceListenerInvoker","message":"[Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Adding newly assigned partitions: fincore.FINCORE.NOTIFICATIONS-0","stack_trace":""}
+2026-06-26 05:58:22.979 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#3-0-C-1] o.a.k.c.c.i.ConsumerCoordinator$OffsetFetchResponseHandler: [Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Found no committed offset for partition fincore.FINCORE.NOTIFICATIONS-0
+2026-06-26 05:58:22.979 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#1-0-C-1] o.a.k.c.c.i.ConsumerCoordinator$OffsetFetchResponseHandler: [Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Found no committed offset for partition fincore.FINCORE.USER_ROLES-0
+{"@timestamp":"2026-06-26T11:28:22.979440852+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.ConsumerCoordinator","message":"[Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Found no committed offset for partition fincore.FINCORE.NOTIFICATIONS-0","stack_trace":""}
+{"@timestamp":"2026-06-26T11:28:22.979479726+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.ConsumerCoordinator","message":"[Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Found no committed offset for partition fincore.FINCORE.USER_ROLES-0","stack_trace":""}
+2026-06-26 05:58:22.980 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#3-0-C-1] o.a.k.c.c.i.SubscriptionState: [Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Resetting offset for partition fincore.FINCORE.NOTIFICATIONS-0 to position FetchPosition{offset=5349, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[kafka.uat-cbops1.svc.cluster.local:9092 (id: 1 rack: null)], epoch=22}}.
+{"@timestamp":"2026-06-26T11:28:22.98079923+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.SubscriptionState","message":"[Consumer clientId=consumer-notification-service-group-2, groupId=notification-service-group] Resetting offset for partition fincore.FINCORE.NOTIFICATIONS-0 to position FetchPosition{offset=5349, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[kafka.uat-cbops1.svc.cluster.local:9092 (id: 1 rack: null)], epoch=22}}.","stack_trace":""}
+2026-06-26 05:58:22.981 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#3-0-C-1] o.s.c.l.LogAccessor: notification-service-group: partitions assigned: [fincore.FINCORE.NOTIFICATIONS-0]
+{"@timestamp":"2026-06-26T11:28:22.981078023+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.s.k.l.KafkaMessageListenerContainer","message":"notification-service-group: partitions assigned: [fincore.FINCORE.NOTIFICATIONS-0]","stack_trace":""}
+2026-06-26 05:58:22.983 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#1-0-C-1] o.a.k.c.c.i.SubscriptionState: [Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Resetting offset for partition fincore.FINCORE.USER_ROLES-0 to position FetchPosition{offset=37, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[kafka.uat-cbops1.svc.cluster.local:9092 (id: 1 rack: null)], epoch=22}}.
+{"@timestamp":"2026-06-26T11:28:22.983235166+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.a.k.c.c.internals.SubscriptionState","message":"[Consumer clientId=consumer-notification-service-group-4, groupId=notification-service-group] Resetting offset for partition fincore.FINCORE.USER_ROLES-0 to position FetchPosition{offset=37, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[kafka.uat-cbops1.svc.cluster.local:9092 (id: 1 rack: null)], epoch=22}}.","stack_trace":""}
+2026-06-26 05:58:22.983 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#1-0-C-1] o.s.c.l.LogAccessor: notification-service-group: partitions assigned: [fincore.FINCORE.USER_ROLES-0]
+{"@timestamp":"2026-06-26T11:28:22.983565414+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.s.k.l.KafkaMessageListenerContainer","message":"notification-service-group: partitions assigned: [fincore.FINCORE.USER_ROLES-0]","stack_trace":""}
