@@ -1,90 +1,56 @@
-2026-06-26 08:08:13 INFO  [org.apache.kafka.clients.consumer.internals.ConsumerCoordinator] (pool-7-thread-1) [Consumer clientId=fincore-schemahistory, groupId=fincore-schemahistory] Request joining group due to: consumer pro-actively leaving the group
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (pool-7-thread-1) Metrics scheduler closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (pool-7-thread-1) Closing reporter org.apache.kafka.common.metrics.JmxReporter
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (pool-7-thread-1) Metrics reporters closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.utils.AppInfoParser] (pool-7-thread-1) App info kafka.consumer for fincore-schemahistory unregistered
-2026-06-26 08:08:14 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (pool-7-thread-1) Finished database schema history recovery of 302 change(s) in 4523 ms
-2026-06-26 08:08:14 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (pool-7-thread-1) Cannot parse column default value '"FINCORE"."PROCESS_STATUS_SEQ"."NEXTVAL" ' to type '2'.  Expression evaluation is not supported.
-2026-06-26 08:08:14 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (pool-7-thread-1) Cannot parse column default value '"FINCORE"."PROCESS_STATUS_SEQ"."NEXTVAL" ' to type '2'.  Expression evaluation is not supported.
-2026-06-26 08:08:14 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (pool-7-thread-1) Mapper for type '-3' not found.
-2026-06-26 08:08:14 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (pool-7-thread-1) Mapper for type '-3' not found.
-2026-06-26 08:08:14 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (pool-7-thread-1) Cannot parse column default value '"FINCORE"."MENU_ITEMS_SEQ"."NEXTVAL"' to type '2'.  Expression evaluation is not supported.
-2026-06-26 08:08:14 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (pool-7-thread-1) Cannot parse column default value '"FINCORE"."MENU_ITEMS_SEQ"."NEXTVAL"' to type '2'.  Expression evaluation is not supported.
-2026-06-26 08:08:14 INFO  [io.debezium.util.Threads] (pool-7-thread-1) Requested thread factory for connector OracleConnector, id = fincore named = SignalProcessor
-2026-06-26 08:08:14 INFO  [io.debezium.util.Threads] (pool-7-thread-1) Requested thread factory for connector OracleConnector, id = fincore named = change-event-source-coordinator
-2026-06-26 08:08:14 INFO  [io.debezium.util.Threads] (pool-7-thread-1) Requested thread factory for connector OracleConnector, id = fincore named = blocking-snapshot
-2026-06-26 08:08:14 INFO  [io.debezium.util.Threads] (pool-7-thread-1) Creating thread debezium-oracleconnector-fincore-change-event-source-coordinator
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Metrics registered
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Context created
-2026-06-26 08:08:14 INFO  [io.debezium.connector.oracle.OracleSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) The previous offset has been found.
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Snapshot ended with SnapshotResult [status=SKIPPED, offset=OracleOffsetContext [scn=109137165, commit_scn=["130745326:1:04000a0097440000"]]]
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Connected metrics set to 'true'
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.signal.SignalProcessor] (debezium-oracleconnector-fincore-change-event-source-coordinator) SignalProcessor started. Scheduling it every 5000ms
-2026-06-26 08:08:14 INFO  [io.debezium.util.Threads] (debezium-oracleconnector-fincore-change-event-source-coordinator) Creating thread debezium-oracleconnector-fincore-SignalProcessor
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Starting streaming
-2026-06-26 08:08:14 ERROR [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Mining session stopped due to error.: io.debezium.DebeziumException: Online REDO LOG files or archive log files do not contain the offset scn 109137165.  Please perform a new snapshot.
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:166)
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:62)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.streamEvents(ChangeEventSourceCoordinator.java:271)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.executeChangeEventSources(ChangeEventSourceCoordinator.java:194)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.lambda$start$0(ChangeEventSourceCoordinator.java:137)
-        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-        at java.base/java.lang.Thread.run(Thread.java:829)
+logger=cleanup t=2026-06-28T19:35:53.90143835Z level=info msg="Completed cleanup jobs" duration=10.529952ms
+logger=grafana.update.checker t=2026-06-28T19:35:53.972279522Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=39.860381ms
+logger=infra.usagestats t=2026-06-28T19:37:29.938434638Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T19:45:53.896791412Z level=info msg="Completed cleanup jobs" duration=5.673858ms
+logger=grafana.update.checker t=2026-06-28T19:45:53.956032676Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=23.610245ms
+logger=cleanup t=2026-06-28T19:55:53.906667013Z level=info msg="Completed cleanup jobs" duration=15.271337ms
+logger=grafana.update.checker t=2026-06-28T19:55:53.955931292Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=23.070036ms
+logger=cleanup t=2026-06-28T20:05:53.909667476Z level=info msg="Completed cleanup jobs" duration=17.98105ms
+logger=grafana.update.checker t=2026-06-28T20:05:53.956204067Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=22.948107ms
+logger=infra.usagestats t=2026-06-28T20:07:29.93707016Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T20:15:53.906112602Z level=info msg="Completed cleanup jobs" duration=14.742971ms
+logger=grafana.update.checker t=2026-06-28T20:15:53.968974478Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=36.26509ms
+logger=cleanup t=2026-06-28T20:25:53.907836817Z level=info msg="Completed cleanup jobs" duration=16.067273ms
+logger=grafana.update.checker t=2026-06-28T20:25:53.954531805Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=22.257868ms
+logger=cleanup t=2026-06-28T20:35:53.896644897Z level=info msg="Completed cleanup jobs" duration=5.066063ms
+logger=grafana.update.checker t=2026-06-28T20:35:53.941813641Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=8.742271ms
+logger=infra.usagestats t=2026-06-28T20:37:29.937123523Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T20:45:53.901695546Z level=info msg="Completed cleanup jobs" duration=10.668949ms
+logger=grafana.update.checker t=2026-06-28T20:45:53.942631092Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=9.370709ms
+logger=cleanup t=2026-06-28T20:55:53.906680356Z level=info msg="Completed cleanup jobs" duration=15.572896ms
+logger=grafana.update.checker t=2026-06-28T20:55:53.955550298Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=22.824605ms
+logger=cleanup t=2026-06-28T21:05:53.905358955Z level=info msg="Completed cleanup jobs" duration=14.209076ms
+logger=grafana.update.checker t=2026-06-28T21:05:53.970646042Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=38.007762ms
+logger=infra.usagestats t=2026-06-28T21:07:29.936866931Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T21:15:53.901136084Z level=info msg="Completed cleanup jobs" duration=10.160812ms
+logger=grafana.update.checker t=2026-06-28T21:15:53.969986598Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=37.483661ms
+logger=cleanup t=2026-06-28T21:25:53.897621542Z level=info msg="Completed cleanup jobs" duration=6.464465ms
+logger=grafana.update.checker t=2026-06-28T21:25:53.942532785Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=10.29858ms
+logger=cleanup t=2026-06-28T21:35:53.896325751Z level=info msg="Completed cleanup jobs" duration=5.29305ms
+logger=grafana.update.checker t=2026-06-28T21:35:53.940631196Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=8.016564ms
+logger=infra.usagestats t=2026-06-28T21:37:29.936880527Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T21:45:53.900016312Z level=info msg="Completed cleanup jobs" duration=8.610358ms
+logger=grafana.update.checker t=2026-06-28T21:45:53.957896141Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=25.054025ms
+logger=cleanup t=2026-06-28T21:55:53.905802968Z level=info msg="Completed cleanup jobs" duration=14.237659ms
+logger=grafana.update.checker t=2026-06-28T21:55:53.970179246Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=37.100315ms
+logger=cleanup t=2026-06-28T22:05:53.908389482Z level=info msg="Completed cleanup jobs" duration=16.641753ms
+logger=grafana.update.checker t=2026-06-28T22:05:53.956651657Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=24.021559ms
+logger=infra.usagestats t=2026-06-28T22:07:29.937166868Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T22:15:53.906640822Z level=info msg="Completed cleanup jobs" duration=15.091095ms
+logger=grafana.update.checker t=2026-06-28T22:15:53.95471279Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=21.649591ms
+logger=cleanup t=2026-06-28T22:25:53.895960194Z level=info msg="Completed cleanup jobs" duration=5.009939ms
+logger=grafana.update.checker t=2026-06-28T22:25:53.970395437Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=38.00039ms
+logger=cleanup t=2026-06-28T22:35:53.907047241Z level=info msg="Completed cleanup jobs" duration=15.452042ms
+logger=grafana.update.checker t=2026-06-28T22:35:53.955113728Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=21.91595ms
+logger=infra.usagestats t=2026-06-28T22:37:29.936950404Z level=info msg="Usage stats are ready to report"
+logger=cleanup t=2026-06-28T22:45:53.906213276Z level=info msg="Completed cleanup jobs" duration=14.692802ms
+logger=grafana.update.checker t=2026-06-28T22:45:53.956903455Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=23.931824ms
+logger=cleanup t=2026-06-28T22:55:53.900206047Z level=info msg="Completed cleanup jobs" duration=8.57024ms
+logger=grafana.update.checker t=2026-06-28T22:55:53.941728536Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=8.502674ms
 
-2026-06-26 08:08:14 ERROR [io.debezium.pipeline.ErrorHandler] (debezium-oracleconnector-fincore-change-event-source-coordinator) Producer failure: io.debezium.DebeziumException: Online REDO LOG files or archive log files do not contain the offset scn 109137165.  Please perform a new snapshot.
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:166)
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:62)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.streamEvents(ChangeEventSourceCoordinator.java:271)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.executeChangeEventSources(ChangeEventSourceCoordinator.java:194)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.lambda$start$0(ChangeEventSourceCoordinator.java:137)
-        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-        at java.base/java.lang.Thread.run(Thread.java:829)
 
-2026-06-26 08:08:14 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) startScn=109137165, endScn=null
-2026-06-26 08:08:14 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Streaming metrics dump: LogMinerStreamingChangeEventSourceMetrics{connectorConfig=io.debezium.connector.oracle.OracleConnectorConfig@7cb3d667, startTime=2026-06-26T08:08:14.127584Z, clock=SystemClock[Z], currentScn=null, offsetScn=null, commitScn=null, oldestScn=null, oldestScnTime=null, currentLogFileNames=[Ljava.lang.String;@7c9c1c2b, redoLogStatuses=[Ljava.lang.String;@5395e506, databaseZoneOffset=Z, batchSize=50000, logSwitchCount=0, logMinerQueryCount=0, sleepTime=1000, minimumLogsMined=0, maximumLogsMined=0, maxBatchProcessingThroughput=0, timeDifference=0, processedRowsCount=0, activeTransactionCount=0, rolledBackTransactionCount=0, oversizedTransactionCount=0, changesCount=0, scnFreezeCount=0, batchProcessingDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@3184e6a9, fetchQueryDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@53660e10, commitDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@4f872d13, lagFromSourceDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@33c64c30, miningSessionStartupDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@2561454f, parseTimeDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@4694c97d, resultSetNextDuration=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$DurationHistogramMetric@300d9b09, userGlobalAreaMemory=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$MaxLongValueMetric@312bf6f4, processGlobalAreaMemory=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$MaxLongValueMetric@1ecf96a3, abandonedTransactionIds=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$LRUSet@7ef06b26, rolledBackTransactionIds=io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics$LRUSet@22797222} io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSourceMetrics@5a21a97a
-2026-06-26 08:08:14 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Offsets: OracleOffsetContext [scn=109137165, commit_scn=["130745326:1:04000a0097440000"]]
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Finished streaming
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Connected metrics set to 'false'
-2026-06-26 08:08:14 INFO  [io.debezium.embedded.EmbeddedEngine] (pool-7-thread-1) Stopping the task and engine
-2026-06-26 08:08:14 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) Stopping down connector
-2026-06-26 08:08:14 INFO  [io.debezium.pipeline.signal.SignalProcessor] (pool-7-thread-1) SignalProcessor stopped
-2026-06-26 08:08:14 INFO  [io.debezium.service.DefaultServiceRegistry] (pool-7-thread-1) Debezium ServiceRegistry stopped.
-2026-06-26 08:08:14 INFO  [io.debezium.jdbc.JdbcConnection] (pool-9-thread-1) Connection gracefully closed
-2026-06-26 08:08:14 INFO  [io.debezium.jdbc.JdbcConnection] (pool-10-thread-1) Connection gracefully closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (pool-7-thread-1) [Producer clientId=fincore-schemahistory] Closing the Kafka producer with timeoutMillis = 30000 ms.
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (pool-7-thread-1) Metrics scheduler closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (pool-7-thread-1) Closing reporter org.apache.kafka.common.metrics.JmxReporter
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (pool-7-thread-1) Metrics reporters closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.utils.AppInfoParser] (pool-7-thread-1) App info kafka.producer for fincore-schemahistory unregistered
-2026-06-26 08:08:14 INFO  [org.apache.kafka.connect.storage.FileOffsetBackingStore] (pool-7-thread-1) Stopped FileOffsetBackingStore
-2026-06-26 08:08:14 ERROR [io.debezium.server.ConnectorLifecycle] (pool-7-thread-1) Connector completed: success = 'false', message = 'Error while trying to run connector class 'io.debezium.connector.oracle.OracleConnector'', error = 'org.apache.kafka.connect.errors.ConnectException: An exception occurred in the change event producer. This connector will be stopped.': org.apache.kafka.connect.errors.ConnectException: An exception occurred in the change event producer. This connector will be stopped.
-        at io.debezium.pipeline.ErrorHandler.setProducerThrowable(ErrorHandler.java:67)
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:269)
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:62)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.streamEvents(ChangeEventSourceCoordinator.java:271)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.executeChangeEventSources(ChangeEventSourceCoordinator.java:194)
-        at io.debezium.pipeline.ChangeEventSourceCoordinator.lambda$start$0(ChangeEventSourceCoordinator.java:137)
-        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-        at java.base/java.lang.Thread.run(Thread.java:829)
-Caused by: io.debezium.DebeziumException: Online REDO LOG files or archive log files do not contain the offset scn 109137165.  Please perform a new snapshot.
-        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:166)
-        ... 9 more
 
-2026-06-26 08:08:14 INFO  [io.debezium.server.DebeziumServer] (main) Received request to stop the engine
-2026-06-26 08:08:14 INFO  [io.debezium.embedded.EmbeddedEngine] (main) Stopping the embedded engine
-2026-06-26 08:08:14 INFO  [io.debezium.server.kafka.KafkaChangeConsumer] (main) consumer destroyed...
-2026-06-26 08:08:14 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 5000 ms.
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics scheduler closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Closing reporter org.apache.kafka.common.metrics.JmxReporter
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics reporters closed
-2026-06-26 08:08:14 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) App info kafka.producer for producer-1 unregistered
-2026-06-26 08:08:14 INFO  [io.quarkus] (main) debezium-server-dist stopped in 0.022s
+
+
+
+I am having grafana pod running but the logs shows the above pasted logs can you please help me resolving it
