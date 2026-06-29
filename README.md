@@ -1,56 +1,77 @@
-logger=cleanup t=2026-06-28T19:35:53.90143835Z level=info msg="Completed cleanup jobs" duration=10.529952ms
-logger=grafana.update.checker t=2026-06-28T19:35:53.972279522Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=39.860381ms
-logger=infra.usagestats t=2026-06-28T19:37:29.938434638Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T19:45:53.896791412Z level=info msg="Completed cleanup jobs" duration=5.673858ms
-logger=grafana.update.checker t=2026-06-28T19:45:53.956032676Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=23.610245ms
-logger=cleanup t=2026-06-28T19:55:53.906667013Z level=info msg="Completed cleanup jobs" duration=15.271337ms
-logger=grafana.update.checker t=2026-06-28T19:55:53.955931292Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=23.070036ms
-logger=cleanup t=2026-06-28T20:05:53.909667476Z level=info msg="Completed cleanup jobs" duration=17.98105ms
-logger=grafana.update.checker t=2026-06-28T20:05:53.956204067Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=22.948107ms
-logger=infra.usagestats t=2026-06-28T20:07:29.93707016Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T20:15:53.906112602Z level=info msg="Completed cleanup jobs" duration=14.742971ms
-logger=grafana.update.checker t=2026-06-28T20:15:53.968974478Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=36.26509ms
-logger=cleanup t=2026-06-28T20:25:53.907836817Z level=info msg="Completed cleanup jobs" duration=16.067273ms
-logger=grafana.update.checker t=2026-06-28T20:25:53.954531805Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=22.257868ms
-logger=cleanup t=2026-06-28T20:35:53.896644897Z level=info msg="Completed cleanup jobs" duration=5.066063ms
-logger=grafana.update.checker t=2026-06-28T20:35:53.941813641Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=8.742271ms
-logger=infra.usagestats t=2026-06-28T20:37:29.937123523Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T20:45:53.901695546Z level=info msg="Completed cleanup jobs" duration=10.668949ms
-logger=grafana.update.checker t=2026-06-28T20:45:53.942631092Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=9.370709ms
-logger=cleanup t=2026-06-28T20:55:53.906680356Z level=info msg="Completed cleanup jobs" duration=15.572896ms
-logger=grafana.update.checker t=2026-06-28T20:55:53.955550298Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=22.824605ms
-logger=cleanup t=2026-06-28T21:05:53.905358955Z level=info msg="Completed cleanup jobs" duration=14.209076ms
-logger=grafana.update.checker t=2026-06-28T21:05:53.970646042Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=38.007762ms
-logger=infra.usagestats t=2026-06-28T21:07:29.936866931Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T21:15:53.901136084Z level=info msg="Completed cleanup jobs" duration=10.160812ms
-logger=grafana.update.checker t=2026-06-28T21:15:53.969986598Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=37.483661ms
-logger=cleanup t=2026-06-28T21:25:53.897621542Z level=info msg="Completed cleanup jobs" duration=6.464465ms
-logger=grafana.update.checker t=2026-06-28T21:25:53.942532785Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=10.29858ms
-logger=cleanup t=2026-06-28T21:35:53.896325751Z level=info msg="Completed cleanup jobs" duration=5.29305ms
-logger=grafana.update.checker t=2026-06-28T21:35:53.940631196Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=8.016564ms
-logger=infra.usagestats t=2026-06-28T21:37:29.936880527Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T21:45:53.900016312Z level=info msg="Completed cleanup jobs" duration=8.610358ms
-logger=grafana.update.checker t=2026-06-28T21:45:53.957896141Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=25.054025ms
-logger=cleanup t=2026-06-28T21:55:53.905802968Z level=info msg="Completed cleanup jobs" duration=14.237659ms
-logger=grafana.update.checker t=2026-06-28T21:55:53.970179246Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=37.100315ms
-logger=cleanup t=2026-06-28T22:05:53.908389482Z level=info msg="Completed cleanup jobs" duration=16.641753ms
-logger=grafana.update.checker t=2026-06-28T22:05:53.956651657Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=24.021559ms
-logger=infra.usagestats t=2026-06-28T22:07:29.937166868Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T22:15:53.906640822Z level=info msg="Completed cleanup jobs" duration=15.091095ms
-logger=grafana.update.checker t=2026-06-28T22:15:53.95471279Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=21.649591ms
-logger=cleanup t=2026-06-28T22:25:53.895960194Z level=info msg="Completed cleanup jobs" duration=5.009939ms
-logger=grafana.update.checker t=2026-06-28T22:25:53.970395437Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=38.00039ms
-logger=cleanup t=2026-06-28T22:35:53.907047241Z level=info msg="Completed cleanup jobs" duration=15.452042ms
-logger=grafana.update.checker t=2026-06-28T22:35:53.955113728Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=21.91595ms
-logger=infra.usagestats t=2026-06-28T22:37:29.936950404Z level=info msg="Usage stats are ready to report"
-logger=cleanup t=2026-06-28T22:45:53.906213276Z level=info msg="Completed cleanup jobs" duration=14.692802ms
-logger=grafana.update.checker t=2026-06-28T22:45:53.956903455Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=23.931824ms
-logger=cleanup t=2026-06-28T22:55:53.900206047Z level=info msg="Completed cleanup jobs" duration=8.57024ms
-logger=grafana.update.checker t=2026-06-28T22:55:53.941728536Z level=error msg="Update check failed" error="failed to get latest.json repo from github.com: Get \"https://raw.githubusercontent.com/grafana/grafana/main/latest.json\": dial tcp: lookup raw.githubusercontent.com on 10.96.0.10:53: no such host" duration=8.502674ms
+[root@fcsitgateway SIT-Grafana]# k get networkpolicy -A
+NAMESPACE   NAME                               POD-SELECTOR                  AGE
+cbops       allow-debezium-kafka               app=debezium-server           3d19h
+cbops       allow-debezium-oracle              app=debezium-server           3d19h
+cbops       allow-dns                          app=voucher-service-backend   5d21h
+cbops       allow-dns-debezium                 app=debezium-server           3d20h
+cbops       allow-dns-notification             app=notification-backend      3d22h
+cbops       allow-egress-to-oracle             app=voucher-service-backend   10d
+cbops       allow-kafka-notification           app=notification-backend      3d22h
+cbops       allow-oracle                       app=voucher-service-backend   10d
+cbops       allow-oracle-db-egress             app=fincore-app               189d
+cbops       allow-postgres-db-egress           app=fincore-app               179d
+cbops       allow-postgres-notification        app=notification-backend      3d21h
+cbops       allow-redis                        app=voucher-service-backend   5d21h
+cbops       allow-redis-notification-service   app=notification-backend      3d21h
+[root@fcsitgateway SIT-Grafana]# k get pods -n kube-system
+NAME                                                              READY   STATUS    RESTARTS     AGE
+antrea-agent-94w9m                                                2/2     Running   0            44d
+antrea-agent-cnzqr                                                2/2     Running   0            10d
+antrea-agent-h64mq                                                2/2     Running   0            43d
+antrea-agent-jtf58                                                2/2     Running   0            208d
+antrea-agent-k7dm2                                                2/2     Running   0            208d
+antrea-agent-ltczz                                                2/2     Running   0            11d
+antrea-agent-pwh95                                                2/2     Running   0            44d
+antrea-agent-smgvt                                                2/2     Running   0            11d
+antrea-agent-th5hv                                                2/2     Running   0            11d
+antrea-controller-6b7485899d-nrtbj                                1/1     Running   0            11d
+coredns-57db7b44f5-cjcwr                                          1/1     Running   0            11d
+coredns-57db7b44f5-rgzkm                                          1/1     Running   0            11d
+docker-registry-h06vkssitcbopscls-bmjtp-22dct                     1/1     Running   0            11d
+docker-registry-h06vkssitcbopscls-bmjtp-dskks                     1/1     Running   0            11d
+docker-registry-h06vkssitcbopscls-bmjtp-g48kt                     1/1     Running   0            11d
+docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-7bpww-zgvt8   1/1     Running   0            10d
+docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   1/1     Running   0            208d
+docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   1/1     Running   0            208d
+docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-rqs4z   1/1     Running   0            44d
+docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-xt7fl   1/1     Running   0            43d
+docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-z995p   1/1     Running   0            44d
+etcd-h06vkssitcbopscls-bmjtp-22dct                                1/1     Running   0            11d
+etcd-h06vkssitcbopscls-bmjtp-dskks                                1/1     Running   0            11d
+etcd-h06vkssitcbopscls-bmjtp-g48kt                                1/1     Running   0            11d
+kube-apiserver-h06vkssitcbopscls-bmjtp-22dct                      1/1     Running   0            11d
+kube-apiserver-h06vkssitcbopscls-bmjtp-dskks                      1/1     Running   0            11d
+kube-apiserver-h06vkssitcbopscls-bmjtp-g48kt                      1/1     Running   0            11d
+kube-controller-manager-h06vkssitcbopscls-bmjtp-22dct             1/1     Running   0            11d
+kube-controller-manager-h06vkssitcbopscls-bmjtp-dskks             1/1     Running   1 (9d ago)   11d
+kube-controller-manager-h06vkssitcbopscls-bmjtp-g48kt             1/1     Running   0            11d
+kube-proxy-67rz7                                                  1/1     Running   0            10d
+kube-proxy-7bkf8                                                  1/1     Running   0            44d
+kube-proxy-89lm8                                                  1/1     Running   0            43d
+kube-proxy-bxpvq                                                  1/1     Running   0            208d
+kube-proxy-d7qbj                                                  1/1     Running   0            44d
+kube-proxy-k29sq                                                  1/1     Running   0            11d
+kube-proxy-n9gkd                                                  1/1     Running   0            208d
+kube-proxy-rkd57                                                  1/1     Running   0            11d
+kube-proxy-xwm6d                                                  1/1     Running   0            11d
+kube-scheduler-h06vkssitcbopscls-bmjtp-22dct                      1/1     Running   1 (8d ago)   11d
+kube-scheduler-h06vkssitcbopscls-bmjtp-dskks                      1/1     Running   1 (9d ago)   11d
+kube-scheduler-h06vkssitcbopscls-bmjtp-g48kt                      1/1     Running   0            11d
+metrics-server-8494fddddc-v5hzk                                   1/1     Running   0            11d
+snapshot-controller-75bb7555d-hfrtt                               1/1     Running   0            11d
+[root@fcsitgateway SIT-Grafana]# k exec -it grafana-758f498965-52ddd -n cbops -- nslookup raw.githubusercontent.com
+Server:         10.96.0.10
+Address:        10.96.0.10:53
+
+Non-authoritative answer:
+
+** server can't find raw.githubusercontent.com: NXDOMAIN
+
+command terminated with exit code 1
+[root@fcsitgateway SIT-Grafana]# k exec -it grafana-758f498965-52ddd -n cbops -- cat /etc/resolv.conf
+search cbops.svc.cluster.local svc.cluster.local cluster.local
+nameserver 10.96.0.10
+options ndots:5
 
 
-
-
-
-
-I am having grafana pod running but the logs shows the above pasted logs can you please help me resolving it
+my cluster is running on tanzu server
