@@ -1,77 +1,23 @@
-[root@fcsitgateway SIT-Grafana]# k get networkpolicy -A
-NAMESPACE   NAME                               POD-SELECTOR                  AGE
-cbops       allow-debezium-kafka               app=debezium-server           3d19h
-cbops       allow-debezium-oracle              app=debezium-server           3d19h
-cbops       allow-dns                          app=voucher-service-backend   5d21h
-cbops       allow-dns-debezium                 app=debezium-server           3d20h
-cbops       allow-dns-notification             app=notification-backend      3d22h
-cbops       allow-egress-to-oracle             app=voucher-service-backend   10d
-cbops       allow-kafka-notification           app=notification-backend      3d22h
-cbops       allow-oracle                       app=voucher-service-backend   10d
-cbops       allow-oracle-db-egress             app=fincore-app               189d
-cbops       allow-postgres-db-egress           app=fincore-app               179d
-cbops       allow-postgres-notification        app=notification-backend      3d21h
-cbops       allow-redis                        app=voucher-service-backend   5d21h
-cbops       allow-redis-notification-service   app=notification-backend      3d21h
-[root@fcsitgateway SIT-Grafana]# k get pods -n kube-system
-NAME                                                              READY   STATUS    RESTARTS     AGE
-antrea-agent-94w9m                                                2/2     Running   0            44d
-antrea-agent-cnzqr                                                2/2     Running   0            10d
-antrea-agent-h64mq                                                2/2     Running   0            43d
-antrea-agent-jtf58                                                2/2     Running   0            208d
-antrea-agent-k7dm2                                                2/2     Running   0            208d
-antrea-agent-ltczz                                                2/2     Running   0            11d
-antrea-agent-pwh95                                                2/2     Running   0            44d
-antrea-agent-smgvt                                                2/2     Running   0            11d
-antrea-agent-th5hv                                                2/2     Running   0            11d
-antrea-controller-6b7485899d-nrtbj                                1/1     Running   0            11d
-coredns-57db7b44f5-cjcwr                                          1/1     Running   0            11d
-coredns-57db7b44f5-rgzkm                                          1/1     Running   0            11d
-docker-registry-h06vkssitcbopscls-bmjtp-22dct                     1/1     Running   0            11d
-docker-registry-h06vkssitcbopscls-bmjtp-dskks                     1/1     Running   0            11d
-docker-registry-h06vkssitcbopscls-bmjtp-g48kt                     1/1     Running   0            11d
-docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-7bpww-zgvt8   1/1     Running   0            10d
-docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-bc5v4   1/1     Running   0            208d
-docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-ff9ds-xk62q   1/1     Running   0            208d
-docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-rqs4z   1/1     Running   0            44d
-docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-xt7fl   1/1     Running   0            43d
-docker-registry-h06vkssitcbopscls-node-pool-1-2nb6d-whk6z-z995p   1/1     Running   0            44d
-etcd-h06vkssitcbopscls-bmjtp-22dct                                1/1     Running   0            11d
-etcd-h06vkssitcbopscls-bmjtp-dskks                                1/1     Running   0            11d
-etcd-h06vkssitcbopscls-bmjtp-g48kt                                1/1     Running   0            11d
-kube-apiserver-h06vkssitcbopscls-bmjtp-22dct                      1/1     Running   0            11d
-kube-apiserver-h06vkssitcbopscls-bmjtp-dskks                      1/1     Running   0            11d
-kube-apiserver-h06vkssitcbopscls-bmjtp-g48kt                      1/1     Running   0            11d
-kube-controller-manager-h06vkssitcbopscls-bmjtp-22dct             1/1     Running   0            11d
-kube-controller-manager-h06vkssitcbopscls-bmjtp-dskks             1/1     Running   1 (9d ago)   11d
-kube-controller-manager-h06vkssitcbopscls-bmjtp-g48kt             1/1     Running   0            11d
-kube-proxy-67rz7                                                  1/1     Running   0            10d
-kube-proxy-7bkf8                                                  1/1     Running   0            44d
-kube-proxy-89lm8                                                  1/1     Running   0            43d
-kube-proxy-bxpvq                                                  1/1     Running   0            208d
-kube-proxy-d7qbj                                                  1/1     Running   0            44d
-kube-proxy-k29sq                                                  1/1     Running   0            11d
-kube-proxy-n9gkd                                                  1/1     Running   0            208d
-kube-proxy-rkd57                                                  1/1     Running   0            11d
-kube-proxy-xwm6d                                                  1/1     Running   0            11d
-kube-scheduler-h06vkssitcbopscls-bmjtp-22dct                      1/1     Running   1 (8d ago)   11d
-kube-scheduler-h06vkssitcbopscls-bmjtp-dskks                      1/1     Running   1 (9d ago)   11d
-kube-scheduler-h06vkssitcbopscls-bmjtp-g48kt                      1/1     Running   0            11d
-metrics-server-8494fddddc-v5hzk                                   1/1     Running   0            11d
-snapshot-controller-75bb7555d-hfrtt                               1/1     Running   0            11d
-[root@fcsitgateway SIT-Grafana]# k exec -it grafana-758f498965-52ddd -n cbops -- nslookup raw.githubusercontent.com
-Server:         10.96.0.10
-Address:        10.96.0.10:53
-
-Non-authoritative answer:
-
-** server can't find raw.githubusercontent.com: NXDOMAIN
-
-command terminated with exit code 1
-[root@fcsitgateway SIT-Grafana]# k exec -it grafana-758f498965-52ddd -n cbops -- cat /etc/resolv.conf
-search cbops.svc.cluster.local svc.cluster.local cluster.local
-nameserver 10.96.0.10
-options ndots:5
-
-
-my cluster is running on tanzu server
+{"@timestamp":"2026-06-29T12:31:18.563085195+05:30","level":"ERROR","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.kafka.core.KafkaAdmin","message":"Could not configure topics","stack_trace":"org.springframework.kafka.KafkaException: Timed out waiting to get existing topics\n\tat org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:539)\n\tat java.base/java.util.HashMap.forEach(HashMap.java:1429)\n\tat org.springframework.kafka.core.KafkaAdmin.checkPartitions(KafkaAdmin.java:518)\n\tat org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:411)\n\tat org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:263)\n\tat org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:227)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:986)\n\tat org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)\n\tat org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)\nCaused by: java.util.concurrent.TimeoutException: null\n\tat java.base/java.util.concurrent.CompletableFuture.timedGet(CompletableFuture.java:1960)\n\tat java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2095)\n\tat org.apache.kafka.common.internals.KafkaFutureImpl.get(KafkaFutureImpl.java:180)\n\tat org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:521)\n\tat java.base/java.util.HashMap.forEach(HashMap.java:1429)\n\tat org.springframework.kafka.core.KafkaAdmin.checkPartitions(KafkaAdmin.java:518)\n\tat org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:411)\n\tat org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:263)\n\tat org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:227)\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:986)\n"}
+2026-06-29 07:01:18.768 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:18.76850275+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:19.773 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:19.773231159+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:20.677 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:20.67769613+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:21.682 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:21.682491148+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:22.687 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:22.687405458+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:23.692 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:23.692548787+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:24.697 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:24.697202741+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:25.701 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:25.70178853+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:26.706 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:26.706374831+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:27.711 WARN  [kafka-admin-client-thread | NotificationService-admin-0] o.a.k.c.NetworkClient: [AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+{"@timestamp":"2026-06-29T12:31:27.711118981+05:30","level":"WARN","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"org.apache.kafka.clients.NetworkClient","message":"[AdminClient clientId=NotificationService-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.","stack_trace":""}
+2026-06-29 07:01:32.759 INFO  [main] o.s.b.StartupInfoLogger: Started NotificationServiceApplication in 88.7 seconds (process running for 90.989)
+{"@timestamp":"2026-06-29T12:31:32.759251258+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"c.f.N.NotificationServiceApplication","message":"Started NotificationServiceApplication in 88.7 seconds (process running for 90.989)","stack_trace":""}
