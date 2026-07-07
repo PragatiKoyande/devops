@@ -22,11 +22,11 @@ data:
 
     debezium.source.decimal.handling.mode=string
     debezium.source.database.connection.adapter=logminer
-	debezium.source.schema.history.internal.kafka.topic=schema-changes.oracle.fresh
+    debezium.source.schema.history.internal.kafka.topic=schema-changes.oracle.fresh
 
     debezium.source.schema.history.internal.kafka.bootstrap.servers=kafka.backend.svc.cluster.local:9092
     debezium.source.schema.history.internal.kafka.topic=schema-changes.oracle
-	debezium.source.offset.storage.file.filename=/debezium/data/offsets_fresh.dat
+    debezium.source.offset.storage.file.filename=/debezium/data/offsets_fresh.dat
 
     debezium.source.log.mining.strategy=online_catalog
     debezium.source.log.mining.continuous.mine=false
@@ -43,9 +43,9 @@ data:
     debezium.sink.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer
     debezium.sink.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer
     debezium.sink.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer
-    debezium.sink.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer 
-	debezium.source.snapshot.mode=initial
-    
+    debezium.sink.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+    debezium.source.snapshot.mode=initial
+
     debezium.format.key=json
     debezium.format.value=json
 
@@ -56,7 +56,7 @@ data:
     quarkus.log.console.json=false
     quarkus.log.console.format=%d{yyyy-MM-dd HH:mm:ss} %-5p [%c] (%t) %s%e%n
 
---- 
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -70,7 +70,7 @@ spec:
     requests:
       storage: 5Gi
 
---- 
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -127,7 +127,7 @@ spec:
           persistentVolumeClaim:
             claimName: debezium-pvc
 
---- 
+---
 apiVersion: v1
 kind: Service
 metadata:
