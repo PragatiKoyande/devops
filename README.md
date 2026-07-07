@@ -26,7 +26,7 @@ data:
 
     debezium.source.schema.history.internal.kafka.bootstrap.servers=kafka.backend.svc.cluster.local:9092
     debezium.source.schema.history.internal.kafka.topic=schema-changes.oracle
-	debezium.source.schema.history.internal.skip.unparseable.ddl=true
+    debezium.source.schema.history.internal.skip.unparseable.ddl=true
     debezium.source.offset.storage.file.filename=/debezium/data/offsets_fresh.dat
 
     debezium.source.log.mining.strategy=online_catalog
@@ -142,8 +142,3 @@ spec:
       port: 8080
       targetPort: 8080
   type: ClusterIP
-
-
-
-
-  indentation issue please resolve it 
