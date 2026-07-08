@@ -1,79 +1,54 @@
-
-[root@fcppjump PRE-PROD-Microservices]# k get networkpolicy -n backend
-NAME                     POD-SELECTOR          AGE
-allow-egress-to-oracle   app=debezium-server   20d
-[root@fcppjump PRE-PROD-Microservices]# k describe pod debezium-server-86c8fbbbcb-g2bch -n backend
-Name:             debezium-server-86c8fbbbcb-g2bch
-Namespace:        backend
-Priority:         0
-Service Account:  default
-Node:             h06vkspreprodcbopscls-node-pool-1-28vw8-qnbb2-l8ft4/10.244.7.218
-Start Time:       Wed, 08 Jul 2026 09:29:00 +0530
-Labels:           app=debezium-server
-                  pod-template-hash=86c8fbbbcb
-Annotations:      <none>
-Status:           Running
-IP:               192.168.5.2
-IPs:
-  IP:           192.168.5.2
-Controlled By:  ReplicaSet/debezium-server-86c8fbbbcb
-Containers:
-  debezium-server:
-    Container ID:   containerd://005a024c4e2457c7450f7a0e23c2b21ffa7b344ded2630fa8b5cd9ff897cc0f4
-    Image:          h06vksharbor.corp.ad.sbi/cbops/debezium-server:oracle-v1
-    Image ID:       h06vksharbor.corp.ad.sbi/cbops/debezium-server@sha256:db96544a508ee71ff174bcf13ce5a02e0b5b57411d8067bafcd916cc0f0025b6
-    Port:           8080/TCP
-    Host Port:      0/TCP
-    State:          Waiting
-      Reason:       CrashLoopBackOff
-    Last State:     Terminated
-      Reason:       Error
-      Exit Code:    1
-      Started:      Wed, 08 Jul 2026 11:43:41 +0530
-      Finished:     Wed, 08 Jul 2026 11:44:04 +0530
-    Ready:          False
-    Restart Count:  29
-    Limits:
-      cpu:     2
-      memory:  3Gi
-    Requests:
-      cpu:     500m
-      memory:  1Gi
-    Environment:
-      JAVA_OPTS:  -Xms512m -Xmx2g
-    Mounts:
-      /debezium/conf from config-volume (rw)
-      /debezium/data from data-volume (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-qw58j (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  config-volume:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      debezium-server-config
-    Optional:  false
-  data-volume:
-    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-    ClaimName:  debezium-pvc
-    ReadOnly:   false
-  kube-api-access-qw58j:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    Optional:                false
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              <none>
-Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type     Reason   Age                    From     Message
-  ----     ------   ----                   ----     -------
-  Normal   Created  52m (x21 over 137m)    kubelet  spec.containers{debezium-server}: Created container: debezium-server
-  Normal   Pulled   3m17s (x29 over 137m)  kubelet  spec.containers{debezium-server}: Container image "h06vksharbor.corp.ad.sbi/cbops/debezium-server:oracle-v1" already present on machine
-  Warning  BackOff  106s (x575 over 136m)  kubelet  spec.containers{debezium-server}: Back-off restarting failed container debezium-server in pod debezium-server-86c8fbbbcb-g2bch_backend(6d60d71c-f4d0-47be-8ca4-f48e1637ea49)
+[root@fcppjump PRE-PROD-Microservices]# k get networkpolicy allow-egress-to-oracle -n backend -o yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-egress-to-oracle","namespace":"backend"},"spec":{"egress":[{"ports":[{"port":1523,"protocol":"TCP"}],"to":[{"ipBlock":{"cidr":"10.177.179.145/32"}}]}],"podSelector":{"matchLabels":{"app":"debezium-server"}},"policyTypes":["Egress"]}}
+  creationTimestamp: "2026-06-17T09:07:09Z"
+  generation: 1
+  name: allow-egress-to-oracle
+  namespace: backend
+  resourceVersion: "59135489"
+  uid: 5a7beae3-496b-40d2-813a-d403dc70214e
+spec:
+  egress:
+  - ports:
+    - port: 1523
+      protocol: TCP
+    to:
+    - ipBlock:
+        cidr: 10.177.179.145/32
+  podSelector:
+    matchLabels:
+      app: debezium-server
+  policyTypes:
+  - Egress
+[root@fcppjump PRE-PROD-Microservices]# k get cm -n backend
+NAME                     DATA   AGE
+debezium-server-config   1      20d
+hadoop-config            5      15d
+kafka-config             2      15d
+kube-root-ca.crt         1      21d
+ldap-config              3      15d
+oracle-config            3      15d
+postgres-config          5      15d
+redis-config             3      15d
+[root@fcppjump PRE-PROD-Microservices]# k get cm debezium-server-config -n backende -o yaml
+Error from server (NotFound): namespaces "backende" not found
+[root@fcppjump PRE-PROD-Microservices]# k get cm debezium-server-config -n backend -o yaml
+apiVersion: v1
+data:
+  application.properties: "debezium.source.connector.class=io.debezium.connector.oracle.OracleConnector\ndebezium.source.tasks.max=1\n\ndebezium.source.database.hostname=10.177.179.145\ndebezium.source.database.port=1523\ndebezium.source.database.user=c##debezium\ndebezium.source.database.password=Debe#123\ndebezium.source.database.dbname=fincorepdb1\ndebezium.source.database.pdb.name=fincorepdb1\ndebezium.source.database.sid=fincorepdb1\ndebezium.source.database.server.name=fincorepdb1\n\ndebezium.source.topic.prefix=fincore\ndebezium.source.table.include.list=fincore.NOTIFICATIONS,fincore.USER_ROLES,fincore.PROCESS_STATUS,fincore.PERMISSIONS,fincore.ROLE_PERMISSIONS\n\ndebezium.source.decimal.handling.mode=string\ndebezium.source.database.connection.adapter=logminer\n\ndebezium.source.schema.history.internal.kafka.bootstrap.servers=kafka.backend.svc.cluster.local:9092\ndebezium.source.schema.history.internal.kafka.topic=schema-changes.oracle\n\ndebezium.source.log.mining.strategy=online_catalog\ndebezium.source.log.mining.continuous.mine=false\ndebezium.source.log.mining.batch.size.default=50000\ndebezium.source.log.mining.batch.size.max=100000\ndebezium.source.log.mining.sleep.time.default=50\ndebezium.source.log.mining.sleep.time.max=2000\n\ndebezium.source.heartbeat.interval.ms=2000\ndebezium.source.heartbeat.topics.prefix=heartbeat\n\ndebezium.sink.type=kafka\ndebezium.sink.kafka.producer.bootstrap.servers=kafka.backend.svc.cluster.local:9092\ndebezium.sink.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer\ndebezium.sink.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer\ndebezium.sink.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer\ndebezium.sink.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+    \n\ndebezium.format.key=json\ndebezium.format.value=json\n\ndebezium.source.offset.storage.file.filename=/debezium/data/offsets.dat\ndebezium.source.offset.flush.interval.ms=60000\n\nquarkus.log.level=INFO\nquarkus.log.console.json=false\nquarkus.log.console.format=%d{yyyy-MM-dd
+    HH:mm:ss} %-5p [%c] (%t) %s%e%n\n"
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"application.properties":"debezium.source.connector.class=io.debezium.connector.oracle.OracleConnector\ndebezium.source.tasks.max=1\n\ndebezium.source.database.hostname=10.177.179.145\ndebezium.source.database.port=1523\ndebezium.source.database.user=c##debezium\ndebezium.source.database.password=Debe#123\ndebezium.source.database.dbname=fincorepdb1\ndebezium.source.database.pdb.name=fincorepdb1\ndebezium.source.database.sid=fincorepdb1\ndebezium.source.database.server.name=fincorepdb1\n\ndebezium.source.topic.prefix=fincore\ndebezium.source.table.include.list=fincore.NOTIFICATIONS,fincore.USER_ROLES,fincore.PROCESS_STATUS,fincore.PERMISSIONS,fincore.ROLE_PERMISSIONS\n\ndebezium.source.decimal.handling.mode=string\ndebezium.source.database.connection.adapter=logminer\n\ndebezium.source.schema.history.internal.kafka.bootstrap.servers=kafka.backend.svc.cluster.local:9092\ndebezium.source.schema.history.internal.kafka.topic=schema-changes.oracle\n\ndebezium.source.log.mining.strategy=online_catalog\ndebezium.source.log.mining.continuous.mine=false\ndebezium.source.log.mining.batch.size.default=50000\ndebezium.source.log.mining.batch.size.max=100000\ndebezium.source.log.mining.sleep.time.default=50\ndebezium.source.log.mining.sleep.time.max=2000\n\ndebezium.source.heartbeat.interval.ms=2000\ndebezium.source.heartbeat.topics.prefix=heartbeat\n\ndebezium.sink.type=kafka\ndebezium.sink.kafka.producer.bootstrap.servers=kafka.backend.svc.cluster.local:9092\ndebezium.sink.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer\ndebezium.sink.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer\ndebezium.sink.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer\ndebezium.sink.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer \n\ndebezium.format.key=json\ndebezium.format.value=json\n\ndebezium.source.offset.storage.file.filename=/debezium/data/offsets.dat\ndebezium.source.offset.flush.interval.ms=60000\n\nquarkus.log.level=INFO\nquarkus.log.console.json=false\nquarkus.log.console.format=%d{yyyy-MM-dd HH:mm:ss} %-5p [%c] (%t) %s%e%n\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"debezium-server-config","namespace":"backend"}}
+  creationTimestamp: "2026-06-17T06:49:59Z"
+  name: debezium-server-config
+  namespace: backend
+  resourceVersion: "59098747"
+  uid: 1f969723-b172-48a1-b404-f59c80d1d132
