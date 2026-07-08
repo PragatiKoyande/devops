@@ -1,92 +1,152 @@
+[root@fcppjump PRE-PROD-Microservices]# k logs debezium-server-86c8fbbbcb-g2bch -f  -n backend --kubeconfig h06vkspreprodcbopscls-kubeconfig.yaml
+       __       __                 _
+  ____/ /___   / /_   ___  ____   (_)__  __ ____ ___
+ / __  // _ \ / __ \ / _ \/_  /  / // / / // __ `__ \
+/ /_/ //  __// /_/ //  __/ / /_ / // /_/ // / / / / /
+\__,_/ \___//_.___/ \___/ /___//_/ \__,_//_/ /_/ /_/
 
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-{"@timestamp":"2026-07-08T11:32:47.46080601+05:30","level":"INFO","service":"ProcessStatusService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
-2026-07-08 06:02:47.551 ERROR [main] o.s.b.SpringApplication: Application run failed
-org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'airflowEventConsumer' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/consumer/AirflowEventConsumer.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'ProcessStatusService' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/ProcessStatusServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'fileServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/FileServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-        at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-        at com.fincore.process_status_service.ProcessStatusApplication.main(ProcessStatusApplication.java:16)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'ProcessStatusService' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/ProcessStatusServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'fileServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/FileServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 24 common frames omitted
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'fileServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/FileServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)
-        at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 38 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed
-        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:222)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:422)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1780)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-        at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
-        at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904)
-        at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782)
-        ... 52 common frames omitted
-Caused by: org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0
-        at org.springframework.dao.support.DataAccessUtils.nullableSingleResult(DataAccessUtils.java:190)
-        at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:520)
-        at com.fincore.commonutilities.buisnessobject.ControlDateService.getControlDates(ControlDateService.java:22)
-        at com.fincore.commonutilities.buisnessobject.ControlDateService.validate(ControlDateService.java:19)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457)
-        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:401)
-        at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:219)
-        ... 65 common frames omitted
-{"@timestamp":"2026-07-08T11:32:47.551844216+05:30","level":"ERROR","service":"ProcessStatusService","traceId":"","userId":"","clientIp":"","apiPath":"","requestUrl":"","httpMethod":"","httpStatus":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'airflowEventConsumer' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/consumer/AirflowEventConsumer.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'ProcessStatusService' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/ProcessStatusServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'fileServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/FileServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'ProcessStatusService' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/ProcessStatusServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'fileServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/FileServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'fileServiceImpl' defined in URL [jar:nested:/app.jar/!BOOT-INF/classes/!/com/fincore/process_status_service/service/FileServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795)\n\tat org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1357)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1194)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\nCaused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'com.fincore.commonutilities.buisnessobject.ControlDateService': Invocation of init method failed\n\tat org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:222)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:422)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1780)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)\n\tat org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)\nCaused by: org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0\n\tat org.springframework.dao.support.DataAccessUtils.nullableSingleResult(DataAccessUtils.java:190)\n\tat org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:520)\n\tat com.fincore.commonutilities.buisnessobject.ControlDateService.getControlDates(ControlDateService.java:22)\n\tat com.fincore.commonutilities.buisnessobject.ControlDateService.validate(ControlDateService.java:19)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580)\n\tat org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457)\n\tat org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:401)\n\tat org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:219)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:422)\n"}
+
+
+                      Powered by Quarkus 3.2.10.Final
+2026-07-08 06:08:14 INFO  [io.debezium.server.BaseChangeConsumer] (main) Using 'io.debezium.server.BaseChangeConsumer$$Lambda$232/0x000000084030bc40@69391e08' stream name mapper
+2026-07-08 06:08:14 INFO  [org.apache.kafka.clients.producer.ProducerConfig] (main) ProducerConfig values:
+        acks = -1
+        auto.include.jmx.reporter = true
+        batch.size = 16384
+        bootstrap.servers = [kafka.backend.svc.cluster.local:9092]
+        buffer.memory = 33554432
+        client.dns.lookup = use_all_dns_ips
+        client.id = producer-1
+        compression.type = none
+        connections.max.idle.ms = 540000
+        delivery.timeout.ms = 120000
+        enable.idempotence = true
+        interceptor.classes = []
+        key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+        linger.ms = 0
+        max.block.ms = 60000
+        max.in.flight.requests.per.connection = 5
+        max.request.size = 1048576
+        metadata.max.age.ms = 300000
+        metadata.max.idle.ms = 300000
+        metric.reporters = []
+        metrics.num.samples = 2
+        metrics.recording.level = INFO
+        metrics.sample.window.ms = 30000
+        partitioner.adaptive.partitioning.enable = true
+        partitioner.availability.timeout.ms = 0
+        partitioner.class = null
+        partitioner.ignore.keys = false
+        receive.buffer.bytes = 32768
+        reconnect.backoff.max.ms = 1000
+        reconnect.backoff.ms = 50
+        request.timeout.ms = 30000
+        retries = 2147483647
+        retry.backoff.ms = 100
+        sasl.client.callback.handler.class = null
+        sasl.jaas.config = null
+        sasl.kerberos.kinit.cmd = /usr/bin/kinit
+        sasl.kerberos.min.time.before.relogin = 60000
+        sasl.kerberos.service.name = null
+        sasl.kerberos.ticket.renew.jitter = 0.05
+        sasl.kerberos.ticket.renew.window.factor = 0.8
+        sasl.login.callback.handler.class = null
+        sasl.login.class = null
+        sasl.login.connect.timeout.ms = null
+        sasl.login.read.timeout.ms = null
+        sasl.login.refresh.buffer.seconds = 300
+        sasl.login.refresh.min.period.seconds = 60
+        sasl.login.refresh.window.factor = 0.8
+        sasl.login.refresh.window.jitter = 0.05
+        sasl.login.retry.backoff.max.ms = 10000
+        sasl.login.retry.backoff.ms = 100
+        sasl.mechanism = GSSAPI
+        sasl.oauthbearer.clock.skew.seconds = 30
+        sasl.oauthbearer.expected.audience = null
+        sasl.oauthbearer.expected.issuer = null
+        sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+        sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+        sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+        sasl.oauthbearer.jwks.endpoint.url = null
+        sasl.oauthbearer.scope.claim.name = scope
+        sasl.oauthbearer.sub.claim.name = sub
+        sasl.oauthbearer.token.endpoint.url = null
+        security.protocol = PLAINTEXT
+        security.providers = null
+        send.buffer.bytes = 131072
+        socket.connection.setup.timeout.max.ms = 30000
+        socket.connection.setup.timeout.ms = 10000
+        ssl.cipher.suites = null
+        ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+        ssl.endpoint.identification.algorithm = https
+        ssl.engine.factory.class = null
+        ssl.key.password = null
+        ssl.keymanager.algorithm = SunX509
+        ssl.keystore.certificate.chain = null
+        ssl.keystore.key = null
+        ssl.keystore.location = null
+        ssl.keystore.password = null
+        ssl.keystore.type = JKS
+        ssl.protocol = TLSv1.3
+        ssl.provider = null
+        ssl.secure.random.implementation = null
+        ssl.trustmanager.algorithm = PKIX
+        ssl.truststore.certificates = null
+        ssl.truststore.location = null
+        ssl.truststore.password = null
+        ssl.truststore.type = JKS
+        transaction.timeout.ms = 60000
+        transactional.id = null
+        value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-07-08 06:08:14 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Instantiated an idempotent producer.
+2026-07-08 06:08:34 WARN  [org.apache.kafka.clients.ClientUtils] (main) Couldn't resolve server kafka.backend.svc.cluster.local:9092 from bootstrap.servers as DNS resolution failed for kafka.backend.svc.cluster.local
+2026-07-08 06:08:34 INFO  [org.apache.kafka.clients.producer.KafkaProducer] (main) [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 0 ms.
+2026-07-08 06:08:34 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics scheduler closed
+2026-07-08 06:08:34 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-07-08 06:08:34 INFO  [org.apache.kafka.common.metrics.Metrics] (main) Metrics reporters closed
+2026-07-08 06:08:34 INFO  [org.apache.kafka.common.utils.AppInfoParser] (main) App info kafka.producer for producer-1 unregistered
+2026-07-08 06:08:34 ERROR [io.quarkus.runtime.Application] (main) Failed to start application (with profile [prod]): java.lang.RuntimeException: Failed to start quarkus
+        at io.quarkus.runner.ApplicationImpl.doStart(Unknown Source)
+        at io.quarkus.runtime.Application.start(Application.java:101)
+        at io.quarkus.runtime.ApplicationLifecycleManager.run(ApplicationLifecycleManager.java:111)
+        at io.quarkus.runtime.Quarkus.run(Quarkus.java:71)
+        at io.quarkus.runtime.Quarkus.run(Quarkus.java:44)
+        at io.quarkus.runtime.Quarkus.run(Quarkus.java:124)
+        at io.debezium.server.Main.main(Main.java:15)
+Caused by: org.apache.kafka.common.KafkaException: Failed to construct kafka producer
+        at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:459)
+        at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:287)
+        at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:270)
+        at io.debezium.server.kafka.KafkaChangeConsumer.start(KafkaChangeConsumer.java:63)
+        at io.debezium.server.kafka.KafkaChangeConsumer_Bean.doCreate(Unknown Source)
+        at io.debezium.server.kafka.KafkaChangeConsumer_Bean.create(Unknown Source)
+        at io.debezium.server.kafka.KafkaChangeConsumer_Bean.create(Unknown Source)
+        at io.debezium.server.DebeziumServer.start(DebeziumServer.java:129)
+        at io.debezium.server.DebeziumServer_Bean.doCreate(Unknown Source)
+        at io.debezium.server.DebeziumServer_Bean.create(Unknown Source)
+        at io.debezium.server.DebeziumServer_Bean.create(Unknown Source)
+        at io.quarkus.arc.impl.AbstractSharedContext.createInstanceHandle(AbstractSharedContext.java:113)
+        at io.quarkus.arc.impl.AbstractSharedContext$1.get(AbstractSharedContext.java:37)
+        at io.quarkus.arc.impl.AbstractSharedContext$1.get(AbstractSharedContext.java:34)
+        at io.quarkus.arc.impl.LazyValue.get(LazyValue.java:26)
+        at io.quarkus.arc.impl.ComputingCache.computeIfAbsent(ComputingCache.java:69)
+        at io.quarkus.arc.impl.AbstractSharedContext.get(AbstractSharedContext.java:34)
+        at io.quarkus.arc.impl.ClientProxies.getApplicationScopedDelegate(ClientProxies.java:21)
+        at io.debezium.server.DebeziumServer_ClientProxy.arc$delegate(Unknown Source)
+        at io.debezium.server.DebeziumServer_ClientProxy.arc_contextualInstance(Unknown Source)
+        at io.debezium.server.DebeziumServer_Observer_Synthetic_f28a48f6bdce4326db44aec92fdb5c84d535b5d9.notify(Unknown Source)
+        at io.quarkus.arc.impl.EventImpl$Notifier.notifyObservers(EventImpl.java:346)
+        at io.quarkus.arc.impl.EventImpl$Notifier.notify(EventImpl.java:328)
+        at io.quarkus.arc.impl.EventImpl.fire(EventImpl.java:82)
+        at io.quarkus.arc.runtime.ArcRecorder.fireLifecycleEvent(ArcRecorder.java:155)
+        at io.quarkus.arc.runtime.ArcRecorder.handleLifecycleEvents(ArcRecorder.java:106)
+        at io.quarkus.deployment.steps.LifecycleEventsBuildStep$startupEvent1144526294.deploy_0(Unknown Source)
+        at io.quarkus.deployment.steps.LifecycleEventsBuildStep$startupEvent1144526294.deploy(Unknown Source)
+        ... 7 more
+Caused by: org.apache.kafka.common.config.ConfigException: No resolvable bootstrap urls given in bootstrap.servers
+        at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:101)
+        at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:60)
+        at org.apache.kafka.clients.ClientUtils.parseAndValidateAddresses(ClientUtils.java:56)
+        at org.apache.kafka.clients.producer.KafkaProducer.<init>(KafkaProducer.java:435)
+        ... 34 more
