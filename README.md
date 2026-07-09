@@ -1,86 +1,76 @@
-        ssl.truststore.type = JKS
-        value.deserializer = class org.springframework.kafka.support.serializer.JsonDeserializer
 
-2026-07-09T05:16:40.839Z  INFO 1 --- [nwsa-variance-service] [           main] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
-2026-07-09T05:16:41.184Z  INFO 1 --- [nwsa-variance-service] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.9.1
-2026-07-09T05:16:41.185Z  INFO 1 --- [nwsa-variance-service] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: f745dfdcee2b9851
-2026-07-09T05:16:41.185Z  INFO 1 --- [nwsa-variance-service] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1783574201183
-2026-07-09T05:16:41.205Z  INFO 1 --- [nwsa-variance-service] [           main] o.a.k.c.c.i.ClassicKafkaConsumer         : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Subscribed to topic(s): nwsa-variance-report.trigger
-2026-07-09T05:16:41.236Z  INFO 1 --- [nwsa-variance-service] [           main] c.f.N.NwsaVarianceApplication            : Started NwsaVarianceApplication in 8.102 seconds (process running for 8.898)
-2026-07-09T05:16:50.575Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 9334 ms.
-2026-07-09T05:16:50.577Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:17:07.545Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 16835 ms.
-2026-07-09T05:17:07.545Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:17:37.698Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:17:37.698Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:18:07.952Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:18:07.953Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:18:35.569Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 27192 ms.
-2026-07-09T05:18:35.570Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:19:05.572Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 29028 ms.
-2026-07-09T05:19:05.573Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:19:36.607Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:19:36.608Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:20:07.520Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:20:07.520Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:20:38.273Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 29732 ms.
-2026-07-09T05:20:38.274Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:21:05.935Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 26718 ms.
-2026-07-09T05:21:05.935Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:21:36.771Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:21:36.772Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:22:07.478Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 29762 ms.
-2026-07-09T05:22:07.479Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:22:34.636Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 26144 ms.
-2026-07-09T05:22:34.636Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:23:05.490Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:23:05.491Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:23:36.534Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:23:36.534Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:24:01.737Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 24337 ms.
-2026-07-09T05:24:01.737Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:24:27.842Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 25149 ms.
-2026-07-09T05:24:27.842Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:24:54.050Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 25172 ms.
-2026-07-09T05:24:54.050Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:25:24.955Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:25:24.955Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:25:56.013Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:25:56.014Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:26:27.056Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:26:27.056Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:26:57.560Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 29494 ms.
-2026-07-09T05:26:57.561Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:27:26.124Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 27509 ms.
-2026-07-09T05:27:26.124Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:27:57.015Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:27:57.015Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:28:28.019Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:28:28.019Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:28:58.976Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:28:58.976Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:29:29.931Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 29949 ms.
-2026-07-09T05:29:29.931Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:30:00.837Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:30:00.838Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:30:31.729Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:30:31.729Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:31:02.735Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 30000 ms.
-2026-07-09T05:31:02.735Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:31:28.241Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 24472 ms.
-2026-07-09T05:31:28.242Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:31:54.898Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 25600 ms.
-2026-07-09T05:31:54.899Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:32:24.650Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 28806 ms.
-2026-07-09T05:32:24.650Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:32:50.453Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 24904 ms.
-2026-07-09T05:32:50.454Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:33:19.753Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 28242 ms.
-2026-07-09T05:33:19.753Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:33:48.103Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 27402 ms.
-2026-07-09T05:33:48.104Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:34:16.218Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 27092 ms.
-2026-07-09T05:34:16.218Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:34:43.610Z  INFO 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Disconnecting from node -1 due to socket connection setup timeout. The timeout value is 26336 ms.
-2026-07-09T05:34:43.611Z  WARN 1 --- [nwsa-variance-service] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-nwsa-variance-group-1, groupId=nwsa-variance-group] Bootstrap broker kafka.be-test.svc.cluster.local:9092 (id: -1 rack: null) disconnected
-2026-07-09T05:35:14.613Z  INFO 1 --- [nwsa-v
+D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>k get svc -n be-test
+NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+akhq                       ClusterIP   10.98.24.1       <none>        8080/TCP            119d
+ascii-generation-service   ClusterIP   10.96.160.251    <none>        80/TCP              31d
+common-master-service      ClusterIP   10.98.77.168     <none>        80/TCP              181d
+common-request-service     ClusterIP   10.98.122.44     <none>        80/TCP              181d
+connect                    ClusterIP   10.110.105.120   <none>        8083/TCP            178d
+dashboard-service          ClusterIP   10.103.171.178   <none>        80/TCP              181d
+debezium-server            ClusterIP   10.108.219.27    <none>        8080/TCP            93d
+druid-service              ClusterIP   10.109.79.182    <none>        80/TCP              44d
+enquiry-service            ClusterIP   10.108.10.187    <none>        80/TCP              65d
+kafka                      ClusterIP   None             <none>        9092/TCP,9093/TCP   178d
+login-service              ClusterIP   10.104.155.75    <none>        80/TCP              181d
+notification-service       ClusterIP   10.107.59.82     <none>        80/TCP              181d
+nwsa-variance-service      ClusterIP   10.104.189.53    <none>        80/TCP              100d
+postgres-db                ClusterIP   10.104.54.96     <none>        5432/TCP            161d
+process-status-service     ClusterIP   10.100.224.145   <none>        80/TCP              181d
+react-service              ClusterIP   10.100.206.6     <none>        80/TCP              155d
+redis-service              ClusterIP   10.111.179.21    <none>        6379/TCP            181d
+report-builder-service     ClusterIP   10.102.195.205   <none>        80/TCP              181d
+report-service             ClusterIP   10.104.144.31    <none>        80/TCP              181d
+template-config-service    ClusterIP   10.111.254.173   <none>        80/TCP              181d
+transactions-service       ClusterIP   10.110.206.166   <none>        80/TCP              181d
+user-service               ClusterIP   10.100.228.230   <none>        80/TCP              181d
+voucher-enquiry-service    ClusterIP   10.110.120.48    <none>        80/TCP              30d
+voucher-service            ClusterIP   10.111.217.119   <none>        80/TCP              4h8m
+
+D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>kgp -n be-test
+NAME                                           READY   STATUS             RESTARTS        AGE
+akhq-5b45d78f84-ll8st                          1/1     Running            0               5h3m
+ascii-generation-deployment-7fffffd99c-nsdvz   1/1     Running            0               5h3m
+common-master-deployment-7f54b468d9-qrdrn      1/1     Running            0               4h36m
+common-request-deployment-785df7859b-kpkpq     1/1     Running            0               4h55m
+dashboard-deployment-58cf5f5f8b-mm5cq          1/1     Running            0               5h3m
+debezium-server-5697cf7d76-2mpmv               1/1     Running            0               17m
+druid-service-deployment-65758645dd-pmg5q      1/1     Running            0               5h3m
+enquiry-service-deployment-677bc6b94-nzrg9     1/1     Running            0               3h56m
+kafka-0                                        0/1     CrashLoopBackOff   3 (20s ago)     4h55m
+login-deployment-69f966b645-pdtgn              1/1     Running            0               4h55m
+notification-deployment-5dfbdb7d5-5d5n8        1/1     Running            0               38m
+nwsa-variance-deployment-855977dbfb-tkg8l      1/1     Running            2 (4h53m ago)   4h55m
+postgres-db-7b865dd6fc-zzb5p                   1/1     Running            0               4h55m
+process-status-deployment-597cbc59c8-q6pfh     1/1     Running            0               4h55m
+redis-deployment-6dfd54846d-9bb6c              1/1     Running            0               5h3m
+report-builder-deployment-7bf687ccf9-srflq     1/1     Running            0               5h3m
+report-deployment-7b467d488-kt9sc              1/1     Running            1 (4h54m ago)   4h55m
+template-config-deployment-5dcb6457b7-78zrb    1/1     Running            0               4h55m
+transactions-deployment-54fd65fc76-n547s       1/1     Running            0               4h36m
+user-deployment-d9fcc5c7d-xgmv2                1/1     Running            1 (4h53m ago)   4h55m
+voucher-enquiry-deployment-6d994c5b94-772c9    1/1     Running            0               4h55m
+voucher-service-deployment-64f6749d58-ght9z    1/1     Running            0               3h45m
+
+D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>k get endpoints kafka -n be-test
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME    ENDPOINTS   AGE
+kafka               178d
+
+D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>k get networkpolicy -A
+NAMESPACE   NAME                          POD-SELECTOR               AGE
+be-test     allow-be-test-to-druid        <none>                     44d
+be-test     allow-debezium-kafka          app=debezium-server        29m
+be-test     allow-debezium-oracle         app=debezium-server        29m
+be-test     allow-egress-to-redis         <none>                     20d
+be-test     allow-jfrog-cluster-egress    <none>                     30d
+be-test     allow-kafka-notification      app=notification-backend   40m
+be-test     allow-oracle-db-egress        <none>                     30d
+be-test     allow-postgres-notification   app=notification-backend   44m
+cbops       allow-egress-druid            app=fincore-app            233d
+cbops       allow-hdfs-db-egress          app=fincore-app            189d
+cbops       allow-postgress-db-egress     app=fincore-app            198d
+logging     loki-network-policy           app=loki                   139d
+
+
+
+I dont have networkpolicy written can you please write one for me send back
