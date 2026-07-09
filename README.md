@@ -1,76 +1,220 @@
-
-D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>k get svc -n be-test
-NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
-akhq                       ClusterIP   10.98.24.1       <none>        8080/TCP            119d
-ascii-generation-service   ClusterIP   10.96.160.251    <none>        80/TCP              31d
-common-master-service      ClusterIP   10.98.77.168     <none>        80/TCP              181d
-common-request-service     ClusterIP   10.98.122.44     <none>        80/TCP              181d
-connect                    ClusterIP   10.110.105.120   <none>        8083/TCP            178d
-dashboard-service          ClusterIP   10.103.171.178   <none>        80/TCP              181d
-debezium-server            ClusterIP   10.108.219.27    <none>        8080/TCP            93d
-druid-service              ClusterIP   10.109.79.182    <none>        80/TCP              44d
-enquiry-service            ClusterIP   10.108.10.187    <none>        80/TCP              65d
-kafka                      ClusterIP   None             <none>        9092/TCP,9093/TCP   178d
-login-service              ClusterIP   10.104.155.75    <none>        80/TCP              181d
-notification-service       ClusterIP   10.107.59.82     <none>        80/TCP              181d
-nwsa-variance-service      ClusterIP   10.104.189.53    <none>        80/TCP              100d
-postgres-db                ClusterIP   10.104.54.96     <none>        5432/TCP            161d
-process-status-service     ClusterIP   10.100.224.145   <none>        80/TCP              181d
-react-service              ClusterIP   10.100.206.6     <none>        80/TCP              155d
-redis-service              ClusterIP   10.111.179.21    <none>        6379/TCP            181d
-report-builder-service     ClusterIP   10.102.195.205   <none>        80/TCP              181d
-report-service             ClusterIP   10.104.144.31    <none>        80/TCP              181d
-template-config-service    ClusterIP   10.111.254.173   <none>        80/TCP              181d
-transactions-service       ClusterIP   10.110.206.166   <none>        80/TCP              181d
-user-service               ClusterIP   10.100.228.230   <none>        80/TCP              181d
-voucher-enquiry-service    ClusterIP   10.110.120.48    <none>        80/TCP              30d
-voucher-service            ClusterIP   10.111.217.119   <none>        80/TCP              4h8m
-
-D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>kgp -n be-test
-NAME                                           READY   STATUS             RESTARTS        AGE
-akhq-5b45d78f84-ll8st                          1/1     Running            0               5h3m
-ascii-generation-deployment-7fffffd99c-nsdvz   1/1     Running            0               5h3m
-common-master-deployment-7f54b468d9-qrdrn      1/1     Running            0               4h36m
-common-request-deployment-785df7859b-kpkpq     1/1     Running            0               4h55m
-dashboard-deployment-58cf5f5f8b-mm5cq          1/1     Running            0               5h3m
-debezium-server-5697cf7d76-2mpmv               1/1     Running            0               17m
-druid-service-deployment-65758645dd-pmg5q      1/1     Running            0               5h3m
-enquiry-service-deployment-677bc6b94-nzrg9     1/1     Running            0               3h56m
-kafka-0                                        0/1     CrashLoopBackOff   3 (20s ago)     4h55m
-login-deployment-69f966b645-pdtgn              1/1     Running            0               4h55m
-notification-deployment-5dfbdb7d5-5d5n8        1/1     Running            0               38m
-nwsa-variance-deployment-855977dbfb-tkg8l      1/1     Running            2 (4h53m ago)   4h55m
-postgres-db-7b865dd6fc-zzb5p                   1/1     Running            0               4h55m
-process-status-deployment-597cbc59c8-q6pfh     1/1     Running            0               4h55m
-redis-deployment-6dfd54846d-9bb6c              1/1     Running            0               5h3m
-report-builder-deployment-7bf687ccf9-srflq     1/1     Running            0               5h3m
-report-deployment-7b467d488-kt9sc              1/1     Running            1 (4h54m ago)   4h55m
-template-config-deployment-5dcb6457b7-78zrb    1/1     Running            0               4h55m
-transactions-deployment-54fd65fc76-n547s       1/1     Running            0               4h36m
-user-deployment-d9fcc5c7d-xgmv2                1/1     Running            1 (4h53m ago)   4h55m
-voucher-enquiry-deployment-6d994c5b94-772c9    1/1     Running            0               4h55m
-voucher-service-deployment-64f6749d58-ght9z    1/1     Running            0               3h45m
-
-D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>k get endpoints kafka -n be-test
-Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
-NAME    ENDPOINTS   AGE
-kafka               178d
-
-D:\Pragati\Kubernetes-Deployment-Working\DEV-Deployment\Kafka>k get networkpolicy -A
-NAMESPACE   NAME                          POD-SELECTOR               AGE
-be-test     allow-be-test-to-druid        <none>                     44d
-be-test     allow-debezium-kafka          app=debezium-server        29m
-be-test     allow-debezium-oracle         app=debezium-server        29m
-be-test     allow-egress-to-redis         <none>                     20d
-be-test     allow-jfrog-cluster-egress    <none>                     30d
-be-test     allow-kafka-notification      app=notification-backend   40m
-be-test     allow-oracle-db-egress        <none>                     30d
-be-test     allow-postgres-notification   app=notification-backend   44m
-cbops       allow-egress-druid            app=fincore-app            233d
-cbops       allow-hdfs-db-egress          app=fincore-app            189d
-cbops       allow-postgress-db-egress     app=fincore-app            198d
-logging     loki-network-policy           app=loki                   139d
-
-
-
-I dont have networkpolicy written can you please write one for me send back
+rg.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,337] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.APP_CONFIG-0.335d4a0d870f4710b4aee3df0c8a315c-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,337] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.APP_CONFIG-0.335d4a0d870f4710b4aee3df0c8a315c-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,338] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.APP_CONFIG-0.335d4a0d870f4710b4aee3df0c8a315c-stray, topicId=YWazDlOfRNOHAXFmgGM4Ag, topic=fincore.FINCORE.APP_CONFIG, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=2) with 1 segments, local-log-start-offset 0 and log-end-offset 2 in 6ms (142/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,338] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.APP_CONFIG-0.335d4a0d870f4710b4aee3df0c8a315c-stray, topicId=YWazDlOfRNOHAXFmgGM4Ag, topic=fincore.FINCORE.APP_CONFIG, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=2) with 1 segments, local-log-start-offset 0 and log-end-offset 2 in 6ms (142/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,339] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.LHO_TRANSFER_SUMMARY-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,339] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,339] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,339] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,340] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,340] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,340] INFO [LogLoader partition=fincore.FINCORE.LHO_TRANSFER_SUMMARY-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,340] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.LHO_TRANSFER_SUMMARY-0.cc4f43e945c64f6793594882e6ff16db-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,340] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.LHO_TRANSFER_SUMMARY-0.cc4f43e945c64f6793594882e6ff16db-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,341] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.LHO_TRANSFER_SUMMARY-0.cc4f43e945c64f6793594882e6ff16db-stray, topicId=oshkP5NqQkKbX7kRHxvtpA, topic=fincore.FINCORE.LHO_TRANSFER_SUMMARY, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0) with 1 segments, local-log-start-offset 0 and log-end-offset 0 in 3ms (143/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,341] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.LHO_TRANSFER_SUMMARY-0.cc4f43e945c64f6793594882e6ff16db-stray, topicId=oshkP5NqQkKbX7kRHxvtpA, topic=fincore.FINCORE.LHO_TRANSFER_SUMMARY, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0) with 1 segments, local-log-start-offset 0 and log-end-offset 0 in 3ms (143/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,342] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for report-generation-response-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,342] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,342] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,342] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,348] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,348] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,348] INFO [LogLoader partition=report-generation-response-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,349] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/report-generation-response-0, topicId=YP_H-vMzSrC2T_B6ulRTvA, topic=report-generation-response, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0) with 1 segments, local-log-start-offset 0 and log-end-offset 0 in 8ms (144/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,349] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/report-generation-response-0, topicId=YP_H-vMzSrC2T_B6ulRTvA, topic=report-generation-response, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0) with 1 segments, local-log-start-offset 0 and log-end-offset 0 in 8ms (144/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,350] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.FIRST_TABLE-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,350] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,350] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,350] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.FIRST_TABLE-0.a8bec4b7717941c6a3ca5fc7076d2a1c-stray/00000000000000000003.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,350] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,352] INFO [ProducerStateManager partition=fincore.FINCORE.FIRST_TABLE-0] Wrote producer snapshot at offset 3 with 1 producer ids in 2 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,352] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 3 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,352] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 3 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,352] INFO [ProducerStateManager partition=fincore.FINCORE.FIRST_TABLE-0] Loading producer state from snapshot file 'SnapshotFile(offset=3, file=/var/lib/kafka/data/kafka/fincore.FINCORE.FIRST_TABLE-0.a8bec4b7717941c6a3ca5fc7076d2a1c-stray/00000000000000000003.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,353] INFO [LogLoader partition=fincore.FINCORE.FIRST_TABLE-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 1ms for snapshot load and 0ms for segment recovery from offset 3 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,353] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.FIRST_TABLE-0.a8bec4b7717941c6a3ca5fc7076d2a1c-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,353] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.FIRST_TABLE-0.a8bec4b7717941c6a3ca5fc7076d2a1c-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,353] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.FIRST_TABLE-0.a8bec4b7717941c6a3ca5fc7076d2a1c-stray, topicId=g6CsfbKaSQaR1LoyFf1nJQ, topic=fincore.FINCORE.FIRST_TABLE, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=3) with 1 segments, local-log-start-offset 0 and log-end-offset 3 in 4ms (145/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,353] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.FIRST_TABLE-0.a8bec4b7717941c6a3ca5fc7076d2a1c-stray, topicId=g6CsfbKaSQaR1LoyFf1nJQ, topic=fincore.FINCORE.FIRST_TABLE, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=3) with 1 segments, local-log-start-offset 0 and log-end-offset 3 in 4ms (145/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.PROCESS_SCREEN_MAPPING-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,355] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,356] INFO Found stray log dir Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, topicId=AG94nLR_QIGYwArQIryFPw, topic=fincore.FINCORE.PROCESS_SCREEN_MAPPING, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0): the topicId AG94nLR_QIGYwArQIryFPw does not exist in the metadata image. (org.apache.kafka.storage.internals.log.LogManager)
+[2026-07-09 10:12:01,359] INFO Error while loading logs in /var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0 in 3ms (146/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,359] INFO Error while loading logs in /var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0 in 3ms (146/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,361] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 9. 0 recovered for spark-events-dlt-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,361] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 9 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,361] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 9 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,362] INFO [ProducerStateManager partition=spark-events-dlt-0] Wrote producer snapshot at offset 9 with 0 producer ids in 1 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,362] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 1ms for segment recovery from offset 9 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,363] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 9 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,363] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 9 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,363] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/spark-events-dlt-0/00000000000000000009.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,363] INFO [LogLoader partition=spark-events-dlt-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 9 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,364] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/spark-events-dlt-0, topicId=1K6li7CzS3WdbkLPUVSfqw, topic=spark-events-dlt, partition=0, highWatermark=9, lastStableOffset=9, logStartOffset=9, logEndOffset=9) with 1 segments, local-log-start-offset 9 and log-end-offset 9 in 4ms (147/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,364] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/spark-events-dlt-0, topicId=1K6li7CzS3WdbkLPUVSfqw, topic=spark-events-dlt, partition=0, highWatermark=9, lastStableOffset=9, logStartOffset=9, logEndOffset=9) with 1 segments, local-log-start-offset 9 and log-end-offset 9 in 4ms (147/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,365] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,365] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,365] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,365] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0.69cd6b27b00644469534004f2ea1c15a-stray/00000000000000000001.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,365] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,367] INFO [ProducerStateManager partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0] Wrote producer snapshot at offset 1 with 1 producer ids in 1 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,368] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 1 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,368] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 1 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,368] INFO [ProducerStateManager partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0] Loading producer state from snapshot file 'SnapshotFile(offset=1, file=/var/lib/kafka/data/kafka/fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0.69cd6b27b00644469534004f2ea1c15a-stray/00000000000000000001.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,368] INFO [LogLoader partition=fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 1 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,369] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0.69cd6b27b00644469534004f2ea1c15a-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,369] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0.69cd6b27b00644469534004f2ea1c15a-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,369] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0.69cd6b27b00644469534004f2ea1c15a-stray, topicId=vaSi_KgyS9uqRqnI8fRBXQ, topic=fincore.FINCORE.INTEREST_CAPITALISATION_DATE, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=1) with 1 segments, local-log-start-offset 0 and log-end-offset 1 in 5ms (148/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,369] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.INTEREST_CAPITALISATION_DATE-0.69cd6b27b00644469534004f2ea1c15a-stray, topicId=vaSi_KgyS9uqRqnI8fRBXQ, topic=fincore.FINCORE.INTEREST_CAPITALISATION_DATE, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=1) with 1 segments, local-log-start-offset 0 and log-end-offset 1 in 5ms (148/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,372] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.CURRENCY_RATE_CHANGE-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,372] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,372] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,372] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.CURRENCY_RATE_CHANGE-0.1deadea21dbf4f7e81ea48662759e07f-stray/00000000000000000094.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,372] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,376] INFO [ProducerStateManager partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0] Wrote producer snapshot at offset 94 with 1 producer ids in 1 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,377] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 94 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,377] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 94 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,377] INFO [ProducerStateManager partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0] Loading producer state from snapshot file 'SnapshotFile(offset=94, file=/var/lib/kafka/data/kafka/fincore.FINCORE.CURRENCY_RATE_CHANGE-0.1deadea21dbf4f7e81ea48662759e07f-stray/00000000000000000094.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,377] INFO [LogLoader partition=fincore.FINCORE.CURRENCY_RATE_CHANGE-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 94 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,378] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.CURRENCY_RATE_CHANGE-0.1deadea21dbf4f7e81ea48662759e07f-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,378] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.CURRENCY_RATE_CHANGE-0.1deadea21dbf4f7e81ea48662759e07f-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,378] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.CURRENCY_RATE_CHANGE-0.1deadea21dbf4f7e81ea48662759e07f-stray, topicId=KFsIFPoQQSq5FM3Wc-b37A, topic=fincore.FINCORE.CURRENCY_RATE_CHANGE, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=94) with 1 segments, local-log-start-offset 0 and log-end-offset 94 in 9ms (149/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,378] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.CURRENCY_RATE_CHANGE-0.1deadea21dbf4f7e81ea48662759e07f-stray, topicId=KFsIFPoQQSq5FM3Wc-b37A, topic=fincore.FINCORE.CURRENCY_RATE_CHANGE, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=94) with 1 segments, local-log-start-offset 0 and log-end-offset 94 in 9ms (149/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,379] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.GL_BALANCE_2-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,379] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,379] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,380] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.GL_BALANCE_2-0.4d8d10fccb1f40efba12807812d7ce20-stray/00000000000000000049.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,380] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 1ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,385] INFO [ProducerStateManager partition=fincore.FINCORE.GL_BALANCE_2-0] Wrote producer snapshot at offset 49 with 1 producer ids in 2 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,386] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 49 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,386] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 49 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,386] INFO [ProducerStateManager partition=fincore.FINCORE.GL_BALANCE_2-0] Loading producer state from snapshot file 'SnapshotFile(offset=49, file=/var/lib/kafka/data/kafka/fincore.FINCORE.GL_BALANCE_2-0.4d8d10fccb1f40efba12807812d7ce20-stray/00000000000000000049.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,386] INFO [LogLoader partition=fincore.FINCORE.GL_BALANCE_2-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 49 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,387] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.GL_BALANCE_2-0.4d8d10fccb1f40efba12807812d7ce20-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,387] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.GL_BALANCE_2-0.4d8d10fccb1f40efba12807812d7ce20-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,387] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.GL_BALANCE_2-0.4d8d10fccb1f40efba12807812d7ce20-stray, topicId=WIXQ0WmUSWuBdSH2IzAcaA, topic=fincore.FINCORE.GL_BALANCE_2, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=49) with 1 segments, local-log-start-offset 0 and log-end-offset 49 in 9ms (150/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,387] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.GL_BALANCE_2-0.4d8d10fccb1f40efba12807812d7ce20-stray, topicId=WIXQ0WmUSWuBdSH2IzAcaA, topic=fincore.FINCORE.GL_BALANCE_2, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=49) with 1 segments, local-log-start-offset 0 and log-end-offset 49 in 9ms (150/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,390] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.PROCESS_SCREEN_MAPPING-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,391] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,391] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,391] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0.ccf88d8717044071853d9fc4dd13b444-stray/00000000000000000004.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,391] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,393] INFO [ProducerStateManager partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0] Wrote producer snapshot at offset 4 with 1 producer ids in 2 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,394] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 4 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,394] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 4 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,394] INFO [ProducerStateManager partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0] Loading producer state from snapshot file 'SnapshotFile(offset=4, file=/var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0.ccf88d8717044071853d9fc4dd13b444-stray/00000000000000000004.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,394] INFO [LogLoader partition=fincore.FINCORE.PROCESS_SCREEN_MAPPING-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 4 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,395] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0.ccf88d8717044071853d9fc4dd13b444-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,395] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0.ccf88d8717044071853d9fc4dd13b444-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,395] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0.ccf88d8717044071853d9fc4dd13b444-stray, topicId=YUDyJt4qQHiBoMKMuEZyKQ, topic=fincore.FINCORE.PROCESS_SCREEN_MAPPING, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=4) with 1 segments, local-log-start-offset 0 and log-end-offset 4 in 8ms (151/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,395] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.PROCESS_SCREEN_MAPPING-0.ccf88d8717044071853d9fc4dd13b444-stray, topicId=YUDyJt4qQHiBoMKMuEZyKQ, topic=fincore.FINCORE.PROCESS_SCREEN_MAPPING, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=4) with 1 segments, local-log-start-offset 0 and log-end-offset 4 in 8ms (151/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,396] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 35. 0 recovered for fincore.FINCORE.USER_ROLES-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,396] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 35 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,396] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 35 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,399] INFO [ProducerStateManager partition=fincore.FINCORE.USER_ROLES-0] Wrote producer snapshot at offset 35 with 0 producer ids in 3 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,399] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 3ms for segment recovery from offset 35 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,400] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 35 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,400] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 35 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,400] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.USER_ROLES-0/00000000000000000035.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,400] INFO [LogLoader partition=fincore.FINCORE.USER_ROLES-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 35 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,402] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.USER_ROLES-0, topicId=DHJfCICVQqmsTRabLt88Lg, topic=fincore.FINCORE.USER_ROLES, partition=0, highWatermark=35, lastStableOffset=35, logStartOffset=35, logEndOffset=35) with 1 segments, local-log-start-offset 35 and log-end-offset 35 in 6ms (152/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,402] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.USER_ROLES-0, topicId=DHJfCICVQqmsTRabLt88Lg, topic=fincore.FINCORE.USER_ROLES, partition=0, highWatermark=35, lastStableOffset=35, logStartOffset=35, logEndOffset=35) with 1 segments, local-log-start-offset 35 and log-end-offset 35 in 6ms (152/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,403] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for __consumer_offsets-26. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,403] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,403] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,403] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,404] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,404] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,404] INFO [LogLoader partition=__consumer_offsets-26, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,404] INFO [ProducerStateManager partition=fincore.FINCORE.READLAKEGLIF-0] Wrote producer snapshot at offset 8082 with 1 producer ids in 2 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,404] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/__consumer_offsets-26, topicId=NnybtqD9TaiLaGjeyMfA7g, topic=__consumer_offsets, partition=26, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0) with 1 segments, local-log-start-offset 0 and log-end-offset 0 in 3ms (153/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,404] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/__consumer_offsets-26, topicId=NnybtqD9TaiLaGjeyMfA7g, topic=__consumer_offsets, partition=26, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0) with 1 segments, local-log-start-offset 0 and log-end-offset 0 in 3ms (153/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,404] WARN [LogLoader partition=fincore.FINCORE.READLAKEGLIF-0, dir=/var/lib/kafka/data/kafka] Corruption found in segment 0, truncating to offset 8082 (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,412] INFO [LogLoader partition=fincore.FINCORE.READLAKEGLIF-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 8082 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,413] INFO [LogLoader partition=fincore.FINCORE.READLAKEGLIF-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 8082 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,413] INFO [ProducerStateManager partition=fincore.FINCORE.READLAKEGLIF-0] Loading producer state from snapshot file 'SnapshotFile(offset=8082, file=/var/lib/kafka/data/kafka/fincore.FINCORE.READLAKEGLIF-0/00000000000000008082.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,413] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.ISSUE_CATEGORY-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,413] INFO [LogLoader partition=fincore.FINCORE.READLAKEGLIF-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 8082 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,413] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,413] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,413] INFO Deleted producer state snapshot /var/lib/kafka/data/kafka/fincore.FINCORE.ISSUE_CATEGORY-0.30b5b7cbf8594cd6a87047d5b2c5b5f7-stray/00000000000000000104.snapshot (org.apache.kafka.storage.internals.log.SnapshotFile)
+[2026-07-09 10:12:01,413] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,414] INFO Found stray log dir Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.READLAKEGLIF-0, topicId=nY4BJqv4Q1-G7lDF83g0iQ, topic=fincore.FINCORE.READLAKEGLIF, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=8082): the topicId nY4BJqv4Q1-G7lDF83g0iQ does not exist in the metadata image. (org.apache.kafka.storage.internals.log.LogManager)
+[2026-07-09 10:12:01,414] INFO Error while loading logs in /var/lib/kafka/data/kafka/fincore.FINCORE.READLAKEGLIF-0 in 144ms (154/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,414] INFO Error while loading logs in /var/lib/kafka/data/kafka/fincore.FINCORE.READLAKEGLIF-0 in 144ms (154/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,415] ERROR There was an error in one of the threads during logs loading: org.apache.kafka.common.errors.KafkaStorageException: The log dir /var/lib/kafka/data/kafka is already offline due to a previous IO exception. (kafka.log.LogManager)
+[2026-07-09 10:12:01,415] ERROR There was an error in one of the threads during logs loading: org.apache.kafka.common.errors.KafkaStorageException: The log dir /var/lib/kafka/data/kafka is already offline due to a previous IO exception. (kafka.log.LogManager)
+[2026-07-09 10:12:01,416] INFO [ProducerStateManager partition=fincore.FINCORE.ISSUE_CATEGORY-0] Wrote producer snapshot at offset 104 with 1 producer ids in 1 ms. (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Recovering unflushed segment 0. 0 recovered for fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0. (org.apache.kafka.storage.internals.log.LogLoader)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 104 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 104 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [ProducerStateManager partition=fincore.FINCORE.ISSUE_CATEGORY-0] Loading producer state from snapshot file 'SnapshotFile(offset=104, file=/var/lib/kafka/data/kafka/fincore.FINCORE.ISSUE_CATEGORY-0.30b5b7cbf8594cd6a87047d5b2c5b5f7-stray/00000000000000000104.snapshot)' (org.apache.kafka.storage.internals.log.ProducerStateManager)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.ISSUE_CATEGORY-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 104 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Loading producer state till offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Reloading from producer snapshot and rebuilding producer state from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,416] INFO [LogLoader partition=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, dir=/var/lib/kafka/data/kafka] Producer state recovery took 0ms for snapshot load and 0ms for segment recovery from offset 0 (org.apache.kafka.storage.internals.log.UnifiedLog)
+[2026-07-09 10:12:01,417] ERROR Encountered fatal fault: Error starting LogManager (org.apache.kafka.server.fault.ProcessTerminatingFaultHandler)
+org.apache.kafka.common.errors.KafkaStorageException: The log dir /var/lib/kafka/data/kafka is already offline due to a previous IO exception.
+[2026-07-09 10:12:01,416] ERROR Error while writing to checkpoint file /var/lib/kafka/data/kafka/fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0/leader-epoch-checkpoint (org.apache.kafka.storage.internals.log.LogDirFailureChannel)
+java.io.IOException: No space left on device
+        at java.base/java.io.FileOutputStream.writeBytes(Native Method) ~[?:?]
+        at java.base/java.io.FileOutputStream.write(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.writeBytes(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.implFlushBuffer(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.implFlush(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.lockedFlush(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.flush(Unknown Source) ~[?:?]
+        at java.base/java.io.OutputStreamWriter.flush(Unknown Source) ~[?:?]
+        at java.base/java.io.BufferedWriter.implFlush(Unknown Source) ~[?:?]
+        at java.base/java.io.BufferedWriter.flush(Unknown Source) ~[?:?]
+        at org.apache.kafka.server.common.CheckpointFile.write(CheckpointFile.java:81) ~[kafka-server-common-8.1.1-ccs.jar:?]
+        at org.apache.kafka.storage.internals.checkpoint.CheckpointFileWithFailureHandler.writeIfDirExists(CheckpointFileWithFailureHandler.java:63) ~[kafka-storage-8.1.1-ccs.jar:?]
+        at org.apache.kafka.storage.internals.checkpoint.LeaderEpochCheckpointFile.writeIfDirExists(LeaderEpochCheckpointFile.java:63) ~[kafka-storage-8.1.1-ccs.jar:?]
+        at org.apache.kafka.storage.internals.epoch.LeaderEpochFileCache.writeIfDirExists(LeaderEpochFileCache.java:531) ~[kafka-storage-8.1.1-ccs.jar:?]
+        at org.apache.kafka.server.util.KafkaScheduler.lambda$schedule$1(KafkaScheduler.java:151) ~[kafka-server-common-8.1.1-ccs.jar:?]
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.FutureTask.run(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) ~[?:?]
+        at java.base/java.lang.Thread.run(Unknown Source) [?:?]
+[2026-07-09 10:12:01,417] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.ISSUE_CATEGORY-0.30b5b7cbf8594cd6a87047d5b2c5b5f7-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,417] WARN Loaded stray log: /var/lib/kafka/data/kafka/fincore.FINCORE.ISSUE_CATEGORY-0.30b5b7cbf8594cd6a87047d5b2c5b5f7-stray (kafka.log.LogManager)
+[2026-07-09 10:12:01,417] INFO Found stray log dir Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0, topicId=UljhHM1fQRKvXVDWHAkqPA, topic=fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=0): the topicId UljhHM1fQRKvXVDWHAkqPA does not exist in the metadata image. (org.apache.kafka.storage.internals.log.LogManager)
+[2026-07-09 10:12:01,417] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.ISSUE_CATEGORY-0.30b5b7cbf8594cd6a87047d5b2c5b5f7-stray, topicId=DigAe23hSS-KvtIWDk9Dkw, topic=fincore.FINCORE.ISSUE_CATEGORY, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=104) with 1 segments, local-log-start-offset 0 and log-end-offset 104 in 13ms (155/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,417] INFO Completed load of Log(dir=/var/lib/kafka/data/kafka/fincore.FINCORE.ISSUE_CATEGORY-0.30b5b7cbf8594cd6a87047d5b2c5b5f7-stray, topicId=DigAe23hSS-KvtIWDk9Dkw, topic=fincore.FINCORE.ISSUE_CATEGORY, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=104) with 1 segments, local-log-start-offset 0 and log-end-offset 104 in 13ms (155/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,417] ERROR Uncaught exception in scheduled task 'leader-epoch-cache-flush-fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0' (org.apache.kafka.server.util.KafkaScheduler)
+org.apache.kafka.common.errors.KafkaStorageException: Error while writing to checkpoint file /var/lib/kafka/data/kafka/fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0/leader-epoch-checkpoint
+Caused by: java.io.IOException: No space left on device
+        at java.base/java.io.FileOutputStream.writeBytes(Native Method) ~[?:?]
+        at java.base/java.io.FileOutputStream.write(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.writeBytes(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.implFlushBuffer(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.implFlush(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.lockedFlush(Unknown Source) ~[?:?]
+        at java.base/sun.nio.cs.StreamEncoder.flush(Unknown Source) ~[?:?]
+        at java.base/java.io.OutputStreamWriter.flush(Unknown Source) ~[?:?]
+        at java.base/java.io.BufferedWriter.implFlush(Unknown Source) ~[?:?]
+        at java.base/java.io.BufferedWriter.flush(Unknown Source) ~[?:?]
+        at org.apache.kafka.server.common.CheckpointFile.write(CheckpointFile.java:81) ~[kafka-server-common-8.1.1-ccs.jar:?]
+        at org.apache.kafka.storage.internals.checkpoint.CheckpointFileWithFailureHandler.writeIfDirExists(CheckpointFileWithFailureHandler.java:63) ~[kafka-storage-8.1.1-ccs.jar:?]
+        at org.apache.kafka.storage.internals.checkpoint.LeaderEpochCheckpointFile.writeIfDirExists(LeaderEpochCheckpointFile.java:63) ~[kafka-storage-8.1.1-ccs.jar:?]
+        at org.apache.kafka.storage.internals.epoch.LeaderEpochFileCache.writeIfDirExists(LeaderEpochFileCache.java:531) ~[kafka-storage-8.1.1-ccs.jar:?]
+        at org.apache.kafka.server.util.KafkaScheduler.lambda$schedule$1(KafkaScheduler.java:151) ~[kafka-server-common-8.1.1-ccs.jar:?]
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.FutureTask.run(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) ~[?:?]
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) ~[?:?]
+        at java.base/java.lang.Thread.run(Unknown Source) [?:?]
+[2026-07-09 10:12:01,417] INFO Error while loading logs in /var/lib/kafka/data/kafka/fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0 in 3ms (156/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
+[2026-07-09 10:12:01,417] INFO Error while loading logs in /var/lib/kafka/data/kafka/fincore.FINCORE.RB_REPORT_TEMPLATE_HISTORY-0 in 3ms (156/217 completed in /var/lib/kafka/data/kafka) (kafka.log.LogManager)
