@@ -1,37 +1,168 @@
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-reportservice-kafka-dns
-  namespace: be-test
-spec:
-  podSelector:
-    matchLabels:
-      app: report-service      # Change to your ReportService pod label
-  policyTypes:
-    - Egress
-  egress:
-    # Allow Kafka
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: be-test
-          podSelector:
-            matchLabels:
-              app: kafka
-      ports:
-        - protocol: TCP
-          port: 9092
 
-    # Allow CoreDNS
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
+2026-07-08 06:43:27 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.MAIN_DATA_PARAMETERS
+2026-07-08 06:43:27 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.MENU_ITEMS
+2026-07-08 06:43:28 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.NOTIFICATIONS
+2026-07-08 06:43:28 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (debezium-oracleconnector-fincore-change-event-source-coordinator) Mapper for type '-3' not found.
+2026-07-08 06:43:28 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (debezium-oracleconnector-fincore-change-event-source-coordinator) Mapper for type '-3' not found.
+2026-07-08 06:43:28 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.NWSA_MAPPING
+2026-07-08 06:43:28 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PERMISSIONS
+2026-07-08 06:43:29 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (debezium-oracleconnector-fincore-change-event-source-coordinator) Cannot parse column default value '"FINCORE"."MENU_ITEMS_SEQ"."NEXTVAL"' to type '2'.  Expression evaluation is not supported.
+2026-07-08 06:43:29 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (debezium-oracleconnector-fincore-change-event-source-coordinator) Cannot parse column default value '"FINCORE"."MENU_ITEMS_SEQ"."NEXTVAL"' to type '2'.  Expression evaluation is not supported.
+2026-07-08 06:43:29 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 108 database changes
+2026-07-08 06:43:29 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_MASTER
+2026-07-08 06:43:29 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_RUN
+2026-07-08 06:43:30 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_RUN_STAGE
+2026-07-08 06:43:30 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_SCREEN_MAPPING
+2026-07-08 06:43:31 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 112 database changes
+2026-07-08 06:43:31 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_STAGES
+2026-07-08 06:43:31 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_STAGE_MASTER
+2026-07-08 06:43:31 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.PROCESS_STATUS
+2026-07-08 06:43:32 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (debezium-oracleconnector-fincore-change-event-source-coordinator) Cannot parse column default value '"FINCORE"."PROCESS_STATUS_SEQ"."NEXTVAL"' to type '2'.  Expression evaluation is not supported.
+2026-07-08 06:43:32 WARN  [io.debezium.connector.oracle.OracleDefaultValueConverter] (debezium-oracleconnector-fincore-change-event-source-coordinator) Cannot parse column default value '"FINCORE"."PROCESS_STATUS_SEQ"."NEXTVAL"' to type '2'.  Expression evaluation is not supported.
+2026-07-08 06:43:32 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.P_L_TRANSFER
+2026-07-08 06:43:32 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.P_L_TRANSFER_BALANCE
+2026-07-08 06:43:33 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 117 database changes
+2026-07-08 06:43:33 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.P_L_TRANSFER_TRANSACTIONS
+2026-07-08 06:43:33 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_ALLOWED_COLUMNS
+2026-07-08 06:43:34 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_ALLOWED_TABLES
+2026-07-08 06:43:34 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_BREAKUP_CONFIG
+2026-07-08 06:43:34 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_FILTER_RULE
+2026-07-08 06:43:35 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 122 database changes
+2026-07-08 06:43:35 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_PARSED_TEMPLATE
+2026-07-08 06:43:35 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_REPORT_TEMPLATE
+2026-07-08 06:43:36 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_REPORT_TEMPLATE_HISTORY
+2026-07-08 06:43:36 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_REPORT_VARIANT
+2026-07-08 06:43:37 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 126 database changes
+2026-07-08 06:43:37 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_TEMPLATE_REQUEST
+2026-07-08 06:43:37 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RB_VARIANT_PARAM_DEF
+2026-07-08 06:43:38 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.READLAKE
+2026-07-08 06:43:38 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.READLAKEGLIF
+2026-07-08 06:43:38 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.READLAKE_BORTOGL
+2026-07-08 06:43:39 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 131 database changes
+2026-07-08 06:43:39 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.READLAKE_INV
+2026-07-08 06:43:39 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.REPORT_ROLE_MAPPING
+2026-07-08 06:43:40 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.REPORT_TYPES
+2026-07-08 06:43:40 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.REQUEST_VOUCHER
+2026-07-08 06:43:41 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.REQUEST_VOUCHER_ISSUE_CATEGORY
+2026-07-08 06:43:41 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 136 database changes
+2026-07-08 06:43:41 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.RESTRICTED_PERMISSION_ELIGIBILITY
+2026-07-08 06:43:43 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 137 database changes
+2026-07-08 06:43:43 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.ROLES
+2026-07-08 06:43:43 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.ROLE_PERMISSIONS
+2026-07-08 06:43:44 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.ROLE_REQUESTS
+2026-07-08 06:43:44 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.SCHEDULED_BATCH_RETRY
+2026-07-08 06:43:44 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.SECOND_TABLE
+2026-07-08 06:43:45 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 142 database changes
+2026-07-08 06:43:45 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.SEGMENT_CODE_MASTER
+2026-07-08 06:43:45 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.SOURCE_FLAG
+2026-07-08 06:43:46 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.STATE_MASTER
+2026-07-08 06:43:46 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.STREAM_CBS_BALANCE
+2026-07-08 06:43:47 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.SUSPENSE_TRACKER
+2026-07-08 06:43:47 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 147 database changes
+2026-07-08 06:43:47 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TB_BREAKUP_META_STAGE
+2026-07-08 06:43:47 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEMP_GENERATED_DATA
+2026-07-08 06:43:48 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEMP_PL_TRANSFER_TRANSACTIONS
+2026-07-08 06:43:48 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_BRANCH_MASTER
+2026-07-08 06:43:49 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 151 database changes
+2026-07-08 06:43:49 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_CBS_BALANCE
+2026-07-08 06:43:49 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_CURRENCY_MASTER
+2026-07-08 06:43:50 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_DIFFERENCE
+2026-07-08 06:43:50 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_GL_BAL
+2026-07-08 06:43:51 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_GL_BAL2
+2026-07-08 06:43:51 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 156 database changes
+2026-07-08 06:43:51 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_GL_TRANS
+2026-07-08 06:43:51 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TEST_GL_TRANS2
+2026-07-08 06:43:52 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.TOTAL_DATA_PARAMETERS
+2026-07-08 06:43:52 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USERS
+2026-07-08 06:43:53 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 160 database changes
+2026-07-08 06:43:53 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_DOWNLOADS
+2026-07-08 06:43:53 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_DOWNLOADS_DATA
+2026-07-08 06:43:54 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_LOGIN_ATTEMPTS
+2026-07-08 06:43:54 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_LOGS
+2026-07-08 06:43:54 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_REQUESTS
+2026-07-08 06:43:55 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 165 database changes
+2026-07-08 06:43:55 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_ROLES
+2026-07-08 06:43:55 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.USER_ROLES_REPLICA
+2026-07-08 06:43:56 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.VOUCHER_BALANCE
+2026-07-08 06:43:56 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.VOUCHER_CATEGORY
+2026-07-08 06:43:57 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.VOUCHER_POSTING
+2026-07-08 06:43:57 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 170 database changes
+2026-07-08 06:43:57 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.VOUCHER_POSTING_DATA
+2026-07-08 06:43:57 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.VOUCHER_TRANSACTIONS
+2026-07-08 06:43:58 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.VOUCHER_WORKFLOW
+2026-07-08 06:43:58 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.WORKFLOW_TRANSITIONS
+2026-07-08 06:43:59 INFO  [io.debezium.relational.history.SchemaHistoryMetrics] (debezium-oracleconnector-fincore-change-event-source-coordinator) Already applied 174 database changes
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Capturing structure of table FINCOREPDB1.FINCORE.ZONE_MASTER
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Snapshot step 7 - Snapshotting data
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Creating snapshot worker pool with 1 worker thread(s)
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) For table 'FINCOREPDB1.FINCORE.NOTIFICATIONS' using select statement: 'SELECT "EVENT_ID", "USER_ID", "MESSAGE", "LINK_URL", "EVENT_SOURCE", "AGGREGATE_ID", "EVENT_TIMESTAMP", "TARGET_ROLE", "SOURCE_EVENT_ID" FROM "FINCORE"."NOTIFICATIONS" AS OF SCN 101334706'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) For table 'FINCOREPDB1.FINCORE.USER_ROLES' using select statement: 'SELECT "USER_ID", "ROLE_ID" FROM "FINCORE"."USER_ROLES" AS OF SCN 101334706'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) For table 'FINCOREPDB1.FINCORE.PROCESS_STATUS' using select statement: 'SELECT "ID", "PROCESS_ID", "PROCESS_TYPE", "PROCESS_STAGE", "START_TIME", "END_TIME", "STATUS", "EXECUTION_REMARKS", "TRIGGERED_BY" FROM "FINCORE"."PROCESS_STATUS" AS OF SCN 101334706'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) For table 'FINCOREPDB1.FINCORE.PERMISSIONS' using select statement: 'SELECT "MENU_ID", "MENU_TITLE", "MENU_ICON", "MENU_SUBMENU", "MENU_ACTION", "MENU_URL", "MENU_COMPONENT_PATH", "MENU_DESCRIPTION", "MENU_DEPENDANT", "MAPPED_REQUEST_TYPE", "MENU_ORDER", "API_RESOURCE_PATTERN" FROM "FINCORE"."PERMISSIONS" AS OF SCN 101334706'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) For table 'FINCOREPDB1.FINCORE.ROLE_PERMISSIONS' using select statement: 'SELECT "ROLE_ID", "PERMISSION_ID", "PERMISSION_ORDER" FROM "FINCORE"."ROLE_PERMISSIONS" AS OF SCN 101334706'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1) Exporting data from table 'FINCOREPDB1.FINCORE.NOTIFICATIONS' (1 of 5 tables)
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1)        Finished exporting 6 records for table 'FINCOREPDB1.FINCORE.NOTIFICATIONS' (1 of 5 tables); total duration '00:00:00.035'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1) Exporting data from table 'FINCOREPDB1.FINCORE.USER_ROLES' (2 of 5 tables)
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1)        Finished exporting 13 records for table 'FINCOREPDB1.FINCORE.USER_ROLES' (2 of 5 tables); total duration '00:00:00.028'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1) Exporting data from table 'FINCOREPDB1.FINCORE.PROCESS_STATUS' (3 of 5 tables)
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1)        Finished exporting 2 records for table 'FINCOREPDB1.FINCORE.PROCESS_STATUS' (3 of 5 tables); total duration '00:00:00.037'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1) Exporting data from table 'FINCOREPDB1.FINCORE.PERMISSIONS' (4 of 5 tables)
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1)        Finished exporting 19 records for table 'FINCOREPDB1.FINCORE.PERMISSIONS' (4 of 5 tables); total duration '00:00:00.009'
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1) Exporting data from table 'FINCOREPDB1.FINCORE.ROLE_PERMISSIONS' (5 of 5 tables)
+2026-07-08 06:43:59 INFO  [io.debezium.relational.RelationalSnapshotChangeEventSource] (pool-10-thread-1)        Finished exporting 49 records for table 'FINCOREPDB1.FINCORE.ROLE_PERMISSIONS' (5 of 5 tables); total duration '00:00:00.037'
+2026-07-08 06:43:59 INFO  [io.debezium.pipeline.source.AbstractSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Snapshot - Final stage
+2026-07-08 06:43:59 INFO  [io.debezium.pipeline.source.AbstractSnapshotChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Snapshot completed
+2026-07-08 06:43:59 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Snapshot ended with SnapshotResult [status=COMPLETED, offset=OracleOffsetContext [scn=101334706, commit_scn=[]]]
+2026-07-08 06:43:59 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Connected metrics set to 'true'
+2026-07-08 06:43:59 INFO  [io.debezium.pipeline.signal.SignalProcessor] (debezium-oracleconnector-fincore-change-event-source-coordinator) SignalProcessor started. Scheduling it every 5000ms
+2026-07-08 06:43:59 INFO  [io.debezium.util.Threads] (debezium-oracleconnector-fincore-change-event-source-coordinator) Creating thread debezium-oracleconnector-fincore-SignalProcessor
+2026-07-08 06:43:59 INFO  [io.debezium.pipeline.ChangeEventSourceCoordinator] (debezium-oracleconnector-fincore-change-event-source-coordinator) Starting streaming
+2026-07-08 06:43:59 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Error while fetching metadata with correlation id 165 : {fincore.FINCORE.PROCESS_STATUS=UNKNOWN_TOPIC_OR_PARTITION}
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.NOTIFICATIONS-0 to 2 since the associated topicId changed from null to z6xheVDZS2SeIXVmWJ5HGQ
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.USER_ROLES-0 to 2 since the associated topicId changed from null to G0B-f7gVTMScM67qwuMM4A
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore-0 to 0 since the associated topicId changed from null to GxNaQzeWSVK01L2K4Qh65Q
+2026-07-08 06:44:00 WARN  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Error while fetching metadata with correlation id 183 : {__debezium-heartbeat.fincore=UNKNOWN_TOPIC_OR_PARTITION}
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.NOTIFICATIONS-0 to 2 since the associated topicId changed from null to z6xheVDZS2SeIXVmWJ5HGQ
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.ROLE_PERMISSIONS-0 to 2 since the associated topicId changed from null to aN1dMtJ2TRKx86rtcNEU8A
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore-0 to 0 since the associated topicId changed from null to GxNaQzeWSVK01L2K4Qh65Q
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.PERMISSIONS-0 to 2 since the associated topicId changed from null to IGMF3JiJTi2izwbSBSNuEQ
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.PROCESS_STATUS-0 to 0 since the associated topicId changed from null to 3IosXn1mQ6qMi8lqJNuU_Q
+2026-07-08 06:44:00 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition fincore.FINCORE.USER_ROLES-0 to 2 since the associated topicId changed from null to G0B-f7gVTMScM67qwuMM4A
+2026-07-08 06:44:01 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator) Redo Log Group Sizes:
+2026-07-08 06:44:01 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator)         Group #1: 209715200 bytes
+2026-07-08 06:44:01 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator)         Group #2: 209715200 bytes
+2026-07-08 06:44:01 INFO  [io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource] (debezium-oracleconnector-fincore-change-event-source-coordinator)         Group #3: 209715200 bytes
+2026-07-08 06:44:28 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 221 records sent during previous 00:01:21.755, last recorded offset of {server=fincore} partition is {commit_scn=101336282:1:0a00170080d90000, transaction_id=null, snapshot_scn=101334706, scn=101336268}
+2026-07-08 06:47:07 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 53 records sent during previous 00:02:38.955, last recorded offset of {server=fincore} partition is {commit_scn=101337237:1:05000a001c260000, transaction_id=null, snapshot_scn=101334706, scn=101337225}
+2026-07-08 06:50:51 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | fincore-schemahistory) [Producer clientId=fincore-schemahistory] Node -1 disconnected.
+2026-07-08 06:50:51 INFO  [org.apache.kafka.clients.NetworkClient] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Node -1 disconnected.
+2026-07-08 06:52:27 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 107 records sent during previous 00:05:20.387, last recorded offset of {server=fincore} partition is {commit_scn=101339641:1:0200110052250000, transaction_id=null, snapshot_scn=101334706, scn=101339632}
+2026-07-08 07:03:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 212 records sent during previous 00:10:39.213, last recorded offset of {server=fincore} partition is {commit_scn=101346728:1:06000400b7230000, transaction_id=null, snapshot_scn=101334706, scn=101346715}
+2026-07-08 07:24:27 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 423 records sent during previous 00:21:20.814, last recorded offset of {server=fincore} partition is {commit_scn=101356286:1:0a001900a8d90000, transaction_id=null, snapshot_scn=101334706, scn=101356275}
+2026-07-08 08:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 842 records sent during previous 00:42:41.379, last recorded offset of {server=fincore} partition is {commit_scn=101375832:1:0a001700c6d90000, transaction_id=null, snapshot_scn=101334706, scn=101375820}
+2026-07-08 10:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2355 records sent during previous 01:59:57.504, last recorded offset of {server=fincore} partition is {commit_scn=101429865:1:0500160077220000, transaction_id=null, snapshot_scn=101334706, scn=101429851}
+2026-07-08 12:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2331 records sent during previous 02:00:01.721, last recorded offset of {server=fincore} partition is {commit_scn=101484321:1:0a000f008ada0000, transaction_id=null, snapshot_scn=101334706, scn=101484310}
+2026-07-08 14:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2313 records sent during previous 01:59:59.84, last recorded offset of {server=fincore} partition is {commit_scn=101535744:1:0a000e00eada0000, transaction_id=null, snapshot_scn=101334706, scn=101535735}
+2026-07-08 16:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2427 records sent during previous 02:00:00.441, last recorded offset of {server=fincore} partition is {commit_scn=101577775:1:0700010034250000, transaction_id=null, snapshot_scn=101334706, scn=101577764}
+2026-07-08 18:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2319 records sent during previous 01:59:57.861, last recorded offset of {server=fincore} partition is {commit_scn=101639267:1:01001500c12b0000, transaction_id=null, snapshot_scn=101334706, scn=101639253}
+2026-07-08 20:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2286 records sent during previous 02:00:00.525, last recorded offset of {server=fincore} partition is {commit_scn=101681304:1:0200190033250000, transaction_id=null, snapshot_scn=101334706, scn=101681290}
+2026-07-08 20:30:52 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition __debezium-heartbeat.fincore-0 to 0 since the associated topicId changed from null to ZvE4iuRwSlCfpKmXz37qZg
+2026-07-08 22:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2422 records sent during previous 01:59:59.369, last recorded offset of {server=fincore} partition is {commit_scn=101723987:1:0a000100ebdb0000, transaction_id=null, snapshot_scn=101334706, scn=101723972}
+2026-07-09 00:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2401 records sent during previous 02:00:00.366, last recorded offset of {server=fincore} partition is {commit_scn=101765945:1:0a0001002ddc0000, transaction_id=null, snapshot_scn=101334706, scn=101765936}
+2026-07-09 02:07:07 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2349 records sent during previous 02:00:01.382, last recorded offset of {server=fincore} partition is {commit_scn=101811324:1:0a000c006edc0000, transaction_id=null, snapshot_scn=101334706, scn=101811310}
+2026-07-09 03:30:52 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition __debezium-heartbeat.fincore-0 to 0 since the associated topicId changed from null to ZvE4iuRwSlCfpKmXz37qZg
+2026-07-09 04:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2323 records sent during previous 01:59:58.8, last recorded offset of {server=fincore} partition is {commit_scn=101852303:1:0900050020250000, transaction_id=null, snapshot_scn=101334706, scn=101852288}
+2026-07-09 06:07:07 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2373 records sent during previous 02:00:00.281, last recorded offset of {server=fincore} partition is {commit_scn=101905479:1:0a001c0027dd0000, transaction_id=null, snapshot_scn=101334706, scn=101905467}
+2026-07-09 08:07:09 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2406 records sent during previous 02:00:02.321, last recorded offset of {server=fincore} partition is {commit_scn=101947438:1:0a0016006cdd0000, transaction_id=null, snapshot_scn=101334706, scn=101947426}
+2026-07-09 10:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2381 records sent during previous 01:59:56.783, last recorded offset of {server=fincore} partition is {commit_scn=101989334:1:07001e0061250000, transaction_id=null, snapshot_scn=101334706, scn=101989329}
+2026-07-09 12:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2358 records sent during previous 02:00:00.251, last recorded offset of {server=fincore} partition is {commit_scn=102031476:1:0a000600f4dd0000, transaction_id=null, snapshot_scn=101334706, scn=102031467}
+2026-07-09 14:07:07 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2338 records sent during previous 02:00:01.252, last recorded offset of {server=fincore} partition is {commit_scn=102072502:1:0a001f0030de0000, transaction_id=null, snapshot_scn=101334706, scn=102072487}
+2026-07-09 16:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2314 records sent during previous 01:59:58.711, last recorded offset of {server=fincore} partition is {commit_scn=102113675:1:0a0005006ede0000, transaction_id=null, snapshot_scn=101334706, scn=102113662}
+2026-07-09 18:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2336 records sent during previous 02:00:02.265, last recorded offset of {server=fincore} partition is {commit_scn=102173665:1:0200190068250000, transaction_id=null, snapshot_scn=101334706, scn=102173651}
+2026-07-09 20:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2323 records sent during previous 02:00:00.294, last recorded offset of {server=fincore} partition is {commit_scn=102215069:1:0a002000e8de0000, transaction_id=null, snapshot_scn=101334706, scn=102215055}
+2026-07-09 20:30:53 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition __debezium-heartbeat.fincore-0 to 0 since the associated topicId changed from null to ZvE4iuRwSlCfpKmXz37qZg
+2026-07-09 22:07:06 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2298 records sent during previous 01:59:57.788, last recorded offset of {server=fincore} partition is {commit_scn=102256749:1:0a001b0004df0000, transaction_id=null, snapshot_scn=101334706, scn=102256735}
+2026-07-10 00:07:07 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2362 records sent during previous 02:00:00.868, last recorded offset of {server=fincore} partition is {commit_scn=102299003:1:0a00200069df0000, transaction_id=null, snapshot_scn=101334706, scn=102298991}
+2026-07-10 02:07:07 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2385 records sent during previous 01:59:59.895, last recorded offset of {server=fincore} partition is {commit_scn=102344698:1:0300020064250000, transaction_id=null, snapshot_scn=101334706, scn=102344684}
+2026-07-10 03:30:53 INFO  [org.apache.kafka.clients.Metadata] (kafka-producer-network-thread | producer-1) [Producer clientId=producer-1] Resetting the last seen epoch of partition __debezium-heartbeat.fincore-0 to 0 since the associated topicId changed from null to ZvE4iuRwSlCfpKmXz37qZg
+2026-07-10 04:07:08 INFO  [io.debezium.connector.common.BaseSourceTask] (pool-7-thread-1) 2361 records sent during previous 02:00:01.366, last recorded offset of {server=fincore} partition is {commit_scn=102385791:1:0a001500f5df0000, transaction_id=null, snapshot_scn=101334706, scn=102385772}
