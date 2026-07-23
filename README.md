@@ -6,3 +6,5 @@ find /media/production-setup/apache-druid-34.0.0/log -type f -mmin -2
 
 
 grep -R "SELECT 1" /media/production-setup/apache-druid-34.0.0/log
+
+grep "SELECT" /media/production-setup/apache-druid-34.0.0/log/broker.log | tail -5
