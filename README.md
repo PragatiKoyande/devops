@@ -1,23 +1,27 @@
-[root@fcsitgateway ~]# k exec -it grafana-758f498965-w9p8m -- sh
-/usr/share/grafana $ curl http://loki:3100/ready
-curl: (6) Could not resolve host: loki
-/usr/share/grafana $ exit
-command terminated with exit code 6
-[root@fcsitgateway ~]# k get pods -A | grep grafana
-cbops                          grafana-758f498965-w9p8m                                1/1     Running             0                19d
-[root@fcsitgateway ~]# k get svc | grep loki
-[root@fcsitgateway ~]# k get svc -A | grep loki
-logging                   loki                                ClusterIP      10.104.67.221    <none>           3100/TCP                     108d
-[root@fcsitgateway ~]# k exec -it grafana-758f498965-w9p8m -- sh
-/usr/share/grafana $ curl http://loki.logging.svc.cluster.local:3100/ready
-^X^Z[1]+  Stopped                    curl http://loki.logging.svc.cluster.local:3100/ready
-/usr/share/grafana $ cat /etc/resolv.conf
-search cbops.svc.cluster.local svc.cluster.local cluster.local
-nameserver 10.96.0.10
-options ndots:5
-/usr/share/grafana $ nslookup kubernetes.default.svc.cluster.local
-Server:         10.96.0.10
-Address:        10.96.0.10:53
-
-Name:   kubernetes.default.svc.cluster.local
-Address: 10.96.0.1
+[root@fcsitgateway ~]# k get endpoints -n logging loki
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+NAME   ENDPOINTS           AGE
+loki   192.168.4.20:3100   108d
+[root@fcsitgateway ~]# k get pods -n logging -o wide
+NAME                    READY   STATUS    RESTARTS   AGE   IP             NODE                                              NOMINATED NODE   READINESS GATES
+loki-86c678b849-rfczr   1/1     Running   0          19d   192.168.4.20   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-ggdcx   <none>           <none>
+[root@fcsitgateway ~]# k get networkpolicy -n logging
+NAME                  POD-SELECTOR   AGE
+loki-network-policy   app=loki       25d
+[root@fcsitgateway ~]# k describe svc loki -n logging
+Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
+Name:              loki
+Namespace:         logging
+Labels:            <none>
+Annotations:       <none>
+Selector:          app=loki
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.104.67.221
+IPs:               10.104.67.221
+Port:              <unset>  3100/TCP
+TargetPort:        3100/TCP
+Endpoints:         192.168.4.20:3100
+Session Affinity:  None
+Events:            <none>
