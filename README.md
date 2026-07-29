@@ -1,83 +1,188 @@
-[root@fcsitgateway ~]# k get pods -n logging -o wide
-NAME                    READY   STATUS    RESTARTS   AGE   IP             NODE                                              NOMINATED NODE   READINESS GATES
-loki-86c678b849-rfczr   1/1     Running   0          19d   192.168.4.20   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-ggdcx   <none>           <none>
-[root@fcsitgateway ~]# k get networkpolicy -n logging
-NAME                  POD-SELECTOR   AGE
-loki-network-policy   app=loki       25d
-[root@fcsitgateway ~]# k describe svc loki -n logging
-Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice
-Name:              loki
-Namespace:         logging
-Labels:            <none>
-Annotations:       <none>
-Selector:          app=loki
-Type:              ClusterIP
-IP Family Policy:  SingleStack
-IP Families:       IPv4
-IP:                10.104.67.221
-IPs:               10.104.67.221
-Port:              <unset>  3100/TCP
-TargetPort:        3100/TCP
-Endpoints:         192.168.4.20:3100
-Session Affinity:  None
-Events:            <none>
-[root@fcsitgateway ~]# k get networkpolicy loki-network-policy -n logging -o yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"loki-network-policy","namespace":"logging"},"spec":{"egress":[{"to":[{"namespaceSelector":{}}]}],"ingress":[{"from":[{"namespaceSelector":{}}],"ports":[{"port":3100,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"loki"}},"policyTypes":["Ingress","Egress"]}}
-  creationTimestamp: "2026-06-29T09:16:40Z"
-  generation: 1
-  name: loki-network-policy
-  namespace: logging
-  resourceVersion: "84536799"
-  uid: 93259b3d-fa00-4290-96ac-4cf25ed75b6b
+  name: debezium-server-config
+  namespace: uat-cbops1
+data:
+  application.properties: |
+    debezium.source.connector.class=io.debezium.connector.oracle.OracleConnector
+    debezium.source.tasks.max=1
+
+    debezium.source.database.hostname=10.177.179.85
+    debezium.source.database.port=1523
+    debezium.source.database.user=c##debezium
+    debezium.source.database.password=Debe#123
+    debezium.source.database.dbname=fincorepdb1
+    debezium.source.database.pdb.name=fincorepdb1
+    debezium.source.database.sid=fincorepdb1
+    debezium.source.database.server.name=fincorepdb1
+
+    debezium.source.topic.prefix=fincore
+    debezium.source.table.include.list=fincore.NOTIFICATIONS,fincore.USER_ROLES,fincore.PROCESS_STATUS,fincore.PERMISSIONS,fincore.ROLE_PERMISSIONS
+
+    debezium.source.decimal.handling.mode=string
+    debezium.source.database.connection.adapter=logminer
+
+    debezium.source.schema.history.internal.kafka.bootstrap.servers=kafka.uat-cbops1.svc.cluster.local:9092
+    debezium.source.schema.history.internal.kafka.topic=schema-changes.oracle.fresh
+
+    debezium.source.log.mining.strategy=online_catalog
+    debezium.source.log.mining.continuous.mine=false
+    debezium.source.log.mining.batch.size.default=50000
+    debezium.source.log.mining.batch.size.max=100000
+    debezium.source.log.mining.sleep.time.default=50
+    debezium.source.log.mining.sleep.time.max=2000
+
+    debezium.source.heartbeat.interval.ms=2000
+    debezium.source.heartbeat.topics.prefix=heartbeat
+
+    debezium.sink.type=kafka
+    debezium.sink.kafka.producer.bootstrap.servers=kafka.uat-cbops1.svc.cluster.local:9092
+    debezium.sink.kafka.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+    debezium.sink.kafka.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+    debezium.sink.kafka.producer.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+    debezium.sink.kafka.producer.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+
+    debezium.format.key=json
+    debezium.format.value=json
+
+    debezium.source.offset.storage.file.filename=/debezium/data/offsets_fresh.dat
+    debezium.source.offset.flush.interval.ms=60000
+    debezium.source.snapshot.mode=initial
+
+    quarkus.log.level=INFO
+    quarkus.log.console.json=false
+    quarkus.log.console.format=%d{yyyy-MM-dd HH:mm:ss} %-5p [%c] (%t) %s%e%n
+    debezium.history.skip.unparseable.ddl=true
+    include.schema.changes=false
+    logging.level.io.debezium=DEBUG
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: debezium-pvc
+  namespace: uat-cbops1
 spec:
-  egress:
-  - to:
-    - namespaceSelector: {}
-  ingress:
-  - from:
-    - namespaceSelector: {}
-    ports:
-    - port: 3100
-      protocol: TCP
-  podSelector:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: h06-vks-sp-5
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debezium-server
+  namespace: uat-cbops1
+spec:
+  replicas: 1
+  selector:
     matchLabels:
-      app: loki
-  policyTypes:
-  - Ingress
-  - Egress
-[root@fcsitgateway ~]# kgp
-NAME                                                 READY   STATUS    RESTARTS   AGE
-analytics-deployment-769b667b87-qbk8b                1/1     Running   0          46h
-common-master-deployment-7f699cc8f4-wclwx            1/1     Running   0          18d
-common-request-deployment-6bb4cf6489-fjbnd           1/1     Running   0          18d
-dashboard-deployment-5586fc6986-xr2vt                1/1     Running   0          18d
-debezium-server-86c8fbbbcb-4b622                     1/1     Running   0          13d
-enquiry-service-deployment-555454c8d5-gdv77          1/1     Running   0          43h
-grafana-758f498965-w9p8m                             1/1     Running   0          19d
-kafka-0                                              1/1     Running   0          19d
-login-deployment-68db87f7f7-sshgh                    1/1     Running   0          4d1h
-notification-deployment-984c7b87d-tfnz6              1/1     Running   0          18d
-postgres-db-7b865dd6fc-42ltl                         1/1     Running   0          19d
-process-status-deployment-7b9c58c589-grds5           1/1     Running   0          18d
-react-app-deployment-57b89ddbd9-bnsfj                1/1     Running   0          19h
-redis-deployment-c976889fb-4prm6                     1/1     Running   0          2d2h
-report-builder-deployment-7d76f8864c-6z2qs           1/1     Running   0          18d
-report-deployment-79b8874495-t4gpd                   1/1     Running   0          18d
-spark-thrift-5bdb599dc-ftnwf                         1/1     Running   0          18d
-template-config-deployment-64d667cf55-lzj2q          1/1     Running   0          18d
-transactions-deployment-869c8c55f9-mtltg             1/1     Running   0          18d
-user-deployment-8695b59675-nzjfr                     1/1     Running   0          2d1h
-voucher-enquiry-service-deployment-f558755b5-frzpm   1/1     Running   0          13d
-voucher-service-deployment-85d49755f7-x9c82          1/1     Running   0          13d
-[root@fcsitgateway ~]# k exec -it grafana-758f498965-w9p8m -- sh
-/usr/share/grafana $ curl -v --connect-timeout 5 http://10.104.67.221:3100/ready
-*   Trying 10.104.67.221:3100...
-* ipv4 connect timeout after 5000ms, move on!
-* Failed to connect to 10.104.67.221 port 3100 after 5002 ms: Timeout was reached
-* Closing connection
-curl: (28) Failed to connect to 10.104.67.221 port 3100 after 5002 ms: Timeout was reached
+      app: debezium-server
+  template:
+    metadata:
+      labels:
+        app: debezium-server
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: debezium-server
+          image: h06vksharbor.corp.ad.sbi/cbops/debezium-server:oracle-v1
+          imagePullPolicy: IfNotPresent
+
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+
+          env:
+            - name: JAVA_OPTS
+              value: "-Xms512m -Xmx2g"
+
+          ports:
+            - containerPort: 8080
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /debezium/conf
+            - name: data-volume
+              mountPath: /debezium/data
+
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "3Gi"
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: debezium-server-config
+
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: debezium-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: debezium-server
+  namespace: uat-cbops1
+spec:
+  selector:
+    app: debezium-server
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+
+I am having this devezium deployment yaml 
+
+getting issue as per below 
+2026-07-29 07:09:07 INFO  [org.apache.kafka.connect.storage.FileOffsetBackingStore] (pool-7-thread-1) Stopped FileOffsetBackingStore
+2026-07-29 07:09:07 ERROR [io.debezium.server.ConnectorLifecycle] (pool-7-thread-1) Connector completed: success = 'false', message = 'Error while trying to run connector class 'io.debezium.connector.oracle.OracleConnector'', error = 'org.apache.kafka.connect.errors.ConnectException: An exception occurred in the change event producer. This connector will be stopped.': org.apache.kafka.connect.errors.ConnectException: An exception occurred in the change event producer. This connector will be stopped.
+        at io.debezium.pipeline.ErrorHandler.setProducerThrowable(ErrorHandler.java:67)
+        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:269)
+        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:62)
+        at io.debezium.pipeline.ChangeEventSourceCoordinator.streamEvents(ChangeEventSourceCoordinator.java:271)
+        at io.debezium.pipeline.ChangeEventSourceCoordinator.executeChangeEventSources(ChangeEventSourceCoordinator.java:194)
+        at io.debezium.pipeline.ChangeEventSourceCoordinator.lambda$start$0(ChangeEventSourceCoordinator.java:137)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+        at java.base/java.lang.Thread.run(Thread.java:829)
+Caused by: io.debezium.text.ParsingException: DDL statement couldn't be parsed. Please open a Jira issue with the statement 'ALTER TABLE dr_view_dimension
+MODIFY ID GENERATED ALWAYS AS IDENTITY (NOCACHE);'
+mismatched input 'GENERATED' expecting {<EOF>, '/', ';'}
+        at io.debezium.antlr.ParsingErrorListener.syntaxError(ParsingErrorListener.java:43)
+        at org.antlr.v4.runtime.ProxyErrorListener.syntaxError(ProxyErrorListener.java:41)
+        at org.antlr.v4.runtime.Parser.notifyErrorListeners(Parser.java:543)
+        at org.antlr.v4.runtime.DefaultErrorStrategy.reportInputMismatch(DefaultErrorStrategy.java:327)
+        at org.antlr.v4.runtime.DefaultErrorStrategy.reportError(DefaultErrorStrategy.java:139)
+        at io.debezium.ddl.parser.oracle.generated.PlSqlParser.sql_script(PlSqlParser.java:2197)
+        at io.debezium.connector.oracle.antlr.OracleDdlParser.parseTree(OracleDdlParser.java:73)
+        at io.debezium.connector.oracle.antlr.OracleDdlParser.parseTree(OracleDdlParser.java:32)
+        at io.debezium.antlr.AntlrDdlParser.parse(AntlrDdlParser.java:78)
+        at io.debezium.connector.oracle.antlr.OracleDdlParser.parse(OracleDdlParser.java:68)
+        at io.debezium.connector.oracle.OracleSchemaChangeEventEmitter.emitSchemaChangeEvent(OracleSchemaChangeEventEmitter.java:84)
+        at io.debezium.pipeline.EventDispatcher.dispatchSchemaChangeEvent(EventDispatcher.java:379)
+        at io.debezium.connector.oracle.logminer.processor.AbstractLogMinerEventProcessor.handleSchemaChange(AbstractLogMinerEventProcessor.java:773)
+        at io.debezium.connector.oracle.logminer.processor.memory.MemoryLogMinerEventProcessor.handleSchemaChange(MemoryLogMinerEventProcessor.java:176)
+        at io.debezium.connector.oracle.logminer.processor.AbstractLogMinerEventProcessor.processRow(AbstractLogMinerEventProcessor.java:368)
+        at io.debezium.connector.oracle.logminer.processor.AbstractLogMinerEventProcessor.processResults(AbstractLogMinerEventProcessor.java:314)
+        at io.debezium.connector.oracle.logminer.processor.AbstractLogMinerEventProcessor.process(AbstractLogMinerEventProcessor.java:235)
+        at io.debezium.connector.oracle.logminer.LogMinerStreamingChangeEventSource.execute(LogMinerStreamingChangeEventSource.java:248)
+        ... 9 more
+Caused by: org.antlr.v4.runtime.InputMismatchException
+        at org.antlr.v4.runtime.DefaultErrorStrategy.sync(DefaultErrorStrategy.java:270)
+        at io.debezium.ddl.parser.oracle.generated.PlSqlParser.sql_script(PlSqlParser.java:2129)
+        ... 21 more
