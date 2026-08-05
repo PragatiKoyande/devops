@@ -1,56 +1,76 @@
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-{"@timestamp":"2026-08-05T14:45:19.616245783+05:30","level":"INFO","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.s.b.a.l.ConditionEvaluationReportLogger","message":"\n\nError starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.","stack_trace":""}
-2026-08-05 09:15:19.630 ERROR [main] o.s.b.SpringApplication: Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1815)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333)
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331)
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201)
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:977)
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)
-        at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143)
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756)
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:321)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-        at com.fincore.NotificationService.NotificationServiceApplication.main(NotificationServiceApplication.java:18)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
-Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:273)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:235)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:212)
-        at org.hibernate.boot.model.relational.Database.<init>(Database.java:44)
-        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:251)
-        at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:203)
-        at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:180)
-        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1388)
-        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.populateSessionFactoryBuilder(EntityManagerFactoryBuilderImpl.java:1468)
-        at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1450)
-        at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:93)
-        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:443)
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:436)
-        at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:411)
-        at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:419)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1862)
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1811)
-        ... 20 common frames omitted
-Caused by: org.hibernate.HibernateException: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)
-        at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:190)
-        at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:86)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentWithDefaults(JdbcEnvironmentInitiator.java:200)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:452)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironment(JdbcEnvironmentInitiator.java:143)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:120)
-        at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:80)
-        at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:133)
-        at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:260)
-        ... 36 common frames omitted
-{"@timestamp":"2026-08-05T14:45:19.63010646+05:30","level":"ERROR","service":"NotificationService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"o.springframework.boot.SpringApplication","message":"Application run failed","stack_trace":"org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1815)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603)\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333)\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331)\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201)\n\tat org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:977)\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621)\n\tat org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143)\nCaused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment] due to: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)\n\tat org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:273)\n\tat org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:235)\n\tat org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:212)\n\tat org.hibernate.boot.model.relational.Database.<init>(Database.java:44)\n\tat org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:251)\n\tat org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:203)\n\tat org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:180)\n\tat org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1388)\n\tat org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.populateSessionFactoryBuilder(EntityManagerFactoryBuilderImpl.java:1468)\n\tat org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1450)\nCaused by: org.hibernate.HibernateException: Unable to determine Dialect without JDBC metadata (please set 'jakarta.persistence.jdbc.url' for common cases or 'hibernate.dialect' when a custom Dialect implementation must be provided)\n\tat org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:190)\n\tat org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:86)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentWithDefaults(JdbcEnvironmentInitiator.java:200)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:452)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironment(JdbcEnvironmentInitiator.java:143)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:120)\n\tat org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:80)\n\tat org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:133)\n\tat org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:260)\n\tat org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:235)\n"}
+E:\Tushar Khade\Projects-CR-Document\Finanace-One\DEV-Deployment\Network-Policy>k describe pod notification-deployment-6d559c9f67-bp4tz -n backend
+Name:             notification-deployment-6d559c9f67-bp4tz
+Namespace:        backend
+Priority:         0
+Service Account:  default
+Node:             h06vksuatcbopscls-node-pool-1-xg7gx-smcqf-67hcr/10.244.5.109
+Start Time:       Wed, 05 Aug 2026 14:45:04 +0530
+Labels:           app=notification-backend
+                  pod-template-hash=6d559c9f67
+Annotations:      kubectl.kubernetes.io/restartedAt: 2026-08-05T14:45:04+05:30
+                  nodeportlocal.antrea.io: [{"podPort":9010,"nodeIP":"10.244.5.109","nodePort":61076,"protocol":"tcp"}]
+Status:           Running
+IP:               192.168.2.102
+IPs:
+  IP:           192.168.2.102
+Controlled By:  ReplicaSet/notification-deployment-6d559c9f67
+Containers:
+  notification-container:
+    Container ID:   containerd://ab3fb6bc98a498374fbdf3d7cc6fa02c70ad13f1359a3c52375b91b8f124fbdd
+    Image:          h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01
+    Image ID:       h06vksharbor.corp.ad.sbi/cbops/notification-service@sha256:6f33fd408eab8fb1c7cd93f2d6a127983b6f2cfdbb800516e7d32e6cc0ee007d
+    Port:           9010/TCP
+    Host Port:      0/TCP
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Wed, 05 Aug 2026 14:48:38 +0530
+      Finished:     Wed, 05 Aug 2026 14:48:45 +0530
+    Ready:          False
+    Restart Count:  5
+    Environment Variables from:
+      config-redis     ConfigMap  Optional: false
+      config-postgres  ConfigMap  Optional: false
+      kafka-config     ConfigMap  Optional: false
+    Environment:
+      SPRING_KAFKA_CONSUMER_GROUP_ID:           notification-service-group
+      SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET:  earliest
+      SPRING_DATA_REDIS_CLIENT_TYPE:            lettuce
+      JWT_SECRET:                               <set to the key 'JWT_SECRET' in secret 'jwt-secret'>                            Optional: false
+      PSQL_SPRING_DATASOURCE_PASSWORD:          <set to the key 'PSQL_SPRING_DATASOURCE_PASSWORD' in secret 'secret-postgres'>  Optional: false
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-jtmjz (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  kube-api-access-jtmjz:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  4m4s                 default-scheduler  Successfully assigned backend/notification-deployment-6d559c9f67-bp4tz to h06vksuatcbopscls-node-pool-1-xg7gx-smcqf-67hcr
+  Normal   Pulled     4m3s                 kubelet            Successfully pulled image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01" in 173ms (173ms including waiting). Image size: 271462999 bytes.
+  Normal   Pulled     3m55s                kubelet            Successfully pulled image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01" in 108ms (108ms including waiting). Image size: 271462999 bytes.
+  Normal   Pulled     3m35s                kubelet            Successfully pulled image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01" in 105ms (105ms including waiting). Image size: 271462999 bytes.
+  Normal   Pulled     2m58s                kubelet            Successfully pulled image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01" in 111ms (111ms including waiting). Image size: 271462999 bytes.
+  Normal   Pulled     119s                 kubelet            Successfully pulled image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01" in 191ms (191ms including waiting). Image size: 271462999 bytes.
+  Normal   Pulling    30s (x6 over 4m3s)   kubelet            Pulling image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01"
+  Normal   Created    30s (x6 over 4m3s)   kubelet            Created container: notification-container
+  Normal   Started    30s (x6 over 4m3s)   kubelet            Started container notification-container
+  Normal   Pulled     30s                  kubelet            Successfully pulled image "h06vksharbor.corp.ad.sbi/cbops/notification-service:EV-01" in 106ms (106ms including waiting). Image size: 271462999 bytes.
+  Warning  BackOff    9s (x15 over 3m47s)  kubelet            Back-off restarting failed container notification-container in pod notification-deployment-6d559c9f67-bp4tz_backend(7312ed26-8a46-48c6-8d9b-3448ddca8225)
