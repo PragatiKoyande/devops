@@ -145,20 +145,20 @@ lifecycle:
   preStopSleep: 5   # gives the LB time to deregister the pod before SIGTERM
 
 envFrom:
-   configMaps:
-     - name: config-kafka
-     - name: config-redis
-     - name: config-oracle
-     - name: config-hdfs
-	 - name: config-ldap
-   secrets:
-     - name: oracle-secret
-     - name: kafka-aes-secret
-     - name: rsa-private-secret
-     - name: rsa-public-secret
-     - name: jwt-secret
-	 - name: secret-ldap
-	 - name: blocked-login-ip
+  configMaps:
+    - name: config-kafka
+    - name: config-redis
+    - name: config-oracle
+    - name: config-hdfs
+    - name: config-ldap
+  secrets:
+    - name: oracle-secret
+    - name: kafka-aes-secret
+    - name: rsa-private-secret
+    - name: rsa-public-secret
+    - name: jwt-secret
+    - name: secret-ldap
+    - name: blocked-login-ip
 
 env: []
   # - name: LOG_LEVEL
@@ -175,14 +175,3 @@ podAnnotations: {}
 podLabels: {}
 deploymentAnnotations: {}
 commonLabels: {}
-
-
-
-D:\pragati\ALL\login-service>helm template cm . -f ./environments/values-dev.yaml
-Error: cannot load values.yaml: cannot unmarshal yaml document: error converting YAML to JSON: yaml: line 153: found a tab character that violates indentation
-
-
-getting this above issue can you please make proper format of file and send me back entire correct file please dont alter any values and send me back the correct file
-
-
-
