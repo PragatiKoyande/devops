@@ -1,175 +1,188 @@
-2026-08-24 07:03:34.155 ERROR [main] c.t.u.c.CacheWarmer: Failed to refresh permissions for Role 10
-org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)
-        at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)
-        at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)
-        at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:404)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:384)
-        at org.springframework.data.redis.core.RedisTemplate.doWithKeys(RedisTemplate.java:853)
-        at org.springframework.data.redis.core.RedisTemplate.delete(RedisTemplate.java:610)
-        at com.tcs.userservice.service.PermissionCacheService.refreshRolePermissions(PermissionCacheService.java:47)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
-        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
-        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
-        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.lambda$applyResilience$0(GlobalResilienceAspect.java:60)
-        at io.github.resilience4j.retry.Retry.lambda$decorateSupplier$5(Retry.java:301)
-        at io.github.resilience4j.circuitbreaker.CircuitBreaker.lambda$decorateSupplier$5(CircuitBreaker.java:194)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.applyResilience(GlobalResilienceAspect.java:73)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
-        at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
-        at com.tcs.userservice.service.PermissionCacheService$$SpringCGLIB$$0.refreshRolePermissions(<generated>)
-        at com.tcs.userservice.config.CacheWarmer.onStartup(CacheWarmer.java:34)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.doInvoke(ApplicationListenerMethodAdapter.java:392)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.processEvent(ApplicationListenerMethodAdapter.java:270)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.onApplicationEvent(ApplicationListenerMethodAdapter.java:200)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:180)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:173)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:151)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:448)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:381)
-        at org.springframework.boot.context.event.EventPublishingRunListener.ready(EventPublishingRunListener.java:110)
-        at org.springframework.boot.SpringApplicationRunListeners.lambda$ready$0(SpringApplicationRunListeners.java:82)
-        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:123)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:117)
-        at org.springframework.boot.SpringApplicationRunListeners.ready(SpringApplicationRunListeners.java:82)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-        at com.tcs.userservice.UserServiceApplication.main(UserServiceApplication.java:15)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
-Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to localhost/<unresolved>:6379
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
-        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)
-        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)
-        at java.base/java.util.Optional.orElseGet(Optional.java:364)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)
-        ... 64 common frames omitted
-Caused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: finishConnect(..) failed with error(-111): Connection refused: localhost/127.0.0.1:6379
-Caused by: java.net.ConnectException: finishConnect(..) failed with error(-111): Connection refused
-        at io.netty.channel.unix.Errors.newConnectException0(Errors.java:166)
-        at io.netty.channel.unix.Errors.handleConnectErrno(Errors.java:131)
-        at io.netty.channel.unix.Socket.finishConnect(Socket.java:361)
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.doFinishConnect(AbstractEpollChannel.java:772)
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.finishConnect(AbstractEpollChannel.java:749)
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.epollOutReady(AbstractEpollChannel.java:616)
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.handle(AbstractEpollChannel.java:477)
-        at io.netty.channel.epoll.EpollIoHandler$DefaultEpollIoRegistration.handle(EpollIoHandler.java:349)
-        at io.netty.channel.epoll.EpollIoHandler.processReady(EpollIoHandler.java:548)
-        at io.netty.channel.epoll.EpollIoHandler.run(EpollIoHandler.java:491)
-        at io.netty.channel.SingleThreadIoEventLoop.runIo(SingleThreadIoEventLoop.java:225)
-        at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:196)
-        at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)
-        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-        at java.base/java.lang.Thread.run(Thread.java:1570)
-{"@timestamp":"2026-08-24T12:33:34.155393334+05:30","level":"ERROR","service":"UserService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.tcs.userservice.config.CacheWarmer","message":"Failed to refresh permissions for Role 10","stack_trace":"org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to localhost/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:220)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\nCaused by: io.netty.channel.AbstractChannel$AnnotatedConnectException: finishConnect(..) failed with error(-111): Connection refused: localhost/127.0.0.1:6379\nCaused by: java.net.ConnectException: finishConnect(..) failed with error(-111): Connection refused\n\tat io.netty.channel.unix.Errors.newConnectException0(Errors.java:166)\n\tat io.netty.channel.unix.Errors.handleConnectErrno(Errors.java:131)\n\tat io.netty.channel.unix.Socket.finishConnect(Socket.java:361)\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.doFinishConnect(AbstractEpollChannel.java:772)\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.finishConnect(AbstractEpollChannel.java:749)\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.epollOutReady(AbstractEpollChannel.java:616)\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe.handle(AbstractEpollChannel.java:477)\n\tat io.netty.channel.epoll.EpollIoHandler$DefaultEpollIoRegistration.handle(EpollIoHandler.java:349)\n\tat io.netty.channel.epoll.EpollIoHandler.processReady(EpollIoHandler.java:548)\n\tat io.netty.channel.epoll.EpollIoHandler.run(EpollIoHandler.java:491)\n"}
-2026-08-24 07:03:34.174 ERROR [main] c.t.u.c.CacheWarmer: Failed to refresh permissions for Role 11
-org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)
-        at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)
-        at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)
-        at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:404)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:384)
-        at org.springframework.data.redis.core.RedisTemplate.doWithKeys(RedisTemplate.java:853)
-        at org.springframework.data.redis.core.RedisTemplate.delete(RedisTemplate.java:610)
-        at com.tcs.userservice.service.PermissionCacheService.refreshRolePermissions(PermissionCacheService.java:47)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
-        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
-        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
-        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.lambda$applyResilience$0(GlobalResilienceAspect.java:60)
-        at io.github.resilience4j.retry.Retry.lambda$decorateSupplier$5(Retry.java:301)
-        at io.github.resilience4j.circuitbreaker.CircuitBreaker.lambda$decorateSupplier$5(CircuitBreaker.java:194)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.applyResilience(GlobalResilienceAspect.java:73)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
-        at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
-        at com.tcs.userservice.service.PermissionCacheService$$SpringCGLIB$$0.refreshRolePermissions(<generated>)
-        at com.tcs.userservice.config.CacheWarmer.onStartup(CacheWarmer.java:34)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.doInvoke(ApplicationListenerMethodAdapter.java:392)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.processEvent(ApplicationListenerMethodAdapter.java:270)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.onApplicationEvent(ApplicationListenerMethodAdapter.java:200)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:180)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:173)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:151)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:448)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:381)
-        at org.springframework.boot.context.event.EventPublishingRunListener.ready(EventPublishingRunListener.java:110)
-        at org.springframework.boot.SpringApplicationRunListeners.lambda$ready$0(SpringApplicationRunListeners.java:82)
-        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:123)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:117)
-        at org.springframework.boot.SpringApplicationRunListeners.ready(SpringApplicationRunListeners.java:82)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-        at com.tcs.userservice.UserServiceApplication.main(UserServiceApplication.java:15)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
-Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to localhost/<unresolved>:6379
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
-        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)
-        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)
-        at java.base/java.util.Optional.orElseGet(Optional.java:364)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)
-        ... 64 common frames omitted
+# =====================================================================
+# BASE values.yaml
+# This file holds the SECURE, PRODUCTION-LEANING defaults shared by all
+# 20 services. Each environment overlay in environments/ only overrides
+# what actually differs (replica count, resource sizes, feature flags).
+# Each SERVICE only overrides values.yaml (name, image repo, port, etc.)
+# via its own service-level values file - never edit templates/.
+#
+# GitLab CI usage (image tag passed at deploy time, not baked into any file):
+#   helm upgrade --install ${SERVICE_NAME} ./chart \
+#     -f ./chart/values.yaml \
+#     -f ./chart/environments/values-${ENV}.yaml \
+#     -f ./services/${SERVICE_NAME}/values.yaml \
+#     --set image.tag=${CI_COMMIT_SHORT_SHA} \
+#     --namespace ${ENV} --install --atomic --timeout 5m
+# =====================================================================
+
+# REQUIRED - set this per service in that service's own values file, e.g.
+# services/login/values.yaml -> serviceName: login
+# This single value drives every resource name in the chart - nothing else
+# to edit, nothing hardcoded in any template:
+#   Deployment               -> login-deployment
+#   Service                  -> login-service
+#   PodDisruptionBudget      -> login-pdb
+#   HorizontalPodAutoscaler  -> login-hpa
+#   ServiceAccount           -> login-sa
+serviceName: "login"
+
+replicaCount: 2
+revisionHistoryLimit: 5
+terminationGracePeriodSeconds: 30
+
+image:
+  repository: registry.example.com/myorg/myapp   # override per-service
+  pullPolicy: Always
+  tag: ""      # overridden by --set image.tag=$CI_COMMIT_SHORT_SHA in CI
+  digest: ""   # optional: pin by digest instead of tag for prod
+
+imagePullSecrets: []
+  # - name: regcred
+
+priorityClassName: ""
+
+# ---------------------------------------------------------------------
+# FEATURE TOGGLES - the entire point of this chart. Environments turn
+# these on/off; templates never need to change.
+# ---------------------------------------------------------------------
+features:
+  enableHPA: false
+  enablePodDisruptionBudget: false
+  enableTopologySpread: false
+  enableStrictSecurity: true      # non-root, seccomp, etc.
+  enableReadOnlyRoot: true        # read-only root filesystem
+  enableResourceLimits: true
+
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+  annotations: {}
+
+securityContext:
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0    # zero downtime by default
+    maxSurge: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8085
+  clusterIP: ""
+  sessionAffinity: ""
+  nodePort: ""
+  annotations: {}
+  extraPorts: []
+  # - name: metrics
+  #   port: 8085
+  #   targetPort: metrics
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+
+podDisruptionBudget:
+  minAvailable: 1
+  maxUnavailable: ""
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels: {}   # populated automatically via selectorLabels in a future iteration if needed
+
+probes:
+  startup:
+    enabled: false
+    path: /healthz
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    failureThreshold: 30
+  liveness:
+    path: /healthz
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+  readiness:
+    path: /ready
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+lifecycle:
+  preStopSleep: 5   # gives the LB time to deregister the pod before SIGTERM
+
+envFrom:
+   configMaps:
+     - name: config-kafka
+     - name: config-redis
+     - name: config-oracle
+     - name: config-hdfs
+	 - name: config-ldap
+   secrets:
+     - name: oracle-secret
+     - name: kafka-aes-secret
+     - name: rsa-private-secret
+     - name: rsa-public-secret
+     - name: jwt-secret
+	 - name: secret-ldap
+	 - name: blocked-login-ip
+
+env: []
+  # - name: LOG_LEVEL
+  #   value: "info"
+
+volumes: []
+volumeMounts: []
+initContainers: []
+extraContainers: []
+
+hostAliases: []
+
+podAnnotations: {}
+podLabels: {}
+deploymentAnnotations: {}
+commonLabels: {}
+
+
+
+D:\pragati\ALL\login-service>helm template cm . -f ./environments/values-dev.yaml
+Error: cannot load values.yaml: cannot unmarshal yaml document: error converting YAML to JSON: yaml: line 153: found a tab character that violates indentation
+
+
+getting this above issue can you please make proper format of file and send me back entire correct file please dont alter any values and send me back the correct file
+
+
+
