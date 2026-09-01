@@ -5,11 +5,11 @@ image:
   repository: h06vksharbor.corp.ad.sbi/cbops/voucher-service
   pullPolicy: Always
   tag: "UAT01"
-  
+
 env:
   - name: SPRING_PROFILES_ACTIVE
     value: "uat"
-	
+
 features:
   enableHPA: true
   enablePodDisruptionBudget: true
@@ -29,12 +29,8 @@ resources:
   limits:
     cpu: 750m
     memory: 768Mi
-	
+
 updateStrategy:
   rollingUpdate:
     maxUnavailable: 1
     maxSurge: 1
-
-
-
-indentation issue please correct the file and send me back entire file please dont alter any values
