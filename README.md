@@ -1,182 +1,41 @@
-2026-09-21 06:39:24.300 ERROR [main] c.t.u.c.CacheWarmer: Failed to refresh permissions for Role 11
-org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)
-        at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)
-        at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)
-        at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:404)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:384)
-        at org.springframework.data.redis.core.RedisTemplate.doWithKeys(RedisTemplate.java:853)
-        at org.springframework.data.redis.core.RedisTemplate.delete(RedisTemplate.java:610)
-        at com.tcs.userservice.service.PermissionCacheService.refreshRolePermissions(PermissionCacheService.java:47)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
-        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
-        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
-        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.lambda$applyResilience$0(GlobalResilienceAspect.java:60)
-        at io.github.resilience4j.retry.Retry.lambda$decorateSupplier$5(Retry.java:301)
-        at io.github.resilience4j.circuitbreaker.CircuitBreaker.lambda$decorateSupplier$5(CircuitBreaker.java:194)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.applyResilience(GlobalResilienceAspect.java:73)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
-        at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
-        at com.tcs.userservice.service.PermissionCacheService$$SpringCGLIB$$0.refreshRolePermissions(<generated>)
-        at com.tcs.userservice.config.CacheWarmer.onStartup(CacheWarmer.java:34)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.doInvoke(ApplicationListenerMethodAdapter.java:392)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.processEvent(ApplicationListenerMethodAdapter.java:270)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.onApplicationEvent(ApplicationListenerMethodAdapter.java:200)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:180)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:173)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:151)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:448)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:381)
-        at org.springframework.boot.context.event.EventPublishingRunListener.ready(EventPublishingRunListener.java:110)
-        at org.springframework.boot.SpringApplicationRunListeners.lambda$ready$0(SpringApplicationRunListeners.java:82)
-        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:123)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:117)
-        at org.springframework.boot.SpringApplicationRunListeners.ready(SpringApplicationRunListeners.java:82)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-        at com.tcs.userservice.UserServiceApplication.main(UserServiceApplication.java:15)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
-Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
-        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)
-        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)
-        at java.base/java.util.Optional.orElseGet(Optional.java:364)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)
-        ... 64 common frames omitted
-Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)
-        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
-        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)
-        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)
-        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)
-        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)
-        at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)
-        at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)
-        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-        at java.base/java.lang.Thread.run(Thread.java:1570)
-{"@timestamp":"2026-09-21T12:09:24.300126902+05:30","level":"ERROR","service":"UserService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.tcs.userservice.config.CacheWarmer","message":"Failed to refresh permissions for Role 11","stack_trace":"org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:220)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\nCaused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)\n\tat io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)\n\tat io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)\n\tat io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)\n\tat io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)\n\tat io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n"}
-2026-09-21 06:39:34.316 ERROR [main] c.t.u.c.CacheWarmer: Failed to refresh permissions for Role 51
-org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)
-        at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)
-        at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)
-        at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:404)
-        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:384)
-        at org.springframework.data.redis.core.RedisTemplate.doWithKeys(RedisTemplate.java:853)
-        at org.springframework.data.redis.core.RedisTemplate.delete(RedisTemplate.java:610)
-        at com.tcs.userservice.service.PermissionCacheService.refreshRolePermissions(PermissionCacheService.java:47)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
-        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
-        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
-        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.lambda$applyResilience$0(GlobalResilienceAspect.java:60)
-        at io.github.resilience4j.retry.Retry.lambda$decorateSupplier$5(Retry.java:301)
-        at io.github.resilience4j.circuitbreaker.CircuitBreaker.lambda$decorateSupplier$5(CircuitBreaker.java:194)
-        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.applyResilience(GlobalResilienceAspect.java:73)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
-        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
-        at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
-        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
-        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
-        at com.tcs.userservice.service.PermissionCacheService$$SpringCGLIB$$0.refreshRolePermissions(<generated>)
-        at com.tcs.userservice.config.CacheWarmer.onStartup(CacheWarmer.java:34)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.doInvoke(ApplicationListenerMethodAdapter.java:392)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.processEvent(ApplicationListenerMethodAdapter.java:270)
-        at org.springframework.context.event.ApplicationListenerMethodAdapter.onApplicationEvent(ApplicationListenerMethodAdapter.java:200)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:180)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:173)
-        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:151)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:448)
-        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:381)
-        at org.springframework.boot.context.event.EventPublishingRunListener.ready(EventPublishingRunListener.java:110)
-        at org.springframework.boot.SpringApplicationRunListeners.lambda$ready$0(SpringApplicationRunListeners.java:82)
-        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:123)
-        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:117)
-        at org.springframework.boot.SpringApplicationRunListeners.ready(SpringApplicationRunListeners.java:82)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-        at com.tcs.userservice.UserServiceApplication.main(UserServiceApplication.java:15)
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
-Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
-        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
-        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)
-        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)
-        at java.base/java.util.Optional.orElseGet(Optional.java:364)
-        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)
-        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)
-        ... 64 common frames omitted
-Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379
-        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)
-        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
-        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)
-        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)
-        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)
-        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)
-        at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)
-        at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)
-        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-        at java.base/java.lang.Thread.run(Thread.java:1570)
-{"@timestamp":"2026-09-21T12:09:34.316846051+05:30","level":"ERROR","service":"UserService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.tcs.userservice.config.CacheWarmer","message":"Failed to refresh permissions for Role 51","stack_trace":"org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:220)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\nCaused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)\n\tat io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)\n\tat io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)\n\tat io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)\n\tat io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)\n\tat io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n"}
+C:\Windows\System32>k get pods --show-labels | grep -i redis
+redis-deployment-9fb78d586-7759r              1/1     Running   0          3d20h   app.kubernetes.io/instance=redis-service,app.kubernetes.io/name=redis,pod-template-hash=9fb78d586
+
+C:\Windows\System32>k get svc redis-service -n backend -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: redis-service
+    meta.helm.sh/release-namespace: backend
+  creationTimestamp: "2026-09-17T09:02:36Z"
+  labels:
+    app.kubernetes.io/instance: redis-service
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/version: 1.16.0
+    helm.sh/chart: redis-service-0.1.0
+  name: redis-service
+  namespace: backend
+  resourceVersion: "170206036"
+  uid: 62cedb13-5e71-4613-b2fc-b41259afce15
+spec:
+  clusterIP: 10.110.234.135
+  clusterIPs:
+  - 10.110.234.135
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 6379
+  selector:
+    app.kubernetes.io/instance: redis-service
+    app.kubernetes.io/name: redis
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
