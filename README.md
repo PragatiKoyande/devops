@@ -1,66 +1,72 @@
-java.sql.SQLTimeoutException: ORA-12170: Cannot connect. TCP connect timeout of 40000ms for host 10.177.103.192 port 1523. (CONNECTION_ID=DtVv6t3VRGKtMlVrn8DK8g==)
-https://docs.oracle.com/error-help/db/ora-12170/
-        at oracle.jdbc.driver.T4CConnection.handleLogonNetException(T4CConnection.java:2068)
-        at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:1305)
-        at oracle.jdbc.driver.PhysicalConnection.connect(PhysicalConnection.java:1236)
-        at oracle.jdbc.driver.T4CDriverExtension.getConnection(T4CDriverExtension.java:107)
-        at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:817)
-        at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:720)
-        at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
-        at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:373)
-        at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:210)
-        at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
-        at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
-        at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-        at java.base/java.lang.Thread.run(Thread.java:1570)
-Caused by: oracle.net.ns.NetException: ORA-12170: Cannot connect. TCP connect timeout of 40000ms for host 10.177.103.192 port 1523. (CONNECTION_ID=DtVv6t3VRGKtMlVrn8DK8g==)
-https://docs.oracle.com/error-help/db/ora-12170/
-        at oracle.net.nt.TcpNTAdapter.handleEstablishSocketException(TcpNTAdapter.java:396)
-        at oracle.net.nt.TcpNTAdapter.establishSocket(TcpNTAdapter.java:361)
-        at oracle.net.nt.TcpNTAdapter.connect(TcpNTAdapter.java:239)
-        at oracle.net.nt.ConnOption.connect(ConnOption.java:361)
-        at oracle.net.nt.ConnStrategy.executeConnOption(ConnStrategy.java:1305)
-        at oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:794)
-        at oracle.net.resolver.AddrResolution.resolveAndExecute(AddrResolution.java:729)
-        at oracle.net.ns.NSProtocol.establishConnection(NSProtocol.java:985)
-        at oracle.net.ns.NSProtocol.connect(NSProtocol.java:344)
-        at oracle.jdbc.driver.T4CConnection.connectNetworkSessionProtocol(T4CConnection.java:3978)
-        at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:1187)
-        ... 14 common frames omitted
-{"@timestamp":"2026-09-18T15:22:01.733024409+05:30","level":"WARN","service":"TransactionsService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.zaxxer.hikari.pool.PoolBase","message":"HikariPool-1 - Pool is empty, failed to create/setup connection (6bf763c1-2e89-444b-a5a5-dad87c1089e8)","stack_trace":"java.sql.SQLTimeoutException: ORA-12170: Cannot connect. TCP connect timeout of 40000ms for host 10.177.103.192 port 1523. (CONNECTION_ID=DtVv6t3VRGKtMlVrn8DK8g==)\nhttps://docs.oracle.com/error-help/db/ora-12170/\n\tat oracle.jdbc.driver.T4CConnection.handleLogonNetException(T4CConnection.java:2068)\n\tat oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:1305)\n\tat oracle.jdbc.driver.PhysicalConnection.connect(PhysicalConnection.java:1236)\n\tat oracle.jdbc.driver.T4CDriverExtension.getConnection(T4CDriverExtension.java:107)\n\tat oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:817)\n\tat oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:720)\n\tat com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)\n\tat com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:373)\n\tat com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:210)\n\tat com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)\nCaused by: oracle.net.ns.NetException: ORA-12170: Cannot connect. TCP connect timeout of 40000ms for host 10.177.103.192 port 1523. (CONNECTION_ID=DtVv6t3VRGKtMlVrn8DK8g==)\nhttps://docs.oracle.com/error-help/db/ora-12170/\n\tat oracle.net.nt.TcpNTAdapter.handleEstablishSocketException(TcpNTAdapter.java:396)\n\tat oracle.net.nt.TcpNTAdapter.establishSocket(TcpNTAdapter.java:361)\n\tat oracle.net.nt.TcpNTAdapter.connect(TcpNTAdapter.java:239)\n\tat oracle.net.nt.ConnOption.connect(ConnOption.java:361)\n\tat oracle.net.nt.ConnStrategy.executeConnOption(ConnStrategy.java:1305)\n\tat oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:794)\n\tat oracle.net.resolver.AddrResolution.resolveAndExecute(AddrResolution.java:729)\n\tat oracle.net.ns.NSProtocol.establishConnection(NSProtocol.java:985)\n\tat oracle.net.ns.NSProtocol.connect(NSProtocol.java:344)\n\tat oracle.jdbc.driver.T4CConnection.connectNetworkSessionProtocol(T4CConnection.java:3978)\n"}
-2026-09-18 09:53:22.751 WARN  [HikariPool-1:connection-adder] c.z.h.p.PoolBase: HikariPool-1 - Pool is empty, failed to create/setup connection (aeaf52a0-7650-445b-b479-959f33e58ae4)
-java.sql.SQLTimeoutException: ORA-12170: Cannot connect. TCP connect timeout of 40000ms for host 10.177.103.192 port 1523. (CONNECTION_ID=yl298w9QTJ6a77DHmVmf+Q==)
-https://docs.oracle.com/error-help/db/ora-12170/
-        at oracle.jdbc.driver.T4CConnection.handleLogonNetException(T4CConnection.java:2068)
-        at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:1305)
-        at oracle.jdbc.driver.PhysicalConnection.connect(PhysicalConnection.java:1236)
-        at oracle.jdbc.driver.T4CDriverExtension.getConnection(T4CDriverExtension.java:107)
-        at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:817)
-        at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:720)
-        at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
-        at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:373)
-        at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:210)
-        at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
-        at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
-        at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
-        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-        at java.base/java.lang.Thread.run(Thread.java:1570)
-Caused by: oracle.net.ns.NetException: ORA-12170: Cannot connect. TCP connect timeout of 40000ms for host 10.177.103.192 port 1523. (CONNECTION_ID=yl298w9QTJ6a77DHmVmf+Q==)
-https://docs.oracle.com/error-help/db/ora-12170/
-        at oracle.net.nt.TcpNTAdapter.handleEstablishSocketException(TcpNTAdapter.java:396)
-        at oracle.net.nt.TcpNTAdapter.establishSocket(TcpNTAdapter.java:361)
-        at oracle.net.nt.TcpNTAdapter.connect(TcpNTAdapter.java:239)
-        at oracle.net.nt.ConnOption.connect(ConnOption.java:361)
-        at oracle.net.nt.ConnStrategy.executeConnOption(ConnStrategy.java:1305)
-        at oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:794)
-        at oracle.net.resolver.AddrResolution.resolveAndExecute(AddrResolution.java:729)
-        at oracle.net.ns.NSProtocol.establishConnection(NSProtocol.java:985)
-        at oracle.net.ns.NSProtocol.connect(NSProtocol.java:344)
-        at oracle.jdbc.driver.T4CConnection.connectNetworkSessionProtocol(T4CConnection.java:3978)
-        at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:1187)
-        ... 14 common frames omitted
+
+2026-09-18 :: 10:59:58.435 || INFO :: StartupInfoLogger.java: | 54 | :: Starting LoginService v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by root in /)
+2026-09-18 :: 10:59:58.439 || INFO :: SpringApplication.java: | 658 | :: The following 1 profile is active: "dev"
+2026-09-18 :: 11:00:01.828 || INFO :: RepositoryConfigurationDelegate.java: | 291 | :: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-18 :: 11:00:01.831 || INFO :: RepositoryConfigurationDelegate.java: | 145 | :: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-18 :: 11:00:02.331 || INFO :: RepositoryConfigurationDelegate.java: | 213 | :: Finished Spring Data repository scanning in 410 ms. Found 8 JPA repository interfaces.
+2026-09-18 :: 11:00:02.342 || INFO :: RepositoryConfigurationDelegate.java: | 291 | :: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-18 :: 11:00:02.411 || INFO :: RepositoryConfigurationDelegate.java: | 145 | :: Bootstrapping Spring Data LDAP repositories in DEFAULT mode.
+2026-09-18 :: 11:00:02.419 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.BranchRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.419 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.421 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.421 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-09-18 :: 11:00:02.421 || INFO :: RepositoryConfigurationDelegate.java: | 213 | :: Finished Spring Data repository scanning in 6 ms. Found 0 LDAP repository interfaces.
+2026-09-18 :: 11:00:02.720 || INFO :: RepositoryConfigurationDelegate.java: | 291 | :: Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-18 :: 11:00:02.723 || INFO :: RepositoryConfigurationDelegate.java: | 145 | :: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-18 :: 11:00:02.812 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.BranchRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.812 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-18 :: 11:00:02.814 || INFO :: RepositoryConfigurationDelegate.java: | 213 | :: Finished Spring Data repository scanning in 75 ms. Found 0 Redis repository interfaces.
+2026-09-18 :: 11:00:08.438 || INFO :: HikariDataSource.java: | 109 | :: HikariPool-1 - Starting...
+2026-09-18 :: 11:00:09.626 || INFO :: HikariPool.java: | 580 | :: HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@1c787389
+2026-09-18 :: 11:00:09.628 || INFO :: HikariDataSource.java: | 122 | :: HikariPool-1 - Start completed.
+2026-09-18 :: 11:00:09.736 || INFO :: LogHelper.java: | 102 | :: HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-09-18 :: 11:00:10.019 || INFO :: Version.java: | 41 | :: HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-09-18 :: 11:00:11.525 || INFO :: SpringPersistenceUnitInfo.java: | 129 | :: No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-18 :: 11:00:12.246 || WARN :: DialectFactoryImpl.java: | 152 | :: HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-09-18 :: 11:00:12.337 || WARN :: JdbcEnvironmentImpl.java: | 376 | :: HHH100123: Low default JDBC fetch size: 10 (consider setting 'hibernate.jdbc.fetch_size')
+2026-09-18 :: 11:00:12.340 || INFO :: JdbcEnvironmentInitiator.java: | 179 | :: HHH10001005: Database info:
+        Database JDBC URL [jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1]
+        Database driver: Oracle JDBC driver
+        Database dialect: OracleDialect
+        Database version: 19.32
+        Default catalog/schema: undefined/FINCORE
+        Autocommit mode: undefined/unknown
+        Isolation level: READ_COMMITTED [default READ_COMMITTED]
+        JDBC fetch size: 10
+        Pool: DataSourceConnectionProvider
+        Minimum pool size: undefined/unknown
+        Maximum pool size: undefined/unknown
+2026-09-18 :: 11:00:16.023 || INFO :: JtaPlatformInitiator.java: | 53 | :: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-18 :: 11:00:16.030 || INFO :: AbstractEntityManagerFactoryBean.java: | 464 | :: Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-18 :: 11:00:18.317 || INFO :: QueryEnhancerFactories.java: | 48 | :: Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-09-18 :: 11:00:20.138 || INFO :: LdapConfig.java: | 48 | :: ===================================================
+2026-09-18 :: 11:00:20.139 || INFO :: LdapConfig.java: | 49 | :: INITIALIZING LDAP CONTEXT SOURCE
+2026-09-18 :: 11:00:20.139 || INFO :: LdapConfig.java: | 50 | :: Configured URLs: ldaps://uatrootdc1.uatad.sbi:3269
+2026-09-18 :: 11:00:20.147 || INFO :: LdapConfig.java: | 126 | :: DNS Lookup for Host [uatrootdc1.uatad.sbi]:
+2026-09-18 :: 11:00:20.147 || INFO :: LdapConfig.java: | 128 | ::   -> Resolved IP: 10.189.42.83
+2026-09-18 :: 11:00:20.148 || ERROR:: LdapConfig.java: | 65 | :: CRITICAL: Truststore configured at 'file:/etc/fincore/secrets/ad-truststore.jks' but FILE NOT FOUND.
+2026-09-18 :: 11:00:20.217 || INFO :: LdapConfig.java: | 80 | :: Setting LDAP Bind User (Service Account): cn=fincorecbops,dc=UATAD,dc=SBI
+2026-09-18 :: 11:00:20.217 || INFO :: LdapConfig.java: | 102 | :: ===================================================
+2026-09-18 :: 11:00:21.636 || INFO :: SecurityConfig.java: | 86 | :: Loading SecurityWebFilterChain
+2026-09-18 :: 11:00:23.422 || INFO :: EndpointLinksResolver.java: | 60 | :: Exposing 3 endpoints beneath base path '/actuator'
+2026-09-18 :: 11:00:26.647 || INFO :: NettyWebServer.java: | 142 | :: Netty started on port 8085 (http)
+2026-09-18 :: 11:00:26.719 || INFO :: StartupInfoLogger.java: | 60 | :: Started LoginService in 29.798 seconds (process running for 31.324)
+2026-09-18 :: 11:01:34.120 || INFO :: LoginUtility.java: | 11 | :: X-Forwarded-For ip : 10.0.26.158
+2026-09-18 :: 11:01:34.121 || INFO :: AuthController.java: | 105 | :: Check-User info user id: 9000002 , ip : 10.0.26.158
+2026-09-21 :: 06:03:47.965 || INFO :: LoginUtility.java: | 11 | :: X-Forwarded-For ip : 10.0.19.203
+2026-09-21 :: 06:03:47.965 || INFO :: AuthController.java: | 105 | :: Check-User info user id: 1015698 , ip : 10.0.19.203
+2026-09-21 :: 06:03:51.212 || INFO :: LoginUtility.java: | 11 | :: X-Forwarded-For ip : 10.0.19.203
+2026-09-21 :: 06:03:51.212 || INFO :: AuthController.java: | 145 | :: Login request for user: 1015698 from IP: 10.0.19.203
+2026-09-21 :: 06:03:51.240 || WARN :: KeyUtils.java: | 100 | :: Payload decryption failed. Invalid ciphertext provided.
+2026-09-21 :: 06:03:51.241 || ERROR:: LoginServiceImpl.java: | 359 | :: Login rejected for user 1015698: Payload decryption failed
+2026-09-21 :: 06:03:51.245 || WARN :: AuthController.java: | 161 | :: Login Failed for user: 1015698. Reason: Security Error: Invalid encrypted payload
