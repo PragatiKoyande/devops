@@ -1,72 +1,182 @@
-
-2026-09-18 :: 10:59:58.435 || INFO :: StartupInfoLogger.java: | 54 | :: Starting LoginService v0.0.1-SNAPSHOT using Java 22.0.2 with PID 1 (/app.jar started by root in /)
-2026-09-18 :: 10:59:58.439 || INFO :: SpringApplication.java: | 658 | :: The following 1 profile is active: "dev"
-2026-09-18 :: 11:00:01.828 || INFO :: RepositoryConfigurationDelegate.java: | 291 | :: Multiple Spring Data modules found, entering strict repository configuration mode
-2026-09-18 :: 11:00:01.831 || INFO :: RepositoryConfigurationDelegate.java: | 145 | :: Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-09-18 :: 11:00:02.331 || INFO :: RepositoryConfigurationDelegate.java: | 213 | :: Finished Spring Data repository scanning in 410 ms. Found 8 JPA repository interfaces.
-2026-09-18 :: 11:00:02.342 || INFO :: RepositoryConfigurationDelegate.java: | 291 | :: Multiple Spring Data modules found, entering strict repository configuration mode
-2026-09-18 :: 11:00:02.411 || INFO :: RepositoryConfigurationDelegate.java: | 145 | :: Bootstrapping Spring Data LDAP repositories in DEFAULT mode.
-2026-09-18 :: 11:00:02.419 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.BranchRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.419 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.420 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.421 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.421 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
-2026-09-18 :: 11:00:02.421 || INFO :: RepositoryConfigurationDelegate.java: | 213 | :: Finished Spring Data repository scanning in 6 ms. Found 0 LDAP repository interfaces.
-2026-09-18 :: 11:00:02.720 || INFO :: RepositoryConfigurationDelegate.java: | 291 | :: Multiple Spring Data modules found, entering strict repository configuration mode
-2026-09-18 :: 11:00:02.723 || INFO :: RepositoryConfigurationDelegate.java: | 145 | :: Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2026-09-18 :: 11:00:02.812 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.BranchRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.812 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LaunchConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginAttemptRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.LoginParamRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.MenuItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.RolePermissionsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.813 || INFO :: RepositoryConfigurationExtensionSupport.java: | 327 | :: Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.fincore.gateway.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2026-09-18 :: 11:00:02.814 || INFO :: RepositoryConfigurationDelegate.java: | 213 | :: Finished Spring Data repository scanning in 75 ms. Found 0 Redis repository interfaces.
-2026-09-18 :: 11:00:08.438 || INFO :: HikariDataSource.java: | 109 | :: HikariPool-1 - Starting...
-2026-09-18 :: 11:00:09.626 || INFO :: HikariPool.java: | 580 | :: HikariPool-1 - Added connection oracle.jdbc.driver.T4CConnection@1c787389
-2026-09-18 :: 11:00:09.628 || INFO :: HikariDataSource.java: | 122 | :: HikariPool-1 - Start completed.
-2026-09-18 :: 11:00:09.736 || INFO :: LogHelper.java: | 102 | :: HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-09-18 :: 11:00:10.019 || INFO :: Version.java: | 41 | :: HHH000001: Hibernate ORM core version 7.4.1.Final
-2026-09-18 :: 11:00:11.525 || INFO :: SpringPersistenceUnitInfo.java: | 129 | :: No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-09-18 :: 11:00:12.246 || WARN :: DialectFactoryImpl.java: | 152 | :: HHH90000025: OracleDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-09-18 :: 11:00:12.337 || WARN :: JdbcEnvironmentImpl.java: | 376 | :: HHH100123: Low default JDBC fetch size: 10 (consider setting 'hibernate.jdbc.fetch_size')
-2026-09-18 :: 11:00:12.340 || INFO :: JdbcEnvironmentInitiator.java: | 179 | :: HHH10001005: Database info:
-        Database JDBC URL [jdbc:oracle:thin:@10.177.103.192:1523/fincorepdb1]
-        Database driver: Oracle JDBC driver
-        Database dialect: OracleDialect
-        Database version: 19.32
-        Default catalog/schema: undefined/FINCORE
-        Autocommit mode: undefined/unknown
-        Isolation level: READ_COMMITTED [default READ_COMMITTED]
-        JDBC fetch size: 10
-        Pool: DataSourceConnectionProvider
-        Minimum pool size: undefined/unknown
-        Maximum pool size: undefined/unknown
-2026-09-18 :: 11:00:16.023 || INFO :: JtaPlatformInitiator.java: | 53 | :: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-09-18 :: 11:00:16.030 || INFO :: AbstractEntityManagerFactoryBean.java: | 464 | :: Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-09-18 :: 11:00:18.317 || INFO :: QueryEnhancerFactories.java: | 48 | :: Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-09-18 :: 11:00:20.138 || INFO :: LdapConfig.java: | 48 | :: ===================================================
-2026-09-18 :: 11:00:20.139 || INFO :: LdapConfig.java: | 49 | :: INITIALIZING LDAP CONTEXT SOURCE
-2026-09-18 :: 11:00:20.139 || INFO :: LdapConfig.java: | 50 | :: Configured URLs: ldaps://uatrootdc1.uatad.sbi:3269
-2026-09-18 :: 11:00:20.147 || INFO :: LdapConfig.java: | 126 | :: DNS Lookup for Host [uatrootdc1.uatad.sbi]:
-2026-09-18 :: 11:00:20.147 || INFO :: LdapConfig.java: | 128 | ::   -> Resolved IP: 10.189.42.83
-2026-09-18 :: 11:00:20.148 || ERROR:: LdapConfig.java: | 65 | :: CRITICAL: Truststore configured at 'file:/etc/fincore/secrets/ad-truststore.jks' but FILE NOT FOUND.
-2026-09-18 :: 11:00:20.217 || INFO :: LdapConfig.java: | 80 | :: Setting LDAP Bind User (Service Account): cn=fincorecbops,dc=UATAD,dc=SBI
-2026-09-18 :: 11:00:20.217 || INFO :: LdapConfig.java: | 102 | :: ===================================================
-2026-09-18 :: 11:00:21.636 || INFO :: SecurityConfig.java: | 86 | :: Loading SecurityWebFilterChain
-2026-09-18 :: 11:00:23.422 || INFO :: EndpointLinksResolver.java: | 60 | :: Exposing 3 endpoints beneath base path '/actuator'
-2026-09-18 :: 11:00:26.647 || INFO :: NettyWebServer.java: | 142 | :: Netty started on port 8085 (http)
-2026-09-18 :: 11:00:26.719 || INFO :: StartupInfoLogger.java: | 60 | :: Started LoginService in 29.798 seconds (process running for 31.324)
-2026-09-18 :: 11:01:34.120 || INFO :: LoginUtility.java: | 11 | :: X-Forwarded-For ip : 10.0.26.158
-2026-09-18 :: 11:01:34.121 || INFO :: AuthController.java: | 105 | :: Check-User info user id: 9000002 , ip : 10.0.26.158
-2026-09-21 :: 06:03:47.965 || INFO :: LoginUtility.java: | 11 | :: X-Forwarded-For ip : 10.0.19.203
-2026-09-21 :: 06:03:47.965 || INFO :: AuthController.java: | 105 | :: Check-User info user id: 1015698 , ip : 10.0.19.203
-2026-09-21 :: 06:03:51.212 || INFO :: LoginUtility.java: | 11 | :: X-Forwarded-For ip : 10.0.19.203
-2026-09-21 :: 06:03:51.212 || INFO :: AuthController.java: | 145 | :: Login request for user: 1015698 from IP: 10.0.19.203
-2026-09-21 :: 06:03:51.240 || WARN :: KeyUtils.java: | 100 | :: Payload decryption failed. Invalid ciphertext provided.
-2026-09-21 :: 06:03:51.241 || ERROR:: LoginServiceImpl.java: | 359 | :: Login rejected for user 1015698: Payload decryption failed
-2026-09-21 :: 06:03:51.245 || WARN :: AuthController.java: | 161 | :: Login Failed for user: 1015698. Reason: Security Error: Invalid encrypted payload
+2026-09-21 06:39:24.300 ERROR [main] c.t.u.c.CacheWarmer: Failed to refresh permissions for Role 11
+org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)
+        at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)
+        at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)
+        at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105)
+        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:404)
+        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:384)
+        at org.springframework.data.redis.core.RedisTemplate.doWithKeys(RedisTemplate.java:853)
+        at org.springframework.data.redis.core.RedisTemplate.delete(RedisTemplate.java:610)
+        at com.tcs.userservice.service.PermissionCacheService.refreshRolePermissions(PermissionCacheService.java:47)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
+        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
+        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+        at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.lambda$applyResilience$0(GlobalResilienceAspect.java:60)
+        at io.github.resilience4j.retry.Retry.lambda$decorateSupplier$5(Retry.java:301)
+        at io.github.resilience4j.circuitbreaker.CircuitBreaker.lambda$decorateSupplier$5(CircuitBreaker.java:194)
+        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.applyResilience(GlobalResilienceAspect.java:73)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+        at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+        at com.tcs.userservice.service.PermissionCacheService$$SpringCGLIB$$0.refreshRolePermissions(<generated>)
+        at com.tcs.userservice.config.CacheWarmer.onStartup(CacheWarmer.java:34)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.context.event.ApplicationListenerMethodAdapter.doInvoke(ApplicationListenerMethodAdapter.java:392)
+        at org.springframework.context.event.ApplicationListenerMethodAdapter.processEvent(ApplicationListenerMethodAdapter.java:270)
+        at org.springframework.context.event.ApplicationListenerMethodAdapter.onApplicationEvent(ApplicationListenerMethodAdapter.java:200)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:180)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:173)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:151)
+        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:448)
+        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:381)
+        at org.springframework.boot.context.event.EventPublishingRunListener.ready(EventPublishingRunListener.java:110)
+        at org.springframework.boot.SpringApplicationRunListeners.lambda$ready$0(SpringApplicationRunListeners.java:82)
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:123)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:117)
+        at org.springframework.boot.SpringApplicationRunListeners.ready(SpringApplicationRunListeners.java:82)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+        at com.tcs.userservice.UserServiceApplication.main(UserServiceApplication.java:15)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
+        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)
+        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)
+        at java.base/java.util.Optional.orElseGet(Optional.java:364)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)
+        ... 64 common frames omitted
+Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379
+        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)
+        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
+        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)
+        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)
+        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)
+        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)
+        at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)
+        at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)
+        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        at java.base/java.lang.Thread.run(Thread.java:1570)
+{"@timestamp":"2026-09-21T12:09:24.300126902+05:30","level":"ERROR","service":"UserService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.tcs.userservice.config.CacheWarmer","message":"Failed to refresh permissions for Role 11","stack_trace":"org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:220)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\nCaused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)\n\tat io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)\n\tat io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)\n\tat io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)\n\tat io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)\n\tat io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n"}
+2026-09-21 06:39:34.316 ERROR [main] c.t.u.c.CacheWarmer: Failed to refresh permissions for Role 51
+org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)
+        at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)
+        at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)
+        at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105)
+        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:404)
+        at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:384)
+        at org.springframework.data.redis.core.RedisTemplate.doWithKeys(RedisTemplate.java:853)
+        at org.springframework.data.redis.core.RedisTemplate.delete(RedisTemplate.java:610)
+        at com.tcs.userservice.service.PermissionCacheService.refreshRolePermissions(PermissionCacheService.java:47)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:190)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:158)
+        at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:133)
+        at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:371)
+        at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:130)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+        at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:96)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+        at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:82)
+        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.lambda$applyResilience$0(GlobalResilienceAspect.java:60)
+        at io.github.resilience4j.retry.Retry.lambda$decorateSupplier$5(Retry.java:301)
+        at io.github.resilience4j.circuitbreaker.CircuitBreaker.lambda$decorateSupplier$5(CircuitBreaker.java:194)
+        at com.fincore.commonutilities.aspect.GlobalResilienceAspect.applyResilience(GlobalResilienceAspect.java:73)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:648)
+        at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:630)
+        at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)
+        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)
+        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:719)
+        at com.tcs.userservice.service.PermissionCacheService$$SpringCGLIB$$0.refreshRolePermissions(<generated>)
+        at com.tcs.userservice.config.CacheWarmer.onStartup(CacheWarmer.java:34)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.context.event.ApplicationListenerMethodAdapter.doInvoke(ApplicationListenerMethodAdapter.java:392)
+        at org.springframework.context.event.ApplicationListenerMethodAdapter.processEvent(ApplicationListenerMethodAdapter.java:270)
+        at org.springframework.context.event.ApplicationListenerMethodAdapter.onApplicationEvent(ApplicationListenerMethodAdapter.java:200)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:180)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:173)
+        at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:151)
+        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:448)
+        at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:381)
+        at org.springframework.boot.context.event.EventPublishingRunListener.ready(EventPublishingRunListener.java:110)
+        at org.springframework.boot.SpringApplicationRunListeners.lambda$ready$0(SpringApplicationRunListeners.java:82)
+        at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:123)
+        at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:117)
+        at org.springframework.boot.SpringApplicationRunListeners.ready(SpringApplicationRunListeners.java:82)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365)
+        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+        at com.tcs.userservice.UserServiceApplication.main(UserServiceApplication.java:15)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106)
+        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)
+        at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)
+        at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)
+        at io.lettuce.core.RedisClient.connect(RedisClient.java:220)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)
+        at java.base/java.util.Optional.orElseGet(Optional.java:364)
+        at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)
+        at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)
+        ... 64 common frames omitted
+Caused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379
+        at io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)
+        at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
+        at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)
+        at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)
+        at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)
+        at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)
+        at io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)
+        at io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)
+        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        at java.base/java.lang.Thread.run(Thread.java:1570)
+{"@timestamp":"2026-09-21T12:09:34.316846051+05:30","level":"ERROR","service":"UserService","traceId":"","userId":"","clientIp":"","apiPath":"","class":"com.tcs.userservice.config.CacheWarmer","message":"Failed to refresh permissions for Role 51","stack_trace":"org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1873)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1804)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.doInLock(LettuceConnectionFactory.java:1542)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1578)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1260)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:1056)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:195)\n\tat org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144)\nCaused by: io.lettuce.core.RedisConnectionException: Unable to connect to redis-service/<unresolved>:6379\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:63)\n\tat io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:41)\n\tat io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:315)\n\tat io.lettuce.core.RedisClient.connect(RedisClient.java:220)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:113)\n\tat java.base/java.util.Optional.orElseGet(Optional.java:364)\n\tat org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:113)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1802)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1601)\n\tat org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.lambda$getConnection$0(LettuceConnectionFactory.java:1581)\nCaused by: io.netty.channel.ConnectTimeoutException: connection timed out after 10000 ms: redis-service.backend.svc.cluster.local/10.110.234.135:6379\n\tat io.netty.channel.epoll.AbstractEpollChannel$AbstractEpollUnsafe$1.run(AbstractEpollChannel.java:669)\n\tat io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)\n\tat io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:160)\n\tat io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:148)\n\tat io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:141)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:535)\n\tat io.netty.channel.SingleThreadIoEventLoop.run(SingleThreadIoEventLoop.java:201)\n\tat io.netty.util.concurrent.SingleThreadEventExecutor$5.run(SingleThreadEventExecutor.java:1204)\n\tat io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)\n\tat io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)\n"}
