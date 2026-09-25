@@ -1,3 +1,19 @@
+D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl get events -n logging --sort-by=.lastTimestamp --kubeconfig h06vksuatcbopscls.conf
+LAST SEEN   TYPE      REASON               OBJECT                       MESSAGE
+60m         Normal    Scheduled            pod/loki-58886b45cd-v7blr    Successfully assigned logging/loki-58886b45cd-v7blr to h06vksuatcbopscls-node-pool-1-xg7gx-smcqf-5zppt
+60m         Normal    SuccessfulCreate     replicaset/loki-58886b45cd   Created pod: loki-58886b45cd-v7blr
+60m         Normal    ScalingReplicaSet    deployment/loki              Scaled up replica set loki-58886b45cd from 0 to 1
+7m13s       Warning   FailedAttachVolume   pod/loki-58886b45cd-v7blr    AttachVolume.Attach failed for volume "pvc-b8e3cd58-c4f6-4c54-b6b4-6457a5eefcd3" : PersistentVolume "pvc-b8e3cd58-c4f6-4c54-b6b4-6457a5eefcd3" is marked for deletion
+5m11s       Warning   FailedAttachVolume   pod/loki-644c85b56-htpdd     AttachVolume.Attach failed for volume "pvc-b8e3cd58-c4f6-4c54-b6b4-6457a5eefcd3" : PersistentVolume "pvc-b8e3cd58-c4f6-4c54-b6b4-6457a5eefcd3" is marked for deletion
+
+D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl get pods -n logging -| app=loki -o wide --kubeconfig h06vksuatcbopscls.conf
+'app' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl describe pod loki-58886b45cd-v7blr -n logging --kubectl h06vksuatcbopscls.conf
+error: unknown flag: --kubectl
+See 'kubectl describe --help' for usage.
+
 D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl describe pod loki-58886b45cd-v7blr -n logging --kubeconfig h06vksuatcbopscls.conf
 Name:             loki-58886b45cd-v7blr
 Namespace:        logging
@@ -60,14 +76,6 @@ Tolerations:                  node.kubernetes.io/not-ready:NoExecute op=Exists f
                               node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
 Topology Spread Constraints:  kubernetes.io/hostname:ScheduleAnyway when max skew 1 is exceeded for selector app=loki
 Events:
-  Type    Reason     Age   From               Message
-  ----    ------     ----  ----               -------
-  Normal  Scheduled  39m   default-scheduler  Successfully assigned logging/loki-58886b45cd-v7blr to h06vksuatcbopscls-node-pool-1-xg7gx-smcqf-5zppt
-
-D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl get pods -n logging --kubeconfig h06vksuatcbopscls.conf
-NAME                    READY   STATUS              RESTARTS   AGE
-fluent-bit-b7kfl        1/1     Running             0          61m
-fluent-bit-m5xtx        1/1     Running             0          61m
-fluent-bit-spwmd        1/1     Running             0          61m
-loki-58886b45cd-v7blr   0/1     ContainerCreating   0          57m
-loki-644c85b56-htpdd    0/1     ContainerCreating   0          16d
+  Type     Reason              Age   From                     Message
+  ----     ------              ----  ----                     -------
+  Warning  FailedAttachVolume  9m4s  attachdetach-controller  AttachVolume.Attach failed for volume "pvc-b8e3cd58-c4f6-4c54-b6b4-6457a5eefcd3" : PersistentVolume "pvc-b8e3cd58-c4f6-4c54-b6b4-6457a5eefcd3" is marked for deletion
