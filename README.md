@@ -33,8 +33,8 @@ data:
     # ============================================
     server:
       http_listen_port: 3100
-	  
-	  # Graceful shutdown support (aligned with 60s terminationGracePeriod)
+
+      # Graceful shutdown support (aligned with 60s terminationGracePeriod)
       graceful_shutdown_timeout: 60s
 
       # Prevent slow client abuse
@@ -78,22 +78,20 @@ data:
     # ============================================
     limits_config:
       retention_period: 168h   # 7 days
-	  
-	  # Enterprise safety controls (added)
+
+      # Enterprise safety controls (added)
       ingestion_rate_mb: 8
       ingestion_burst_size_mb: 16
       max_streams_per_user: 10000
       max_global_streams_per_user: 0
-
 
     # ============================================
     # Chunk Store Configuration
     # ============================================
     chunk_store_config:
       max_look_back_period: 168h
-	  
-	  
-	# ============================================
+
+    # ============================================
     # Compactor Configuration
     # Required for boltdb-shipper in production
     # ============================================
@@ -133,8 +131,3 @@ data:
     # ============================================
     frontend:
       log_queries_longer_than: 5s
-
-
-
-
-      please correct the indenattion error and send me back the entire file as is please dont alter any extra values
