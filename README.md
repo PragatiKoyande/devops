@@ -1,22 +1,67 @@
-D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl get pv -n cbops --kubeconfig h06vksuatcbopscls.conf
-NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS        CLAIM                                       STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
-airflow-new-pv                             5Gi        RWX            Delete           Terminating   cbops/airflow-dags                          h06-vks-sp-6   <unset>                          197d
-pvc-34360a99-be86-4953-9d7d-00d5f54947e6   50Gi       RWO            Delete           Bound         backend/kafka-data-kafka-0                  h06-vks-sp-6   <unset>                          8d
-pvc-34aa3481-3d35-4ca7-8243-5d6edb028deb   100Gi      RWO            Delete           Terminating   cbops/logs-airflow-triggerer-0              h06-vks-sp-3   <unset>                          156d
-pvc-53ff550d-28bd-4f90-a1b3-eb329f59fab3   150Gi      RWO            Delete           Terminating   tanzu-system-monitoring/prometheus-server   h06-vks-sp-3   <unset>                          199d
-pvc-56358765-3836-47b5-82d6-40aa179e9b55   100Gi      RWO            Delete           Terminating   cbops/logs-airflow-worker-2                 h06-vks-sp-3   <unset>                          156d
-pvc-72040709-8d9f-4456-8207-16ac6a09245c   2Gi        RWO            Delete           Terminating   tanzu-system-monitoring/alertmanager        h06-vks-sp-3   <unset>                          199d
-pvc-8fc62353-980d-433a-901f-0303b72eb857   100Gi      RWO            Delete           Terminating   cbops/logs-airflow-worker-1                 h06-vks-sp-3   <unset>                          156d
-pvc-9b9144b3-0ee8-4d61-aa77-8f5606217d20   5Gi        RWO            Delete           Terminating   cbops/grafana-pvc                           h06-vks-sp-3   <unset>                          212d
-pvc-a91822ec-97b8-43e5-b61a-ad9a92aa9e9f   100Gi      RWO            Delete           Terminating   cbops/logs-airflow-worker-0                 h06-vks-sp-3   <unset>                          156d
-pvc-b6a2575d-a8d7-4f5f-8f93-a294e56117ec   50Gi       RWO            Delete           Bound         backend/debezium-pvc                        h06-vks-sp-6   <unset>                          8d
-redis-airflow-pv                           10Gi       RWX            Delete           Bound         cbops/redis-airflow-pvc                     h06-vks-sp-6   <unset>                          51d
-
-D:\pragati\HELM_LATEST_26082026\Grafana-Deployment>kubectl get pvc -n cbops --kubeconfig h06vksuatcbopscls.conf
-NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
-airflow-dags               Bound    airflow-new-pv                             5Gi        RWX            h06-vks-sp-6   <unset>                 197d
-logs-airflow-triggerer-0   Bound    pvc-34aa3481-3d35-4ca7-8243-5d6edb028deb   100Gi      RWO            h06-vks-sp-3   <unset>                 156d
-logs-airflow-worker-0      Bound    pvc-a91822ec-97b8-43e5-b61a-ad9a92aa9e9f   100Gi      RWO            h06-vks-sp-3   <unset>                 156d
-logs-airflow-worker-1      Bound    pvc-8fc62353-980d-433a-901f-0303b72eb857   100Gi      RWO            h06-vks-sp-3   <unset>                 156d
-logs-airflow-worker-2      Bound    pvc-56358765-3836-47b5-82d6-40aa179e9b55   100Gi      RWO            h06-vks-sp-3   <unset>                 156d
-redis-airflow-pvc          Bound    redis-airflow-pv                           10Gi       RWX            h06-vks-sp-6   <unset>                 51d
+[root@fcsitgateway SIT-Grafana]# kubectl describe pod debezium-server-86c8fbbbcb-g7xmp
+Name:             debezium-server-86c8fbbbcb-g7xmp
+Namespace:        backend
+Priority:         0
+Service Account:  default
+Node:             h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-t6s7f/10.244.7.89
+Start Time:       Tue, 08 Sep 2026 15:17:45 +0530
+Labels:           app=debezium-server
+                  pod-template-hash=86c8fbbbcb
+Annotations:      <none>
+Status:           Pending
+IP:
+IPs:              <none>
+Controlled By:    ReplicaSet/debezium-server-86c8fbbbcb
+Containers:
+  debezium-server:
+    Container ID:
+    Image:          h06vksharbor.corp.ad.sbi/cbops/debezium-server:oracle-v1
+    Image ID:
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      cpu:     2
+      memory:  3Gi
+    Requests:
+      cpu:     500m
+      memory:  1Gi
+    Environment:
+      JAVA_OPTS:  -Xms512m -Xmx2g
+    Mounts:
+      /debezium/conf from config-volume (rw)
+      /debezium/data from data-volume (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-g4f8j (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  config-volume:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      debezium-server-config
+    Optional:  false
+  data-volume:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  debezium-pvc
+    ReadOnly:   false
+  kube-api-access-g4f8j:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason       Age                      From     Message
+  ----     ------       ----                     ----     -------
+  Warning  FailedMount  3m59s (x18880 over 26d)  kubelet  MountVolume.SetUp failed for volume "pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71" : rpc error: code = FailedPrecondition desc = volume ID: "0b8f4e85-183c-402b-934a-ac8d2d662d9f-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71" does not appear staged to "/var/lib/kubelet/plugins/kubernetes.io/csi/csi.vsphere.vmware.com/8923abe49ff697861a3dc614c3bdba1daacbcd6170b9bfc4bdd312998dbc5df4/globalmount"
