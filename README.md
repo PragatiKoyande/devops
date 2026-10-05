@@ -1,67 +1,52 @@
-[root@fcsitgateway SIT-Grafana]# kubectl describe pod debezium-server-86c8fbbbcb-g7xmp
-Name:             debezium-server-86c8fbbbcb-g7xmp
-Namespace:        backend
-Priority:         0
-Service Account:  default
-Node:             h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-t6s7f/10.244.7.89
-Start Time:       Tue, 08 Sep 2026 15:17:45 +0530
-Labels:           app=debezium-server
-                  pod-template-hash=86c8fbbbcb
-Annotations:      <none>
-Status:           Pending
-IP:
-IPs:              <none>
-Controlled By:    ReplicaSet/debezium-server-86c8fbbbcb
-Containers:
-  debezium-server:
-    Container ID:
-    Image:          h06vksharbor.corp.ad.sbi/cbops/debezium-server:oracle-v1
-    Image ID:
-    Port:           8080/TCP
-    Host Port:      0/TCP
-    State:          Waiting
-      Reason:       ContainerCreating
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      cpu:     2
-      memory:  3Gi
-    Requests:
-      cpu:     500m
-      memory:  1Gi
-    Environment:
-      JAVA_OPTS:  -Xms512m -Xmx2g
-    Mounts:
-      /debezium/conf from config-volume (rw)
-      /debezium/data from data-volume (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-g4f8j (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  config-volume:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      debezium-server-config
-    Optional:  false
-  data-volume:
-    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
-    ClaimName:  debezium-pvc
-    ReadOnly:   false
-  kube-api-access-g4f8j:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              <none>
-Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type     Reason       Age                      From     Message
-  ----     ------       ----                     ----     -------
-  Warning  FailedMount  3m59s (x18880 over 26d)  kubelet  MountVolume.SetUp failed for volume "pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71" : rpc error: code = FailedPrecondition desc = volume ID: "0b8f4e85-183c-402b-934a-ac8d2d662d9f-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71" does not appear staged to "/var/lib/kubelet/plugins/kubernetes.io/csi/csi.vsphere.vmware.com/8923abe49ff697861a3dc614c3bdba1daacbcd6170b9bfc4bdd312998dbc5df4/globalmount"
+[root@fcsitgateway SIT-Grafana]# k get pvc
+NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+debezium-pvc               Bound    pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71   5Gi        RWO            h06-vks-sp-6   <unset>                 51d
+kafka-data-kafka-0         Bound    pvc-0c1d8e96-553b-4b41-a8af-e2d81bab6fab   5Gi        RWO            h06-vks-sp-6   <unset>                 51d
+logs-airflow-triggerer-0   Bound    pvc-494aa9a7-7d49-4a01-9b0c-d5b2ed07ffc3   100Gi      RWO            h06-vks-sp-6   <unset>                 41d
+logs-airflow-worker-0      Bound    pvc-580bb0c8-c0a0-4b7b-b5fc-6543cc789992   100Gi      RWO            h06-vks-sp-6   <unset>                 41d
+[root@fcsitgateway SIT-Grafana]# k get pvc debezium-pvc -n backend -o wide
+NAME           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE   VOLUMEMODE
+debezium-pvc   Bound    pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71   5Gi        RWO            h06-vks-sp-6   <unset>                 51d   Filesystem
+[root@fcsitgateway SIT-Grafana]# kubectl get volumeattachments -o wide
+NAME                                                                   ATTACHER                 PV                                         NODE                                              ATTACHED   AGE
+csi-2c9e9c019e4f8086951e28a3597a09ebca909fcb1ff61c246b1363e591881c26   csi.vsphere.vmware.com   pvc-fb0f9a1b-95ad-40a5-97ac-2a3a9890afa3   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-8drdn   true       61d
+csi-2e6e9fbfb87a029dd719e8b2763a42e8c6dd8c91f13f05d5847a6f0a3be00fe2   csi.vsphere.vmware.com   pvc-d80bd3e8-f7a4-4e65-ab4e-402dc81d9d8a   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-5l4cx   true       3h2m
+csi-53184daa6d1e1798c29e9e6282297353a5025d95c5d4eed8df9bb48482e59722   csi.vsphere.vmware.com   pvc-c439d9d8-5b80-4a99-83ce-a341a377ebd6   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-8drdn   true       61d
+csi-60aec5123627d0864f2fbc7c3db250e7b1e58b5bcee1f99895814968110a6a3d   csi.vsphere.vmware.com   pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-t6s7f   true       26d
+csi-78542e7ac20037fd94a6c9ca1bbd01775fb8779eb87b86773f726e00dadaac5c   csi.vsphere.vmware.com   pvc-37fca4a5-08d9-4412-8891-35429baef9f1   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-8drdn   true       61d
+csi-808ac7943701d96cf59193ec5a7b5dc5d0b0a7cccc3661db75dd650c37c6c9ed   csi.vsphere.vmware.com   pvc-0c1d8e96-553b-4b41-a8af-e2d81bab6fab   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-8sp4r   true       26d
+csi-902ccae87e570b1c965de8fbd35ef272cf2514e7bf08412f7f38d926bdca181e   csi.vsphere.vmware.com   pvc-d4eaa0be-c6c5-4512-9660-d8bbab3d2a2a   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-x6kh4   true       61d
+csi-b16202f5c834e7b3e2db07deff91f6479bf8f0a5df976f7ce8f97b579f6a8e11   csi.vsphere.vmware.com   pvc-2132a635-6582-45f2-bb91-216ec327a52c   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-5l4cx   true       3h1m
+csi-e6f9ada32360dba913d5fd6b626ec04bce357f53bdd24f1b2ca87cd71ee9d2c6   csi.vsphere.vmware.com   pvc-812e9777-3fec-4d66-ae53-9a5f9d501ad2   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-8drdn   true       61d
+csi-f9516acae2f1de52ec7b0fca13de7d9227570dc17a2bbfab60d54132976755c6   csi.vsphere.vmware.com   pvc-3c69c9cb-29d8-48b5-b755-5eb7294cde6f   h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-wx64h   true       61d
+[root@fcsitgateway SIT-Grafana]# k get pods -A -o wide | grep -i vsphere
+vmware-system-csi              vsphere-csi-controller-7495fc69ff-r79fg                 7/7     Running                      11 (61d ago)    92d    192.168.11.3    h06vkssitcbopscls-bmjtp-lr7mk                     <none>           <none>
+vmware-system-csi              vsphere-csi-node-2kv82                                  3/3     Running                      0               27d    10.244.7.89     h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-t6s7f   <none>           <none>
+vmware-system-csi              vsphere-csi-node-4sxp7                                  3/3     Running                      3 (92d ago)     92d    10.244.7.93     h06vkssitcbopscls-bmjtp-lr7mk                     <none>           <none>
+vmware-system-csi              vsphere-csi-node-f9ncb                                  3/3     Running                      0               61d    10.244.10.5     h06vkssitcbopscls-bmjtp-fgqq5                     <none>           <none>
+vmware-system-csi              vsphere-csi-node-gxpfv                                  3/3     Running                      0               27d    10.244.7.86     h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-8sp4r   <none>           <none>
+vmware-system-csi              vsphere-csi-node-qjpkb                                  3/3     Running                      0               92d    10.244.7.94     h06vkssitcbopscls-bmjtp-rnhv5                     <none>           <none>
+vmware-system-csi              vsphere-csi-node-tspw2                                  3/3     Running                      0               19d    10.244.7.87     h06vkssitcbopscls-node-pool-1-2nb6d-qhtlx-5l4cx   <none>           <none>
+[root@fcsitgateway SIT-Grafana]# k get events -n backend --sort-by=.lastTimestamp | tail -30
+LAST SEEN   TYPE      REASON                    OBJECT                                           MESSAGE
+4m4s        Warning   FailedKillPod             pod/process-status-deployment-7f7f7b699b-lt47t   error killing pod: failed to "KillPodSandbox" for "e03b824c-5bcd-411a-9e85-c983c69cf890" with KillPodSandboxError: "rpc error: code = Unknown desc = failed to destroy network for sandbox \"7d4e2ae09a0a2d804c6b4be6f1642e5af8854f356ea4973de39c9d637db05b89\": plugin type=\"antrea\" failed (delete): rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial unix /var/run/antrea/cni.sock: connect: connection refused\""
+4m4s        Warning   FailedKillPod             pod/common-request-deployment-79c88796c7-jx8gv   error killing pod: failed to "KillPodSandbox" for "58a67a66-6721-4a4d-a290-d93a53e10280" with KillPodSandboxError: "rpc error: code = Unknown desc = failed to destroy network for sandbox \"c1fe1a250cdd6f895ce3842c9eb8086b35657576abcbcdebd58aab7c9aa4aa3a\": plugin type=\"antrea\" failed (delete): rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial unix /var/run/antrea/cni.sock: connect: connection refused\""
+3m45s       Warning   FailedKillPod             pod/common-master-deployment-c6d998984-j478m     error killing pod: failed to "KillPodSandbox" for "069a6712-b7f9-49a3-bf97-9b2942fb391c" with KillPodSandboxError: "rpc error: code = Unknown desc = failed to destroy network for sandbox \"4a153ec9e017fa5e4bb5e40b8276901ae2d192724dbc6c545b125beaba5558d2\": plugin type=\"antrea\" failed (delete): rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial unix /var/run/antrea/cni.sock: connect: connection refused\""
+2m55s       Warning   Failed                    pod/airflow-run-airflow-migrations-pgmrf         Error: secret "airflow-s3-creds" not found
+99s         Warning   FailedScheduling          pod/airflow-dag-processor-58b665588-lpkcz        0/6 nodes are available: persistentvolumeclaim "airflow-st-dags" not found. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
+99s         Warning   FailedScheduling          pod/airflow-redis-0                              0/6 nodes are available: persistentvolumeclaim "redis-airflow-st-pvc" not found. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
+99s         Warning   FailedScheduling          pod/airflow-triggerer-0                          0/6 nodes are available: persistentvolumeclaim "airflow-st-dags" not found. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
+99s         Warning   FailedScheduling          pod/airflow-worker-0                             0/6 nodes are available: persistentvolumeclaim "airflow-st-dags" not found. preemption: 0/6 nodes are available: 6 Preemption is not helpful for scheduling.
+83s         Normal    Pulled                    pod/airflow-run-airflow-migrations-pgmrf         Container image "h06vksharbor.corp.ad.sbi/cbops/airflow-latest:v2" already present on machine
+71s         Warning   FailedMount               pod/debezium-server-86c8fbbbcb-g7xmp             MountVolume.SetUp failed for volume "pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71" : rpc error: code = FailedPrecondition desc = volume ID: "0b8f4e85-183c-402b-934a-ac8d2d662d9f-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71" does not appear staged to "/var/lib/kubelet/plugins/kubernetes.io/csi/csi.vsphere.vmware.com/8923abe49ff697861a3dc614c3bdba1daacbcd6170b9bfc4bdd312998dbc5df4/globalmount"
+67s         Warning   FailedGetResourceMetric   horizontalpodautoscaler/common-master-hpa        failed to get cpu utilization: missing request for cpu in container common-master-container of Pod common-master-deployment-5b9dcb6f8-6l6mz
+67s         Warning   FailedGetResourceMetric   horizontalpodautoscaler/common-request-hpa       failed to get cpu utilization: missing request for cpu in container common-request-container of Pod common-request-deployment-57bf45cbc8-676fd
+67s         Warning   FailedGetResourceMetric   horizontalpodautoscaler/login-hpa                failed to get cpu utilization: missing request for cpu in container login-backend-container of Pod login-deployment-5689c98fd-jqhf4
+67s         Warning   FailedGetResourceMetric   horizontalpodautoscaler/notification-hpa         failed to get cpu utilization: missing request for cpu in container notification-container of Pod notification-deployment-6f49d99649-dc7k6
+67s         Warning   FailedGetResourceMetric   horizontalpodautoscaler/process-status-hpa       failed to get cpu utilization: missing request for cpu in container process-status-container of Pod process-status-deployment-799ff67cc5-l8x6r
+14s         Warning   FailedMount               pod/airflow-scheduler-c8fb5b79c-25phq            MountVolume.SetUp failed for volume "s3-ca-volume" : secret "s3-ca-secret" not found
+14s         Warning   FailedMount               pod/airflow-api-server-7c664f7745-wm92k          MountVolume.SetUp failed for volume "s3-ca-volume" : secret "s3-ca-secret" not found
+[root@fcsitgateway SIT-Grafana]# kubectl get pv $(kubectl get pvc debezium-pvc -n backend -o jsonpath='{.spec.volumeName}') -o wide
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                  STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE   VOLUMEMODE
+pvc-b5d60fbd-9a4f-4d1a-8875-bba9e53f2a71   5Gi        RWO            Delete           Bound    backend/debezium-pvc   h06-vks-sp-6   <unset>                          51d   Filesystem
+[root@fcsitgateway SIT-Grafana]#
