@@ -1,45 +1,136 @@
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-10-08T08:56:06.422Z ERROR 1 --- [CommunicationService] [           main] o.s.boot.SpringApplication               : Application run failed
-
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'priorityOtpConsumer': Injection of autowired dependencies failed
-        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:499) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1444) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1225) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1191) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:994) ~[spring-context-7.0.9.jar!/:7.0.9]
-        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621) ~[spring-context-7.0.9.jar!/:7.0.9]
-        at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.1.1.jar!/:4.1.1]
-        at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.1.1.jar!/:4.1.1]
-        at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.1.1.jar!/:4.1.1]
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.1.1.jar!/:4.1.1]
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.1.1.jar!/:4.1.1]
-        at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.1.1.jar!/:4.1.1]
-        at com.fincore.CommunicationService.CommunicationServiceApplication.main(CommunicationServiceApplication.java:12) ~[!/:0.0.1-SNAPSHOT]
-        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-        at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:106) ~[app.jar:0.0.1-SNAPSHOT]
-        at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64) ~[app.jar:0.0.1-SNAPSHOT]
-        at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40) ~[app.jar:0.0.1-SNAPSHOT]
-Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'security.internal.kafka-aes-key' in value "${security.internal.kafka-aes-key}"
-        at org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81) ~[spring-core-7.0.9.jar!/:7.0.9]
-        at org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:296) ~[spring-core-7.0.9.jar!/:7.0.9]
-        at org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:129) ~[spring-core-7.0.9.jar!/:7.0.9]
-        at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:96) ~[spring-core-7.0.9.jar!/:7.0.9]
-        at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:286) ~[spring-core-7.0.9.jar!/:7.0.9]
-        at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:257) ~[spring-core-7.0.9.jar!/:7.0.9]
-        at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:184) ~[spring-context-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:959) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1679) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1658) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:764) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:748) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:493) ~[spring-beans-7.0.9.jar!/:7.0.9]
-        ... 24 common frames omitted
+[root@fcuatgateway ENV-Changes]# k get deployment communication-deployment -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "61"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"communication-deployment","namespace":"uat-cbops1"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"communication-backend"}},"template":{"metadata":{"labels":{"app":"communication-backend"}},"spec":{"containers":[{"env":[{"name":"SPRING_PROFILES_ACTIVE","value":"uat"},{"name":"SPRING_KAFKA_CONSUMER_GROUP_ID","value":"communication-login-otp-group-v7"},{"name":"SPRING_KAFKA_ADMIN_PROPERTIES_REQUEST_TIMEOUT_MS","value":"60000"},{"name":"SPRING_KAFKA_PROPERTIES_SOCKET_CONNECTION_SETUP_TIMEOUT_MS","value":"30000"},{"name":"SPRING_KAFKA_ADMIN_AUTO_CREATE","value":"false"},{"name":"REPORT_SERVICE_URL","value":"report-service.uat-cbops1.svc.cluster.local:80"}],"envFrom":[{"configMapRef":{"name":"config-oracle"}},{"configMapRef":{"name":"config-kafka"}},{"configMapRef":{"name":"config-redis"}},{"secretRef":{"name":"oracle-secret"}},{"secretRef":{"name":"jwt-secret"}},{"secretRef":{"name":"kafka-aes-secret"}},{"secretRef":{"name":"rsa-private-secret"}},{"secretRef":{"name":"rsa-public-secret"}}],"image":"h06vksharbor.corp.ad.sbi/cbops/communication-service:UAT29","imagePullPolicy":"Always","name":"communication-container","ports":[{"containerPort":8001}]}]}}}}
+    kubernetes.io/change-cause: kubectl set image deployment/communication-deployment
+      communication-container=h06vksharbor.corp.ad.sbi/cbops/communication-service:UAT23
+      --namespace=uat-cbops1 --record=true
+  creationTimestamp: "2026-06-17T11:38:23Z"
+  generation: 62
+  name: communication-deployment
+  namespace: uat-cbops1
+  resourceVersion: "127247688"
+  uid: 87fa5a9b-b439-4a21-9b49-3831a1b9f0c8
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: communication-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-09-29T16:32:09+05:30"
+      creationTimestamp: null
+      labels:
+        app: communication-backend
+    spec:
+      containers:
+      - env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: uat
+        - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+          value: communication-login-otp-group-v7
+        - name: SPRING_KAFKA_ADMIN_PROPERTIES_REQUEST_TIMEOUT_MS
+          value: "60000"
+        - name: SPRING_KAFKA_PROPERTIES_SOCKET_CONNECTION_SETUP_TIMEOUT_MS
+          value: "30000"
+        - name: SPRING_KAFKA_ADMIN_AUTO_CREATE
+          value: "false"
+        - name: REPORT_SERVICE_URL
+          value: report-service.uat-cbops1.svc.cluster.local:80
+        envFrom:
+        - configMapRef:
+            name: config-oracle
+        - configMapRef:
+            name: config-kafka
+        - configMapRef:
+            name: config-redis
+        - secretRef:
+            name: oracle-secret
+        - secretRef:
+            name: jwt-secret
+        - secretRef:
+            name: kafka-aes-secret
+        - secretRef:
+            name: rsa-private-secret
+        - secretRef:
+            name: rsa-public-secret
+        image: h06vksharbor.corp.ad.sbi/cbops/communication-service:UAT29
+        imagePullPolicy: Always
+        name: communication-container
+        ports:
+        - containerPort: 8001
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  conditions:
+  - lastTransitionTime: "2026-09-16T08:25:45Z"
+    lastUpdateTime: "2026-10-08T08:55:42Z"
+    message: ReplicaSet "communication-deployment-6b85cdf6b8" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-10-08T08:59:49Z"
+    lastUpdateTime: "2026-10-08T08:59:49Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  observedGeneration: 62
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
+[root@fcuatgateway ENV-Changes]# k get secret
+NAME                                   TYPE                 DATA   AGE
+airflow-api-secret-key                 Opaque               1      201d
+airflow-broker-url                     Opaque               1      201d
+airflow-fernet-key                     Opaque               1      201d
+airflow-jwt-secret                     Opaque               1      201d
+airflow-metadata                       Opaque               1      201d
+airflow-redis-password                 Opaque               1      201d
+airflow-s3-creds                       Opaque               5      163d
+airflow-secret                         Opaque               2      56d
+blocked-login-ip                       Opaque               1      56d
+jwt-secret                             Opaque               1      57d
+kafka-aes-secret                       Opaque               1      56d
+ldap-truststore-file                   Opaque               1      56d
+oracle-properties                      Opaque               6      206d
+oracle-secret                          Opaque               1      57d
+rsa-private-secret                     Opaque               1      16d
+rsa-public-secret                      Opaque               1      16d
+s3-ca-secret                           Opaque               1      163d
+secret-druid                           Opaque               2      51d
+secret-ldap                            Opaque               2      30d
+secret-postgres                        Opaque               1      56d
+secret-sftp                            Opaque               1      51d
+sh.helm.release.v1.airflow.v1          helm.sh/release.v1   1      201d
+sh.helm.release.v1.airflow.v2          helm.sh/release.v1   1      163d
+sh.helm.release.v1.airflow.v3          helm.sh/release.v1   1      163d
+sh.helm.release.v1.airflow.v4          helm.sh/release.v1   1      163d
+sh.helm.release.v1.airflow.v5          helm.sh/release.v1   1      90d
+sh.helm.release.v1.airflow.v6          helm.sh/release.v1   1      77d
+sh.helm.release.v1.airflow.v7          helm.sh/release.v1   1      44d
+sh.helm.release.v1.airflow.v8          helm.sh/release.v1   1      44d
+sh.helm.release.v1.spark-operator.v1   helm.sh/release.v1   1      208d
+sh.helm.release.v1.spark-operator.v2   helm.sh/release.v1   1      206d
+sh.helm.release.v1.spark-operator.v3   helm.sh/release.v1   1      201d
+spark-operator-webhook-certs           Opaque               4      208d
+uat-common-app-secret                  Opaque               1      277d
