@@ -1,38 +1,26 @@
-Delivery Support
-continuously monitor to ensure the uptime of the application to met.
+Analytical Ability
+Makes systematic and rational judgments based on relevant information, and supports the same with facts. Identifies potential issues/opportunities in complex situations and foresees implications of proposed solutions.
 
-I will proactively monitor application and infrastructure health to ensure high availability and uninterrupted business operations. I will perform regular health checks, monitor application logs, troubleshoot production issues, and coordinate with relevant teams for timely incident resolution. I will focus on minimizing application downtime, identifying recurring issues, performing root cause analysis, and ensuring adherence to operational SLAs.
-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------
 
-Delivery Support
-Allocate the the system resources effieciently to respective services to ensure maximum utilisation of the avaialble resources.
+Coaching
+Facilitates the continuous development of individual and organizational competencies, developing other's potential through the sharing of expertise and providing timely feedback.
 
-I will ensure efficient utilization of infrastructure resources across application services by continuously monitoring CPU, memory, and storage consumption. I will analyse resource utilization patterns, identify underutilized or overutilized resources, and recommend appropriate resource allocation wherever required. I will focus on optimizing Kubernetes resource requests and limits, maintaining application performance and stability, and ensuring effective utilization of available infrastructure resources.
---------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
 
-Configuring / Support Implementing the Product
-Number of products configured without any issues
+Continual Learning
+Continuously seeks knowledge to enhance one's professional growth and performance. Makes use of opportunities for learning that the job as well as the organization provides. Learns new technologies, tools and processes relevant to one's job.
 
-I will ensure smooth and error-free configuration and implementation of application components across different environments such as DEV, SIT, UAT, and Production. I will support application deployments, configure Kubernetes resources, manage ConfigMaps and Secrets, validate application connectivity, and troubleshoot configuration-related issues. I will follow established deployment procedures and perform necessary validations to ensure successful implementation with minimal deployment issues.
---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
+Innovation and Creativity
+Provides an original solution by using various tools and techniques and constantly questioning the status quo. Experiments with new approaches and effectively utilizes creativity to enhance outcomes.
 
+------------------------------------------------------------------------------------------------------------------------------------------------
 
-Asset creation, mentoring
-Document all the necessary deployment and monitoring related tasks.
+Planning and Organising
+Plans a course of action, manages and prioritizes activities so as to execute them in a time-bound manner. Sets goals, timelines, actions plans to meet organizational objectives.
 
-I will maintain clear and structured technical documentation covering application deployment procedures, Kubernetes configurations, CI/CD pipelines, monitoring activities, troubleshooting steps, and production support processes. I will document recurring issues and their resolutions to improve knowledge sharing and operational efficiency. I will also share technical knowledge with team members and support them in understanding deployment and monitoring procedures.
--------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
 
-
-Continuous Improvement and Innovation
-Optimize Kubernetes cluster resources to prevent pod crashes
-
-I will continuously analyse Kubernetes cluster resource utilization and optimize CPU and memory requests and limits to improve workload stability and prevent resource-related pod failures. I will monitor pod health, investigate OOMKilled events, CrashLoopBackOff issues, and resource constraints, and implement appropriate corrective actions. I will focus on improving workload reliability, resource efficiency, and overall cluster performance.
------------------------------------------------------------------------------------------------------------
-
-
-Continuous Improvement and Innovation
-identify and analyse pod failures on regular basis to identify the causes and suggest / plan the improvements.
-
-
-I will regularly monitor Kubernetes pod health and proactively investigate pod failures, restarts, and deployment-related issues. I will analyse pod events, application logs, resource utilization, and container status to identify root causes. Based on the findings, I will suggest and implement preventive measures, improve deployment configurations, and document resolutions to minimize recurring failures and improve application availability and operational stability.
+Values / Conduct
+Makes decisions and takes action which is consistent with the company's core values and with the principles enshrined in our code of conduct. In the pursuit of results, acts with a high degree of integrity and responsibility
