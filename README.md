@@ -1,48 +1,82 @@
-Analytical Ability
-Makes systematic and rational judgments based on relevant information, and supports the same with facts. Identifies potential issues/opportunities in complex situations and foresees implications of proposed solutions.
+D:\pragati\HELM_LATEST_26082026>k get secrets
+NAME                                            TYPE                             DATA   AGE
+airflow-secret                                  Opaque                           2      108d
+blocked-login-ip                                Opaque                           1      98d
+jfrog-secret                                    kubernetes.io/dockerconfigjson   1      145d
+jwt-secret                                      Opaque                           1      102d
+kafka-aes-secret                                Opaque                           1      109d
+ldap-creds                                      Opaque                           1      165d
+ldap-truststore-file                            Opaque                           1      165d
+oracle-secret                                   Opaque                           1      102d
+rsa-private-secret                              Opaque                           1      56d
+rsa-public-secret                               Opaque                           1      56d
+secret-druid                                    Opaque                           2      108d
+secret-ldap                                     Opaque                           2      102d
+secret-postgres                                 Opaque                           1      108d
+secret-sftp                                     Opaque                           1      91d
+sh.helm.release.v1.common-master-service.v1     helm.sh/release.v1               1      60d
+sh.helm.release.v1.common-master-service.v2     helm.sh/release.v1               1      56d
+sh.helm.release.v1.common-master-service.v3     helm.sh/release.v1               1      33d
+sh.helm.release.v1.common-master-service.v4     helm.sh/release.v1               1      33d
+sh.helm.release.v1.common-master-service.v5     helm.sh/release.v1               1      33d
+sh.helm.release.v1.common-master-service.v6     helm.sh/release.v1               1      32d
+sh.helm.release.v1.common-master-service.v7     helm.sh/release.v1               1      32d
+sh.helm.release.v1.common-request-service.v1    helm.sh/release.v1               1      60d
+sh.helm.release.v1.common-request-service.v2    helm.sh/release.v1               1      60d
+sh.helm.release.v1.common-request-service.v3    helm.sh/release.v1               1      56d
+sh.helm.release.v1.common-request-service.v4    helm.sh/release.v1               1      33d
+sh.helm.release.v1.communication-service.v1     helm.sh/release.v1               1      14d
+sh.helm.release.v1.communication-service.v2     helm.sh/release.v1               1      14d
+sh.helm.release.v1.communication-service.v3     helm.sh/release.v1               1      14d
+sh.helm.release.v1.dashboard-service.v1         helm.sh/release.v1               1      60d
+sh.helm.release.v1.dashboard-service.v2         helm.sh/release.v1               1      56d
+sh.helm.release.v1.dashboard-service.v3         helm.sh/release.v1               1      31d
+sh.helm.release.v1.dashboard-service.v4         helm.sh/release.v1               1      31d
+sh.helm.release.v1.enquiry-service.v1           helm.sh/release.v1               1      60d
+sh.helm.release.v1.enquiry-service.v2           helm.sh/release.v1               1      56d
+sh.helm.release.v1.enquiry-service.v3           helm.sh/release.v1               1      20d
+sh.helm.release.v1.enquiry-service.v4           helm.sh/release.v1               1      20d
+sh.helm.release.v1.login-service.v1             helm.sh/release.v1               1      15d
+sh.helm.release.v1.notification-service.v1      helm.sh/release.v1               1      31d
+sh.helm.release.v1.process-status-service.v1    helm.sh/release.v1               1      59d
+sh.helm.release.v1.process-status-service.v2    helm.sh/release.v1               1      31d
+sh.helm.release.v1.process-status-service.v3    helm.sh/release.v1               1      28d
+sh.helm.release.v1.react-service.v10            helm.sh/release.v1               1      31d
+sh.helm.release.v1.react-service.v11            helm.sh/release.v1               1      31d
+sh.helm.release.v1.react-service.v12            helm.sh/release.v1               1      24d
+sh.helm.release.v1.react-service.v13            helm.sh/release.v1               1      24d
+sh.helm.release.v1.react-service.v14            helm.sh/release.v1               1      24d
+sh.helm.release.v1.react-service.v15            helm.sh/release.v1               1      24d
+sh.helm.release.v1.react-service.v16            helm.sh/release.v1               1      20d
+sh.helm.release.v1.react-service.v17            helm.sh/release.v1               1      17d
+sh.helm.release.v1.react-service.v18            helm.sh/release.v1               1      14d
+sh.helm.release.v1.react-service.v9             helm.sh/release.v1               1      33d
+sh.helm.release.v1.redis-service.v1             helm.sh/release.v1               1      56d
+sh.helm.release.v1.report-service.v1            helm.sh/release.v1               1      59d
+sh.helm.release.v1.report-service.v2            helm.sh/release.v1               1      56d
+sh.helm.release.v1.report-service.v3            helm.sh/release.v1               1      20d
+sh.helm.release.v1.template-config-service.v1   helm.sh/release.v1               1      59d
+sh.helm.release.v1.template-config-service.v2   helm.sh/release.v1               1      56d
+sh.helm.release.v1.template-config-service.v3   helm.sh/release.v1               1      26d
+sh.helm.release.v1.transactions-service.v1      helm.sh/release.v1               1      59d
+sh.helm.release.v1.transactions-service.v2      helm.sh/release.v1               1      31d
+sh.helm.release.v1.transactions-service.v3      helm.sh/release.v1               1      31d
+sh.helm.release.v1.transactions-service.v4      helm.sh/release.v1               1      28d
+sh.helm.release.v1.user-service.v1              helm.sh/release.v1               1      56d
+sh.helm.release.v1.user-service.v2              helm.sh/release.v1               1      56d
+sh.helm.release.v1.user-service.v3              helm.sh/release.v1               1      49d
+sh.helm.release.v1.user-service.v4              helm.sh/release.v1               1      49d
+sh.helm.release.v1.user-service.v5              helm.sh/release.v1               1      42d
+sh.helm.release.v1.user-service.v6              helm.sh/release.v1               1      34d
+sh.helm.release.v1.user-service.v7              helm.sh/release.v1               1      33d
+sh.helm.release.v1.user-service.v8              helm.sh/release.v1               1      33d
+sh.helm.release.v1.voucher-enquiry-service.v1   helm.sh/release.v1               1      59d
+sh.helm.release.v1.voucher-enquiry-service.v2   helm.sh/release.v1               1      56d
+sh.helm.release.v1.voucher-enquiry-service.v3   helm.sh/release.v1               1      33d
+sh.helm.release.v1.voucher-enquiry-service.v4   helm.sh/release.v1               1      17d
+sh.helm.release.v1.voucher-service.v1           helm.sh/release.v1               1      59d
+sh.helm.release.v1.voucher-service.v2           helm.sh/release.v1               1      56d
+sh.helm.release.v1.voucher-service.v3           helm.sh/release.v1               1      33d
 
 
-
-I apply analytical and logical thinking to troubleshoot technical issues and identify their root causes. I analyse application logs, Kubernetes events, infrastructure metrics, and deployment failures to make informed decisions based on facts and technical observations. I proactively identify potential risks, evaluate possible solutions, and implement corrective and preventive actions to improve application stability, performance, and operational efficiency.
------------------------------------------------------------------------------------------------------------------------------------------------
-
-Coaching
-Facilitates the continuous development of individual and organizational competencies, developing other's potential through the sharing of expertise and providing timely feedback.
-
-
-I actively contribute to team collaboration by sharing my technical knowledge and experience related to AWS, Kubernetes, application deployments, CI/CD pipelines, and production troubleshooting. I support team members in resolving technical challenges, share troubleshooting approaches, and document important technical processes to improve team knowledge. I also remain open to feedback and continuously work on improving my own skills while contributing to the overall development of the team.
--------------------------------------------------------------------------------------------------------------------------------------------
-
-Continual Learning
-Continuously seeks knowledge to enhance one's professional growth and performance. Makes use of opportunities for learning that the job as well as the organization provides. Learns new technologies, tools and processes relevant to one's job.
-
-
-
-I continuously focus on enhancing my technical knowledge and professional capabilities by learning new technologies, tools, and industry best practices relevant to Cloud and DevOps. I have recently successfully completed the CNCF Kubernetes and Cloud Native Associate (KCNA) certification, strengthening my understanding of Kubernetes and cloud-native technologies. I plan to pursue additional Kubernetes and cloud certifications to further enhance my expertise in container orchestration, Amazon EKS, automation, and cloud infrastructure. I also aim to apply my learning to practical project requirements and continuously improve my technical contributions.
----------------------------------------------------------------------------------------------------------------------------------------
-Innovation and Creativity
-Provides an original solution by using various tools and techniques and constantly questioning the status quo. Experiments with new approaches and effectively utilizes creativity to enhance outcomes.
-
-
-
-I continuously look for opportunities to improve existing processes through automation, optimization, and innovative approaches. I focus on identifying repetitive manual activities, improving Kubernetes deployment configurations, optimizing resource utilization, and enhancing monitoring and troubleshooting practices. I explore new DevOps tools and technologies and evaluate how they can be effectively implemented to improve operational efficiency, reduce manual effort, and enhance application reliability.
-
-------------------------------------------------------------------------------------------------------------------------------------------------
-
-Planning and Organising
-Plans a course of action, manages and prioritizes activities so as to execute them in a time-bound manner. Sets goals, timelines, actions plans to meet organizational objectives.
-
-
-
-
-I effectively plan and prioritize my daily activities based on business requirements, project deliverables, and operational priorities. I ensure timely execution of application deployments, infrastructure-related activities, incident resolution, and assigned tasks. I coordinate with development, testing, and other support teams to ensure smooth delivery and minimize operational delays. I proactively track pending activities, communicate potential risks, and focus on completing assigned responsibilities within agreed timelines.
----------------------------------------------------------------------------------------------------------
-
-Values / Conduct
-Makes decisions and takes action which is consistent with the company's core values and with the principles enshrined in our code of conduct. In the pursuit of results, acts with a high degree of integrity and responsibility
-
-
-
-
-
-I consistently demonstrate professionalism, accountability, integrity, and ownership while performing my responsibilities. I follow organizational policies, security guidelines, and established processes while handling application infrastructure and production environments. I maintain transparency in communication, collaborate respectfully with team members, take responsibility for assigned tasks, and ensure that all activities are performed ethically and in alignment with the organization's values and code of conduct.
+in my helm setup why these many secrets are getting created and from where i dont want them can you help me with this??/
